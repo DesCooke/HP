@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_holiday_details_form"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.des.hp.Holiday.HolidayDetailsEdit">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.7"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imageButton2"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentTop="true"
+                android:layout_weight="5"
+                android:onClick="btnClearClick"
+                app:srcCompat="@android:drawable/ic_menu_delete"/>
+
+            <ImageButton
+                android:id="@+id/imageViewSmall"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignLeft="@+id/edtDayName"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/edtDayName"
+                android:layout_weight="1"
+                android:onClick="pickImage"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/imagemissing"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.3"
+            android:clickable="true"
+            android:onClick="pickHolidayName"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txtHolidayNameCaption"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Holiday Name"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/txtHolidayName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="TextView"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.3"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/lblKnownDates"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Dates Known"
+                android:textSize="18sp"/>
+
+            <Switch
+                android:id="@+id/swKnownDates"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="toggleVisibility"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/grpStartDate"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.3"
+            android:onClick="pickDateTime"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/lblStartDate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Start Date"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/txtStartDate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/imageButton2"
+                android:layout_toEndOf="@+id/imageButton2"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="TextView"
+                android:textSize="18sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/picturePicked"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="CheckBox"
+                android:visibility="invisible"/>
+
+            <Button
+                android:id="@+id/btnOk"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignLeft="@+id/button"
+                android:layout_alignStart="@+id/button"
+                android:layout_below="@+id/button"
+                android:layout_weight="1"
+                android:onClick="saveHoliday"
+                android:text="Save"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

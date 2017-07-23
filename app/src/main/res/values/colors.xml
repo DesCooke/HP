@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3f51b5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#af40a6ce</color>
+    <color name="colorWarning">#c72929</color>
+    <color name="colorOk">#199f24</color>
+    <color name="colorBusy">#ea9395</color>
+    <color name="colorModerate">#e5e980</color>
+    <color name="colorEasy">#abd4ae</color>
+    <color name="colorTransparent">#00000000</color>
+    <color name="colorUnknown">#f7f1f1</color>
+    <color name="colorEnabled">#40a6ce</color>
+    <color name="colorDisabled">#bdbec2</color>
+    <color name="BadgeColour">#ad40a6ce</color>
+</resources>

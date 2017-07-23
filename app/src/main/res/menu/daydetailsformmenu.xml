@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_add_flight"
+        android:orderInCategory="100"
+        android:title="@string/action_add_flight"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_add_hotel"
+        android:orderInCategory="100"
+        android:title="@string/action_add_hotel"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_add_show"
+        android:orderInCategory="100"
+        android:title="@string/action_add_show"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_add_restaurant"
+        android:orderInCategory="100"
+        android:title="@string/action_add_restaurant"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_add_bus"
+        android:orderInCategory="100"
+        android:title="@string/action_add_bus"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_add_cinema"
+        android:orderInCategory="100"
+        android:title="@string/action_add_cinema"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_add_parade"
+        android:orderInCategory="100"
+        android:title="@string/action_add_parade"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_add_park"
+        android:orderInCategory="100"
+        android:title="@string/action_add_park"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_add_ride"
+        android:orderInCategory="100"
+        android:title="@string/action_add_ride"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_add_other"
+        android:orderInCategory="100"
+        android:title="@string/action_add_other"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_edit_day"
+        android:orderInCategory="100"
+        android:title="@string/action_edit_day"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_delete_day"
+        android:orderInCategory="100"
+        android:title="@string/action_delete_day"
+        app:showAsAction="never" />
+</menu>

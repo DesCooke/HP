@@ -1,0 +1,82 @@
+<resources>
+    <string name="app_name">HP</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_backup">Backup</string>
+    <string name="action_add_flight">Add Flight</string>
+    <string name="action_add_hotel">Add Hotel</string>
+    <string name="action_add_show">Add Show</string>
+    <string name="action_add_restaurant">Add Restaurant</string>
+    <string name="action_add_bus">Add Bus</string>
+    <string name="action_add_cinema">Add Cinema</string>
+    <string name="action_add_park">Add Park</string>
+    <string name="action_add_parade">Add Parade</string>
+    <string name="action_add_other">Add Other</string>
+    <string name="action_add_ride">Add Ride</string>
+    <string name="action_delete_holiday">Delete Holiday</string>
+    <string name="action_delete_flight">Delete Flight</string>
+    <string name="action_delete_hotel">Delete Hotel</string>
+    <string name="action_delete_bus">Delete Bus</string>
+    <string name="action_delete_restaurant">Delete Restaurant</string>
+    <string name="action_delete_cinema">Delete Cinema</string>
+    <string name="action_delete_day">Delete Day</string>
+    <string name="action_delete_park">Delete Park</string>
+    <string name="action_delete_parade">Delete Parade</string>
+    <string name="action_delete_other">Delete Other</string>
+    <string name="action_delete_ride">Delete Ride</string>
+    <string name="action_delete_extra_files">Delete</string>
+    <string name="action_delete_show">Delete Show</string>
+    <string name="action_delete_task">Delete Task</string>
+    <string name="action_delete_budget">Delete Budget</string>
+    <string name="action_delete_tipgroup">Delete Tip Group</string>
+    <string name="action_delete_tip">Delete Tip</string>
+    <string name="action_delete_attraction">Delete Attraction</string>
+    <string name="action_delete_attractionarea">Delete Attraction Area</string>
+    <string name="action_delete_contact">Delete Contact</string>
+    <string name="action_delete_restaurantfull">Delete Restaurant</string>
+    <string name="action_delete_notes">Delete Notes</string>
+    <string name="action_edit_bus">Edit Bus</string>
+    <string name="action_edit_cinema">Edit Cinema</string>
+    <string name="action_edit_hotel">Edit Hotel</string>
+    <string name="action_edit_extra_files">Edit</string>
+    <string name="action_edit_flight">Edit Flight</string>
+    <string name="action_edit_restaurant">Edit Restaurant</string>
+    <string name="action_edit_holiday">Edit Holiday</string>
+    <string name="action_edit_day">Edit Day</string>
+    <string name="action_edit_notes">Edit Notes</string>
+    <string name="action_edit_task">Edit Task</string>
+    <string name="action_edit_attractionarea">Edit Attraction Area</string>
+    <string name="action_edit_contact">Edit Contact</string>
+    <string name="action_edit_restaurantfull">Edit Restaurant</string>
+    <string name="action_edit_budget">Edit Budget</string>
+    <string name="action_edit_ride">Edit Ride</string>
+    <string name="action_edit_show">Edit Show</string>
+    <string name="action_edit_tipgroup">Edit Tip Group</string>
+    <string name="action_edit_tip">Edit Tip</string>
+    <string name="action_edit_attraction">Edit Attraction</string>
+    <string name="action_edit_other">Edit Other</string>
+    <string name="action_edit_parade">Edit Parade</string>
+    <string name="action_edit_park">Edit Park</string>
+    <string name="action_view_tipgroup">View Tip Group</string>
+    <string name="action_view_attraction">View Attraction</string>
+    <string name="action_view_attractionarea">View Attraction Area</string>
+    <string name="action_move">Move to Another Area</string>
+
+    <string name="settings_date_format">dd/MM/yyyy</string>
+
+    <string name="title_planner">Planner</string>
+    <string name="title_waitingforpermission">Waiting for Permission</string>
+
+    <string name="tab_schedule">Schedule</string>
+    <string name="tab_highlights">Highlights</string>
+
+    <string name="fmt_day_line">Day %d</string>
+    <string name="fmt_date_line">%s</string>
+    <string name="fmt_hr_line">%d Hr</string>
+    <string name="fmt_hrs_line">%d Hrs</string>
+
+</resources>

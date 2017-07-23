@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:text="Flight Details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lblTitle"
+        android:textSize="36sp"
+        android:textAlignment="center" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="291dp">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@android:drawable/btn_dialog"
+            android:layout_alignParentTop="true"
+            android:id="@+id/imageButton2"
+            android:onClick="btnClearImage" />
+
+        <ImageButton
+            android:layout_width="284dp"
+            android:layout_height="256dp"
+            app:srcCompat="@drawable/imagemissing"
+            android:id="@+id/imageViewSmall"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="49dp"
+            android:layout_marginStart="49dp"
+            android:onClick="pickImage"
+            android:scaleType="fitXY"
+            android:layout_weight="0.78" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="checkInClick">
+
+                <TextView
+                    android:text="Checkin"
+                    android:layout_width="match_parent"
+                    android:id="@+id/lblCheckin"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="gravity"
+                    android:gravity="center_vertical|center_horizontal" />
+
+                <TextView
+                    android:text="00:00"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtCheckin"
+                    android:textSize="18sp"
+                    android:textAlignment="center"
+                    android:gravity="center_vertical|center_horizontal" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="departureClick">
+
+
+                <TextView
+                    android:text="Departure"
+                    android:layout_width="match_parent"
+                    android:id="@+id/lblDeparture"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="gravity"
+                    android:gravity="center_vertical|center_horizontal" />
+
+                <TextView
+                    android:text="00:00"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtDeparture"
+                    android:textSize="18sp"
+                    android:textAlignment="center"
+                    android:gravity="center_vertical|center_horizontal" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="arrivalClick">
+
+
+                <TextView
+                    android:text="Arrival"
+                    android:layout_width="match_parent"
+                    android:id="@+id/lblArrival"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="gravity"
+                    android:gravity="center_vertical|center_horizontal" />
+
+                <TextView
+                    android:text="00:00"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtArrival"
+                    android:textSize="18sp"
+                    android:textAlignment="center"
+                    android:gravity="center_vertical|center_horizontal" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="pickSchedName">
+
+            <TextView
+                android:text="Description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtSchedNameCaption"
+                android:layout_weight="2"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtSchedName"
+                android:layout_weight="1"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="pickFlightNo">
+
+            <TextView
+                android:text="Flight Number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtFlightNoCaption"
+                android:layout_weight="2"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtFlightNo"
+                android:layout_weight="1"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="pickTerminal">
+
+            <TextView
+                android:text="Terminal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtTerminalCaption"
+                android:textSize="18sp"
+                android:layout_weight="2" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtTerminal"
+                android:layout_weight="1"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="pickBookingRef">
+
+            <TextView
+                android:text="Booking Ref"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtBookingRefCaption"
+                android:layout_weight="2"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtBookingRef"
+                android:layout_weight="1"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <Button
+            android:text="Save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnOk"
+            android:onClick="saveSchedule"
+            android:layout_marginTop="12dp"
+            android:layout_below="@+id/button"
+            android:layout_alignLeft="@+id/button"
+            android:layout_alignStart="@+id/button" />
+
+        <CheckBox
+            android:text="CheckBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/picturePicked"
+            android:visibility="invisible" />
+
+        <CheckBox
+            android:text="CheckBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/chkCheckinKnown"
+            android:visibility="invisible" />
+
+        <CheckBox
+            android:text="CheckBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/chkDepartureKnown"
+            android:visibility="invisible" />
+
+        <CheckBox
+            android:text="CheckBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/chkArrivalKnown"
+            android:visibility="invisible" />
+
+    </LinearLayout>
+</LinearLayout>

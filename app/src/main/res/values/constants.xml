@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="application_file_path">/storage/emulated/0/HP</string>
+    <string name="database_filename">/storage/emulated/0/HP/hp.db</string>
+    <string name="picture_path">/storage/emulated/0/HP/pictures</string>
+    <string name="files_path">/storage/emulated/0/HP/files</string>
+    <string name="archive_path">/storage/emulated/0/HPArchive</string>
+    <string name="log_filename">/storage/emulated/0/HP/hp.txt</string>
+    <string name="tmp_path">/storage/emulated/0/HPTmp</string>
+    <string name="rusureDialogTag">rusureDialogTag</string>
+    <string name="reallysureDialogTag">reallysureDialogTag</string>
+    <string name="dwetDialogTag">dwetDialogTag</string>
+    <string name="dwynDialogTag">dwynDialogTag</string>
+    <string name="dwtvDialogTag">dwtvDialogTag</string>
+
+    <integer name="schedule_type_unknown">0</integer>
+    <integer name="schedule_type_flight">1</integer>
+    <integer name="schedule_type_hotel">2</integer>
+    <integer name="schedule_type_show">3</integer>
+    <integer name="schedule_type_restaurant">4</integer>
+    <integer name="schedule_type_bus">5</integer>
+    <integer name="schedule_type_cinema">6</integer>
+    <integer name="schedule_type_park">7</integer>
+    <integer name="schedule_type_parade">8</integer>
+    <integer name="schedule_type_other">9</integer>
+    <integer name="schedule_type_ride">10</integer>
+
+    <integer name="day_cat_unknown">0</integer>
+    <integer name="day_cat_easy">1</integer>
+    <integer name="day_cat_moderate">2</integer>
+    <integer name="day_cat_busy">3</integer>
+    
+</resources>

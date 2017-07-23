@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:layout_height="wrap_content"
+    android:id="@+id/scheduleItemCell">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="10dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:background="@android:drawable/dialog_holo_light_frame"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                app:srcCompat="@drawable/imagemissing"
+                android:id="@+id/imgScheduleType"
+                android:textAlignment="center"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <ImageView
+                app:srcCompat="@drawable/imagemissing"
+                android:id="@+id/imgSchedule"
+                android:textAlignment="center"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:id="@+id/txtSchedName"
+                    android:textAlignment="center"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:id="@+id/txtTimeRange"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtReservationType"
+                    android:gravity="center_vertical|center_horizontal"/>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RatingBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/rbHeartRatingView"
+                        android:indeterminateDrawable="@drawable/like24ratingstyle"
+                        android:numStars="5"
+                        android:rating="3.5"
+                        style="@style/like24RatingBar"
+                        android:progressDrawable="@drawable/like24ratingstyle"
+                        android:stepSize="0.1"
+                        android:isIndicator="true"/>
+
+                    <RatingBar
+                        android:layout_width="wrap_content"
+                        android:id="@+id/rbScenicRatingView"
+                        android:numStars="5"
+                        android:rating="2.2"
+                        android:stepSize="0.1"
+                        style="@style/scenic24RatingBar"
+                        android:layout_height="wrap_content"
+                        android:indeterminateDrawable="@drawable/scenic24ratingstyle"
+                        android:progressDrawable="@drawable/scenic24ratingstyle"
+                        android:isIndicator="true"/>
+
+                    <RatingBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/rbThrillRatingView"
+                        android:indeterminateDrawable="@drawable/thrill24ratingstyle"
+                        android:numStars="5"
+                        android:rating="3.5"
+                        style="@style/thrill24RatingBar"
+                        android:progressDrawable="@drawable/thrill24ratingstyle"
+                        android:stepSize="0.1"
+                        android:isIndicator="true"/>
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.72" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+</LinearLayout>

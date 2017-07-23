@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_delete_tipgroup"
+        android:orderInCategory="100"
+        android:title="@string/action_delete_tipgroup"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_edit_tipgroup"
+        android:orderInCategory="100"
+        android:title="@string/action_edit_tipgroup"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_view_tipgroup"
+        android:orderInCategory="100"
+        android:title="@string/action_view_tipgroup"
+        app:showAsAction="never" />
+</menu>
