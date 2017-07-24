@@ -3,3 +3,5 @@ build/
 .gradle/
 .idea/
 *.iml
+gradle/wrapper/gradle-wrapper.jar
+gradle/wrapper/gradle-wrapper.properties
