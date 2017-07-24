@@ -255,7 +255,7 @@ public class DayDetailsView extends AppCompatActivity {
                     }
                     if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_busy)) {
                         lColor = getColor(R.color.colorBusy);
-                        lDayCat = "Day Category: Busy";
+                        lDayCat = "Day Category: VBusy";
                     }
 
                     txtDayCat.setText(lDayCat);
