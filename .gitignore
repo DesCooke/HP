@@ -7,3 +7,8 @@ themes/classic/views/
 *.ap_
 *.bin
 build/generated
+*.lock
+.idea
+.gradle
+build
+
