@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,6 +19,7 @@ import android.graphics.BitmapFactory;
 import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
+import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
 import com.example.des.hp.R;
 import com.example.des.hp.Schedule.Ride.RideDetailsEdit;
@@ -33,7 +33,7 @@ import com.example.des.hp.Notes.NoteView;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-public class HotelDetailsView extends AppCompatActivity
+public class HotelDetailsView extends BaseActivity
 {
 
     public DatabaseAccess databaseAccess;

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +19,7 @@ import android.widget.LinearLayout;
 import android.graphics.BitmapFactory;
 
 import com.example.des.hp.Database.DatabaseAccess;
+import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
 import com.example.des.hp.Highlight.PageHighlightsFragment;
 import com.example.des.hp.Notes.NoteItem;
@@ -41,7 +41,8 @@ import com.example.des.hp.Schedule.Restaurant.RestaurantDetailsEdit;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.thirdpartyutils.BadgeView;
 
-public class AttractionAreaDetailsView extends AppCompatActivity {
+public class AttractionAreaDetailsView extends BaseActivity
+{
 
     public DatabaseAccess databaseAccess;
     private ImageView imageView;

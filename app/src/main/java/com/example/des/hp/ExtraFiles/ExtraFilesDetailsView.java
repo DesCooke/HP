@@ -5,7 +5,6 @@ import android.content.pm.ResolveInfo;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
+import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.thirdpartyutils.BadgeView;
@@ -24,7 +24,8 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 import java.io.File;
 import java.util.List;
 
-public class ExtraFilesDetailsView extends AppCompatActivity {
+public class ExtraFilesDetailsView extends BaseActivity
+{
 
     public DatabaseAccess databaseAccess;
     private ImageView imageView;

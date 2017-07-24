@@ -3,7 +3,6 @@ package com.example.des.hp.ScheduleArea;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -16,6 +15,7 @@ import com.example.des.hp.Attraction.AttractionDetailsEdit;
 import com.example.des.hp.Attraction.AttractionDetailsView;
 import com.example.des.hp.Attraction.AttractionItem;
 import com.example.des.hp.Database.DatabaseAccess;
+import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
 
@@ -26,7 +26,7 @@ import java.util.Collections;
  ** Created by Des on 02/11/2016.
  */
 
-public class ScheduleAreaList extends AppCompatActivity
+public class ScheduleAreaList extends BaseActivity
 {
 
     public DatabaseAccess databaseAccess;

@@ -2,7 +2,6 @@ package com.example.des.hp.Schedule.Ride;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +15,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
+import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
 import com.example.des.hp.R;
 import com.example.des.hp.ScheduleArea.ScheduleAreaList;
@@ -27,7 +27,7 @@ import com.example.des.hp.Notes.NoteView;
 
 import java.util.Locale;
 
-public class RideDetailsView extends AppCompatActivity
+public class RideDetailsView extends BaseActivity
 {
 
     public DatabaseAccess databaseAccess;

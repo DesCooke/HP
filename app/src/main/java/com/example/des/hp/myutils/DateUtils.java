@@ -1,10 +1,11 @@
 package com.example.des.hp.myutils;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+
+import com.example.des.hp.Dialog.BaseActivity;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -20,7 +21,7 @@ import static java.text.DateFormat.getDateInstance;
 //
 // All functions return true/false
 //
-public class DateUtils extends AppCompatActivity
+public class DateUtils extends BaseActivity
 {
     private MyMessages myMessages;
     public static long unknownDate = 2051222400000L;

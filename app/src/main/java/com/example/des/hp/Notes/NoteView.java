@@ -3,7 +3,6 @@ package com.example.des.hp.Notes;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,12 +13,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
+import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.thirdpartyutils.BadgeView;
 
-public class NoteView extends AppCompatActivity
+public class NoteView extends BaseActivity
 {
 
     public DatabaseAccess databaseAccess;

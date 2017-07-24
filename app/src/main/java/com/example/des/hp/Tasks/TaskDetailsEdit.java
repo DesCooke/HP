@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -17,13 +16,15 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
+import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
 import java.io.InputStream;
 import java.util.Date;
 
-public class TaskDetailsEdit extends AppCompatActivity {
+public class TaskDetailsEdit extends BaseActivity
+{
 
     public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO = 1;

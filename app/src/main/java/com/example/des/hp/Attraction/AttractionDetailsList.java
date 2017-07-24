@@ -7,7 +7,6 @@ package com.example.des.hp.Attraction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -15,6 +14,7 @@ import android.view.View;
 
 import com.example.des.hp.AttractionArea.AttractionAreaDetailsList;
 import com.example.des.hp.Database.DatabaseAccess;
+import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
 import com.example.des.hp.Notes.NoteView;
 import com.example.des.hp.R;
@@ -27,7 +27,7 @@ import java.util.Collections;
  ** Created by Des on 02/11/2016.
  */
 
-public class AttractionDetailsList extends AppCompatActivity
+public class AttractionDetailsList extends BaseActivity
 {
 
     public DatabaseAccess databaseAccess;

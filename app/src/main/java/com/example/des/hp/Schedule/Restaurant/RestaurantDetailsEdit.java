@@ -3,7 +3,6 @@ package com.example.des.hp.Schedule.Restaurant;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,11 +14,12 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
+import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.Schedule.*;
 
-public class RestaurantDetailsEdit extends AppCompatActivity
+public class RestaurantDetailsEdit extends BaseActivity
 {
 
     public DatabaseAccess databaseAccess;

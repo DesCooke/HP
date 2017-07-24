@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,6 +20,7 @@ import android.widget.TextView;
 import com.example.des.hp.Budget.BudgetDetailsList;
 import com.example.des.hp.Contact.ContactDetailsList;
 import com.example.des.hp.Database.DatabaseAccess;
+import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.Notes.NoteView;
 import com.example.des.hp.TipGroup.*;
@@ -32,7 +32,8 @@ import com.example.des.hp.Tasks.TaskDetailsList;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.thirdpartyutils.BadgeView;
 
-public class HolidayDetailsView extends AppCompatActivity {
+public class HolidayDetailsView extends BaseActivity
+{
 
     public DatabaseAccess databaseAccess;
     private ImageView imageView;
