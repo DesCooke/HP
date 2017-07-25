@@ -22,7 +22,7 @@ import com.example.des.hp.Notes.NoteView;
 
 public class AttractionAreaView extends BaseActivity
 {
-
+    
     public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO = 1;
     private ImageView imageViewSmall;
@@ -40,70 +40,77 @@ public class AttractionAreaView extends BaseActivity
     public BadgeView btnShowInfoBadge;
     public MyColor myColor;
     public ImageButton btnShowNotes;
-
+    
     public void clearImage(View view)
     {
-        imageViewSmall.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
+        try
+        {
+            imageViewSmall.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
+        }
+        catch (Exception e)
+        {
+            ShowError("clearImage", e.getMessage());
+        }
     }
-
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError
-                (
-                        "Error in AttractionAreaView::" + argFunction,
-                        argMessage
-                );
-    }
-
+    
     public void showNotes(View view)
     {
-        Intent intent2 = new Intent(getApplicationContext(), NoteView.class);
-        if(attractionAreaItem.noteId==0)
+        try
         {
-            MyInt myInt = new MyInt();
-            if(!databaseAccess.getNextNoteId(holidayId, myInt))
-                return;
-            attractionAreaItem.noteId = myInt.Value;
-            if(!databaseAccess.updateAttractionAreaItem(attractionAreaItem))
-                return;
+            
+            Intent intent2 = new Intent(getApplicationContext(), NoteView.class);
+            if (attractionAreaItem.noteId == 0)
+            {
+                MyInt myInt = new MyInt();
+                if (!databaseAccess.getNextNoteId(holidayId, myInt))
+                    return;
+                attractionAreaItem.noteId = myInt.Value;
+                if (!databaseAccess.updateAttractionAreaItem(attractionAreaItem))
+                    return;
+            }
+            intent2.putExtra("ACTION", "view");
+            intent2.putExtra("HOLIDAYID", attractionAreaItem.holidayId);
+            intent2.putExtra("NOTEID", attractionAreaItem.noteId);
+            intent2.putExtra("TITLE", attractionAreaItem.attractionAreaDescription);
+            intent2.putExtra("SUBTITLE", "Notes");
+            startActivity(intent2);
         }
-        intent2.putExtra("ACTION", "view");
-        intent2.putExtra("HOLIDAYID", attractionAreaItem.holidayId);
-        intent2.putExtra("NOTEID", attractionAreaItem.noteId);
-        intent2.putExtra("TITLE", attractionAreaItem.attractionAreaDescription);
-        intent2.putExtra("SUBTITLE", "Notes");
-        startActivity(intent2);
+        catch (Exception e)
+        {
+            ShowError("showNotes", e.getMessage());
+        }
     }
-
+    
     public void showForm()
     {
         try
         {
             clearImage(null);
-
+            
             Bundle extras = getIntent().getExtras();
-            if (extras != null) {
+            if (extras != null)
+            {
                 String title = extras.getString("TITLE");
                 String subtitle = extras.getString("SUBTITLE");
                 actionBar.setTitle(title);
                 action = extras.getString("ACTION");
-
+                
                 holidayId = extras.getInt("HOLIDAYID");
                 attractionId = extras.getInt("ATTRACTIONID");
                 attractionAreaId = extras.getInt("ATTRACTIONAREAID");
                 attractionAreaItem = new AttractionAreaItem();
                 if (!databaseAccess.getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
                     return;
-
+                
                 attractionAreaDescription.setText(attractionAreaItem.attractionAreaDescription);
-
+                
                 if (!imageUtils.getPageHeaderImage(this, attractionAreaItem.attractionAreaPicture, imageViewSmall))
                     return;
-
+                
                 actionBar.setSubtitle(subtitle);
-
+                
                 txtAttractionAreaNotes.setText(String.valueOf(attractionAreaItem.attractionAreaNotes));
-
+                
                 MyInt lFileCount = new MyInt();
                 lFileCount.Value = 0;
                 if (attractionAreaItem.infoId > 0)
@@ -112,7 +119,7 @@ public class AttractionAreaView extends BaseActivity
                         return;
                 }
                 btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
-
+                
                 if (lFileCount.Value == 0)
                 {
                     btnShowInfoBadge.setVisibility(View.INVISIBLE);
@@ -125,85 +132,95 @@ public class AttractionAreaView extends BaseActivity
                         return;
                 }
                 NoteItem noteItem = new NoteItem();
-                if(!databaseAccess.getNoteItem(attractionAreaItem.holidayId, attractionAreaItem.noteId, noteItem))
+                if (!databaseAccess.getNoteItem(attractionAreaItem.holidayId, attractionAreaItem.noteId, noteItem))
                     return;
                 if (noteItem.notes.length() == 0)
                 {
                     if (myColor.SetImageButtonTint(btnShowNotes, R.color.colorDisabled) == false)
                         return;
-                } else {
+                } else
+                {
                     if (myColor.SetImageButtonTint(btnShowNotes, R.color.colorEnabled) == false)
                         return;
                 }
             }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("showForm", e.getMessage());
         }
     }
-
+    
     public void showInfo(View view)
     {
-        Intent intent2 = new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
-        if(attractionAreaItem.infoId==0)
+        try
         {
-            MyInt myInt = new MyInt();
-            if(!databaseAccess.getNextFileGroupId(myInt))
-                return;
-            attractionAreaItem.infoId = myInt.Value;
-            if(!databaseAccess.updateAttractionAreaItem(attractionAreaItem))
-                return;
+            Intent intent2 = new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
+            if (attractionAreaItem.infoId == 0)
+            {
+                MyInt myInt = new MyInt();
+                if (!databaseAccess.getNextFileGroupId(myInt))
+                    return;
+                attractionAreaItem.infoId = myInt.Value;
+                if (!databaseAccess.updateAttractionAreaItem(attractionAreaItem))
+                    return;
+            }
+            intent2.putExtra("FILEGROUPID", attractionAreaItem.infoId);
+            intent2.putExtra("TITLE", attractionAreaItem.attractionAreaDescription);
+            intent2.putExtra("SUBTITLE", "Info");
+            startActivity(intent2);
         }
-        intent2.putExtra("FILEGROUPID", attractionAreaItem.infoId);
-        intent2.putExtra("TITLE", attractionAreaItem.attractionAreaDescription);
-        intent2.putExtra("SUBTITLE", "Info");
-        startActivity(intent2);
+        catch (Exception e)
+        {
+            ShowError("showInfo", e.getMessage());
+        }
     }
-
+    
     @Override
-    protected void onResume(){
+    protected void onResume()
+    {
         super.onResume();
         try
         {
             showForm();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("onResume", e.getMessage());
         }
-
+        
     }
-
-
+    
+    
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-
+        
         try
         {
             setContentView(R.layout.activity_attractionarea_view);
-
+            
             databaseAccess = new DatabaseAccess(this);
             actionBar = getSupportActionBar();
             imageUtils = new ImageUtils(this);
             myMessages = new MyMessages(this);
             myColor = new MyColor(this);
-
+            
             imageViewSmall = (ImageView) findViewById(R.id.imageViewSmall);
             attractionAreaDescription = (TextView) findViewById(R.id.txtAttractionAreaDescription);
             txtAttractionAreaNotes = (TextView) findViewById(R.id.txtAttractionAreaNotes);
-            btnShowInfo=(ImageButton) findViewById(R.id.btnShowInfo);
-            btnShowNotes=(ImageButton) findViewById(R.id.btnShowNotes);
-
+            btnShowInfo = (ImageButton) findViewById(R.id.btnShowInfo);
+            btnShowNotes = (ImageButton) findViewById(R.id.btnShowNotes);
+            
             btnShowInfoBadge = new BadgeView(this, btnShowInfo);
             btnShowInfoBadge.setText(Integer.toString(0));
             btnShowInfoBadge.show();
-
+            
             showForm();
-
+            
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }

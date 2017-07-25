@@ -19,6 +19,15 @@ public class BaseActivity extends AppCompatActivity
         super.onPostCreate(savedInstanceState);
     }
     
+    protected void ShowError(String argFunction, String argMessage)
+    {
+        String lv_title;
+        
+        lv_title = this.getLocalClassName() + "::" + argFunction;
+        
+        ErrorDialog.Show("Error in " + lv_title, argMessage);
+    }
+    
     @Override
     protected void onResume()
     {

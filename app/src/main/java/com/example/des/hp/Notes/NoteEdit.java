@@ -25,7 +25,7 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 
 public class NoteEdit extends BaseActivity
 {
-
+    
     public DatabaseAccess databaseAccess;
     private ImageView imageView;
     public int holidayId;
@@ -43,35 +43,35 @@ public class NoteEdit extends BaseActivity
     public BadgeView btnShowInfoBadge;
     public MyColor myColor;
     public MyKeyboard myKeyboard;
-
+    
     public void showForm()
     {
         try
         {
-            databaseAccess=new DatabaseAccess(this);
-
+            databaseAccess = new DatabaseAccess(this);
+            
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-
-            Bundle extras=getIntent().getExtras();
-            if(extras != null)
+            
+            Bundle extras = getIntent().getExtras();
+            if (extras != null)
             {
-                String action=extras.getString("ACTION");
-                if(action != null && action.equals("modify"))
+                String action = extras.getString("ACTION");
+                if (action != null && action.equals("modify"))
                 {
-                    holidayId=extras.getInt("HOLIDAYID");
-                    noteId=extras.getInt("NOTEID");
-                    noteItem=new NoteItem();
+                    holidayId = extras.getInt("HOLIDAYID");
+                    noteId = extras.getInt("NOTEID");
+                    noteItem = new NoteItem();
                     noteItem.holidayId = holidayId;
                     noteItem.noteId = noteId;
-                    if(!databaseAccess.getNoteItem(holidayId, noteId, noteItem))
+                    if (!databaseAccess.getNoteItem(holidayId, noteId, noteItem))
                         return;
-
-                    actionBar=getSupportActionBar();
-                    if(actionBar != null)
+                    
+                    actionBar = getSupportActionBar();
+                    if (actionBar != null)
                     {
-                        String title=extras.getString("TITLE");
-                        String subtitle=extras.getString("SUBTITLE");
-                        if(title != null && title.length() > 0)
+                        String title = extras.getString("TITLE");
+                        String subtitle = extras.getString("SUBTITLE");
+                        if (title != null && title.length() > 0)
                         {
                             actionBar.setTitle(title);
                             actionBar.setSubtitle(subtitle);
@@ -81,60 +81,61 @@ public class NoteEdit extends BaseActivity
                             actionBar.setSubtitle("");
                         }
                     }
-
+                    
                     edtNote.setText(noteItem.notes);
                 }
             }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("showForm", e.getMessage());
         }
     }
-
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError("Error in NoteEdit::" + argFunction, argMessage);
-    }
-
+    
     public void saveNotes(View view)
     {
-        noteItem.notes = edtNote.getText().toString();
-
-        MyBoolean noteExists = new MyBoolean();
-        if(!databaseAccess.noteExists(holidayId, noteItem.noteId, noteExists))
-            return;
-        if(noteExists.Value==false)
+        try
         {
-            if(!databaseAccess.addNoteItem(noteItem))
+            noteItem.notes = edtNote.getText().toString();
+            
+            MyBoolean noteExists = new MyBoolean();
+            if (!databaseAccess.noteExists(holidayId, noteItem.noteId, noteExists))
                 return;
+            if (noteExists.Value == false)
+            {
+                if (!databaseAccess.addNoteItem(noteItem))
+                    return;
+            } else
+            {
+                if (!databaseAccess.updateNoteItem(noteItem))
+                    return;
+            }
+            finish();
         }
-        else
+        catch (Exception e)
         {
-            if(!databaseAccess.updateNoteItem(noteItem))
-                return;
+            ShowError("saveNotes", e.getMessage());
         }
-        finish();
     }
-
-
+    
+    
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_notes_edit);
-        edtNote=(EditText) findViewById(R.id.edtNotes);
-        edtNote.requestFocus();
-
+        
         try
         {
+            setContentView(R.layout.activity_notes_edit);
+            edtNote = (EditText) findViewById(R.id.edtNotes);
+            edtNote.requestFocus();
+            
             showForm();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
     }
-
+    
 }

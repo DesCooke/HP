@@ -6,6 +6,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.ActionBar;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -23,7 +25,7 @@ import java.io.InputStream;
 
 public class ExtraFilesDetailsEdit extends BaseActivity
 {
-
+    
     public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO = 1;
     private final int SELECT_PDF = 2;
@@ -41,42 +43,49 @@ public class ExtraFilesDetailsEdit extends BaseActivity
     private Uri mySelectedFileUri;
     public boolean FileSelected;
     public MyMessages myMessages;
-
+    
     //region Yes/No dialog
     public DialogWithYesNoFragment dialogWithYesNoFragment;
     public String dwynDialogTag;
     public View.OnClickListener dwynOnYesClick;
     public View.OnClickListener dwynOnNoClick;
     //endregion
-
+    
     //region Rename Edit Text dialog
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public String dwetDialogTag;
     public View.OnClickListener dwetOnOkClick;
     //endregion
-
+    
     public String origFilename;
     public String newFilename;
-
-
+    
+    
     public void pickImage(View view)
     {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, SELECT_PHOTO);
-    }
-
-    public void pickPDF(View view)
-    {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-
         try
         {
+            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+            photoPickerIntent.setType("image/*");
+            startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+        }
+        catch (Exception e)
+        {
+            ShowError("pickImage", e.getMessage());
+        }
+    }
+    
+    public void pickPDF(View view)
+    {
+        try
+        {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*");
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            
             startActivityForResult(
-                    Intent.createChooser(intent, "Select a File to Upload"),
-                    SELECT_PDF);
+                Intent.createChooser(intent, "Select a File to Upload"),
+                SELECT_PDF);
         }
         catch (Exception e)
         {
@@ -84,9 +93,10 @@ public class ExtraFilesDetailsEdit extends BaseActivity
             ShowError("pickPDF", e.getMessage());
         }
     }
-
+    
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent)
+    {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         try
         {
@@ -99,24 +109,25 @@ public class ExtraFilesDetailsEdit extends BaseActivity
                         {
                             MyBitmap myBitmap = new MyBitmap();
                             Boolean lRetCode =
-                                    imageUtils.ScaleBitmapFromUrl
-                                            (
-                                                    imageReturnedIntent.getData(),
-                                                    getContentResolver(),
-                                                    myBitmap
-                                            );
-                            if(lRetCode==false)
+                                imageUtils.ScaleBitmapFromUrl
+                                    (
+                                        imageReturnedIntent.getData(),
+                                        getContentResolver(),
+                                        myBitmap
+                                    );
+                            if (lRetCode == false)
                                 return;
-
+                            
                             // assign new bitmap and set scale type
                             imageViewSmall.setImageBitmap(myBitmap.Value);
-
+                            
                             cbPicturePicked.setChecked(true);
-
+                            
                             extraFilesItem.pictureChanged = true;
-
-
-                        } catch (Exception e)
+                            
+                            
+                        }
+                        catch (Exception e)
                         {
                             ShowError("onActivityResult-selectphoto", e.getMessage());
                         }
@@ -126,16 +137,16 @@ public class ExtraFilesDetailsEdit extends BaseActivity
                     if (resultCode == RESULT_OK)
                     {
                         final Uri imageUri = imageReturnedIntent.getData();
-                        grantUriPermission("com.example.des.hp",imageUri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        grantUriPermission("com.example.des.hp", imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         mySelectedFileUri = imageUri;
                         extraFilesItem.fileChanged = true;
-                        MyString myString=new MyString();
-                        if(myFileUtils.BaseFilenameFromUri(imageUri, myString)==false)
+                        MyString myString = new MyString();
+                        if (myFileUtils.BaseFilenameFromUri(imageUri, myString) == false)
                             return;
                         fileName.setText(myString.Value);
                     }
                     break;
-
+                
             }
         }
         catch (Exception e)
@@ -143,310 +154,386 @@ public class ExtraFilesDetailsEdit extends BaseActivity
             ShowError("onActivityResult", e.getMessage());
         }
     }
-
+    
     public void clearImage(View view)
     {
-        cbPicturePicked.setChecked(false);
-        imageViewSmall.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
+        try
+        {
+            cbPicturePicked.setChecked(false);
+            imageViewSmall.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
+        }
+        catch (Exception e)
+        {
+            ShowError("clearImage", e.getMessage());
+        }
     }
-
+    
     public void btnClearImage(View view)
     {
-        clearImage(view);
-        extraFilesItem.pictureChanged=true;
+        try
+        {
+            clearImage(view);
+            extraFilesItem.pictureChanged = true;
+        }
+        catch (Exception e)
+        {
+            ShowError("btnClearImage", e.getMessage());
+        }
     }
-
-
+    
+    
     public void SaveIt()
     {
-
-        extraFilesItem.pictureAssigned = cbPicturePicked.isChecked();
-        extraFilesItem.fileDescription = fileDescription.getText().toString();
-        if(extraFilesItem.fileChanged)
-            extraFilesItem.fileName = newFilename;
-        extraFilesItem.fileBitmap = null;
-        if (extraFilesItem.pictureAssigned)
-            extraFilesItem.fileBitmap=((BitmapDrawable)imageViewSmall.getDrawable()).getBitmap() ;
-
-        if(extraFilesItem.fileName==null)
+        try
         {
-            myMessages.ShowMessageShort("Need to select a file first... ");
-            return;
+            extraFilesItem.pictureAssigned = cbPicturePicked.isChecked();
+            extraFilesItem.fileDescription = fileDescription.getText().toString();
+            if (extraFilesItem.fileChanged)
+                extraFilesItem.fileName = newFilename;
+            extraFilesItem.fileBitmap = null;
+            if (extraFilesItem.pictureAssigned)
+                extraFilesItem.fileBitmap = ((BitmapDrawable) imageViewSmall.getDrawable()).getBitmap();
+            
+            if (extraFilesItem.fileName == null)
+            {
+                myMessages.ShowMessageShort("Need to select a file first... ");
+                return;
+            }
+            
+            myMessages.ShowMessageShort("Saving " + fileDescription.getText().toString());
+            
+            if (action.equals("add"))
+            {
+                MyInt myInt = new MyInt();
+                
+                extraFilesItem.fileGroupId = fileGroupId;
+                
+                if (!databaseAccess.getNextExtraFilesId(fileGroupId, myInt))
+                    return;
+                extraFilesItem.fileId = myInt.Value;
+                
+                if (!databaseAccess.getNextExtraFilesSequenceNo(fileGroupId, myInt))
+                    return;
+                extraFilesItem.sequenceNo = myInt.Value;
+                
+                if (!databaseAccess.addExtraFilesItem(extraFilesItem))
+                    return;
+            }
+            
+            if (action.equals("modify"))
+            {
+                extraFilesItem.fileGroupId = fileGroupId;
+                extraFilesItem.fileId = fileId;
+                if (!databaseAccess.updateExtraFilesItem(extraFilesItem))
+                    return;
+            }
+            
+            finish();
         }
-
-        myMessages.ShowMessageShort("Saving " + fileDescription.getText().toString());
-
-        if(action.equals("add"))
+        catch (Exception e)
         {
-            MyInt myInt = new MyInt();
-
-            extraFilesItem.fileGroupId = fileGroupId;
-
-            if(!databaseAccess.getNextExtraFilesId(fileGroupId,myInt))
-                return;
-            extraFilesItem.fileId = myInt.Value;
-
-            if(!databaseAccess.getNextExtraFilesSequenceNo(fileGroupId, myInt))
-                return;
-            extraFilesItem.sequenceNo = myInt.Value;
-
-            if(!databaseAccess.addExtraFilesItem(extraFilesItem))
-                return;
+            ShowError("SaveIt", e.getMessage());
         }
-
-        if(action.equals("modify"))
-        {
-            extraFilesItem.fileGroupId = fileGroupId;
-            extraFilesItem.fileId = fileId;
-            if(!databaseAccess.updateExtraFilesItem(extraFilesItem))
-                return;
-        }
-
-        finish();
     }
-
+    
     public void saveExtraFile(View view)
     {
-        if(extraFilesItem.fileChanged==false)
+        try
         {
-            SaveIt();
-            return;
-        }
-
-        if(mySelectedFileUri!=null) {
-            grantUriPermission("com.example.des.hp", mySelectedFileUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            try {
-                InputStream in = getContentResolver().openInputStream(mySelectedFileUri);
-            } catch (Exception e)
+            if (extraFilesItem.fileChanged == false)
             {
-                ShowError("saveExtraFile", e.getMessage());
+                SaveIt();
                 return;
             }
-            extraFilesItem.fileUri = mySelectedFileUri;
-
-            MyString myString=new MyString();
-            if(myFileUtils.BaseFilenameFromUri(mySelectedFileUri, myString)==false)
-                return;
-            newFilename = myString.Value;
-
-            File tof = new File(getResources().getString(R.string.files_path) + "/" + newFilename);
-            if (tof.exists())
+            
+            if (mySelectedFileUri != null)
             {
-                origFilename = newFilename;
+                grantUriPermission("com.example.des.hp", mySelectedFileUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                try
+                {
+                    InputStream in = getContentResolver().openInputStream(mySelectedFileUri);
+                }
+                catch (Exception e)
+                {
+                    ShowError("saveExtraFile", e.getMessage());
+                    return;
+                }
+                extraFilesItem.fileUri = mySelectedFileUri;
+                
+                MyString myString = new MyString();
+                if (myFileUtils.BaseFilenameFromUri(mySelectedFileUri, myString) == false)
+                    return;
+                newFilename = myString.Value;
+                
+                File tof = new File(getResources().getString(R.string.files_path) + "/" + newFilename);
+                if (tof.exists())
+                {
+                    origFilename = newFilename;
+                    newFilename = "";
+                    // offer a rename option
+                    handleRename(tof.getName());
+                } else
+                {
+                    SaveIt();
+                }
+            } else
+            {
                 newFilename = "";
-                // offer a rename option
-                handleRename(tof.getName());
-            }
-            else
-            {
                 SaveIt();
             }
         }
-        else
+        catch (Exception e)
         {
-            newFilename="";
-            SaveIt();
+            ShowError("SaveExtraFile", e.getMessage());
         }
+        
     }
-
+    
     public void ExtraFilesNamePicked(View view)
     {
-        fileDescription.setText(dialogWithEditTextFragment.getFinalText());
-
-        dialogWithEditTextFragment.dismiss();
+        try
+        {
+            fileDescription.setText(dialogWithEditTextFragment.getFinalText());
+            
+            dialogWithEditTextFragment.dismiss();
+        }
+        catch (Exception e)
+        {
+            ShowError("ExtraFilesNamePicked", e.getMessage());
+        }
     }
-
+    
     public void pickExtraFilesName(View view)
     {
-        dwetOnOkClick = new View.OnClickListener()
+        try
         {
-            public void onClick(View view)
+            dwetOnOkClick = new View.OnClickListener()
             {
-                ExtraFilesNamePicked(view);
-            }
-        };
-
-        dialogWithEditTextFragment =
+                public void onClick(View view)
+                {
+                    ExtraFilesNamePicked(view);
+                }
+            };
+            
+            dialogWithEditTextFragment =
                 DialogWithEditTextFragment.newInstance
-                        (
-                                getFragmentManager(),     // for the transaction bit
-                                "hihi",            // unique name for this dialog type
-                                "File" ,    // form caption
-                                "Description",             // form message
-                                R.drawable.attachment,
-                                fileDescription.getText().toString(), // initial text
-                                dwetOnOkClick,
-                                this,
-                                false
-                        );
-
-        dialogWithEditTextFragment.showIt();
+                    (
+                        getFragmentManager(),     // for the transaction bit
+                        "hihi",            // unique name for this dialog type
+                        "File",    // form caption
+                        "Description",             // form message
+                        R.drawable.attachment,
+                        fileDescription.getText().toString(), // initial text
+                        dwetOnOkClick,
+                        this,
+                        false
+                    );
+            
+            dialogWithEditTextFragment.showIt();
+        }
+        catch (Exception e)
+        {
+            ShowError("pickExtraFilesName", e.getMessage());
+        }
     }
-
+    
     public void dwetOnOkClickProc(View view)
     {
-        newFilename = dialogWithEditTextFragment.getFinalText();
-
-        myMessages.ShowMessageShort("Renaming to " + newFilename);
-
-        dialogWithEditTextFragment.dismiss();
-
-        SaveIt();
+        try
+        {
+            newFilename = dialogWithEditTextFragment.getFinalText();
+            
+            myMessages.ShowMessageShort("Renaming to " + newFilename);
+            
+            dialogWithEditTextFragment.dismiss();
+            
+            SaveIt();
+        }
+        catch (Exception e)
+        {
+            ShowError("dwetOnOkClickProc", e.getMessage());
+        }
     }
-
+    
     // Create a YES onclick procedure
     public void dwynOnYesClickProc(View view)
     {
-        dialogWithYesNoFragment.dismiss();
-
-        dwetOnOkClick = new View.OnClickListener()
+        try
         {
-            public void onClick(View view)
+            dialogWithYesNoFragment.dismiss();
+            
+            dwetOnOkClick = new View.OnClickListener()
             {
-                dwetOnOkClickProc(view);
-            }
-        };
-
-        dialogWithEditTextFragment =
+                public void onClick(View view)
+                {
+                    dwetOnOkClickProc(view);
+                }
+            };
+            
+            dialogWithEditTextFragment =
                 DialogWithEditTextFragment.newInstance
-                        (
-                                getFragmentManager(),     // for the transaction bit
-                                dwetDialogTag,            // unique name for this dialog type
-                                "New Filename" ,    // form caption
-                                "Filename",             // form message
-                                R.drawable.attachment,
-                                origFilename,                // initial text
-                                dwetOnOkClick,
-                                this,
-                                false
-                        );
-
-        dialogWithEditTextFragment.showIt();
+                    (
+                        getFragmentManager(),     // for the transaction bit
+                        dwetDialogTag,            // unique name for this dialog type
+                        "New Filename",    // form caption
+                        "Filename",             // form message
+                        R.drawable.attachment,
+                        origFilename,                // initial text
+                        dwetOnOkClick,
+                        this,
+                        false
+                    );
+            
+            dialogWithEditTextFragment.showIt();
+        }
+        catch (Exception e)
+        {
+            ShowError("dwynOnyesClickProc", e.getMessage());
+        }
     }
-
+    
     // Create a NO onclick procedure
     public void dwynOnNoClickProc(View view)
     {
-        // When button is clicked close the dialog
-        dialogWithYesNoFragment.dismiss();
+        try
+        {
+            // When button is clicked close the dialog
+            dialogWithYesNoFragment.dismiss();
+        }
+        catch (Exception e)
+        {
+            ShowError("dwynOnNoClickProc", e.getMessage());
+        }
     }
-
+    
     public void handleRename(String origFilename)
     {
-        String newFilename;
-
-        dwynOnYesClick = new View.OnClickListener()
+        try
         {
-            public void onClick(View view)
+            String newFilename;
+            
+            dwynOnYesClick = new View.OnClickListener()
             {
-                dwynOnYesClickProc(view);
-            }
-        };
-        // create a no on-click listener to call your procedure
-        dwynOnNoClick = new View.OnClickListener()
-        {
-            public void onClick(View view)
+                public void onClick(View view)
+                {
+                    dwynOnYesClickProc(view);
+                }
+            };
+            // create a no on-click listener to call your procedure
+            dwynOnNoClick = new View.OnClickListener()
             {
-                dwynOnNoClickProc(view);
-            }
-        };
-
-
-        dialogWithYesNoFragment =
+                public void onClick(View view)
+                {
+                    dwynOnNoClickProc(view);
+                }
+            };
+            
+            
+            dialogWithYesNoFragment =
                 DialogWithYesNoFragment.newInstance
-                        (
-                                getFragmentManager(),     // for the transaction bit
-                                dwynDialogTag,            // unique name for this dialog type
-                                "File Already Exists",    // form caption
-                                "Rename " + origFilename + "?", // form message
-                                R.drawable.attachment,
-                                dwynOnYesClick,
-                                dwynOnNoClick,
-                                this
-                        );
-
-        dialogWithYesNoFragment.showIt();
+                    (
+                        getFragmentManager(),     // for the transaction bit
+                        dwynDialogTag,            // unique name for this dialog type
+                        "File Already Exists",    // form caption
+                        "Rename " + origFilename + "?", // form message
+                        R.drawable.attachment,
+                        dwynOnYesClick,
+                        dwynOnNoClick,
+                        this
+                    );
+            
+            dialogWithYesNoFragment.showIt();
+        }
+        catch (Exception e)
+        {
+            ShowError("handleRename", e.getMessage());
+        }
     }
-
-
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError
-                (
-                        "Error in ExtraFileDetailsEdit::" + argFunction,
-                        argMessage
-                );
-    }
-
-
+    
+    
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_extra_files_details_edit);
-
-        newFilename="";
-
-        databaseAccess = new DatabaseAccess(this);
-        actionBar = getSupportActionBar();
-        imageUtils = new ImageUtils(this);
-        myFileUtils = new MyFileUtils(this);
-        myMessages = new MyMessages(this);
-
-        dwynDialogTag = getResources().getString(R.string.dwynDialogTag);
-        dwetDialogTag = getResources().getString(R.string.dwetDialogTag);
-
-        cbPicturePicked=(CheckBox)findViewById(R.id.picturePicked);
-        imageViewSmall = (ImageView)findViewById(R.id.imageViewSmall);
-        fileDescription =(TextView)findViewById(R.id.txtFileDescription);
-        fileName =(TextView)findViewById(R.id.txtFilename);
-
-        clearImage(null);
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null)
+        
+        try
         {
-            String title = extras.getString("TITLE");
-            String subtitle = extras.getString("SUBTITLE");
-            actionBar.setTitle(title);
-            action = extras.getString("ACTION");
-            if(action!=null && action.equals("add"))
+            setContentView(R.layout.activity_extra_files_details_edit);
+            
+            newFilename = "";
+            
+            databaseAccess = new DatabaseAccess(this);
+            actionBar = getSupportActionBar();
+            imageUtils = new ImageUtils(this);
+            myFileUtils = new MyFileUtils(this);
+            myMessages = new MyMessages(this);
+            
+            dwynDialogTag = getResources().getString(R.string.dwynDialogTag);
+            dwetDialogTag = getResources().getString(R.string.dwetDialogTag);
+            
+            cbPicturePicked = (CheckBox) findViewById(R.id.picturePicked);
+            imageViewSmall = (ImageView) findViewById(R.id.imageViewSmall);
+            fileDescription = (TextView) findViewById(R.id.txtFileDescription);
+            fileName = (TextView) findViewById(R.id.txtFilename);
+            
+            clearImage(null);
+            
+            Bundle extras = getIntent().getExtras();
+            if (extras != null)
             {
-                extraFilesItem = new ExtraFilesItem();
-                fileGroupId = extras.getInt("FILEGROUPID");
-                fileDescription.setText("");
-                fileName.setText("");
-                cbPicturePicked.setChecked(false);
-                actionBar.setSubtitle("Add a File");
-            }
-            if(action!=null && action.equals("modify"))
-            {
-                fileGroupId = extras.getInt("FILEGROUPID");
-                fileId = extras.getInt("FILEID");
-                extraFilesItem = new ExtraFilesItem();
-                if(!databaseAccess.getExtraFilesItem(fileGroupId, fileId, extraFilesItem))
-                    return;
-
-                fileDescription.setText(extraFilesItem.fileDescription);
-                fileName.setText(extraFilesItem.fileName);
-
-                String originalFileName = extraFilesItem.filePicture;
-
-                if(imageUtils.getPageHeaderImage(this, extraFilesItem.filePicture, imageViewSmall)==false)
-                    return;
-
-                cbPicturePicked.setChecked(extraFilesItem.pictureAssigned);
-
-                actionBar.setSubtitle(subtitle);
+                String title = extras.getString("TITLE");
+                String subtitle = extras.getString("SUBTITLE");
+                actionBar.setTitle(title);
+                action = extras.getString("ACTION");
+                if (action != null && action.equals("add"))
+                {
+                    extraFilesItem = new ExtraFilesItem();
+                    fileGroupId = extras.getInt("FILEGROUPID");
+                    fileDescription.setText("");
+                    fileName.setText("");
+                    cbPicturePicked.setChecked(false);
+                    actionBar.setSubtitle("Add a File");
+                }
+                if (action != null && action.equals("modify"))
+                {
+                    fileGroupId = extras.getInt("FILEGROUPID");
+                    fileId = extras.getInt("FILEID");
+                    extraFilesItem = new ExtraFilesItem();
+                    if (!databaseAccess.getExtraFilesItem(fileGroupId, fileId, extraFilesItem))
+                        return;
+                    
+                    fileDescription.setText(extraFilesItem.fileDescription);
+                    fileName.setText(extraFilesItem.fileName);
+                    
+                    String originalFileName = extraFilesItem.filePicture;
+                    
+                    if (imageUtils.getPageHeaderImage(this, extraFilesItem.filePicture, imageViewSmall) == false)
+                        return;
+                    
+                    cbPicturePicked.setChecked(extraFilesItem.pictureAssigned);
+                    
+                    actionBar.setSubtitle(subtitle);
+                }
             }
         }
-
+        catch (Exception e)
+        {
+            ShowError("onCreate", e.getMessage());
+        }
+        
     }
 /*
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        try
+        {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.daydetailsformmenu, menu);
+        }
+        catch(Exception e)
+        {
+            ShowError("onCreateOptionsMenu", e.getMessage());
+        }
         return true;
     }
 */

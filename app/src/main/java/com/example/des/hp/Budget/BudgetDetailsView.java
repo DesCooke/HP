@@ -44,11 +44,20 @@ public class BudgetDetailsView extends BaseActivity
 
     public void clearImage(View view)
     {
+        try
+        {
         imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
+        }
+        catch (Exception e)
+        {
+            ShowError("clearImage", e.getMessage());
+        }
     }
 
     public void showNotes(View view)
     {
+        try
+        {
         Intent intent2 = new Intent(getApplicationContext(), NoteView.class);
         if(budgetItem.noteId==0)
         {
@@ -65,6 +74,11 @@ public class BudgetDetailsView extends BaseActivity
         intent2.putExtra("TITLE", budgetItem.budgetDescription);
         intent2.putExtra("SUBTITLE", "Notes");
         startActivity(intent2);
+        }
+        catch (Exception e)
+        {
+            ShowError("showNotes", e.getMessage());
+        }
     }
 
     public void showForm()
@@ -146,21 +160,15 @@ public class BudgetDetailsView extends BaseActivity
         }
     }
 
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError
-                (
-                        "Error in BudgetDetailsView::" + argFunction,
-                        argMessage
-                );
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_budget_details_view);
+        
+        try
+        {
         imageUtils = new ImageUtils(this);
         myMessages = new MyMessages(this);
         myColor = new MyColor(this);
@@ -178,8 +186,6 @@ public class BudgetDetailsView extends BaseActivity
         btnShowInfoBadge.setText(Integer.toString(0));
         btnShowInfoBadge.show();
 
-        try
-        {
             showForm();
         }
         catch(Exception e)
@@ -190,6 +196,8 @@ public class BudgetDetailsView extends BaseActivity
 
     public void editBudget()
     {
+        try
+        {
         Intent intent = new Intent(getApplicationContext(), BudgetDetailsEdit.class);
         intent.putExtra("ACTION", "modify");
         intent.putExtra("HOLIDAYID", holidayId);
@@ -197,18 +205,37 @@ public class BudgetDetailsView extends BaseActivity
         intent.putExtra("TITLE", actionBar.getTitle());
         intent.putExtra("SUBTITLE", actionBar.getSubtitle());
         startActivity(intent);
+        }
+        catch (Exception e)
+        {
+            ShowError("editBudget", e.getMessage());
+        }
     }
 
     public void deleteBudget()
     {
+        try
+        {
         if(!databaseAccess.deleteBudgetItem(budgetItem))
             return;
         finish();
+        }
+        catch (Exception e)
+        {
+            ShowError("deleteBudget", e.getMessage());
+        }
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
+        try
+        {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.budgetdetailsformmenu, menu);
+        }
+        catch (Exception e)
+        {
+            ShowError("onCreateOptionsMenu", e.getMessage());
+        }
         return true;
     }
 
@@ -228,6 +255,8 @@ public class BudgetDetailsView extends BaseActivity
 
     public void showInfo(View view)
     {
+        try
+        {
         Intent intent2 = new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
         if(budgetItem.infoId==0)
         {
@@ -242,12 +271,20 @@ public class BudgetDetailsView extends BaseActivity
         intent2.putExtra("TITLE", budgetItem.budgetDescription);
         intent2.putExtra("SUBTITLE", "Info");
         startActivity(intent2);
+                    }
+        catch (Exception e)
+        {
+            ShowError("showInfo", e.getMessage());
+        }
+
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        try
+        {
         switch (item.getItemId())
         {
             case R.id.action_delete_budget:
@@ -259,5 +296,11 @@ public class BudgetDetailsView extends BaseActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
+        }
+        catch (Exception e)
+        {
+            ShowError("onOptionsItemSelected", e.getMessage());
+        }
+        return(true);
     }
 }

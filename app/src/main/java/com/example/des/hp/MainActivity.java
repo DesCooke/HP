@@ -29,9 +29,16 @@ public class MainActivity extends BaseActivity
     
     public void showHolidayAdd(View view)
     {
-        Intent intent = new Intent(getApplicationContext(), HolidayDetailsEdit.class);
-        intent.putExtra("ACTION", "add");
-        startActivity(intent);
+        try
+        {
+            Intent intent = new Intent(getApplicationContext(), HolidayDetailsEdit.class);
+            intent.putExtra("ACTION", "add");
+            startActivity(intent);
+        }
+        catch (Exception e)
+        {
+            ShowError("showHolidayAdd", e.getMessage());
+        }
     }
     
     public void showForm()
@@ -78,7 +85,7 @@ public class MainActivity extends BaseActivity
         }
         catch (Exception e)
         {
-            ErrorDialog.Show("Error in MainActivity", e.getMessage());
+            ShowError("ShowForm", e.getMessage());
         }
     }
     
@@ -95,16 +102,6 @@ public class MainActivity extends BaseActivity
         {
             ShowError("onResume", e.getMessage());
         }
-        
-    }
-    
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError
-            (
-                "Error in MainActivity::" + argFunction,
-                argMessage
-            );
     }
     
     @Override
@@ -113,13 +110,13 @@ public class MainActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        myMessages = new MyMessages(this);
-        archiveRestore = new ArchiveRestore(this);
-        
-        myMessages.ClearLog();
-        
         try
         {
+            myMessages = new MyMessages(this);
+            archiveRestore = new ArchiveRestore(this);
+            
+            myMessages.ClearLog();
+            
             showForm();
         }
         catch (Exception e)
@@ -131,32 +128,59 @@ public class MainActivity extends BaseActivity
     
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        if (accessGranted == true)
+        try
         {
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.mainactivitymenu, menu);
+            if (accessGranted == true)
+            {
+                MenuInflater inflater = getMenuInflater();
+                inflater.inflate(R.menu.mainactivitymenu, menu);
+            }
+        }
+        catch (Exception e)
+        {
+            ShowError("onCreateOptionsMenu", e.getMessage());
         }
         return true;
     }
     
     public boolean backup()
     {
-        return (archiveRestore.Archive());
+        boolean lv_result = false;
+        try
+        {
+            lv_result = archiveRestore.Archive();
+        }
+        catch (Exception e)
+        {
+            ShowError("backup", e.getMessage());
+        }
+        return (lv_result);
     }
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch (item.getItemId())
+        boolean lv_result = false;
+        
+        try
         {
-            case R.id.action_backup:
-                // don't care about return code
-                backup();
-                // consume click here
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            switch (item.getItemId())
+            {
+                case R.id.action_backup:
+                    // don't care about return code
+                    backup();
+                    // consume click here
+                    lv_result = true;
+                    break;
+                default:
+                    lv_result = super.onOptionsItemSelected(item);
+            }
         }
+        catch (Exception e)
+        {
+            ShowError("onOptionsItemSelected", e.getMessage());
+        }
+        return (lv_result);
     }
     
     

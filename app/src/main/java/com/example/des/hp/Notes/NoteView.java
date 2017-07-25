@@ -21,7 +21,7 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 
 public class NoteView extends BaseActivity
 {
-
+    
     public DatabaseAccess databaseAccess;
     private ImageView imageView;
     public int holidayId;
@@ -38,33 +38,33 @@ public class NoteView extends BaseActivity
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
     public MyColor myColor;
-
+    
     public void showForm()
     {
         try
         {
-            databaseAccess=new DatabaseAccess(this);
-
-            Bundle extras=getIntent().getExtras();
-            if(extras != null)
+            databaseAccess = new DatabaseAccess(this);
+            
+            Bundle extras = getIntent().getExtras();
+            if (extras != null)
             {
-                String action=extras.getString("ACTION");
-                if(action != null && action.equals("view"))
+                String action = extras.getString("ACTION");
+                if (action != null && action.equals("view"))
                 {
-                    holidayId=extras.getInt("HOLIDAYID");
-                    noteId=extras.getInt("NOTEID");
-                    noteItem=new NoteItem();
+                    holidayId = extras.getInt("HOLIDAYID");
+                    noteId = extras.getInt("NOTEID");
+                    noteItem = new NoteItem();
                     noteItem.holidayId = holidayId;
                     noteItem.noteId = noteId;
-                    if(!databaseAccess.getNoteItem(holidayId, noteId, noteItem))
+                    if (!databaseAccess.getNoteItem(holidayId, noteId, noteItem))
                         return;
-
-                    actionBar=getSupportActionBar();
-                    if(actionBar != null)
+                    
+                    actionBar = getSupportActionBar();
+                    if (actionBar != null)
                     {
-                        String title=extras.getString("TITLE");
-                        String subtitle=extras.getString("SUBTITLE");
-                        if(title != null && title.length() > 0)
+                        String title = extras.getString("TITLE");
+                        String subtitle = extras.getString("SUBTITLE");
+                        if (title != null && title.length() > 0)
                         {
                             actionBar.setTitle(title);
                             actionBar.setSubtitle(subtitle);
@@ -74,57 +74,66 @@ public class NoteView extends BaseActivity
                             actionBar.setSubtitle("");
                         }
                     }
-
+                    
                     txtNoteView.setText(noteItem.notes);
                 }
             }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("showForm", e.getMessage());
         }
     }
-
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError("Error in NoteView::" + argFunction, argMessage);
-    }
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_notes_view);
-        txtNoteView=(TextView)findViewById(R.id.txtNotes);
+        
         try
         {
+            setContentView(R.layout.activity_notes_view);
+            txtNoteView = (TextView) findViewById(R.id.txtNotes);
             showForm();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
     }
-
+    
     public void editNotes()
     {
-        Intent intent=new Intent(getApplicationContext(), NoteEdit.class);
-        intent.putExtra("ACTION", "modify");
-        intent.putExtra("HOLIDAYID", holidayId);
-        intent.putExtra("NOTEID", noteId);
-        intent.putExtra("TITLE", actionBar.getTitle());
-        intent.putExtra("SUBTITLE", actionBar.getSubtitle());
-        startActivity(intent);
+        try
+        {
+            Intent intent = new Intent(getApplicationContext(), NoteEdit.class);
+            intent.putExtra("ACTION", "modify");
+            intent.putExtra("HOLIDAYID", holidayId);
+            intent.putExtra("NOTEID", noteId);
+            intent.putExtra("TITLE", actionBar.getTitle());
+            intent.putExtra("SUBTITLE", actionBar.getSubtitle());
+            startActivity(intent);
+        }
+        catch (Exception e)
+        {
+            ShowError("editNotes", e.getMessage());
+        }
     }
-
+    
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        MenuInflater inflater=getMenuInflater();
-        inflater.inflate(R.menu.notesformmenu, menu);
+        try
+        {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.notesformmenu, menu);
+        }
+        catch (Exception e)
+        {
+            ShowError("onCreateOptionsMenu", e.getMessage());
+        }
         return true;
     }
-
+    
     @Override
     protected void onResume()
     {
@@ -133,34 +142,49 @@ public class NoteView extends BaseActivity
         {
             showForm();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("onResume", e.getMessage());
         }
-
+        
     }
-
+    
     public void deleteNotes()
     {
-        noteItem.notes = "";
-        if(!databaseAccess.updateNoteItem(noteItem))
-            return;
-        finish();
+        try
+        {
+            noteItem.notes = "";
+            if (!databaseAccess.updateNoteItem(noteItem))
+                return;
+            finish();
+        }
+        catch (Exception e)
+        {
+            ShowError("deleteNotes", e.getMessage());
+        }
     }
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch(item.getItemId())
+        try
         {
-            case R.id.action_edit_notes:
-                editNotes();
-                return true;
-            case R.id.action_delete_notes:
-                deleteNotes();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            switch (item.getItemId())
+            {
+                case R.id.action_edit_notes:
+                    editNotes();
+                    return true;
+                case R.id.action_delete_notes:
+                    deleteNotes();
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
         }
+        catch (Exception e)
+        {
+            ShowError("onOptionsItemSelected", e.getMessage());
+        }
+        return (true);
     }
 }

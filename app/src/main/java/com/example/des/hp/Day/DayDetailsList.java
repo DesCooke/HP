@@ -19,7 +19,7 @@ import java.util.Collections;
 
 
 /**
- ** Created by Des on 02/11/2016.
+ * * Created by Des on 02/11/2016.
  */
 
 public class DayDetailsList extends BaseActivity
@@ -30,64 +30,75 @@ public class DayDetailsList extends BaseActivity
     public HolidayItem holidayItem;
     public DayAdapter dayAdapter;
     public MyMessages myMessages;
-
+    
     public void showDayAdd(View view)
     {
-        Intent intent = new Intent(getApplicationContext(), DayDetailsEdit.class);
-        intent.putExtra("ACTION", "add");
-        intent.putExtra("HOLIDAYID", holidayId);
-        startActivity(intent);
+        try
+        {
+            Intent intent = new Intent(getApplicationContext(), DayDetailsEdit.class);
+            intent.putExtra("ACTION", "add");
+            intent.putExtra("HOLIDAYID", holidayId);
+            startActivity(intent);
+        }
+        catch (Exception e)
+        {
+            ShowError("showDayAdd", e.getMessage());
+        }
     }
-
+    
     public void showForm()
     {
-        try {
+        try
+        {
             databaseAccess = new DatabaseAccess(this);
             holidayItem = new HolidayItem();
             if (!databaseAccess.getHolidayItem(holidayId, holidayItem))
                 return;
             ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
+            if (actionBar != null)
+            {
                 actionBar.setTitle(holidayItem.holidayName);
                 actionBar.setSubtitle("Itinerary");
             }
-
+            
             DatabaseAccess.currentStartDate = holidayItem.startDateDate;
             dayList = new ArrayList<>();
             if (!databaseAccess.getDayList(holidayId, dayList))
                 return;
-
+            
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.dayListView);
             recyclerView.setLayoutManager(new LinearLayoutManager(this/*getActivity()*/));
             recyclerView.setHasFixedSize(true);
             //listView1.setDivider(null);
             dayAdapter = new DayAdapter(this, dayList);
             recyclerView.setAdapter(dayAdapter);
-
+            
             itemTouchHelper.attachToRecyclerView(recyclerView);
-
+            
             dayAdapter.setOnItemClickListener
-                    (
-                            new DayAdapter.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(View view, DayItem obj, int position) {
-                                    Intent intent = new Intent(getApplicationContext(), DayDetailsView.class);
-                                    intent.putExtra("ACTION", "view");
-                                    intent.putExtra("HOLIDAYID", dayList.get(position).holidayId);
-                                    intent.putExtra("DAYID", dayList.get(position).dayId);
-                                    startActivity(intent);
-                                }
-                            }
-                    );
-
+                (
+                    new DayAdapter.OnItemClickListener()
+                    {
+                        @Override
+                        public void onItemClick(View view, DayItem obj, int position)
+                        {
+                            Intent intent = new Intent(getApplicationContext(), DayDetailsView.class);
+                            intent.putExtra("ACTION", "view");
+                            intent.putExtra("HOLIDAYID", dayList.get(position).holidayId);
+                            intent.putExtra("DAYID", dayList.get(position).dayId);
+                            startActivity(intent);
+                        }
+                    }
+                );
+            
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("showForm", e.getMessage());
         }
-
+        
     }
-
+    
     // handle swipe to delete, and draggable
     ItemTouchHelper itemTouchHelper =
         new ItemTouchHelper
@@ -96,20 +107,20 @@ public class DayDetailsList extends BaseActivity
                 {
                     int dragFrom = -1;
                     int dragTo = -1;
-
+                    
                     @Override
                     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
                     {
                         int fromPosition = viewHolder.getAdapterPosition();
                         int toPosition = target.getAdapterPosition();
-
-
-                        if(dragFrom == -1)
+                        
+                        
+                        if (dragFrom == -1)
                         {
-                            dragFrom =  fromPosition;
+                            dragFrom = fromPosition;
                         }
                         dragTo = toPosition;
-
+                        
                         if (fromPosition < toPosition)
                         {
                             for (int i = fromPosition; i < toPosition; i++)
@@ -124,10 +135,10 @@ public class DayDetailsList extends BaseActivity
                             }
                         }
                         dayAdapter.notifyItemMoved(fromPosition, toPosition);
-
+                        
                         return true;
                     }
-
+                    
                     @Override
                     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
                     {
@@ -135,74 +146,68 @@ public class DayDetailsList extends BaseActivity
                         int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
                         return makeMovementFlags(dragFlags, swipeFlags);
                     }
-
+                    
                     @Override
                     public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction)
                     {
                     }
-
+                    
                     @Override
                     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
                     {
                         super.clearView(recyclerView, viewHolder);
-
-                        if(dragFrom != -1 && dragTo != -1 && dragFrom != dragTo)
+                        
+                        if (dragFrom != -1 && dragTo != -1 && dragFrom != dragTo)
                         {
                             dayAdapter.onItemMove(dragFrom, dragTo);
                         }
-
+                        
                         dragFrom = dragTo = -1;
                     }
-
+                    
                 }
             );
-
+    
     @Override
-    protected void onResume(){
+    protected void onResume()
+    {
         super.onResume();
-
+        
         try
         {
             showForm();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("onResume", e.getMessage());
         }
-
+        
     }
-
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError
-                (
-                        "Error in DayDetailsList::" + argFunction,
-                        argMessage
-                );
-    }
-
+    
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_day_list);
-
-        myMessages = new MyMessages(this);
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null)
-        {
-            holidayId = extras.getInt("HOLIDAYID");
-        }
+        
         try
         {
+            setContentView(R.layout.activity_day_list);
+            
+            myMessages = new MyMessages(this);
+            
+            Bundle extras = getIntent().getExtras();
+            if (extras != null)
+            {
+                holidayId = extras.getInt("HOLIDAYID");
+            }
             showForm();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
-
+        
     }
-
+    
 }
 

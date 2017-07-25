@@ -226,10 +226,17 @@ public class BudgetDetailsEdit extends BaseActivity
 
     public void calculateUnpaid()
     {
+        try
+        {
         int lTotal = Integer.parseInt(removePoundSign(budgetTotal.getText().toString()));
         int lPaid = Integer.parseInt(removePoundSign(budgetPaid.getText().toString()));
         int lUnpaid = lTotal-lPaid;
         budgetUnpaid.setText(StringUtils.IntToMoneyString(lUnpaid));
+        }
+        catch (Exception e)
+        {
+            ShowError("calculateUnpaid", e.getMessage());
+        }
     }
     public void BudgetTotalPicked(View view)
     {
@@ -421,15 +428,6 @@ public class BudgetDetailsEdit extends BaseActivity
         {
             ShowError("pickBudgetNotes", e.getMessage());
         }
-    }
-
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError
-                (
-                        "Error in BudgetDetailsEdit::" + argFunction,
-                        argMessage
-                );
     }
 
     @Override

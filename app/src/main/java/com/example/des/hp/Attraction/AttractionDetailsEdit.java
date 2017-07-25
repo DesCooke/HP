@@ -17,7 +17,7 @@ import com.example.des.hp.R;
 
 public class AttractionDetailsEdit extends BaseActivity
 {
-
+    
     public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO = 1;
     private ImageView imageViewSmall;
@@ -34,16 +34,24 @@ public class AttractionDetailsEdit extends BaseActivity
     public DialogWithMultiEditTextFragment dialogWithMultiEditTextFragment;
     public TextView txtAttractionNotes;
     public MyMessages myMessages;
-
+    
     public void pickImage(View view)
     {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+        try
+        {
+            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+            photoPickerIntent.setType("image/*");
+            startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+        }
+        catch (Exception e)
+        {
+            ShowError("pickImage", e.getMessage());
+        }
     }
-
+    
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent)
+    {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         try
         {
@@ -54,32 +62,33 @@ public class AttractionDetailsEdit extends BaseActivity
                     {
                         try
                         {
-
+                            
                             MyBitmap myBitmap = new MyBitmap();
                             Boolean lRetCode =
-                                    imageUtils.ScaleBitmapFromUrl
-                                            (
-                                                    imageReturnedIntent.getData(),
-                                                    getContentResolver(),
-                                                    myBitmap
-                                            );
-                            if(!lRetCode)
+                                imageUtils.ScaleBitmapFromUrl
+                                    (
+                                        imageReturnedIntent.getData(),
+                                        getContentResolver(),
+                                        myBitmap
+                                    );
+                            if (!lRetCode)
                                 return;
-
+                            
                             // assign new bitmap and set scale type
                             imageViewSmall.setImageBitmap(myBitmap.Value);
-
+                            
                             cbPicturePicked.setChecked(true);
-
+                            
                             attractionItem.pictureChanged = true;
-
-                        } catch (Exception e)
+                            
+                        }
+                        catch (Exception e)
                         {
                             ShowError("onActivityResult-SelectPhoto", e.getMessage());
                         }
                     }
                     break;
-
+                
             }
         }
         catch (Exception e)
@@ -87,36 +96,52 @@ public class AttractionDetailsEdit extends BaseActivity
             ShowError("onActivityResult", e.getMessage());
         }
     }
-
+    
     public void clearImage(View view)
     {
-        cbPicturePicked.setChecked(false);
-        imageViewSmall.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
+        try
+        {
+            cbPicturePicked.setChecked(false);
+            imageViewSmall.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
+        }
+        catch (Exception e)
+        {
+            ShowError("clearImage", e.getMessage());
+        }
     }
-
+    
     public void btnClearImage(View view)
     {
-        clearImage(view);
-        attractionItem.pictureChanged = true;
-        attractionItem.pictureAssigned = false;
+        try
+        {
+            clearImage(view);
+            attractionItem.pictureChanged = true;
+            attractionItem.pictureAssigned = false;
+        }
+        catch (Exception e)
+        {
+            ShowError("btnClearImage", e.getMessage());
+        }
     }
-
+    
     public void saveAttraction(View view)
     {
-        try {
+        try
+        {
             MyInt retInt = new MyInt();
-
+            
             myMessages.ShowMessageShort("Saving " + attractionDescription.getText().toString());
-
+            
             attractionItem.pictureAssigned = cbPicturePicked.isChecked();
             attractionItem.attractionDescription = attractionDescription.getText().toString();
             attractionItem.fileBitmap = null;
             if (attractionItem.pictureAssigned)
                 attractionItem.fileBitmap = ((BitmapDrawable) imageViewSmall.getDrawable()).getBitmap();
-
+            
             attractionItem.attractionNotes = txtAttractionNotes.getText().toString();
-
-            if (action.equals("add")) {
+            
+            if (action.equals("add"))
+            {
                 attractionItem.holidayId = holidayId;
                 if (!databaseAccess.getNextAttractionId(holidayId, retInt))
                     return;
@@ -127,14 +152,15 @@ public class AttractionDetailsEdit extends BaseActivity
                 if (!databaseAccess.addAttractionItem(attractionItem))
                     return;
             }
-
-            if (action.equals("modify")) {
+            
+            if (action.equals("modify"))
+            {
                 attractionItem.holidayId = holidayId;
                 attractionItem.attractionId = attractionId;
                 if (!databaseAccess.updateAttractionItem(attractionItem))
                     return;
             }
-
+            
             finish();
         }
         catch (Exception e)
@@ -142,145 +168,173 @@ public class AttractionDetailsEdit extends BaseActivity
             ShowError("saveAttraction", e.getMessage());
         }
     }
-
-
+    
+    
     public void AttractionDescriptionPicked(View view)
     {
-        attractionDescription.setText(dialogWithEditTextFragment.getFinalText());
-
-        dialogWithEditTextFragment.dismiss();
+        try
+        {
+            attractionDescription.setText(dialogWithEditTextFragment.getFinalText());
+            
+            dialogWithEditTextFragment.dismiss();
+        }
+        catch (Exception e)
+        {
+            ShowError("AttractionDescriptionPicked", e.getMessage());
+        }
     }
-
+    
     // Create a YES onclick procedure
     public void pickAttractionDescription(View view)
     {
-        dwetOnOkClick = new View.OnClickListener()
+        try
         {
-            public void onClick(View view)
+            dwetOnOkClick = new View.OnClickListener()
             {
-                AttractionDescriptionPicked(view);
-            }
-        };
-
-
-        dialogWithEditTextFragment =
+                public void onClick(View view)
+                {
+                    AttractionDescriptionPicked(view);
+                }
+            };
+            
+            
+            dialogWithEditTextFragment =
                 DialogWithEditTextFragment.newInstance
-                        (
-                                getFragmentManager(),     // for the transaction bit
-                                "hihi",            // unique name for this dialog type
-                                "Attraction" ,    // form caption
-                                "Description",             // form message
-                                R.drawable.attachment,
-                                attractionDescription.getText().toString(),                // initial text
-                                dwetOnOkClick,
-                                this,
-                                false
-                        );
-
-        dialogWithEditTextFragment.showIt();
+                    (
+                        getFragmentManager(),     // for the transaction bit
+                        "hihi",            // unique name for this dialog type
+                        "Attraction",    // form caption
+                        "Description",             // form message
+                        R.drawable.attachment,
+                        attractionDescription.getText().toString(),                // initial text
+                        dwetOnOkClick,
+                        this,
+                        false
+                    );
+            
+            dialogWithEditTextFragment.showIt();
+        }
+        catch (Exception e)
+        {
+            ShowError("pickAttractionDescription", e.getMessage());
+        }
+        
     }
-
+    
     public void AttractionNotesPicked(View view)
     {
-        txtAttractionNotes.setText(dialogWithMultiEditTextFragment.getFinalText());
-
-        dialogWithMultiEditTextFragment.dismiss();
+        try
+        {
+            txtAttractionNotes.setText(dialogWithMultiEditTextFragment.getFinalText());
+            
+            dialogWithMultiEditTextFragment.dismiss();
+        }
+        catch (Exception e)
+        {
+            ShowError("AttractionNotesPicked", e.getMessage());
+        }
     }
-
+    
     // Create a YES onclick procedure
     public void pickAttractionNotes(View view)
     {
-        dwetOnOkClick = new View.OnClickListener()
+        try
         {
-            public void onClick(View view)
+            dwetOnOkClick = new View.OnClickListener()
             {
-                AttractionNotesPicked(view);
-            }
-        };
-
-
-        dialogWithMultiEditTextFragment =
+                public void onClick(View view)
+                {
+                    AttractionNotesPicked(view);
+                }
+            };
+            
+            
+            dialogWithMultiEditTextFragment =
                 DialogWithMultiEditTextFragment.newInstance
-                        (
-                                getFragmentManager(),     // for the transaction bit
-                                "hihi",            // unique name for this dialog type
-                                "Attraction Notes" ,    // form caption
-                                "Notes",             // form message
-                                R.drawable.attachment,
-                                txtAttractionNotes.getText().toString(),                // initial text
-                                dwetOnOkClick,
-                                this
-                        );
-
-
-        dialogWithMultiEditTextFragment.showIt();
-    }
-
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError
-                (
-                        "Error in AttractionDetailsEdit::" + argFunction,
-                        argMessage
-                );
-    }
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_attraction_details_edit);
-
-        databaseAccess = new DatabaseAccess(this);
-        actionBar = getSupportActionBar();
-        imageUtils = new ImageUtils(this);
-        myMessages = new MyMessages(this);
-
-        cbPicturePicked=(CheckBox)findViewById(R.id.picturePicked);
-        imageViewSmall = (ImageView)findViewById(R.id.imageViewSmall);
-        attractionDescription =(TextView)findViewById(R.id.txtAttractionDescription);
-        txtAttractionNotes = (TextView) findViewById(R.id.txtAttractionNotes);
-
-        clearImage(null);
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null)
+                    (
+                        getFragmentManager(),     // for the transaction bit
+                        "hihi",            // unique name for this dialog type
+                        "Attraction Notes",    // form caption
+                        "Notes",             // form message
+                        R.drawable.attachment,
+                        txtAttractionNotes.getText().toString(),                // initial text
+                        dwetOnOkClick,
+                        this
+                    );
+            
+            
+            dialogWithMultiEditTextFragment.showIt();
+        }
+        catch (Exception e)
         {
-            String title = extras.getString("TITLE");
-            String subtitle = extras.getString("SUBTITLE");
-            actionBar.setTitle(title);
-            action = extras.getString("ACTION");
-            if(action!=null && action.equals("add"))
+            ShowError("pickAttractionNotes", e.getMessage());
+        }
+        
+    }
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        
+        try
+        {
+            setContentView(R.layout.activity_attraction_details_edit);
+            
+            databaseAccess = new DatabaseAccess(this);
+            actionBar = getSupportActionBar();
+            imageUtils = new ImageUtils(this);
+            myMessages = new MyMessages(this);
+            
+            cbPicturePicked = (CheckBox) findViewById(R.id.picturePicked);
+            imageViewSmall = (ImageView) findViewById(R.id.imageViewSmall);
+            attractionDescription = (TextView) findViewById(R.id.txtAttractionDescription);
+            txtAttractionNotes = (TextView) findViewById(R.id.txtAttractionNotes);
+            
+            clearImage(null);
+            
+            Bundle extras = getIntent().getExtras();
+            if (extras != null)
             {
-                attractionItem = new AttractionItem();
-                holidayId = extras.getInt("HOLIDAYID");
-                attractionDescription.setText("");
-                cbPicturePicked.setChecked(false);
-                actionBar.setSubtitle("Add an Attraction");
-                txtAttractionNotes.setText("");
-            }
-            if(action!=null && action.equals("modify"))
-            {
-                holidayId = extras.getInt("HOLIDAYID");
-                attractionId = extras.getInt("ATTRACTIONID");
-                attractionItem = new AttractionItem();
-                if(!databaseAccess.getAttractionItem(holidayId, attractionId, attractionItem))
-                    return;
-
-                attractionDescription.setText(attractionItem.attractionDescription);
-
-                if(attractionItem.attractionPicture.length()>0)
-                    if(!imageUtils.getPageHeaderImage(this, attractionItem.attractionPicture, imageViewSmall))
+                String title = extras.getString("TITLE");
+                String subtitle = extras.getString("SUBTITLE");
+                actionBar.setTitle(title);
+                action = extras.getString("ACTION");
+                if (action != null && action.equals("add"))
+                {
+                    attractionItem = new AttractionItem();
+                    holidayId = extras.getInt("HOLIDAYID");
+                    attractionDescription.setText("");
+                    cbPicturePicked.setChecked(false);
+                    actionBar.setSubtitle("Add an Attraction");
+                    txtAttractionNotes.setText("");
+                }
+                if (action != null && action.equals("modify"))
+                {
+                    holidayId = extras.getInt("HOLIDAYID");
+                    attractionId = extras.getInt("ATTRACTIONID");
+                    attractionItem = new AttractionItem();
+                    if (!databaseAccess.getAttractionItem(holidayId, attractionId, attractionItem))
                         return;
-
-                cbPicturePicked.setChecked(attractionItem.pictureAssigned);
-
-                actionBar.setSubtitle(subtitle);
-
-                txtAttractionNotes.setText(String.valueOf(attractionItem.attractionNotes));
+                    
+                    attractionDescription.setText(attractionItem.attractionDescription);
+                    
+                    if (attractionItem.attractionPicture.length() > 0)
+                        if (!imageUtils.getPageHeaderImage(this, attractionItem.attractionPicture, imageViewSmall))
+                            return;
+                    
+                    cbPicturePicked.setChecked(attractionItem.pictureAssigned);
+                    
+                    actionBar.setSubtitle(subtitle);
+                    
+                    txtAttractionNotes.setText(String.valueOf(attractionItem.attractionNotes));
+                }
             }
         }
-
+        catch (Exception e)
+        {
+            ShowError("onCreate", e.getMessage());
+        }
+        
     }
 }
