@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- ** Created by Des on 02/11/2016.
+ * * Created by Des on 02/11/2016.
  */
 
 public class ScheduleAreaList extends BaseActivity
@@ -45,39 +45,38 @@ public class ScheduleAreaList extends BaseActivity
 
     public void showForm()
     {
-        try {
-            if (actionBar != null)
+        try
+        {
+            if(actionBar != null)
             {
                 actionBar.setTitle("MOVE TO ANOTHER LOCATION");
                 actionBar.setSubtitle("");
             }
 
-            scheduleAreaList = new ArrayList<>();
-            if (!databaseAccess.getScheduleAreaList(holidayId, scheduleAreaList))
+            scheduleAreaList=new ArrayList<>();
+            if(!databaseAccess.getScheduleAreaList(holidayId, scheduleAreaList))
                 return;
 
-            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.scheduleAreaListView);
+            RecyclerView recyclerView=(RecyclerView) findViewById(R.id.scheduleAreaListView);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setHasFixedSize(true);
             //listView1.setDivider(null);
-            scheduleAreaAdapter = new ScheduleAreaAdapter(this, scheduleAreaList);
+            scheduleAreaAdapter=new ScheduleAreaAdapter(this, scheduleAreaList);
             recyclerView.setAdapter(scheduleAreaAdapter);
 
-            scheduleAreaAdapter.setOnItemClickListener
-                    (
-                            new ScheduleAreaAdapter.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(View view, ScheduleAreaItem obj, int position)
-                                {
-                                    Intent intent = new Intent();
-                                    intent.putExtra("DAYID",obj.dayId);
-                                    intent.putExtra("ATTRACTIONID", obj.attractionId);
-                                    intent.putExtra("ATTRACTIONAREAID", obj.attractionAreaId);
-                                    setResult(RESULT_OK, intent);
-                                    finish();
-                                }
-                            }
-                    );
+            scheduleAreaAdapter.setOnItemClickListener(new ScheduleAreaAdapter.OnItemClickListener()
+            {
+                @Override
+                public void onItemClick(View view, ScheduleAreaItem obj, int position)
+                {
+                    Intent intent=new Intent();
+                    intent.putExtra("DAYID", obj.dayId);
+                    intent.putExtra("ATTRACTIONID", obj.attractionId);
+                    intent.putExtra("ATTRACTIONAREAID", obj.attractionAreaId);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            });
         }
         catch(Exception e)
         {
@@ -85,39 +84,30 @@ public class ScheduleAreaList extends BaseActivity
         }
     }
 
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError
-                (
-                        "Error in ScheduleAreaDetailsList::" + argFunction,
-                        argMessage
-                );
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_schedulearea_list);
-
-        databaseAccess = new DatabaseAccess(this);
-        actionBar = getSupportActionBar();
-        myMessages = new MyMessages(this);
-
-        title = "";
-        subtitle = "";
-        Bundle extras = getIntent().getExtras();
-        if (extras != null)
-        {
-            holidayId = extras.getInt("HOLIDAYID");
-            dayId = extras.getInt("DAYID");
-            attractionId = extras.getInt("ATTRACTIONID");
-            attractionAreaId = extras.getInt("ATTRACTIONAREAID");
-            scheduleId = extras.getInt("SCHEDULEID");
-        }
         try
         {
+            setContentView(R.layout.activity_schedulearea_list);
+
+            databaseAccess=new DatabaseAccess(this);
+            actionBar=getSupportActionBar();
+            myMessages=new MyMessages(this);
+
+            title="";
+            subtitle="";
+            Bundle extras=getIntent().getExtras();
+            if(extras != null)
+            {
+                holidayId=extras.getInt("HOLIDAYID");
+                dayId=extras.getInt("DAYID");
+                attractionId=extras.getInt("ATTRACTIONID");
+                attractionAreaId=extras.getInt("ATTRACTIONAREAID");
+                scheduleId=extras.getInt("SCHEDULEID");
+            }
             showForm();
         }
         catch(Exception e)

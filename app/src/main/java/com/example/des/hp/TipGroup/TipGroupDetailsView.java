@@ -40,11 +40,21 @@ public class TipGroupDetailsView extends BaseActivity
 
     public void clearImage(View view)
     {
+        try
+        {
         imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
+        }
+        catch(Exception e)
+        {
+            ShowError("clearImage", e.getMessage());
+        }
+
     }
 
     public void showNotes(View view)
     {
+        try
+        {
         Intent intent2 = new Intent(getApplicationContext(), NoteView.class);
         if(tipGroupItem.noteId==0)
         {
@@ -61,6 +71,12 @@ public class TipGroupDetailsView extends BaseActivity
         intent2.putExtra("TITLE", tipGroupItem.tipGroupDescription);
         intent2.putExtra("SUBTITLE", "Notes");
         startActivity(intent2);
+        }
+        catch(Exception e)
+        {
+            ShowError("showNotes", e.getMessage());
+        }
+
     }
 
     public void showForm()
@@ -135,19 +151,13 @@ public class TipGroupDetailsView extends BaseActivity
         }
     }
 
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError
-                (
-                        "Error in TipGroupDetailsView::" + argFunction,
-                        argMessage
-                );
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        try
+        {
         setContentView(R.layout.activity_tipgroup_details_view);
 
         imageUtils = new ImageUtils(this);
@@ -164,8 +174,6 @@ public class TipGroupDetailsView extends BaseActivity
         btnShowInfoBadge.setText(Integer.toString(0));
         btnShowInfoBadge.show();
 
-        try
-        {
             showForm();
         }
         catch(Exception e)
@@ -176,6 +184,8 @@ public class TipGroupDetailsView extends BaseActivity
 
     public void showInfo(View view)
     {
+        try
+        {
         Intent intent2 = new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
         if(tipGroupItem.infoId==0)
         {
@@ -190,12 +200,20 @@ public class TipGroupDetailsView extends BaseActivity
         intent2.putExtra("TITLE", tipGroupItem.tipGroupDescription);
         intent2.putExtra("SUBTITLE", "Info");
         startActivity(intent2);
+        }
+        catch(Exception e)
+        {
+            ShowError("showInfo", e.getMessage());
+        }
+
     }
 
 
 
     public void editTipGroup()
     {
+        try
+        {
         Intent intent = new Intent(getApplicationContext(), TipGroupDetailsEdit.class);
         intent.putExtra("ACTION", "modify");
         intent.putExtra("HOLIDAYID", holidayId);
@@ -203,13 +221,27 @@ public class TipGroupDetailsView extends BaseActivity
         intent.putExtra("TITLE", actionBar.getTitle());
         intent.putExtra("SUBTITLE", actionBar.getSubtitle());
         startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            ShowError("editTipGroup", e.getMessage());
+        }
+
     }
 
     public void deleteTipGroup()
     {
+        try
+        {
         if(!databaseAccess.deleteTipGroupItem(tipGroupItem))
             return;
         finish();
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteTipGroup", e.getMessage());
+        }
+
     }
 
     @Override

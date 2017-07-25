@@ -54,9 +54,17 @@ public class RideDetailsEdit extends BaseActivity
 
     public void pickImage(View view)
     {
+        try
+        {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
         startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+        }
+        catch(Exception e)
+        {
+            ShowError("pickImage", e.getMessage());
+        }
+
     }
 
     @Override
@@ -105,25 +113,51 @@ public class RideDetailsEdit extends BaseActivity
 
     public void clearImage(View view)
     {
+        try
+        {
         cbPicturePicked.setChecked(false);
         imageViewSmall.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
+        }
+        catch(Exception e)
+        {
+            ShowError("clearImage", e.getMessage());
+        }
+
     }
 
     public void btnClearImage(View view)
     {
+        try
+        {
         clearImage(view);
         scheduleItem.pictureChanged=true;
+        }
+        catch(Exception e)
+        {
+            ShowError("btnClearImage", e.getMessage());
+        }
+
     }
 
     public void SchedNamePicked(View view)
     {
+        try
+        {
         txtSchedName.setText(dialogWithEditTextFragment.getFinalText());
 
         dialogWithEditTextFragment.dismiss();
+        }
+        catch(Exception e)
+        {
+            ShowError("SchedNamePicked", e.getMessage());
+        }
+
     }
 
     public void pickSchedName(View view)
     {
+        try
+        {
         dwetOnOkClick = new View.OnClickListener()
         {
             public void onClick(View view)
@@ -147,14 +181,28 @@ public class RideDetailsEdit extends BaseActivity
                         );
 
         dialogWithEditTextFragment.showIt();
+        }
+        catch(Exception e)
+        {
+            ShowError("pickSchedName", e.getMessage());
+        }
+
     }
 
 
     public void BookingRefPicked(View view)
     {
+        try
+        {
         txtBookingRef.setText(dialogWithEditTextFragment.getFinalText());
 
         dialogWithEditTextFragment.dismiss();
+        }
+        catch(Exception e)
+        {
+            ShowError("BookingRefPicked", e.getMessage());
+        }
+
     }
 
     public void saveSchedule(View view)
@@ -279,20 +327,13 @@ public class RideDetailsEdit extends BaseActivity
 
     }
 
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError
-                (
-                        "Error in RideDetailsEdit::" + argFunction,
-                        argMessage
-                );
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
+        try
+        {
         setContentView(R.layout.activity_ride_details_edit);
 
         actionBar = getSupportActionBar();
@@ -310,6 +351,12 @@ public class RideDetailsEdit extends BaseActivity
         thrillRating=(RatingBar)findViewById(R.id.rbThrillRating);
 
         showForm();
+        }
+        catch(Exception e)
+        {
+            ShowError("onCreate", e.getMessage());
+        }
+
     }
 
 }

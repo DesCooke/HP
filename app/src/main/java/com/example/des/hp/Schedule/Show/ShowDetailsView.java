@@ -66,20 +66,22 @@ public class ShowDetailsView extends BaseActivity
 
     public void clearImage(View view)
     {
+        try
+        {
         cbPicturePicked.setChecked(false);
         imageViewSmall.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
+        }
+        catch(Exception e)
+        {
+            ShowError("clearImage", e.getMessage());
+        }
+
     }
 
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError
-                (
-                        "Error in ShowDetailsView::" + argFunction,
-                        argMessage
-                );
-    }
     public void showNotes(View view)
     {
+        try
+        {
         Intent intent2 = new Intent(getApplicationContext(), NoteView.class);
         if(scheduleItem.noteId==0)
         {
@@ -96,6 +98,12 @@ public class ShowDetailsView extends BaseActivity
         intent2.putExtra("TITLE", scheduleItem.schedName);
         intent2.putExtra("SUBTITLE", "Notes");
         startActivity(intent2);
+        }
+        catch(Exception e)
+        {
+            ShowError("showNotes", e.getMessage());
+        }
+
     }
 
 
@@ -142,6 +150,9 @@ public class ShowDetailsView extends BaseActivity
     {
         super.onCreate(savedInstanceState);
 
+        try
+        {
+
         setContentView(R.layout.activity_show_details_view);
 
         actionBar = getSupportActionBar();
@@ -170,6 +181,12 @@ public class ShowDetailsView extends BaseActivity
         btnShowInfoBadge.show();
 
         showForm();
+                    }
+        catch(Exception e)
+        {
+            ShowError("onCreate", e.getMessage());
+        }
+
     }
 
     public void showForm()
@@ -258,6 +275,8 @@ public class ShowDetailsView extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        try
+        {
         switch (item.getItemId())
         {
             case R.id.action_delete_show:
@@ -272,6 +291,12 @@ public class ShowDetailsView extends BaseActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
+        }
+        catch(Exception e)
+        {
+            ShowError("onOptionsItemSelected", e.getMessage());
+        }
+return true;
     }
 
     public void move()
@@ -296,23 +321,41 @@ public class ShowDetailsView extends BaseActivity
 
     public boolean onCreateOptionsMenu(Menu menu)
     {
+        try
+        {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.showdetailsformmenu, menu);
+        }
+        catch(Exception e)
+        {
+            ShowError("onCreateOptionsMenu", e.getMessage());
+        }
+
         return true;
     }
 
 
     public void deleteShow()
     {
+        try
+        {
         if(!databaseAccess.deleteScheduleItem(scheduleItem))
             return;
 
         finish();
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteShow", e.getMessage());
+        }
+
     }
 
 
     private int getHour(TextView textview)
     {
+        try
+        {
         String[] sarray=textview.getText().toString().split(":");
         int lHour = Integer.parseInt(sarray[0]);
         if(lHour<0)
@@ -320,10 +363,19 @@ public class ShowDetailsView extends BaseActivity
         if(lHour>23)
             lHour=23;
         return(lHour);
+        }
+        catch(Exception e)
+        {
+            ShowError("getHour", e.getMessage());
+        }
+        return 0;
+
     }
 
     private int getMinute(TextView textview)
     {
+        try
+        {
         String[] sarray=textview.getText().toString().split(":");
         int lMinute = Integer.parseInt(sarray[1]);
         if(lMinute<0)
@@ -331,10 +383,19 @@ public class ShowDetailsView extends BaseActivity
         if(lMinute>59)
             lMinute=59;
         return(lMinute);
+        }
+        catch(Exception e)
+        {
+            ShowError("getMinute", e.getMessage());
+        }
+        return 0;
+
     }
 
     private void handleTime(TextView txtTime, CheckBox chkTime, String title)
     {
+        try
+        {
         DialogTimePicker mTimePicker;
         int hour;
         int minute;
@@ -350,10 +411,18 @@ public class ShowDetailsView extends BaseActivity
         mTimePicker.minute = minute;
         mTimePicker.timeKnown = chkTime.isChecked();
         mTimePicker.show();
+        }
+        catch(Exception e)
+        {
+            ShowError("handleTime", e.getMessage());
+        }
+
     }
 
     private void setTimeText(TextView textView, int hour, int minute)
     {
+        try
+        {
         String lTime;
         lTime="";
         if(hour<10)
@@ -364,10 +433,18 @@ public class ShowDetailsView extends BaseActivity
             lTime=lTime+"0";
         lTime=lTime+minute;
         textView.setText(lTime);
+        }
+        catch(Exception e)
+        {
+            ShowError("setTimeText", e.getMessage());
+        }
+
     }
 
     public void editShow()
     {
+        try
+        {
         Intent intent = new Intent(getApplicationContext(), ShowDetailsEdit.class);
         intent.putExtra("ACTION", "edit");
         intent.putExtra("HOLIDAYID", holidayId);
@@ -380,10 +457,18 @@ public class ShowDetailsView extends BaseActivity
         intent.putExtra("SUBTITLE", actionBar.getSubtitle());
 
         startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            ShowError("editShow", e.getMessage());
+        }
+
     }
 
     public void showInfo(View view)
     {
+        try
+        {
         Intent intent2 = new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
         if(scheduleItem.infoId==0)
         {
@@ -398,6 +483,12 @@ public class ShowDetailsView extends BaseActivity
         intent2.putExtra("TITLE", scheduleItem.schedName);
         intent2.putExtra("SUBTITLE", "Info");
         startActivity(intent2);
+        }
+        catch(Exception e)
+        {
+            ShowError("showInfo", e.getMessage());
+        }
+
     }
 
 

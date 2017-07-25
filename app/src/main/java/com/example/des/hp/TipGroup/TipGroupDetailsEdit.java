@@ -42,9 +42,17 @@ public class TipGroupDetailsEdit extends BaseActivity
 
     public void pickImage(View view)
     {
+        try
+        {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
         startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+        }
+        catch(Exception e)
+        {
+            ShowError("pickImage", e.getMessage());
+        }
+
     }
 
     @Override
@@ -95,19 +103,37 @@ public class TipGroupDetailsEdit extends BaseActivity
 
     public void clearImage(View view)
     {
+        try
+        {
         cbPicturePicked.setChecked(false);
         imageViewSmall.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
+        }
+        catch(Exception e)
+        {
+            ShowError("clearImage", e.getMessage());
+        }
+
     }
 
     public void btnClearImage(View view)
     {
+        try
+        {
         clearImage(view);
         tipGroupItem.pictureChanged = true;
         tipGroupItem.pictureAssigned = false;
+        }
+        catch(Exception e)
+        {
+            ShowError("btnClearImage", e.getMessage());
+        }
+
     }
 
     public void saveTipGroup(View view)
     {
+        try
+        {
         myMessages.ShowMessageShort("Saving " + tipGroupDescription.getText().toString());
 
         tipGroupItem.pictureAssigned = cbPicturePicked.isChecked();
@@ -146,19 +172,35 @@ public class TipGroupDetailsEdit extends BaseActivity
         }
 
         finish();
+        }
+        catch(Exception e)
+        {
+            ShowError("saveTipGroup", e.getMessage());
+        }
+
     }
 
 
     public void TipGroupDescriptionPicked(View view)
     {
+        try
+        {
         tipGroupDescription.setText(dialogWithEditTextFragment.getFinalText());
 
         dialogWithEditTextFragment.dismiss();
+        }
+        catch(Exception e)
+        {
+            ShowError("TipGroupDescriptionPicked", e.getMessage());
+        }
+
     }
 
     // Create a YES onclick procedure
     public void pickTipGroupDescription(View view)
     {
+        try
+        {
         dwetOnOkClick = new View.OnClickListener()
         {
             public void onClick(View view)
@@ -183,18 +225,35 @@ public class TipGroupDetailsEdit extends BaseActivity
                         );
 
         dialogWithEditTextFragment.showIt();
+        }
+        catch(Exception e)
+        {
+            ShowError("pickTipGroupDescription", e.getMessage());
+        }
+
     }
 
     public void TipGroupNotesPicked(View view)
     {
+        try
+        {
         txtTipGroupNotes.setText(dialogWithMultiEditTextFragment.getFinalText());
 
         dialogWithMultiEditTextFragment.dismiss();
+        }
+        catch(Exception e)
+        {
+            ShowError("TipGroupNotesPicked", e.getMessage());
+        }
+
     }
 
     // Create a YES onclick procedure
     public void pickTipGroupNotes(View view)
+
     {
+        try
+        {
         dwetOnOkClick = new View.OnClickListener()
         {
             public void onClick(View view)
@@ -219,21 +278,21 @@ public class TipGroupDetailsEdit extends BaseActivity
 
 
         dialogWithMultiEditTextFragment.showIt();
+        }
+        catch(Exception e)
+        {
+            ShowError("pickTipGroupNotes", e.getMessage());
+        }
+
     }
 
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError
-                (
-                        "Error in TipGroupDetailsEdit::" + argFunction,
-                        argMessage
-                );
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        try
+        {
         setContentView(R.layout.activity_tipgroup_details_edit);
 
         databaseAccess = new DatabaseAccess(this);
@@ -284,14 +343,12 @@ public class TipGroupDetailsEdit extends BaseActivity
                 txtTipGroupNotes.setText(String.valueOf(tipGroupItem.tipGroupNotes));
             }
         }
+        }
+        catch(Exception e)
+        {
+            ShowError("onCreate", e.getMessage());
+        }
 
     }
 
-/*
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.daydetailsformmenu, menu);
-        return true;
-    }
-*/
 }

@@ -300,15 +300,6 @@ public class OtherDetailsEdit extends BaseActivity
         }
     }
 
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError
-                (
-                        "Error in OtherDetailsEdit::" + argFunction,
-                        argMessage
-                );
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

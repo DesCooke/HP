@@ -44,92 +44,118 @@ public class TipDetailsView extends BaseActivity
 
     public void clearImage(View view)
     {
-        imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
+        try
+        {
+            imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
+        }
+        catch(Exception e)
+        {
+            ShowError("clearImage", e.getMessage());
+        }
+
     }
 
     public void showNotes(View view)
     {
-        Intent intent2 = new Intent(getApplicationContext(), NoteView.class);
-        if(tipItem.noteId==0)
+        try
         {
-            MyInt myInt = new MyInt();
-            if(!databaseAccess.getNextNoteId(holidayId, myInt))
-                return;
-            tipItem.noteId = myInt.Value;
-            if(!databaseAccess.updateTipItem(tipItem))
-                return;
+            Intent intent2=new Intent(getApplicationContext(), NoteView.class);
+            if(tipItem.noteId == 0)
+            {
+                MyInt myInt=new MyInt();
+                if(!databaseAccess.getNextNoteId(holidayId, myInt))
+                    return;
+                tipItem.noteId=myInt.Value;
+                if(!databaseAccess.updateTipItem(tipItem))
+                    return;
+            }
+            intent2.putExtra("ACTION", "view");
+            intent2.putExtra("HOLIDAYID", tipItem.holidayId);
+            intent2.putExtra("NOTEID", tipItem.noteId);
+            intent2.putExtra("TITLE", tipItem.tipDescription);
+            intent2.putExtra("SUBTITLE", "Notes");
+            startActivity(intent2);
         }
-        intent2.putExtra("ACTION", "view");
-        intent2.putExtra("HOLIDAYID", tipItem.holidayId);
-        intent2.putExtra("NOTEID", tipItem.noteId);
-        intent2.putExtra("TITLE", tipItem.tipDescription);
-        intent2.putExtra("SUBTITLE", "Notes");
-        startActivity(intent2);
+        catch(Exception e)
+        {
+            ShowError("showNotes", e.getMessage());
+        }
+
     }
 
     public void showForm()
     {
-        try {
-            databaseAccess = new DatabaseAccess(this);
+        try
+        {
+            databaseAccess=new DatabaseAccess(this);
 
             clearImage(null);
 
-            Bundle extras = getIntent().getExtras();
-            if (extras != null) {
-                String action = extras.getString("ACTION");
-                if (action != null && action.equals("view")) {
-                    holidayId = extras.getInt("HOLIDAYID");
-                    tipGroupId = extras.getInt("TIPGROUPID");
-                    tipId = extras.getInt("TIPID");
-                    tipItem = new TipItem();
-                    if (!databaseAccess.getTipItem(holidayId, tipGroupId, tipId, tipItem))
+            Bundle extras=getIntent().getExtras();
+            if(extras != null)
+            {
+                String action=extras.getString("ACTION");
+                if(action != null && action.equals("view"))
+                {
+                    holidayId=extras.getInt("HOLIDAYID");
+                    tipGroupId=extras.getInt("TIPGROUPID");
+                    tipId=extras.getInt("TIPID");
+                    tipItem=new TipItem();
+                    if(!databaseAccess.getTipItem(holidayId, tipGroupId, tipId, tipItem))
                         return;
 
-                    actionBar = getSupportActionBar();
-                    if (actionBar != null) {
-                        String title = extras.getString("TITLE");
-                        String subtitle = extras.getString("SUBTITLE");
-                        if (title.length() > 0) {
+                    actionBar=getSupportActionBar();
+                    if(actionBar != null)
+                    {
+                        String title=extras.getString("TITLE");
+                        String subtitle=extras.getString("SUBTITLE");
+                        if(title.length() > 0)
+                        {
                             actionBar.setTitle(title);
                             actionBar.setSubtitle(subtitle);
-                        } else {
+                        } else
+                        {
                             actionBar.setTitle(tipItem.tipDescription);
                             actionBar.setSubtitle("");
                         }
                     }
 
-                    if (imageUtils.getPageHeaderImage(this, tipItem.tipPicture, imageView) == false)
+                    if(imageUtils.getPageHeaderImage(this, tipItem.tipPicture, imageView) == false)
                         return;
                     txtTipDescription.setText(tipItem.tipDescription);
 
                     txtTipNotes.setText(tipItem.tipNotes);
 
-                    MyInt lFileCount = new MyInt();
-                    lFileCount.Value = 0;
-                    if (tipItem.infoId > 0) {
-                        if (!databaseAccess.getExtraFilesCount(tipItem.infoId, lFileCount))
+                    MyInt lFileCount=new MyInt();
+                    lFileCount.Value=0;
+                    if(tipItem.infoId > 0)
+                    {
+                        if(!databaseAccess.getExtraFilesCount(tipItem.infoId, lFileCount))
                             return;
                     }
                     btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
 
-                    if (lFileCount.Value == 0) {
+                    if(lFileCount.Value == 0)
+                    {
                         btnShowInfoBadge.hide();
-                        if (myColor.SetImageButtonTint(btnShowInfo, R.color.colorDisabled) == false)
+                        if(myColor.SetImageButtonTint(btnShowInfo, R.color.colorDisabled) == false)
                             return;
-                    } else {
+                    } else
+                    {
                         btnShowInfoBadge.show();
-                        if (myColor.SetImageButtonTint(btnShowInfo, R.color.colorEnabled) == false)
+                        if(myColor.SetImageButtonTint(btnShowInfo, R.color.colorEnabled) == false)
                             return;
                     }
-                    NoteItem noteItem = new NoteItem();
+                    NoteItem noteItem=new NoteItem();
                     if(!databaseAccess.getNoteItem(tipItem.holidayId, tipItem.noteId, noteItem))
                         return;
-                    if (noteItem.notes.length() == 0)
+                    if(noteItem.notes.length() == 0)
                     {
-                        if (myColor.SetImageButtonTint(btnShowNotes, R.color.colorDisabled) == false)
+                        if(myColor.SetImageButtonTint(btnShowNotes, R.color.colorDisabled) == false)
                             return;
-                    } else {
-                        if (myColor.SetImageButtonTint(btnShowNotes, R.color.colorEnabled) == false)
+                    } else
+                    {
+                        if(myColor.SetImageButtonTint(btnShowNotes, R.color.colorEnabled) == false)
                             return;
                     }
                 }
@@ -141,57 +167,55 @@ public class TipDetailsView extends BaseActivity
         }
     }
 
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError
-                (
-                        "Error in TipDetailsView::" + argFunction,
-                        argMessage
-                );
-    }
-
     public void showInfo(View view)
     {
-        Intent intent2 = new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
-        if(tipItem.infoId==0)
+        try
         {
-            MyInt myInt = new MyInt();
-            if(!databaseAccess.getNextFileGroupId(myInt))
-                return;
-            tipItem.infoId = myInt.Value;
-            if(!databaseAccess.updateTipItem(tipItem))
-                return;
+            Intent intent2=new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
+            if(tipItem.infoId == 0)
+            {
+                MyInt myInt=new MyInt();
+                if(!databaseAccess.getNextFileGroupId(myInt))
+                    return;
+                tipItem.infoId=myInt.Value;
+                if(!databaseAccess.updateTipItem(tipItem))
+                    return;
+            }
+            intent2.putExtra("FILEGROUPID", tipItem.infoId);
+            intent2.putExtra("TITLE", tipItem.tipDescription);
+            intent2.putExtra("SUBTITLE", "Info");
+            startActivity(intent2);
         }
-        intent2.putExtra("FILEGROUPID", tipItem.infoId);
-        intent2.putExtra("TITLE", tipItem.tipDescription);
-        intent2.putExtra("SUBTITLE", "Info");
-        startActivity(intent2);
-    }
+        catch(Exception e)
+        {
+            ShowError("showInfo", e.getMessage());
+        }
 
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tip_details_view);
-
-        imageUtils = new ImageUtils(this);
-        myMessages = new MyMessages(this);
-        myColor = new MyColor(this);
-
-        imageView = (ImageView)findViewById(R.id.imageViewSmall);
-        txtTipDescription = (TextView) findViewById(R.id.txtTipDescription);
-        txtTipNotes = (TextView) findViewById(R.id.txtTipNotes);
-        btnShowInfo=(ImageButton) findViewById(R.id.btnShowInfo);
-        btnShowNotes=(ImageButton) findViewById(R.id.btnShowNotes);
-
-        btnShowInfoBadge = new BadgeView(this, btnShowInfo);
-        btnShowInfoBadge.setText(Integer.toString(0));
-        btnShowInfoBadge.show();
-
         try
         {
+            setContentView(R.layout.activity_tip_details_view);
+
+            imageUtils=new ImageUtils(this);
+            myMessages=new MyMessages(this);
+            myColor=new MyColor(this);
+
+            imageView=(ImageView) findViewById(R.id.imageViewSmall);
+            txtTipDescription=(TextView) findViewById(R.id.txtTipDescription);
+            txtTipNotes=(TextView) findViewById(R.id.txtTipNotes);
+            btnShowInfo=(ImageButton) findViewById(R.id.btnShowInfo);
+            btnShowNotes=(ImageButton) findViewById(R.id.btnShowNotes);
+
+            btnShowInfoBadge=new BadgeView(this, btnShowInfo);
+            btnShowInfoBadge.setText(Integer.toString(0));
+            btnShowInfoBadge.show();
+
             showForm();
         }
         catch(Exception e)
@@ -202,31 +226,57 @@ public class TipDetailsView extends BaseActivity
 
     public void editTip()
     {
-        Intent intent = new Intent(getApplicationContext(), TipDetailsEdit.class);
-        intent.putExtra("ACTION", "modify");
-        intent.putExtra("HOLIDAYID", holidayId);
-        intent.putExtra("TIPGROUPID", tipGroupId);
-        intent.putExtra("TIPID", tipId);
-        intent.putExtra("TITLE", actionBar.getTitle());
-        intent.putExtra("SUBTITLE", actionBar.getSubtitle());
-        startActivity(intent);
+        try
+        {
+            Intent intent=new Intent(getApplicationContext(), TipDetailsEdit.class);
+            intent.putExtra("ACTION", "modify");
+            intent.putExtra("HOLIDAYID", holidayId);
+            intent.putExtra("TIPGROUPID", tipGroupId);
+            intent.putExtra("TIPID", tipId);
+            intent.putExtra("TITLE", actionBar.getTitle());
+            intent.putExtra("SUBTITLE", actionBar.getSubtitle());
+            startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            ShowError("editTip", e.getMessage());
+        }
+
     }
 
     public void deleteTip()
     {
-        if(!databaseAccess.deleteTipItem(tipItem))
-            return;
-        finish();
+        try
+        {
+            if(!databaseAccess.deleteTipItem(tipItem))
+                return;
+            finish();
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteTip", e.getMessage());
+        }
+
     }
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.tipdetailsformmenu, menu);
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        try
+        {
+            MenuInflater inflater=getMenuInflater();
+            inflater.inflate(R.menu.tipdetailsformmenu, menu);
+        }
+        catch(Exception e)
+        {
+            ShowError("onCreateOptionsMenu", e.getMessage());
+        }
+
         return true;
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume()
+    {
         super.onResume();
         try
         {
@@ -243,16 +293,25 @@ public class TipDetailsView extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch (item.getItemId())
+        try
         {
-            case R.id.action_delete_tip:
-                deleteTip();
-                return true;
-            case R.id.action_edit_tip:
-                editTip();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            switch(item.getItemId())
+            {
+                case R.id.action_delete_tip:
+                    deleteTip();
+                    return true;
+                case R.id.action_edit_tip:
+                    editTip();
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
         }
+        catch(Exception e)
+        {
+            ShowError("onOptionsItemSelected", e.getMessage());
+        }
+        return true;
+
     }
 }

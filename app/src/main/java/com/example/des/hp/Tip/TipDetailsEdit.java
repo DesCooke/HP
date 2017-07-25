@@ -6,6 +6,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.ActionBar;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -24,7 +26,7 @@ public class TipDetailsEdit extends BaseActivity
 {
 
     public DatabaseAccess databaseAccess;
-    private final int SELECT_PHOTO = 1;
+    private final int SELECT_PHOTO=1;
     private ImageView imageViewSmall;
     private String action;
     public int holidayId;
@@ -43,32 +45,35 @@ public class TipDetailsEdit extends BaseActivity
 
     public void pickImage(View view)
     {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+        try
+        {
+            Intent photoPickerIntent=new Intent(Intent.ACTION_PICK);
+            photoPickerIntent.setType("image/*");
+            startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+        }
+        catch(Exception e)
+        {
+            ShowError("pickImage", e.getMessage());
+        }
+
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent)
+    {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         try
         {
-            switch (requestCode)
+            switch(requestCode)
             {
                 case SELECT_PHOTO:
-                    if (resultCode == RESULT_OK)
+                    if(resultCode == RESULT_OK)
                     {
                         try
                         {
-                            MyBitmap myBitmap = new MyBitmap();
-                            Boolean lRetCode =
-                                    imageUtils.ScaleBitmapFromUrl
-                                            (
-                                                    imageReturnedIntent.getData(),
-                                                    getContentResolver(),
-                                                    myBitmap
-                                            );
-                            if(lRetCode==false)
+                            MyBitmap myBitmap=new MyBitmap();
+                            Boolean lRetCode=imageUtils.ScaleBitmapFromUrl(imageReturnedIntent.getData(), getContentResolver(), myBitmap);
+                            if(lRetCode == false)
                                 return;
 
                             // assign new bitmap and set scale type
@@ -76,10 +81,11 @@ public class TipDetailsEdit extends BaseActivity
 
                             cbPicturePicked.setChecked(true);
 
-                            tipItem.pictureChanged = true;
+                            tipItem.pictureChanged=true;
 
 
-                        } catch (Exception e)
+                        }
+                        catch(Exception e)
                         {
                             ShowError("onActivityResult-selectphoto", e.getMessage());
                         }
@@ -88,7 +94,7 @@ public class TipDetailsEdit extends BaseActivity
 
             }
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onActivityResult", e.getMessage());
         }
@@ -96,205 +102,257 @@ public class TipDetailsEdit extends BaseActivity
 
     public void clearImage(View view)
     {
-        cbPicturePicked.setChecked(false);
-        imageViewSmall.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
+        try
+        {
+            cbPicturePicked.setChecked(false);
+            imageViewSmall.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
+        }
+        catch(Exception e)
+        {
+            ShowError("clearImage", e.getMessage());
+        }
+
     }
 
     public void btnClearImage(View view)
     {
-        clearImage(view);
-        tipItem.pictureChanged = true;
-        tipItem.pictureAssigned = false;
+        try
+        {
+            clearImage(view);
+            tipItem.pictureChanged=true;
+            tipItem.pictureAssigned=false;
+        }
+        catch(Exception e)
+        {
+            ShowError("btnClearImage", e.getMessage());
+        }
+
     }
 
     public void saveTip(View view)
     {
-        myMessages.ShowMessageShort("Saving " + tipDescription.getText().toString());
-
-        tipItem.pictureAssigned = cbPicturePicked.isChecked();
-        tipItem.tipDescription = tipDescription.getText().toString();
-        tipItem.fileBitmap = null;
-        if (tipItem.pictureAssigned)
-            tipItem.fileBitmap=((BitmapDrawable)imageViewSmall.getDrawable()).getBitmap() ;
-
-        tipItem.tipNotes = txtTipNotes.getText().toString();
-
-        if(action.equals("add"))
+        try
         {
-            MyInt myInt = new MyInt();
+            myMessages.ShowMessageShort("Saving " + tipDescription.getText().toString());
 
-            tipItem.holidayId = holidayId;
-            tipItem.tipGroupId= tipGroupId;
+            tipItem.pictureAssigned=cbPicturePicked.isChecked();
+            tipItem.tipDescription=tipDescription.getText().toString();
+            tipItem.fileBitmap=null;
+            if(tipItem.pictureAssigned)
+                tipItem.fileBitmap=((BitmapDrawable) imageViewSmall.getDrawable()).getBitmap();
 
-            if(!databaseAccess.getNextTipId(holidayId, tipGroupId, myInt))
-                return;
-            tipItem.tipId = myInt.Value;
+            tipItem.tipNotes=txtTipNotes.getText().toString();
 
-            if(!databaseAccess.getNextTipSequenceNo(holidayId, tipGroupId, myInt))
-                return;
-            tipItem.sequenceNo = myInt.Value;
+            if(action.equals("add"))
+            {
+                MyInt myInt=new MyInt();
 
-            if(!databaseAccess.addTipItem(tipItem))
-                return;
+                tipItem.holidayId=holidayId;
+                tipItem.tipGroupId=tipGroupId;
+
+                if(!databaseAccess.getNextTipId(holidayId, tipGroupId, myInt))
+                    return;
+                tipItem.tipId=myInt.Value;
+
+                if(!databaseAccess.getNextTipSequenceNo(holidayId, tipGroupId, myInt))
+                    return;
+                tipItem.sequenceNo=myInt.Value;
+
+                if(!databaseAccess.addTipItem(tipItem))
+                    return;
+            }
+
+            if(action.equals("modify"))
+            {
+                tipItem.holidayId=holidayId;
+                tipItem.tipGroupId=tipGroupId;
+                tipItem.tipId=tipId;
+                if(!databaseAccess.updateTipItem(tipItem))
+                    return;
+            }
+
+            finish();
+        }
+        catch(Exception e)
+        {
+            ShowError("saveTip", e.getMessage());
         }
 
-        if(action.equals("modify"))
-        {
-            tipItem.holidayId = holidayId;
-            tipItem.tipGroupId= tipGroupId;
-            tipItem.tipId = tipId;
-            if(!databaseAccess.updateTipItem(tipItem))
-                return;
-        }
-
-        finish();
     }
 
 
     public void TipDescriptionPicked(View view)
     {
-        tipDescription.setText(dialogWithEditTextFragment.getFinalText());
+        try
+        {
+            tipDescription.setText(dialogWithEditTextFragment.getFinalText());
 
-        dialogWithEditTextFragment.dismiss();
+            dialogWithEditTextFragment.dismiss();
+        }
+        catch(Exception e)
+        {
+            ShowError("TipDescriptionPicked", e.getMessage());
+        }
+
     }
 
     // Create a YES onclick procedure
     public void pickTipDescription(View view)
     {
-        dwetOnOkClick = new View.OnClickListener()
+        try
         {
-            public void onClick(View view)
+            dwetOnOkClick=new View.OnClickListener()
             {
-                TipDescriptionPicked(view);
-            }
-        };
+                public void onClick(View view)
+                {
+                    TipDescriptionPicked(view);
+                }
+            };
 
 
-        dialogWithEditTextFragment =
-                DialogWithEditTextFragment.newInstance
-                        (
-                                getFragmentManager(),     // for the transaction bit
-                                "hihi",            // unique name for this dialog type
-                                "Tip Group" ,    // form caption
-                                "Description",             // form message
-                                R.drawable.attachment,
-                                tipDescription.getText().toString(),                // initial text
-                                dwetOnOkClick,
-                                this,
-                                false
-                        );
+            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+                "hihi",            // unique name for this dialog type
+                "Tip Group",    // form caption
+                "Description",             // form message
+                R.drawable.attachment, tipDescription.getText().toString(),                // initial text
+                dwetOnOkClick, this, false
+            );
 
-        dialogWithEditTextFragment.showIt();
+            dialogWithEditTextFragment.showIt();
+        }
+        catch(Exception e)
+        {
+            ShowError("pickTipDescription", e.getMessage());
+        }
+
     }
 
     public void TipNotesPicked(View view)
     {
-        txtTipNotes.setText(dialogWithMultiEditTextFragment.getFinalText());
+        try
+        {
+            txtTipNotes.setText(dialogWithMultiEditTextFragment.getFinalText());
 
-        dialogWithMultiEditTextFragment.dismiss();
+            dialogWithMultiEditTextFragment.dismiss();
+        }
+        catch(Exception e)
+        {
+            ShowError("TipNotesPicked", e.getMessage());
+        }
+
     }
 
     // Create a YES onclick procedure
     public void pickTipNotes(View view)
     {
-        dwetOnOkClick = new View.OnClickListener()
+        try
         {
-            public void onClick(View view)
+            dwetOnOkClick=new View.OnClickListener()
             {
-                TipNotesPicked(view);
-            }
-        };
+                public void onClick(View view)
+                {
+                    TipNotesPicked(view);
+                }
+            };
 
 
-        dialogWithMultiEditTextFragment =
-                DialogWithMultiEditTextFragment.newInstance
-                        (
-                                getFragmentManager(),     // for the transaction bit
-                                "hjhj",            // unique name for this dialog type
-                                "TIP Group Notes" ,    // form caption
-                                "Notes",             // form message
-                                R.drawable.attachment,
-                                txtTipNotes.getText().toString(),                // initial text
-                                dwetOnOkClick,
-                                this
-                        );
+            dialogWithMultiEditTextFragment=DialogWithMultiEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+                "hjhj",            // unique name for this dialog type
+                "TIP Group Notes",    // form caption
+                "Notes",             // form message
+                R.drawable.attachment, txtTipNotes.getText().toString(),                // initial text
+                dwetOnOkClick, this
+            );
 
 
-        dialogWithMultiEditTextFragment.showIt();
-    }
-
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError
-                (
-                        "Error in TipDetailsEdit::" + argFunction,
-                        argMessage
-                );
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_tip_details_edit);
-
-        databaseAccess = new DatabaseAccess(this);
-        actionBar = getSupportActionBar();
-        imageUtils = new ImageUtils(this);
-        myMessages = new MyMessages(this);
-
-        cbPicturePicked=(CheckBox)findViewById(R.id.picturePicked);
-        imageViewSmall = (ImageView)findViewById(R.id.imageViewSmall);
-        tipDescription =(TextView)findViewById(R.id.txtTipDescription);
-        txtTipNotes = (TextView) findViewById(R.id.txtTipNotes);
-
-        clearImage(null);
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null)
+            dialogWithMultiEditTextFragment.showIt();
+        }
+        catch(Exception e)
         {
-            String title = extras.getString("TITLE");
-            String subtitle = extras.getString("SUBTITLE");
-            actionBar.setTitle(title);
-            action = extras.getString("ACTION");
-            if(action!=null && action.equals("add"))
-            {
-                tipItem = new TipItem();
-                holidayId = extras.getInt("HOLIDAYID");
-                tipGroupId = extras.getInt("TIPGROUPID");
-                tipDescription.setText("");
-                cbPicturePicked.setChecked(false);
-                actionBar.setSubtitle("Add a Tip");
-                txtTipNotes.setText("");
-            }
-            if(action!=null && action.equals("modify"))
-            {
-                holidayId = extras.getInt("HOLIDAYID");
-                tipGroupId = extras.getInt("TIPGROUPID");
-                tipId = extras.getInt("TIPID");
-                tipItem = new TipItem();
-                if(!databaseAccess.getTipItem(holidayId, tipGroupId, tipId, tipItem))
-                    return;
-
-                tipDescription.setText(tipItem.tipDescription);
-
-                if(imageUtils.getPageHeaderImage(this, tipItem.tipPicture, imageViewSmall)==false)
-                    return;
-
-                cbPicturePicked.setChecked(tipItem.pictureAssigned);
-
-                actionBar.setSubtitle(subtitle);
-
-                txtTipNotes.setText(String.valueOf(tipItem.tipNotes));
-            }
+            ShowError("pickTipNotes", e.getMessage());
         }
 
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        try
+        {
+            setContentView(R.layout.activity_tip_details_edit);
+
+            databaseAccess=new DatabaseAccess(this);
+            actionBar=getSupportActionBar();
+            imageUtils=new ImageUtils(this);
+            myMessages=new MyMessages(this);
+
+            cbPicturePicked=(CheckBox) findViewById(R.id.picturePicked);
+            imageViewSmall=(ImageView) findViewById(R.id.imageViewSmall);
+            tipDescription=(TextView) findViewById(R.id.txtTipDescription);
+            txtTipNotes=(TextView) findViewById(R.id.txtTipNotes);
+
+            clearImage(null);
+
+            Bundle extras=getIntent().getExtras();
+            if(extras != null)
+            {
+                String title=extras.getString("TITLE");
+                String subtitle=extras.getString("SUBTITLE");
+                actionBar.setTitle(title);
+                action=extras.getString("ACTION");
+                if(action != null && action.equals("add"))
+                {
+                    tipItem=new TipItem();
+                    holidayId=extras.getInt("HOLIDAYID");
+                    tipGroupId=extras.getInt("TIPGROUPID");
+                    tipDescription.setText("");
+                    cbPicturePicked.setChecked(false);
+                    actionBar.setSubtitle("Add a Tip");
+                    txtTipNotes.setText("");
+                }
+                if(action != null && action.equals("modify"))
+                {
+                    holidayId=extras.getInt("HOLIDAYID");
+                    tipGroupId=extras.getInt("TIPGROUPID");
+                    tipId=extras.getInt("TIPID");
+                    tipItem=new TipItem();
+                    if(!databaseAccess.getTipItem(holidayId, tipGroupId, tipId, tipItem))
+                        return;
+
+                    tipDescription.setText(tipItem.tipDescription);
+
+                    if(imageUtils.getPageHeaderImage(this, tipItem.tipPicture, imageViewSmall) == false)
+                        return;
+
+                    cbPicturePicked.setChecked(tipItem.pictureAssigned);
+
+                    actionBar.setSubtitle(subtitle);
+
+                    txtTipNotes.setText(String.valueOf(tipItem.tipNotes));
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("onCreate", e.getMessage());
+        }
+
+    }
 /*
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.daydetailsformmenu, menu);
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        try
+        {
+            MenuInflater inflater=getMenuInflater();
+            inflater.inflate(R.menu.daydetailsformmenu, menu);
+        }
+        catch(Exception e)
+        {
+            ShowError("onCreateOptionsMenu", e.getMessage());
+        }
+
         return true;
     }
 */

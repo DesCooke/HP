@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- ** Created by Des on 02/11/2016.
+ * * Created by Des on 02/11/2016.
  */
 
 public class TaskDetailsList extends BaseActivity
@@ -34,57 +34,68 @@ public class TaskDetailsList extends BaseActivity
 
     public void showTaskAdd(View view)
     {
-        Intent intent = new Intent(getApplicationContext(), TaskDetailsEdit.class);
-        intent.putExtra("ACTION", "add");
-        intent.putExtra("HOLIDAYID", holidayId);
-        startActivity(intent);
+        try
+        {
+            Intent intent=new Intent(getApplicationContext(), TaskDetailsEdit.class);
+            intent.putExtra("ACTION", "add");
+            intent.putExtra("HOLIDAYID", holidayId);
+            startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            ShowError("showTaskAdd", e.getMessage());
+        }
+
     }
 
     public void showForm()
     {
-        try {
-            databaseAccess = new DatabaseAccess(this);
-            actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                if (title.length() > 0) {
+        try
+        {
+            databaseAccess=new DatabaseAccess(this);
+            actionBar=getSupportActionBar();
+            if(actionBar != null)
+            {
+                if(title.length() > 0)
+                {
                     actionBar.setTitle(title);
                     actionBar.setSubtitle(subtitle);
-                } else {
+                } else
+                {
                     actionBar.setTitle("Task");
                     actionBar.setSubtitle("Tasks");
                 }
             }
 
-            taskList = new ArrayList<TaskItem>();
-            if (!databaseAccess.getTaskList(holidayId, taskList))
+            taskList=new ArrayList<TaskItem>();
+            if(!databaseAccess.getTaskList(holidayId, taskList))
                 return;
 
-            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.taskListView);
+            RecyclerView recyclerView=(RecyclerView) findViewById(R.id.taskListView);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setHasFixedSize(false);
-            taskAdapter = new TaskAdapter(this, taskList);
+            taskAdapter=new TaskAdapter(this, taskList);
             recyclerView.setAdapter(taskAdapter);
 
             itemTouchHelper.attachToRecyclerView(recyclerView);
 
-            taskAdapter.setOnItemClickListener
-                    (
-                            new TaskAdapter.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(View view, TaskItem obj, int position) {
-                                    Intent intent = new Intent(getApplicationContext(), TaskDetailsView.class);
-                                    intent.putExtra("ACTION", "view");
-                                    intent.putExtra("HOLIDAYID", taskList.get(position).holidayId);
-                                    intent.putExtra("TASKID", taskList.get(position).taskId);
-                                    if (actionBar != null) {
-                                        intent.putExtra("TITLE", actionBar.getTitle() + "/" +
-                                                actionBar.getSubtitle());
-                                        intent.putExtra("SUBTITLE", taskList.get(position).taskDescription);
-                                    }
-                                    startActivity(intent);
-                                }
-                            }
-                    );
+            taskAdapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener()
+            {
+                @Override
+                public void onItemClick(View view, TaskItem obj, int position)
+                {
+                    Intent intent=new Intent(getApplicationContext(), TaskDetailsView.class);
+                    intent.putExtra("ACTION", "view");
+                    intent.putExtra("HOLIDAYID", taskList.get(position).holidayId);
+                    intent.putExtra("TASKID", taskList.get(position).taskId);
+                    if(actionBar != null)
+                    {
+                        intent.putExtra("TITLE", actionBar.getTitle() + "/" + actionBar.getSubtitle());
+                        intent.putExtra("SUBTITLE", taskList.get(position).taskDescription);
+                    }
+                    startActivity(intent);
+                }
+            });
         }
         catch(Exception e)
         {
@@ -94,76 +105,73 @@ public class TaskDetailsList extends BaseActivity
     }
 
     // handle swipe to delete, and dragable
-    ItemTouchHelper itemTouchHelper =
-            new ItemTouchHelper
-                    (
-                            new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)
-                            {
-                                int dragFrom = -1;
-                                int dragTo = -1;
+    ItemTouchHelper itemTouchHelper=new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)
+    {
+        int dragFrom=-1;
+        int dragTo=-1;
 
-                                @Override
-                                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
-                                {
-                                    int fromPosition = viewHolder.getAdapterPosition();
-                                    int toPosition = target.getAdapterPosition();
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
+        {
+            int fromPosition=viewHolder.getAdapterPosition();
+            int toPosition=target.getAdapterPosition();
 
 
-                                    if(dragFrom == -1)
-                                    {
-                                        dragFrom =  fromPosition;
-                                    }
-                                    dragTo = toPosition;
+            if(dragFrom == -1)
+            {
+                dragFrom=fromPosition;
+            }
+            dragTo=toPosition;
 
-                                    if (fromPosition < toPosition)
-                                    {
-                                        for (int i = fromPosition; i < toPosition; i++)
-                                        {
-                                            Collections.swap(taskAdapter.data, i, i + 1);
-                                        }
-                                    } else
-                                    {
-                                        for (int i = fromPosition; i > toPosition; i--)
-                                        {
-                                            Collections.swap(taskAdapter.data, i, i - 1);
-                                        }
-                                    }
-                                    taskAdapter.notifyItemMoved(fromPosition, toPosition);
+            if(fromPosition < toPosition)
+            {
+                for(int i=fromPosition; i < toPosition; i++)
+                {
+                    Collections.swap(taskAdapter.data, i, i + 1);
+                }
+            } else
+            {
+                for(int i=fromPosition; i > toPosition; i--)
+                {
+                    Collections.swap(taskAdapter.data, i, i - 1);
+                }
+            }
+            taskAdapter.notifyItemMoved(fromPosition, toPosition);
 
-                                    return true;
-                                }
+            return true;
+        }
 
-                                @Override
-                                public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
-                                {
-                                    int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-                                    int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-                                    return makeMovementFlags(dragFlags, swipeFlags);
-                                }
+        @Override
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
+        {
+            int dragFlags=ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+            int swipeFlags=ItemTouchHelper.START | ItemTouchHelper.END;
+            return makeMovementFlags(dragFlags, swipeFlags);
+        }
 
-                                @Override
-                                public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction)
-                                {
-                                }
+        @Override
+        public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction)
+        {
+        }
 
-                                @Override
-                                public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
-                                {
-                                    super.clearView(recyclerView, viewHolder);
+        @Override
+        public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
+        {
+            super.clearView(recyclerView, viewHolder);
 
-                                    if(dragFrom != -1 && dragTo != -1 && dragFrom != dragTo)
-                                    {
-                                        taskAdapter.onItemMove(dragFrom, dragTo);
-                                    }
+            if(dragFrom != -1 && dragTo != -1 && dragFrom != dragTo)
+            {
+                taskAdapter.onItemMove(dragFrom, dragTo);
+            }
 
-                                    dragFrom = dragTo = -1;
-                                }
+            dragFrom=dragTo=-1;
+        }
 
-                            }
-                    );
+    });
 
     @Override
-    protected void onResume(){
+    protected void onResume()
+    {
         super.onResume();
 
         try
@@ -177,33 +185,25 @@ public class TaskDetailsList extends BaseActivity
 
     }
 
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError
-                (
-                        "Error in TaskDetailsList::" + argFunction,
-                        argMessage
-                );
-    }
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_list);
-
-        myMessages = new MyMessages(this);
-
-        title = "";
-        subtitle = "";
-        Bundle extras = getIntent().getExtras();
-        if (extras != null)
-        {
-            holidayId = extras.getInt("HOLIDAYID");
-            title = extras.getString("TITLE");
-            subtitle = extras.getString("SUBTITLE");
-        }
         try
         {
+            setContentView(R.layout.activity_task_list);
+
+            myMessages=new MyMessages(this);
+
+            title="";
+            subtitle="";
+            Bundle extras=getIntent().getExtras();
+            if(extras != null)
+            {
+                holidayId=extras.getInt("HOLIDAYID");
+                title=extras.getString("TITLE");
+                subtitle=extras.getString("SUBTITLE");
+            }
             showForm();
         }
         catch(Exception e)

@@ -42,11 +42,19 @@ public class TipDetailsList extends BaseActivity
 
     public void showTipAdd(View view)
     {
+        try
+        {
         Intent intent = new Intent(getApplicationContext(), TipDetailsEdit.class);
         intent.putExtra("ACTION", "add");
         intent.putExtra("HOLIDAYID", holidayId);
         intent.putExtra("TIPGROUPID", tipGroupId);
         startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            ShowError("showTipAdd", e.getMessage());
+        }
+
     }
 
     public void showForm()
@@ -189,18 +197,11 @@ public class TipDetailsList extends BaseActivity
 
     }
 
-    private void ShowError(String argFunction, String argMessage)
-    {
-        myMessages.ShowError
-                (
-                        "Error in TipDetailsList::" + argFunction,
-                        argMessage
-                );
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try
+        {
         setContentView(R.layout.activity_tip_list);
 
         databaseAccess = new DatabaseAccess(this);
@@ -217,8 +218,6 @@ public class TipDetailsList extends BaseActivity
             title = extras.getString("TITLE");
             subtitle = extras.getString("SUBTITLE");
         }
-        try
-        {
             showForm();
         }
         catch(Exception e)
@@ -230,6 +229,8 @@ public class TipDetailsList extends BaseActivity
 
     public void editTipGroup()
     {
+        try
+        {
         Intent intent = new Intent(getApplicationContext(), TipGroupDetailsEdit.class);
         intent.putExtra("ACTION", "modify");
         intent.putExtra("HOLIDAYID", holidayId);
@@ -237,10 +238,18 @@ public class TipDetailsList extends BaseActivity
         intent.putExtra("TITLE", actionBar.getTitle());
         intent.putExtra("SUBTITLE", actionBar.getSubtitle());
         startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            ShowError("editTipGroup", e.getMessage());
+        }
+
     }
 
     public void viewTipGroup()
     {
+        try
+        {
         Intent intent = new Intent(getApplicationContext(), TipGroupDetailsView.class);
         intent.putExtra("ACTION", "view");
         intent.putExtra("HOLIDAYID", holidayId);
@@ -248,24 +257,49 @@ public class TipDetailsList extends BaseActivity
         intent.putExtra("TITLE", actionBar.getTitle());
         intent.putExtra("SUBTITLE", actionBar.getSubtitle());
         startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            ShowError("viewTipGroup", e.getMessage());
+        }
+
     }
 
     public void deleteTipGroup()
     {
+        try
+        {
+
         if(!databaseAccess.deleteTipGroupItem(tipGroupItem))
             return;
         finish();
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteTipGroup", e.getMessage());
+        }
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
+        try
+        {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.tipgroupdetailsformmenu, menu);
+        }
+        catch(Exception e)
+        {
+            ShowError("onCreateOptionsMenu", e.getMessage());
+        }
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        try
+        {
         switch (item.getItemId())
         {
             case R.id.action_delete_tipgroup:
@@ -280,6 +314,13 @@ public class TipDetailsList extends BaseActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
+        }
+        catch(Exception e)
+        {
+            ShowError("onOptionsItemSelected", e.getMessage());
+        }
+        return true;
+
     }
 
 }
