@@ -41,10 +41,12 @@ import com.example.des.hp.Schedule.Restaurant.RestaurantDetailsEdit;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.thirdpartyutils.BadgeView;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class AttractionAreaDetailsView extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     private ImageView imageView;
     public int holidayId;
     public int attractionId;
@@ -59,7 +61,6 @@ public class AttractionAreaDetailsView extends BaseActivity
     private PageScheduleFragment f_schedule;
     private PageHighlightsFragment f_highlights;
     private ActionBar actionBar;
-    public MyMessages myMessages;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
     public MyColor myColor;
@@ -85,10 +86,10 @@ public class AttractionAreaDetailsView extends BaseActivity
             if (attractionAreaItem.noteId == 0)
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess.getNextNoteId(holidayId, myInt))
+                if (!databaseAccess().getNextNoteId(holidayId, myInt))
                     return;
                 attractionAreaItem.noteId = myInt.Value;
-                if (!databaseAccess.updateAttractionAreaItem(attractionAreaItem))
+                if (!databaseAccess().updateAttractionAreaItem(attractionAreaItem))
                     return;
             }
             intent2.putExtra("ACTION", "view");
@@ -130,10 +131,8 @@ public class AttractionAreaDetailsView extends BaseActivity
         
         try
         {
-            databaseAccess = new DatabaseAccess(this);
             dateUtils = new DateUtils(this);
             imageUtils = new ImageUtils(this);
-            myMessages = new MyMessages(this);
             myColor = new MyColor(this);
             
             viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -208,11 +207,11 @@ public class AttractionAreaDetailsView extends BaseActivity
                     attractionId = extras.getInt("ATTRACTIONID");
                     attractionAreaId = extras.getInt("ATTRACTIONAREAID");
                     attractionAreaItem = new AttractionAreaItem();
-                    if (!databaseAccess.getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
+                    if (!databaseAccess().getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
                         return;
                     
                     HolidayItem holidayItem = new HolidayItem();
-                    if (!databaseAccess.getHolidayItem(holidayId, holidayItem))
+                    if (!databaseAccess().getHolidayItem(holidayId, holidayItem))
                         return;
                     
                     if (attractionAreaItem.attractionAreaPicture.length() > 0)
@@ -232,7 +231,7 @@ public class AttractionAreaDetailsView extends BaseActivity
                     lFileCount.Value = 0;
                     if (attractionAreaItem.infoId > 0)
                     {
-                        if (!databaseAccess.getExtraFilesCount(attractionAreaItem.infoId, lFileCount))
+                        if (!databaseAccess().getExtraFilesCount(attractionAreaItem.infoId, lFileCount))
                             return;
                     }
                     btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
@@ -250,7 +249,7 @@ public class AttractionAreaDetailsView extends BaseActivity
                     }
                     
                     NoteItem noteItem = new NoteItem();
-                    if (!databaseAccess.getNoteItem(attractionAreaItem.holidayId, attractionAreaItem.noteId, noteItem))
+                    if (!databaseAccess().getNoteItem(attractionAreaItem.holidayId, attractionAreaItem.noteId, noteItem))
                         return;
                     if (noteItem.notes.length() == 0)
                     {
@@ -325,12 +324,12 @@ public class AttractionAreaDetailsView extends BaseActivity
             if (attractionAreaItem.infoId == 0)
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess.getNextFileGroupId(myInt))
+                if (!databaseAccess().getNextFileGroupId(myInt))
                     return;
                 String lstr = "infoid is 0 - next one is " + myInt.Value;
-                myMessages.ShowMessageLong(lstr);
+                myMessages().ShowMessageLong(lstr);
                 attractionAreaItem.infoId = myInt.Value;
-                if (!databaseAccess.updateAttractionAreaItem(attractionAreaItem))
+                if (!databaseAccess().updateAttractionAreaItem(attractionAreaItem))
                     return;
             }
             intent2.putExtra("FILEGROUPID", attractionAreaItem.infoId);
@@ -639,7 +638,7 @@ public class AttractionAreaDetailsView extends BaseActivity
     {
         try
         {
-            if (!databaseAccess.deleteAttractionAreaItem(attractionAreaItem))
+            if (!databaseAccess().deleteAttractionAreaItem(attractionAreaItem))
                 return;
             finish();
         }

@@ -10,9 +10,9 @@ import com.example.des.hp.myutils.MyMessages;
 
 class TableRestaurant extends TableBase
 {
-    TableRestaurant(Context context, SQLiteOpenHelper dbHelper, MyMessages myMessages)
+    TableRestaurant(Context context, SQLiteOpenHelper dbHelper)
     {
-        super(context, dbHelper, myMessages);
+        super(context, dbHelper);
     }
 
     public void ShowError(String argFunction, String argMessage)

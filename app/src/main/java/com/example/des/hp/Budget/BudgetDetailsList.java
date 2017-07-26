@@ -17,6 +17,8 @@ import com.example.des.hp.myutils.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 /**
  * * Created by Des on 02/11/2016.
  */
@@ -24,7 +26,6 @@ import java.util.Collections;
 public class BudgetDetailsList extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     public ArrayList<BudgetItem> budgetList;
     public int holidayId;
     public BudgetAdapter budgetAdapter;
@@ -34,7 +35,6 @@ public class BudgetDetailsList extends BaseActivity
     public TextView budgetTotal;
     public TextView budgetPaid;
     public TextView budgetUnpaid;
-    public MyMessages myMessages;
     
     public void showBudgetAdd(View view)
     {
@@ -69,7 +69,7 @@ public class BudgetDetailsList extends BaseActivity
             }
             
             budgetList = new ArrayList<>();
-            if (!databaseAccess.getBudgetList(holidayId, budgetList))
+            if (!databaseAccess().getBudgetList(holidayId, budgetList))
                 return;
             
             budgetTotal = (TextView) findViewById(R.id.totBudgetTotal);
@@ -87,15 +87,15 @@ public class BudgetDetailsList extends BaseActivity
             
             itemTouchHelper.attachToRecyclerView(recyclerView);
             
-            if (!databaseAccess.getBudgetTotal(holidayId, myInt))
+            if (!databaseAccess().getBudgetTotal(holidayId, myInt))
                 return;
             budgetTotal.setText(StringUtils.IntToMoneyString(myInt.Value));
             
-            if (!databaseAccess.getBudgetPaid(holidayId, myInt))
+            if (!databaseAccess().getBudgetPaid(holidayId, myInt))
                 return;
             budgetPaid.setText(StringUtils.IntToMoneyString(myInt.Value));
             
-            if (!databaseAccess.getBudgetUnpaid(holidayId, myInt))
+            if (!databaseAccess().getBudgetUnpaid(holidayId, myInt))
                 return;
             budgetUnpaid.setText(StringUtils.IntToMoneyString(myInt.Value));
             
@@ -222,9 +222,7 @@ public class BudgetDetailsList extends BaseActivity
         
         try
         {
-            databaseAccess = new DatabaseAccess(this);
             actionBar = getSupportActionBar();
-            myMessages = new MyMessages(this);
             
             title = "";
             subtitle = "";

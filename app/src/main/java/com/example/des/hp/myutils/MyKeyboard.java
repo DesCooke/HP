@@ -10,19 +10,19 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class MyKeyboard
 {
-    MyMessages myMessages;
-
+    
     public MyKeyboard(Context context)
     {
         Context _context = context;
-        myMessages = new MyMessages(context);
     }
 
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages.ShowError
+        myMessages().ShowError
                 (
                         "Error in MyKeyboard::" + argFunction,
                         argMessage

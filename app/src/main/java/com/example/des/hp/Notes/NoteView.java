@@ -19,10 +19,12 @@ import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.thirdpartyutils.BadgeView;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class NoteView extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     private ImageView imageView;
     public int holidayId;
     public int noteId;
@@ -34,7 +36,6 @@ public class NoteView extends BaseActivity
     public TextView txtBudgetPaid;
     public TextView txtBudgetUnpaid;
     public TextView txtBudgetNotes;
-    public MyMessages myMessages;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
     public MyColor myColor;
@@ -43,8 +44,6 @@ public class NoteView extends BaseActivity
     {
         try
         {
-            databaseAccess = new DatabaseAccess(this);
-            
             Bundle extras = getIntent().getExtras();
             if (extras != null)
             {
@@ -56,7 +55,7 @@ public class NoteView extends BaseActivity
                     noteItem = new NoteItem();
                     noteItem.holidayId = holidayId;
                     noteItem.noteId = noteId;
-                    if (!databaseAccess.getNoteItem(holidayId, noteId, noteItem))
+                    if (!databaseAccess().getNoteItem(holidayId, noteId, noteItem))
                         return;
                     
                     actionBar = getSupportActionBar();
@@ -154,7 +153,7 @@ public class NoteView extends BaseActivity
         try
         {
             noteItem.notes = "";
-            if (!databaseAccess.updateNoteItem(noteItem))
+            if (!databaseAccess().updateNoteItem(noteItem))
                 return;
             finish();
         }

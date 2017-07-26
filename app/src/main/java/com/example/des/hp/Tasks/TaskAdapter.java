@@ -17,6 +17,8 @@ import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 /**
  ** Created by Des on 06/10/2016.
  */
@@ -27,7 +29,6 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>
     private int layoutResourceId;
     public ArrayList<TaskItem> data = null;
     private DateUtils dateUtils;
-    private DatabaseAccess databaseAccess;
     private OnItemClickListener mOnItemClickListener;
     private ImageUtils imageUtils;
 
@@ -66,7 +67,6 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>
     TaskAdapter(Activity activity, ArrayList<TaskItem> items) {
         this.context = activity;
         imageUtils = new ImageUtils(activity);
-        databaseAccess = new DatabaseAccess(activity);
         data = items;
     }
 
@@ -141,7 +141,7 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>
         {
             items.get(i).sequenceNo=i+1;
         }
-        if(!databaseAccess.updateTaskItems(items))
+        if(!databaseAccess().updateTaskItems(items))
             return;
         notifyDataSetChanged();
     }

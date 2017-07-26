@@ -32,10 +32,12 @@ import com.example.des.hp.Tasks.TaskDetailsList;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.thirdpartyutils.BadgeView;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class HolidayDetailsView extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     private ImageView imageView;
     private TextView txtStartDate;
     public int holidayId;
@@ -82,7 +84,6 @@ public class HolidayDetailsView extends BaseActivity
     //endregion
     
     public Context context;
-    public MyMessages myMessages;
     
     public void clearImage(View view)
     {
@@ -144,7 +145,7 @@ public class HolidayDetailsView extends BaseActivity
     {
         try
         {
-            myMessages.ShowMessageLong("user clicked no");
+            myMessages().ShowMessageLong("user clicked no");
             // When button is clicked, call up to owning activity.
             rusureDialogFragment.dismiss();
         }
@@ -228,7 +229,7 @@ public class HolidayDetailsView extends BaseActivity
     {
         try
         {
-            myMessages.ShowMessageLong("ah ok");
+            myMessages().ShowMessageLong("ah ok");
             // When button is clicked, call up to owning activity.
             reallysureDialogFragment.dismiss();
         }
@@ -242,7 +243,7 @@ public class HolidayDetailsView extends BaseActivity
     {
         try
         {
-            myMessages.ShowMessageLong("ah righty ho");
+            myMessages().ShowMessageLong("ah righty ho");
             // When button is clicked, call up to owning activity.
             reallysureDialogFragment.dismiss();
         }
@@ -341,10 +342,10 @@ public class HolidayDetailsView extends BaseActivity
             if (holidayItem.mapFileGroupId == 0)
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess.getNextFileGroupId(myInt))
+                if (!databaseAccess().getNextFileGroupId(myInt))
                     return;
                 holidayItem.mapFileGroupId = myInt.Value;
-                if (!databaseAccess.updateHolidayItem(holidayItem))
+                if (!databaseAccess().updateHolidayItem(holidayItem))
                     return;
             }
             intent2.putExtra("FILEGROUPID", holidayItem.mapFileGroupId);
@@ -366,10 +367,10 @@ public class HolidayDetailsView extends BaseActivity
             if (holidayItem.noteId == 0)
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess.getNextNoteId(holidayId, myInt))
+                if (!databaseAccess().getNextNoteId(holidayId, myInt))
                     return;
                 holidayItem.noteId = myInt.Value;
-                if (!databaseAccess.updateHolidayItem(holidayItem))
+                if (!databaseAccess().updateHolidayItem(holidayItem))
                     return;
             }
             intent2.putExtra("ACTION", "view");
@@ -401,40 +402,40 @@ public class HolidayDetailsView extends BaseActivity
                     
                     holidayId = extras.getInt("HOLIDAYID");
                     holidayItem = new HolidayItem();
-                    if (!databaseAccess.getHolidayItem(holidayId, holidayItem))
+                    if (!databaseAccess().getHolidayItem(holidayId, holidayItem))
                         return;
                     
-                    if (!databaseAccess.getDayCount(holidayId, myInt))
+                    if (!databaseAccess().getDayCount(holidayId, myInt))
                         return;
                     int dayCount = myInt.Value;
                     itineraryBadge.setText("Days (" + Integer.toString(dayCount) + ")");
                     
-                    if (!databaseAccess.getExtraFilesCount(holidayItem.mapFileGroupId, myInt))
+                    if (!databaseAccess().getExtraFilesCount(holidayItem.mapFileGroupId, myInt))
                         return;
                     int mapCount = myInt.Value;
                     mapBadge.setText("Maps (" + Integer.toString(mapCount) + ")");
                     
-                    if (!databaseAccess.getTaskCount(holidayItem.holidayId, myInt))
+                    if (!databaseAccess().getTaskCount(holidayItem.holidayId, myInt))
                         return;
                     int taskCount = myInt.Value;
                     taskBadge.setText("Tasks (" + Integer.toString(taskCount) + ")");
                     
-                    if (!databaseAccess.getBudgetCount(holidayItem.holidayId, myInt))
+                    if (!databaseAccess().getBudgetCount(holidayItem.holidayId, myInt))
                         return;
                     int budgetCount = myInt.Value;
                     budgetBadge.setText("Budget (" + Integer.toString(budgetCount) + ")");
                     
-                    if (!databaseAccess.getTipsCount(holidayItem.holidayId, myInt))
+                    if (!databaseAccess().getTipsCount(holidayItem.holidayId, myInt))
                         return;
                     int tipsCount = myInt.Value;
                     tipsBadge.setText("Tips (" + Integer.toString(tipsCount) + ")");
                     
-                    if (!databaseAccess.getAttractionsCount(holidayItem.holidayId, myInt))
+                    if (!databaseAccess().getAttractionsCount(holidayItem.holidayId, myInt))
                         return;
                     int attractionsCount = myInt.Value;
                     attractionsBadge.setText("Attractions (" + Integer.toString(attractionsCount) + ")");
                     
-                    if (!databaseAccess.getContactCount(holidayItem.holidayId, myInt))
+                    if (!databaseAccess().getContactCount(holidayItem.holidayId, myInt))
                         return;
                     int contactCount = myInt.Value;
                     contactsBadge.setText("Contacts (" + Integer.toString(contactCount) + ")");
@@ -458,7 +459,7 @@ public class HolidayDetailsView extends BaseActivity
                     lFileCount.Value = 0;
                     if (holidayItem.infoId > 0)
                     {
-                        if (!databaseAccess.getExtraFilesCount(holidayItem.infoId, lFileCount))
+                        if (!databaseAccess().getExtraFilesCount(holidayItem.infoId, lFileCount))
                             return;
                     }
                     btnShowInfoBadge.setText("Info (" + Integer.toString(lFileCount.Value) + ")");
@@ -473,7 +474,7 @@ public class HolidayDetailsView extends BaseActivity
                             return;
                     }
                     NoteItem noteItem = new NoteItem();
-                    if (!databaseAccess.getNoteItem(holidayItem.holidayId, holidayItem.noteId, noteItem))
+                    if (!databaseAccess().getNoteItem(holidayItem.holidayId, holidayItem.noteId, noteItem))
                         return;
                     if (noteItem.notes.length() == 0)
                     {
@@ -503,8 +504,6 @@ public class HolidayDetailsView extends BaseActivity
             imageUtils = new ImageUtils(this);
             myColor = new MyColor(this);
             context = this;
-            myMessages = new MyMessages(this);
-            databaseAccess = new DatabaseAccess(this);
             
             rusureDialogTag = getResources().getString(R.string.rusureDialogTag);
             dwetDialogTag = getResources().getString(R.string.dwetDialogTag);
@@ -547,10 +546,10 @@ public class HolidayDetailsView extends BaseActivity
             if (holidayItem.infoId == 0)
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess.getNextFileGroupId(myInt))
+                if (!databaseAccess().getNextFileGroupId(myInt))
                     return;
                 holidayItem.infoId = myInt.Value;
-                if (!databaseAccess.updateHolidayItem(holidayItem))
+                if (!databaseAccess().updateHolidayItem(holidayItem))
                     return;
             }
             intent2.putExtra("FILEGROUPID", holidayItem.infoId);
@@ -584,7 +583,7 @@ public class HolidayDetailsView extends BaseActivity
     {
         try
         {
-            if (!databaseAccess.deleteHolidayItem(holidayItem))
+            if (!databaseAccess().deleteHolidayItem(holidayItem))
                 return;
             finish();
         }

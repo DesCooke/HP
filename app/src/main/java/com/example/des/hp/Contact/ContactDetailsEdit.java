@@ -15,10 +15,12 @@ import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class ContactDetailsEdit extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO = 1;
     private ImageView imageViewSmall;
     private String action;
@@ -33,7 +35,6 @@ public class ContactDetailsEdit extends BaseActivity
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public DialogWithMultiEditTextFragment dialogWithMultiEditTextFragment;
     public TextView txtContactNotes;
-    public MyMessages myMessages;
     
     public void pickImage(View view)
     {
@@ -128,7 +129,7 @@ public class ContactDetailsEdit extends BaseActivity
     {
         try
         {
-            myMessages.ShowMessageShort("Saving " + contactDescription.getText().toString());
+            myMessages().ShowMessageShort("Saving " + contactDescription.getText().toString());
             
             contactItem.pictureAssigned = cbPicturePicked.isChecked();
             contactItem.contactDescription = contactDescription.getText().toString();
@@ -143,15 +144,15 @@ public class ContactDetailsEdit extends BaseActivity
                 MyInt myInt = new MyInt();
                 contactItem.holidayId = holidayId;
                 
-                if (!databaseAccess.getNextContactId(holidayId, myInt))
+                if (!databaseAccess().getNextContactId(holidayId, myInt))
                     return;
                 contactItem.contactId = myInt.Value;
                 
-                if (!databaseAccess.getNextContactSequenceNo(holidayId, myInt))
+                if (!databaseAccess().getNextContactSequenceNo(holidayId, myInt))
                     return;
                 contactItem.sequenceNo = myInt.Value;
                 
-                if (!databaseAccess.addContactItem(contactItem))
+                if (!databaseAccess().addContactItem(contactItem))
                     return;
             }
             
@@ -159,7 +160,7 @@ public class ContactDetailsEdit extends BaseActivity
             {
                 contactItem.holidayId = holidayId;
                 contactItem.contactId = contactId;
-                if (!databaseAccess.updateContactItem(contactItem))
+                if (!databaseAccess().updateContactItem(contactItem))
                     return;
             }
             
@@ -282,10 +283,8 @@ public class ContactDetailsEdit extends BaseActivity
         {
             setContentView(R.layout.activity_contact_details_edit);
             
-            databaseAccess = new DatabaseAccess(this);
             actionBar = getSupportActionBar();
             imageUtils = new ImageUtils(this);
-            myMessages = new MyMessages(this);
             
             cbPicturePicked = (CheckBox) findViewById(R.id.picturePicked);
             imageViewSmall = (ImageView) findViewById(R.id.imageViewSmall);
@@ -315,7 +314,7 @@ public class ContactDetailsEdit extends BaseActivity
                     holidayId = extras.getInt("HOLIDAYID");
                     contactId = extras.getInt("CONTACTID");
                     contactItem = new ContactItem();
-                    if (!databaseAccess.getContactItem(holidayId, contactId, contactItem))
+                    if (!databaseAccess().getContactItem(holidayId, contactId, contactItem))
                         return;
                     
                     contactDescription.setText(contactItem.contactDescription);

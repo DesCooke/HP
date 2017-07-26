@@ -18,6 +18,8 @@ import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 /**
  ** Created by Des on 06/10/2016.
  */
@@ -27,7 +29,6 @@ class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder>
     private Context context;
     private int layoutResourceId;
     public ArrayList<ScheduleItem> data = null;
-    private DatabaseAccess databaseAccess;
     private OnItemClickListener mOnItemClickListener;
     private ImageUtils imageUtils;
     private Drawable drawableAirplane;
@@ -83,7 +84,6 @@ class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder>
         this.context = activity;
         imageUtils = new ImageUtils(activity);
         DateUtils dateUtils = new DateUtils(activity);
-        databaseAccess = new DatabaseAccess(activity);
         data = items;
         drawableAirplane = context.getDrawable(R.drawable.airplane);
         drawableHotel = context.getDrawable(R.drawable.hotel);
@@ -249,7 +249,7 @@ class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder>
         {
             items.get(i).sequenceNo=i+1;
         }
-        if(!databaseAccess.updateScheduleItems(items))
+        if(!databaseAccess().updateScheduleItems(items))
             return;
         notifyDataSetChanged();
     }

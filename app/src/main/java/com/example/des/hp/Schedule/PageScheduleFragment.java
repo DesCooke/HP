@@ -29,6 +29,9 @@ import com.example.des.hp.myutils.MyMessages;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 /**
  * Created by Des on 13/11/2016.
  */
@@ -41,20 +44,16 @@ public class PageScheduleFragment extends Fragment
     private int dayId;
     private int attractionId;
     private int attractionAreaId;
-    private DatabaseAccess databaseAccess;
     public ArrayList<ScheduleItem> scheduleList;
     public ScheduleAdapter scheduleAdapter;
     public String title;
     public String subTitle;
-    public MyMessages myMessages;
 
     public void showForm()
     {
         try {
-            databaseAccess = new DatabaseAccess(getContext());
-
             scheduleList = new ArrayList<>();
-            if (!databaseAccess.getScheduleList(holidayId, dayId, attractionId, attractionAreaId, scheduleList))
+            if (!databaseAccess().getScheduleList(holidayId, dayId, attractionId, attractionAreaId, scheduleList))
                 return;
 
             RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.scheduleListView);
@@ -295,7 +294,7 @@ public class PageScheduleFragment extends Fragment
 
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages.ShowError
+        myMessages().ShowError
                 (
                         "Error in PageScheduleFragment::" + argFunction,
                         argMessage
@@ -306,8 +305,6 @@ public class PageScheduleFragment extends Fragment
     @Nullable
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        myMessages = new MyMessages(getContext());
-
         view = inflater.inflate(R.layout.page_fragment_schedule, container, false);
 
         Bundle extras = getActivity().getIntent().getExtras();

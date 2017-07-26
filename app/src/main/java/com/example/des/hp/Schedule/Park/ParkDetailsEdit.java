@@ -26,10 +26,12 @@ import com.example.des.hp.Schedule.*;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class ParkDetailsEdit extends BaseActivity
 {
 
-    public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO=1;
     private ImageView imageViewSmall;
     private String originalFileName;
@@ -53,7 +55,6 @@ public class ParkDetailsEdit extends BaseActivity
     public CheckBox chkDepartureKnown;
     public TextView departs;
     public TextView txtBookingRef;
-    public MyMessages myMessages;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
 
@@ -228,7 +229,7 @@ public class ParkDetailsEdit extends BaseActivity
         {
             MyInt myInt=new MyInt();
 
-            myMessages.ShowMessageShort("Saving Schedule");
+            myMessages().ShowMessageShort("Saving Schedule");
 
             scheduleItem.pictureAssigned=cbPicturePicked.isChecked();
             scheduleItem.schedName=txtSchedName.getText().toString();
@@ -244,11 +245,11 @@ public class ParkDetailsEdit extends BaseActivity
                 scheduleItem.attractionId=attractionId;
                 scheduleItem.attractionAreaId=attractionAreaId;
 
-                if(!databaseAccess.getNextScheduleId(holidayId, dayId, attractionId, attractionAreaId, myInt))
+                if(!databaseAccess().getNextScheduleId(holidayId, dayId, attractionId, attractionAreaId, myInt))
                     return;
                 scheduleItem.scheduleId=myInt.Value;
 
-                if(!databaseAccess.getNextScheduleSequenceNo(holidayId, dayId, attractionId, attractionAreaId, myInt))
+                if(!databaseAccess().getNextScheduleSequenceNo(holidayId, dayId, attractionId, attractionAreaId, myInt))
                     return;
                 scheduleItem.sequenceNo=myInt.Value;
 
@@ -270,7 +271,7 @@ public class ParkDetailsEdit extends BaseActivity
 
                 scheduleItem.parkItem=parkItem;
 
-                if(!databaseAccess.addScheduleItem(scheduleItem))
+                if(!databaseAccess().addScheduleItem(scheduleItem))
                     return;
             }
 
@@ -287,7 +288,7 @@ public class ParkDetailsEdit extends BaseActivity
                     scheduleItem.parkItem.bookingReference=txtBookingRef.getText().toString();
                 }
 
-                if(!databaseAccess.updateScheduleItem(scheduleItem))
+                if(!databaseAccess().updateScheduleItem(scheduleItem))
                     return;
             }
 
@@ -309,10 +310,8 @@ public class ParkDetailsEdit extends BaseActivity
             setContentView(R.layout.activity_park_details_edit);
 
             actionBar=getSupportActionBar();
-            databaseAccess=new DatabaseAccess(this);
             dateUtils=new DateUtils(this);
             imageUtils=new ImageUtils(this);
-            myMessages=new MyMessages(this);
 
             cbPicturePicked=(CheckBox) findViewById(R.id.picturePicked);
             imageViewSmall=(ImageView) findViewById(R.id.imageViewSmall);
@@ -351,7 +350,7 @@ public class ParkDetailsEdit extends BaseActivity
                 {
                     scheduleId=extras.getInt("SCHEDULEID");
                     scheduleItem=new ScheduleItem();
-                    if(!databaseAccess.getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, scheduleItem))
+                    if(!databaseAccess().getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, scheduleItem))
                         return;
 
                     chkCheckinKnown.setChecked(scheduleItem.startTimeKnown);

@@ -16,6 +16,8 @@ import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 /**
  ** Created by Des on 06/10/2016.
  */
@@ -24,7 +26,6 @@ class AttractionAreaAdapter extends RecyclerView.Adapter<AttractionAreaAdapter.V
 {
     private Context context;
     public ArrayList<AttractionAreaItem> data = null;
-    private DatabaseAccess databaseAccess;
     private OnItemClickListener mOnItemClickListener;
     private ImageUtils imageUtils;
 
@@ -60,7 +61,6 @@ class AttractionAreaAdapter extends RecyclerView.Adapter<AttractionAreaAdapter.V
     AttractionAreaAdapter(Activity activity, ArrayList<AttractionAreaItem> items) {
         this.context = activity;
         imageUtils = new ImageUtils(activity);
-        databaseAccess = new DatabaseAccess(activity);
         data = items;
     }
 
@@ -124,7 +124,7 @@ class AttractionAreaAdapter extends RecyclerView.Adapter<AttractionAreaAdapter.V
         {
             items.get(i).sequenceNo=i+1;
         }
-        if(!databaseAccess.updateAttractionAreaItems(items))
+        if(!databaseAccess().updateAttractionAreaItems(items))
             return;
         notifyDataSetChanged();
     }

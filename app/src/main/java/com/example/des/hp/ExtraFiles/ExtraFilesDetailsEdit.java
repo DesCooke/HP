@@ -23,10 +23,12 @@ import com.example.des.hp.R;
 import java.io.File;
 import java.io.InputStream;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class ExtraFilesDetailsEdit extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO = 1;
     private final int SELECT_PDF = 2;
     private ImageView imageViewSmall;
@@ -42,7 +44,6 @@ public class ExtraFilesDetailsEdit extends BaseActivity
     private MyFileUtils myFileUtils;
     private Uri mySelectedFileUri;
     public boolean FileSelected;
-    public MyMessages myMessages;
     
     //region Yes/No dialog
     public DialogWithYesNoFragment dialogWithYesNoFragment;
@@ -196,11 +197,11 @@ public class ExtraFilesDetailsEdit extends BaseActivity
             
             if (extraFilesItem.fileName == null)
             {
-                myMessages.ShowMessageShort("Need to select a file first... ");
+                myMessages().ShowMessageShort("Need to select a file first... ");
                 return;
             }
             
-            myMessages.ShowMessageShort("Saving " + fileDescription.getText().toString());
+            myMessages().ShowMessageShort("Saving " + fileDescription.getText().toString());
             
             if (action.equals("add"))
             {
@@ -208,15 +209,15 @@ public class ExtraFilesDetailsEdit extends BaseActivity
                 
                 extraFilesItem.fileGroupId = fileGroupId;
                 
-                if (!databaseAccess.getNextExtraFilesId(fileGroupId, myInt))
+                if (!databaseAccess().getNextExtraFilesId(fileGroupId, myInt))
                     return;
                 extraFilesItem.fileId = myInt.Value;
                 
-                if (!databaseAccess.getNextExtraFilesSequenceNo(fileGroupId, myInt))
+                if (!databaseAccess().getNextExtraFilesSequenceNo(fileGroupId, myInt))
                     return;
                 extraFilesItem.sequenceNo = myInt.Value;
                 
-                if (!databaseAccess.addExtraFilesItem(extraFilesItem))
+                if (!databaseAccess().addExtraFilesItem(extraFilesItem))
                     return;
             }
             
@@ -224,7 +225,7 @@ public class ExtraFilesDetailsEdit extends BaseActivity
             {
                 extraFilesItem.fileGroupId = fileGroupId;
                 extraFilesItem.fileId = fileId;
-                if (!databaseAccess.updateExtraFilesItem(extraFilesItem))
+                if (!databaseAccess().updateExtraFilesItem(extraFilesItem))
                     return;
             }
             
@@ -343,7 +344,7 @@ public class ExtraFilesDetailsEdit extends BaseActivity
         {
             newFilename = dialogWithEditTextFragment.getFinalText();
             
-            myMessages.ShowMessageShort("Renaming to " + newFilename);
+            myMessages().ShowMessageShort("Renaming to " + newFilename);
             
             dialogWithEditTextFragment.dismiss();
             
@@ -462,11 +463,9 @@ public class ExtraFilesDetailsEdit extends BaseActivity
             
             newFilename = "";
             
-            databaseAccess = new DatabaseAccess(this);
             actionBar = getSupportActionBar();
             imageUtils = new ImageUtils(this);
             myFileUtils = new MyFileUtils(this);
-            myMessages = new MyMessages(this);
             
             dwynDialogTag = getResources().getString(R.string.dwynDialogTag);
             dwetDialogTag = getResources().getString(R.string.dwetDialogTag);
@@ -499,7 +498,7 @@ public class ExtraFilesDetailsEdit extends BaseActivity
                     fileGroupId = extras.getInt("FILEGROUPID");
                     fileId = extras.getInt("FILEID");
                     extraFilesItem = new ExtraFilesItem();
-                    if (!databaseAccess.getExtraFilesItem(fileGroupId, fileId, extraFilesItem))
+                    if (!databaseAccess().getExtraFilesItem(fileGroupId, fileId, extraFilesItem))
                         return;
                     
                     fileDescription.setText(extraFilesItem.fileDescription);

@@ -20,10 +20,11 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.Notes.NoteView;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 public class AttractionDetailsView extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     private ImageView imageView;
     public int holidayId;
     public int attractionId;
@@ -32,7 +33,6 @@ public class AttractionDetailsView extends BaseActivity
     public TextView txtAttractionDescription;
     public ActionBar actionBar;
     public TextView txtAttractionNotes;
-    public MyMessages myMessages;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
     public MyColor myColor;
@@ -59,10 +59,10 @@ public class AttractionDetailsView extends BaseActivity
             if (attractionItem.noteId == 0)
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess.getNextNoteId(holidayId, myInt))
+                if (!databaseAccess().getNextNoteId(holidayId, myInt))
                     return;
                 attractionItem.noteId = myInt.Value;
-                if (!databaseAccess.updateAttractionItem(attractionItem))
+                if (!databaseAccess().updateAttractionItem(attractionItem))
                     return;
             }
             intent2.putExtra("ACTION", "view");
@@ -83,8 +83,6 @@ public class AttractionDetailsView extends BaseActivity
     {
         try
         {
-            databaseAccess = new DatabaseAccess(this);
-            
             clearImage(null);
             
             Bundle extras = getIntent().getExtras();
@@ -96,7 +94,7 @@ public class AttractionDetailsView extends BaseActivity
                     holidayId = extras.getInt("HOLIDAYID");
                     attractionId = extras.getInt("ATTRACTIONID");
                     attractionItem = new AttractionItem();
-                    if (!databaseAccess.getAttractionItem(holidayId, attractionId, attractionItem))
+                    if (!databaseAccess().getAttractionItem(holidayId, attractionId, attractionItem))
                         return;
                     
                     actionBar = getSupportActionBar();
@@ -126,7 +124,7 @@ public class AttractionDetailsView extends BaseActivity
                     lFileCount.Value = 0;
                     if (attractionItem.infoId > 0)
                     {
-                        if (!databaseAccess.getExtraFilesCount(attractionItem.infoId, lFileCount))
+                        if (!databaseAccess().getExtraFilesCount(attractionItem.infoId, lFileCount))
                             return;
                     }
                     btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
@@ -143,7 +141,7 @@ public class AttractionDetailsView extends BaseActivity
                             return;
                     }
                     NoteItem noteItem = new NoteItem();
-                    if (!databaseAccess.getNoteItem(attractionItem.holidayId, attractionItem.noteId, noteItem))
+                    if (!databaseAccess().getNoteItem(attractionItem.holidayId, attractionItem.noteId, noteItem))
                         return;
                     if (noteItem.notes.length() == 0)
                     {
@@ -171,10 +169,10 @@ public class AttractionDetailsView extends BaseActivity
             if (attractionItem.infoId == 0)
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess.getNextFileGroupId(myInt))
+                if (!databaseAccess().getNextFileGroupId(myInt))
                     return;
                 attractionItem.infoId = myInt.Value;
-                if (!databaseAccess.updateAttractionItem(attractionItem))
+                if (!databaseAccess().updateAttractionItem(attractionItem))
                     return;
             }
             intent2.putExtra("FILEGROUPID", attractionItem.infoId);
@@ -198,7 +196,6 @@ public class AttractionDetailsView extends BaseActivity
         try
         {
             imageUtils = new ImageUtils(this);
-            myMessages = new MyMessages(this);
             myColor = new MyColor(this);
             
             imageView = (ImageView) findViewById(R.id.imageViewSmall);

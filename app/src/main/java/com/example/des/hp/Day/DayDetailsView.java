@@ -42,10 +42,11 @@ import com.example.des.hp.Notes.NoteView;
 import java.util.Date;
 import java.util.Locale;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 public class DayDetailsView extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO = 1;
     private ImageView imageView;
     public int holidayId;
@@ -62,7 +63,6 @@ public class DayDetailsView extends BaseActivity
     private PageHighlightsFragment f_highlights;
     private ActionBar actionBar;
     private TextView txtDayCat;
-    public MyMessages myMessages;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
     public MyColor myColor;
@@ -90,10 +90,10 @@ public class DayDetailsView extends BaseActivity
             if (dayItem.noteId == 0)
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess.getNextNoteId(holidayId, myInt))
+                if (!databaseAccess().getNextNoteId(holidayId, myInt))
                     return;
                 dayItem.noteId = myInt.Value;
-                if (!databaseAccess.updateDayItem(dayItem))
+                if (!databaseAccess().updateDayItem(dayItem))
                     return;
             }
             intent2.putExtra("ACTION", "view");
@@ -133,10 +133,8 @@ public class DayDetailsView extends BaseActivity
         {
             setContentView(R.layout.activity_day_details_view);
             
-            databaseAccess = new DatabaseAccess(this);
             dateUtils = new DateUtils(this);
             imageUtils = new ImageUtils(this);
-            myMessages = new MyMessages(this);
             myColor = new MyColor(this);
             
             viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -169,10 +167,10 @@ public class DayDetailsView extends BaseActivity
             if (dayItem.infoId == 0)
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess.getNextFileGroupId(myInt))
+                if (!databaseAccess().getNextFileGroupId(myInt))
                     return;
                 dayItem.infoId = myInt.Value;
-                if (!databaseAccess.updateDayItem(dayItem))
+                if (!databaseAccess().updateDayItem(dayItem))
                     return;
             }
             intent2.putExtra("FILEGROUPID", dayItem.infoId);
@@ -235,11 +233,11 @@ public class DayDetailsView extends BaseActivity
                     holidayId = extras.getInt("HOLIDAYID");
                     dayId = extras.getInt("DAYID");
                     dayItem = new DayItem();
-                    if (!databaseAccess.getDayItem(holidayId, dayId, dayItem))
+                    if (!databaseAccess().getDayItem(holidayId, dayId, dayItem))
                         return;
                     
                     HolidayItem holidayItem = new HolidayItem();
-                    if (!databaseAccess.getHolidayItem(holidayId, holidayItem))
+                    if (!databaseAccess().getHolidayItem(holidayId, holidayItem))
                         return;
                     
                     String originalFileName = dayItem.dayPicture;
@@ -248,7 +246,7 @@ public class DayDetailsView extends BaseActivity
                     
                     String lSubTitle;
                     MyBoolean isUnknown = new MyBoolean();
-                    if (!dateUtils.IsUnknown(DatabaseAccess.currentStartDate, isUnknown))
+                    if (!dateUtils.IsUnknown(databaseAccess().currentStartDate, isUnknown))
                         return;
                     if (isUnknown.Value)
                     {
@@ -259,7 +257,7 @@ public class DayDetailsView extends BaseActivity
                         
                         // we subtract 1 because sequenceno starts at 1 - but we want to add 0 days for the
                         // first element
-                        if (dateUtils.AddDays(DatabaseAccess.currentStartDate, (dayItem.sequenceNo - 1), lcurrdate) == false)
+                        if (dateUtils.AddDays(databaseAccess().currentStartDate, (dayItem.sequenceNo - 1), lcurrdate) == false)
                             return;
                         
                         MyString myString = new MyString();
@@ -305,7 +303,7 @@ public class DayDetailsView extends BaseActivity
                     lFileCount.Value = 0;
                     if (dayItem.infoId > 0)
                     {
-                        if (!databaseAccess.getExtraFilesCount(dayItem.infoId, lFileCount))
+                        if (!databaseAccess().getExtraFilesCount(dayItem.infoId, lFileCount))
                             return;
                     }
                     btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
@@ -323,7 +321,7 @@ public class DayDetailsView extends BaseActivity
                     }
                     
                     NoteItem noteItem = new NoteItem();
-                    if (!databaseAccess.getNoteItem(dayItem.holidayId, dayItem.noteId, noteItem))
+                    if (!databaseAccess().getNoteItem(dayItem.holidayId, dayItem.noteId, noteItem))
                         return;
                     if (noteItem.notes.length() == 0)
                     {
@@ -690,7 +688,7 @@ public class DayDetailsView extends BaseActivity
     {
         try
         {
-            if (!databaseAccess.deleteDayItem(dayItem))
+            if (!databaseAccess().deleteDayItem(dayItem))
                 return;
             finish();
         }

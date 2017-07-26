@@ -3,6 +3,10 @@ package com.example.des.hp.Dialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.des.hp.myutils.MyMessages;
+
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class BaseActivity extends AppCompatActivity
 {
     @Override
@@ -11,8 +15,14 @@ public class BaseActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         ErrorDialog.SetContext(this);
         MessageDialog.SetContext(this);
+        MyMessages.SetContext(this);
     }
     
+    public void showForm()
+    {
+        myMessages().ShowMessageShort("BaseActivity::showForm");
+    }
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState)
     {
@@ -34,5 +44,7 @@ public class BaseActivity extends AppCompatActivity
         super.onResume();
         ErrorDialog.SetContext(this);
         MessageDialog.SetContext(this);
+        MyMessages.SetContext(this);
+        showForm();
     }
 }

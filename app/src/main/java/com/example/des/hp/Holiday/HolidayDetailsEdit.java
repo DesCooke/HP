@@ -25,10 +25,12 @@ import com.example.des.hp.myutils.*;
 import java.io.InputStream;
 import java.util.Date;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class HolidayDetailsEdit extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO = 1;
     private ImageView imageViewSmall;
     private String action;
@@ -44,7 +46,6 @@ public class HolidayDetailsEdit extends BaseActivity
     public HolidayItem holidayItem;
     public CheckBox cbPicturePicked;
     private ImageUtils imageUtils;
-    public MyMessages myMessages;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
     
@@ -203,7 +204,7 @@ public class HolidayDetailsEdit extends BaseActivity
     {
         try
         {
-            myMessages.ShowMessageShort("Saving Holiday");
+            myMessages().ShowMessageShort("Saving Holiday");
             
             CheckBox cb = (CheckBox) findViewById(R.id.picturePicked);
             holidayItem.pictureAssigned = cb.isChecked();
@@ -233,18 +234,18 @@ public class HolidayDetailsEdit extends BaseActivity
             if (action.equals("add"))
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess.getNextHolidayId(myInt))
+                if (!databaseAccess().getNextHolidayId(myInt))
                     return;
                 holidayItem.holidayId = myInt.Value;
                 
-                if (!databaseAccess.addHolidayItem(holidayItem))
+                if (!databaseAccess().addHolidayItem(holidayItem))
                     return;
             }
             
             if (action.equals("modify"))
             {
                 holidayItem.holidayId = holidayId;
-                if (!databaseAccess.updateHolidayItem(holidayItem))
+                if (!databaseAccess().updateHolidayItem(holidayItem))
                     return;
             }
             
@@ -265,10 +266,8 @@ public class HolidayDetailsEdit extends BaseActivity
         {
             setContentView(R.layout.activity_holiday_details_edit);
             
-            databaseAccess = new DatabaseAccess(this);
             dateUtils = new DateUtils(this);
             imageUtils = new ImageUtils(this);
-            myMessages = new MyMessages(this);
             
             cbPicturePicked = (CheckBox) findViewById(R.id.picturePicked);
             imageViewSmall = (ImageView) findViewById(R.id.imageViewSmall);
@@ -303,7 +302,7 @@ public class HolidayDetailsEdit extends BaseActivity
                 {
                     holidayId = extras.getInt("HOLIDAYID");
                     holidayItem = new HolidayItem();
-                    if (!databaseAccess.getHolidayItem(holidayId, holidayItem))
+                    if (!databaseAccess().getHolidayItem(holidayId, holidayItem))
                         return;
                     
                     holidayName.setText(holidayItem.holidayName);

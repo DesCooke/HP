@@ -18,15 +18,23 @@ import com.example.des.hp.Holiday.*;
 
 import java.util.ArrayList;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class MainActivity extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     public ArrayList<HolidayItem> holidayList;
-    public MyMessages myMessages;
     public ArchiveRestore archiveRestore;
     public boolean accessGranted = false;
     
+    private static MainActivity instance;
+    
+    public static MainActivity getInstance()
+    {
+        return instance;
+    }
+
     public void showHolidayAdd(View view)
     {
         try
@@ -58,9 +66,8 @@ public class MainActivity extends BaseActivity
                 accessGranted = true;
                 invalidateOptionsMenu();
                 
-                databaseAccess = new DatabaseAccess(this);
                 holidayList = new ArrayList<>();
-                if (!databaseAccess.getHolidayList(holidayList))
+                if (!databaseAccess().getHolidayList(holidayList))
                     return;
                 HolidayAdapter adapter = new HolidayAdapter(this, R.layout.holidaylistitemrow, holidayList);
                 ListView listView1 = (ListView) findViewById(R.id.holidayListView);
@@ -104,18 +111,19 @@ public class MainActivity extends BaseActivity
         }
     }
     
+    
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        instance = this;
         setContentView(R.layout.activity_main);
         
         try
         {
-            myMessages = new MyMessages(this);
             archiveRestore = new ArchiveRestore(this);
             
-            myMessages.ClearLog();
+            myMessages().ClearLog();
             
             showForm();
         }

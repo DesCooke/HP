@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.des.hp.MainActivity;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.R;
 import com.example.des.hp.Holiday.*;
@@ -40,13 +41,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class DatabaseAccess extends SQLiteOpenHelper
 {
     //region MEMBERVARIABLES
     private static final int DATABASE_VERSION=41;
-    private Resources res;
     public static Date currentStartDate;
-    public MyMessages myMessages;
+    public static DatabaseAccess database=null;
+    
+    private Resources res;
     private TableHoliday tableHoliday;
     private TableDay tableDay;
     private TableFlight tableFlight;
@@ -86,32 +90,31 @@ public class DatabaseAccess extends SQLiteOpenHelper
             // Save the context for messages etc
             res=context.getResources();
 
-            myMessages=new MyMessages(context);
-            tableHoliday=new TableHoliday(context, this, myMessages);
-            tableDay=new TableDay(context, this, myMessages);
-            tableFlight=new TableFlight(context, this, myMessages);
-            tableHotel=new TableHotel(context, this, myMessages);
-            tableRestaurant=new TableRestaurant(context, this, myMessages);
-            tableRide=new TableRide(context, this, myMessages);
-            tableShow=new TableShow(context, this, myMessages);
-            tableBus=new TableBus(context, this, myMessages);
-            tableCinema=new TableCinema(context, this, myMessages);
-            tablePark=new TablePark(context, this, myMessages);
-            tableParade=new TableParade(context, this, myMessages);
-            tableOther=new TableOther(context, this, myMessages);
-            tableSchedule=new TableSchedule(context, this, myMessages);
-            tableExtraFiles=new TableExtraFiles(context, this, myMessages);
-            tableTask=new TableTask(context, this, myMessages);
-            tableBudget=new TableBudget(context, this, myMessages);
-            tableTip=new TableTip(context, this, myMessages);
-            tableTipGroup=new TableTipGroup(context, this, myMessages);
-            tableAttraction=new TableAttraction(context, this, myMessages);
-            tableAttractionArea=new TableAttractionArea(context, this, myMessages);
-            tableContact=new TableContact(context, this, myMessages);
-            tableFileIds=new TableFileIds(context, this, myMessages);
-            tableHighlightGroup=new TableHighlightGroup(context, this, myMessages);
-            tableHighlight=new TableHighlight(context, this, myMessages);
-            tableNotes = new TableNotes(context, this, myMessages);
+            tableHoliday=new TableHoliday(context, this);
+            tableDay=new TableDay(context, this);
+            tableFlight=new TableFlight(context, this);
+            tableHotel=new TableHotel(context, this);
+            tableRestaurant=new TableRestaurant(context, this);
+            tableRide=new TableRide(context, this);
+            tableShow=new TableShow(context, this);
+            tableBus=new TableBus(context, this);
+            tableCinema=new TableCinema(context, this);
+            tablePark=new TablePark(context, this);
+            tableParade=new TableParade(context, this);
+            tableOther=new TableOther(context, this);
+            tableSchedule=new TableSchedule(context, this);
+            tableExtraFiles=new TableExtraFiles(context, this);
+            tableTask=new TableTask(context, this);
+            tableBudget=new TableBudget(context, this);
+            tableTip=new TableTip(context, this);
+            tableTipGroup=new TableTipGroup(context, this);
+            tableAttraction=new TableAttraction(context, this);
+            tableAttractionArea=new TableAttractionArea(context, this);
+            tableContact=new TableContact(context, this);
+            tableFileIds=new TableFileIds(context, this);
+            tableHighlightGroup=new TableHighlightGroup(context, this);
+            tableHighlight=new TableHighlight(context, this);
+            tableNotes = new TableNotes(context, this);
             dateUtils=new DateUtils(context);
 
             File f1 = new File(res.getString(R.string.application_file_path));
@@ -119,7 +122,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
             {
                 if(!f1.mkdir())
                 {
-                    myMessages.ShowMessageWithOk("DatabaseAccess()", "Unable to create directory " +
+                    myMessages().ShowMessageWithOk("DatabaseAccess()", "Unable to create directory " +
                         "" + f1.getName(), null);
                 }
             }
@@ -129,7 +132,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
             {
                 if(!f.mkdir())
                 {
-                    myMessages.ShowMessageWithOk("DatabaseAccess()", "Unable to create directory " +
+                    myMessages().ShowMessageWithOk("DatabaseAccess()", "Unable to create directory " +
                         "" + f.getName(), null);
                 }
             }
@@ -140,12 +143,21 @@ public class DatabaseAccess extends SQLiteOpenHelper
             ShowError("DatabaseAccess", e.getMessage());
         }
     }
+    
+    public static DatabaseAccess databaseAccess()
+    {
+        if (database == null)
+            database = new DatabaseAccess(MainActivity.getInstance());
+        
+        return (database);
+    }
+    
     //endregion
 
     //region GENERICFUNCTIONS
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages.ShowError("Error in DatabaseAccess::" + argFunction, argMessage);
+        myMessages().ShowError("Error in DatabaseAccess::" + argFunction, argMessage);
     }
 
     @Override
@@ -206,7 +218,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
-        myMessages.ShowMessageShort("Upgrading from " + oldVersion + " to " + newVersion);
+        myMessages().ShowMessageShort("Upgrading from " + oldVersion + " to " + newVersion);
 
         if(!tableHoliday.onUpgrade(db, oldVersion, newVersion))
             return;

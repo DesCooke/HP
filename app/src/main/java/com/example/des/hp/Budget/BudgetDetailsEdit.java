@@ -15,10 +15,12 @@ import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class BudgetDetailsEdit extends BaseActivity
 {
 
-    public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO = 1;
     private ImageView imageViewSmall;
     private String action;
@@ -36,8 +38,7 @@ public class BudgetDetailsEdit extends BaseActivity
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public DialogWithMultiEditTextFragment dialogWithMultiEditTextFragment;
     public TextView txtBudgetNotes;
-    public MyMessages myMessages;
-
+    
     public void pickImage(View view)
     {
         try
@@ -131,7 +132,7 @@ public class BudgetDetailsEdit extends BaseActivity
         {
             MyInt myInt = new MyInt();
 
-            myMessages.ShowMessageShort("Saving " + budgetDescription.getText().toString());
+            myMessages().ShowMessageShort("Saving " + budgetDescription.getText().toString());
 
             budgetItem.pictureAssigned = cbPicturePicked.isChecked();
             budgetItem.budgetDescription = budgetDescription.getText().toString();
@@ -147,15 +148,15 @@ public class BudgetDetailsEdit extends BaseActivity
             if (action.equals("add"))
             {
                 budgetItem.holidayId = holidayId;
-                if(!databaseAccess.getNextBudgetId(holidayId, myInt))
+                if(!databaseAccess().getNextBudgetId(holidayId, myInt))
                     return;
                 budgetItem.budgetId = myInt.Value;
 
-                if(!databaseAccess.getNextBudgetSequenceNo(holidayId, myInt))
+                if(!databaseAccess().getNextBudgetSequenceNo(holidayId, myInt))
                     return;
                 budgetItem.sequenceNo = myInt.Value;
 
-                if(!databaseAccess.addBudgetItem(budgetItem))
+                if(!databaseAccess().addBudgetItem(budgetItem))
                     return;
             }
 
@@ -163,7 +164,7 @@ public class BudgetDetailsEdit extends BaseActivity
             {
                 budgetItem.holidayId = holidayId;
                 budgetItem.budgetId = budgetId;
-                if(!databaseAccess.updateBudgetItem(budgetItem))
+                if(!databaseAccess().updateBudgetItem(budgetItem))
                     return;
             }
 
@@ -437,10 +438,8 @@ public class BudgetDetailsEdit extends BaseActivity
         try {
             setContentView(R.layout.activity_budget_details_edit);
 
-            databaseAccess = new DatabaseAccess(this);
             actionBar = getSupportActionBar();
             imageUtils = new ImageUtils(this);
-            myMessages = new MyMessages(this);
 
             cbPicturePicked = (CheckBox) findViewById(R.id.picturePicked);
             imageViewSmall = (ImageView) findViewById(R.id.imageViewSmall);
@@ -472,7 +471,7 @@ public class BudgetDetailsEdit extends BaseActivity
                     holidayId = extras.getInt("HOLIDAYID");
                     budgetId = extras.getInt("BUDGETID");
                     budgetItem = new BudgetItem();
-                    if(!databaseAccess.getBudgetItem(holidayId, budgetId, budgetItem))
+                    if(!databaseAccess().getBudgetItem(holidayId, budgetId, budgetItem))
                         return;
 
                     budgetDescription.setText(budgetItem.budgetDescription);

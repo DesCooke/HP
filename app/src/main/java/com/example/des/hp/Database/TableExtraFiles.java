@@ -14,9 +14,9 @@ import java.util.ArrayList;
 
 class TableExtraFiles extends TableBase
 {
-    TableExtraFiles(Context context, SQLiteOpenHelper dbHelper, MyMessages myMessages)
+    TableExtraFiles(Context context, SQLiteOpenHelper dbHelper)
     {
-        super(context, dbHelper, myMessages);
+        super(context, dbHelper);
     }
 
     public void ShowError(String argFunction, String argMessage)

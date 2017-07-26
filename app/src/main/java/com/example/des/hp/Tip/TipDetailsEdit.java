@@ -22,10 +22,12 @@ import com.example.des.hp.R;
 
 import java.io.InputStream;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class TipDetailsEdit extends BaseActivity
 {
 
-    public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO=1;
     private ImageView imageViewSmall;
     private String action;
@@ -41,7 +43,6 @@ public class TipDetailsEdit extends BaseActivity
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public DialogWithMultiEditTextFragment dialogWithMultiEditTextFragment;
     public TextView txtTipNotes;
-    public MyMessages myMessages;
 
     public void pickImage(View view)
     {
@@ -133,7 +134,7 @@ public class TipDetailsEdit extends BaseActivity
     {
         try
         {
-            myMessages.ShowMessageShort("Saving " + tipDescription.getText().toString());
+            myMessages().ShowMessageShort("Saving " + tipDescription.getText().toString());
 
             tipItem.pictureAssigned=cbPicturePicked.isChecked();
             tipItem.tipDescription=tipDescription.getText().toString();
@@ -150,15 +151,15 @@ public class TipDetailsEdit extends BaseActivity
                 tipItem.holidayId=holidayId;
                 tipItem.tipGroupId=tipGroupId;
 
-                if(!databaseAccess.getNextTipId(holidayId, tipGroupId, myInt))
+                if(!databaseAccess().getNextTipId(holidayId, tipGroupId, myInt))
                     return;
                 tipItem.tipId=myInt.Value;
 
-                if(!databaseAccess.getNextTipSequenceNo(holidayId, tipGroupId, myInt))
+                if(!databaseAccess().getNextTipSequenceNo(holidayId, tipGroupId, myInt))
                     return;
                 tipItem.sequenceNo=myInt.Value;
 
-                if(!databaseAccess.addTipItem(tipItem))
+                if(!databaseAccess().addTipItem(tipItem))
                     return;
             }
 
@@ -167,7 +168,7 @@ public class TipDetailsEdit extends BaseActivity
                 tipItem.holidayId=holidayId;
                 tipItem.tipGroupId=tipGroupId;
                 tipItem.tipId=tipId;
-                if(!databaseAccess.updateTipItem(tipItem))
+                if(!databaseAccess().updateTipItem(tipItem))
                     return;
             }
 
@@ -283,10 +284,8 @@ public class TipDetailsEdit extends BaseActivity
         {
             setContentView(R.layout.activity_tip_details_edit);
 
-            databaseAccess=new DatabaseAccess(this);
             actionBar=getSupportActionBar();
             imageUtils=new ImageUtils(this);
-            myMessages=new MyMessages(this);
 
             cbPicturePicked=(CheckBox) findViewById(R.id.picturePicked);
             imageViewSmall=(ImageView) findViewById(R.id.imageViewSmall);
@@ -318,7 +317,7 @@ public class TipDetailsEdit extends BaseActivity
                     tipGroupId=extras.getInt("TIPGROUPID");
                     tipId=extras.getInt("TIPID");
                     tipItem=new TipItem();
-                    if(!databaseAccess.getTipItem(holidayId, tipGroupId, tipId, tipItem))
+                    if(!databaseAccess().getTipItem(holidayId, tipGroupId, tipId, tipItem))
                         return;
 
                     tipDescription.setText(tipItem.tipDescription);

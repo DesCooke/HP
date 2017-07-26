@@ -19,6 +19,8 @@ import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 /**
  ** Created by Des on 06/10/2016.
  */
@@ -30,7 +32,6 @@ class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
     private int layoutResourceId;
     public ArrayList<DayItem> data = null;
     private DateUtils dateUtils;
-    private DatabaseAccess databaseAccess;
     private OnItemClickListener mOnItemClickListener;
     private ImageUtils imageUtils;
     private TextView txtRange;
@@ -85,7 +86,6 @@ class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
         res = this.context.getResources();
         imageUtils = new ImageUtils(activity);
         dateUtils = new DateUtils(activity);
-        databaseAccess = new DatabaseAccess(activity);
         data = items;
     }
 
@@ -106,7 +106,7 @@ class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
         holder.txtEndAt.setText(c.end_at);
 
         MyBoolean isUnknown = new MyBoolean();
-        if (!dateUtils.IsUnknown(DatabaseAccess.currentStartDate, isUnknown))
+        if (!dateUtils.IsUnknown(databaseAccess().currentStartDate, isUnknown))
             return;
 
         String lStartDate;
@@ -121,7 +121,7 @@ class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
 
             // we subtract 1 because sequenceno starts at 1 - but we want to add 0 days for the
             // first element
-            if(dateUtils.AddDays(DatabaseAccess.currentStartDate, (c.sequenceNo-1), lcurrdate)==false)
+            if(dateUtils.AddDays(databaseAccess().currentStartDate, (c.sequenceNo-1), lcurrdate)==false)
                 return;
 
             MyString myString = new MyString();
@@ -218,7 +218,7 @@ class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
         {
             items.get(i).sequenceNo=i+1;
         }
-        if(!databaseAccess.updateDayItems(items))
+        if(!databaseAccess().updateDayItems(items))
             return;
         notifyDataSetChanged();
     }

@@ -30,6 +30,8 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 /**
  * * Created by Des on 02/11/2016.
  */
@@ -37,7 +39,6 @@ import java.util.Collections;
 public class AttractionAreaDetailsList extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     public ArrayList<AttractionAreaItem> attractionAreaList;
     public int holidayId;
     public int attractionId;
@@ -46,7 +47,6 @@ public class AttractionAreaDetailsList extends BaseActivity
     public String subtitle;
     public ActionBar actionBar;
     public AttractionItem attractionItem;
-    public MyMessages myMessages;
     public ImageButton btnShowInfo;
     public ImageButton btnShowNotes;
     public MyColor myColor;
@@ -76,10 +76,10 @@ public class AttractionAreaDetailsList extends BaseActivity
             if (attractionItem.infoId == 0)
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess.getNextFileGroupId(myInt))
+                if (!databaseAccess().getNextFileGroupId(myInt))
                     return;
                 attractionItem.infoId = myInt.Value;
-                if (!databaseAccess.updateAttractionItem(attractionItem))
+                if (!databaseAccess().updateAttractionItem(attractionItem))
                     return;
             }
             intent2.putExtra("FILEGROUPID", attractionItem.infoId);
@@ -101,10 +101,10 @@ public class AttractionAreaDetailsList extends BaseActivity
             if (attractionItem.noteId == 0)
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess.getNextNoteId(holidayId, myInt))
+                if (!databaseAccess().getNextNoteId(holidayId, myInt))
                     return;
                 attractionItem.noteId = myInt.Value;
-                if (!databaseAccess.updateAttractionItem(attractionItem))
+                if (!databaseAccess().updateAttractionItem(attractionItem))
                     return;
             }
             intent2.putExtra("ACTION", "view");
@@ -139,11 +139,11 @@ public class AttractionAreaDetailsList extends BaseActivity
             }
             
             attractionItem = new AttractionItem();
-            if (!databaseAccess.getAttractionItem(holidayId, attractionId, attractionItem))
+            if (!databaseAccess().getAttractionItem(holidayId, attractionId, attractionItem))
                 return;
             
             attractionAreaList = new ArrayList<>();
-            if (!databaseAccess.getAttractionAreaList(holidayId, attractionId, attractionAreaList))
+            if (!databaseAccess().getAttractionAreaList(holidayId, attractionId, attractionAreaList))
                 return;
             
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.attractionAreaListView);
@@ -181,7 +181,7 @@ public class AttractionAreaDetailsList extends BaseActivity
             lFileCount.Value = 0;
             if (attractionItem.infoId > 0)
             {
-                if (!databaseAccess.getExtraFilesCount(attractionItem.infoId, lFileCount))
+                if (!databaseAccess().getExtraFilesCount(attractionItem.infoId, lFileCount))
                     return;
             }
             btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
@@ -198,7 +198,7 @@ public class AttractionAreaDetailsList extends BaseActivity
                     return;
             }
             NoteItem noteItem = new NoteItem();
-            if (!databaseAccess.getNoteItem(attractionItem.holidayId, attractionItem.noteId, noteItem))
+            if (!databaseAccess().getNoteItem(attractionItem.holidayId, attractionItem.noteId, noteItem))
                 return;
             if (noteItem.notes.length() == 0)
             {
@@ -309,9 +309,7 @@ public class AttractionAreaDetailsList extends BaseActivity
         
         try
         {
-            databaseAccess = new DatabaseAccess(this);
             actionBar = getSupportActionBar();
-            myMessages = new MyMessages(this);
             myColor = new MyColor(this);
             btnShowInfo = (ImageButton) findViewById(R.id.btnShowInfo);
             btnShowNotes = (ImageButton) findViewById(R.id.btnShowNotes);
@@ -379,7 +377,7 @@ public class AttractionAreaDetailsList extends BaseActivity
     {
         try
         {
-            if (!databaseAccess.deleteAttractionItem(attractionItem))
+            if (!databaseAccess().deleteAttractionItem(attractionItem))
                 return;
             finish();
         }

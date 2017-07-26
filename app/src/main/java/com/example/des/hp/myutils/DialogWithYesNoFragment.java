@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.example.des.hp.R;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class DialogWithYesNoFragment extends DialogFragment
 {
     private String title;
@@ -26,7 +28,6 @@ public class DialogWithYesNoFragment extends DialogFragment
     private static FragmentTransaction fragmentTransaction;
     private String dialogTag;
     public Context context;
-    public MyMessages myMessages;
 
     public DialogWithYesNoFragment()
     {
@@ -35,7 +36,7 @@ public class DialogWithYesNoFragment extends DialogFragment
 
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages.ShowError
+        myMessages().ShowError
                 (
                         "Error in DialogWithYesNoFragment::" + argFunction,
                         argMessage
@@ -66,7 +67,6 @@ public class DialogWithYesNoFragment extends DialogFragment
         dialogWithYesNoFragment = new DialogWithYesNoFragment();
         dialogWithYesNoFragment.dialogTag=tag;
         dialogWithYesNoFragment.context = context;
-        dialogWithYesNoFragment.myMessages = new MyMessages(context);
 
         if(argOnYesClick==null)
         {

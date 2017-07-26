@@ -16,6 +16,8 @@ import com.example.des.hp.myutils.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 /**
  * * Created by Des on 02/11/2016.
  */
@@ -23,14 +25,12 @@ import java.util.Collections;
 public class ExtraFilesDetailsList extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     public ArrayList<ExtraFilesItem> extraFilesList;
     public int fileGroupId;
     public ExtraFilesAdapter extraFilesAdapter;
     public String title;
     public String subtitle;
     public ActionBar actionBar;
-    public MyMessages myMessages;
     
     public void showMapAdd(View view)
     {
@@ -51,7 +51,6 @@ public class ExtraFilesDetailsList extends BaseActivity
     {
         try
         {
-            databaseAccess = new DatabaseAccess(this);
             actionBar = getSupportActionBar();
             if (actionBar != null)
             {
@@ -67,7 +66,7 @@ public class ExtraFilesDetailsList extends BaseActivity
             }
             
             extraFilesList = new ArrayList<>();
-            if (!databaseAccess.getExtraFilesList(fileGroupId, extraFilesList))
+            if (!databaseAccess().getExtraFilesList(fileGroupId, extraFilesList))
                 return;
             
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.extraFilesListView);
@@ -200,8 +199,6 @@ public class ExtraFilesDetailsList extends BaseActivity
         try
         {
             setContentView(R.layout.activity_extra_files_list);
-            
-            myMessages = new MyMessages(this);
             
             title = "";
             subtitle = "";

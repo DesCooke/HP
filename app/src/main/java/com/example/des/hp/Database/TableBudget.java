@@ -15,9 +15,9 @@ import java.util.ArrayList;
 class TableBudget extends TableBase
 {
 
-    TableBudget(Context context, SQLiteOpenHelper dbHelper, MyMessages myMessages)
+    TableBudget(Context context, SQLiteOpenHelper dbHelper)
     {
-        super(context, dbHelper, myMessages);
+        super(context, dbHelper);
     }
 
     public void ShowError(String argFunction, String argMessage)

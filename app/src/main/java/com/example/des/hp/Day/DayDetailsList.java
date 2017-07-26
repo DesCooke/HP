@@ -17,6 +17,9 @@ import com.example.des.hp.myutils.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 
 /**
  * * Created by Des on 02/11/2016.
@@ -24,12 +27,10 @@ import java.util.Collections;
 
 public class DayDetailsList extends BaseActivity
 {
-    public DatabaseAccess databaseAccess;
     public ArrayList<DayItem> dayList;
     public int holidayId;
     public HolidayItem holidayItem;
     public DayAdapter dayAdapter;
-    public MyMessages myMessages;
     
     public void showDayAdd(View view)
     {
@@ -48,11 +49,12 @@ public class DayDetailsList extends BaseActivity
     
     public void showForm()
     {
+        super.showForm();
+        myMessages().ShowMessageShort("BaseActivity::showForm");
         try
         {
-            databaseAccess = new DatabaseAccess(this);
             holidayItem = new HolidayItem();
-            if (!databaseAccess.getHolidayItem(holidayId, holidayItem))
+            if (!databaseAccess().getHolidayItem(holidayId, holidayItem))
                 return;
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null)
@@ -61,9 +63,9 @@ public class DayDetailsList extends BaseActivity
                 actionBar.setSubtitle("Itinerary");
             }
             
-            DatabaseAccess.currentStartDate = holidayItem.startDateDate;
+            databaseAccess().currentStartDate = holidayItem.startDateDate;
             dayList = new ArrayList<>();
-            if (!databaseAccess.getDayList(holidayId, dayList))
+            if (!databaseAccess().getDayList(holidayId, dayList))
                 return;
             
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.dayListView);
@@ -167,7 +169,7 @@ public class DayDetailsList extends BaseActivity
                     
                 }
             );
-    
+/*
     @Override
     protected void onResume()
     {
@@ -183,7 +185,7 @@ public class DayDetailsList extends BaseActivity
         }
         
     }
-    
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -192,8 +194,6 @@ public class DayDetailsList extends BaseActivity
         try
         {
             setContentView(R.layout.activity_day_list);
-            
-            myMessages = new MyMessages(this);
             
             Bundle extras = getIntent().getExtras();
             if (extras != null)

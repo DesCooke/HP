@@ -24,10 +24,11 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 import java.io.File;
 import java.util.List;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 public class ExtraFilesDetailsView extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     private ImageView imageView;
     private TextView txtStartDate;
     public int fileGroupId;
@@ -40,7 +41,6 @@ public class ExtraFilesDetailsView extends BaseActivity
     public TextView txtFilename;
     public ActionBar actionBar;
     public MyFileUtils myFileUtils;
-    public MyMessages myMessages;
     
     public void clearImage(View view)
     {
@@ -58,8 +58,6 @@ public class ExtraFilesDetailsView extends BaseActivity
     {
         try
         {
-            databaseAccess = new DatabaseAccess(this);
-            
             clearImage(null);
             
             Bundle extras = getIntent().getExtras();
@@ -71,7 +69,7 @@ public class ExtraFilesDetailsView extends BaseActivity
                     fileGroupId = extras.getInt("FILEGROUPID");
                     fileId = extras.getInt("FILEID");
                     extraFilesItem = new ExtraFilesItem();
-                    if (!databaseAccess.getExtraFilesItem(fileGroupId, fileId, extraFilesItem))
+                    if (!databaseAccess().getExtraFilesItem(fileGroupId, fileId, extraFilesItem))
                         return;
                     
                     actionBar = getSupportActionBar();
@@ -113,7 +111,6 @@ public class ExtraFilesDetailsView extends BaseActivity
         {
             imageUtils = new ImageUtils(this);
             myFileUtils = new MyFileUtils(this);
-            myMessages = new MyMessages(this);
             
             imageView = (ImageView) findViewById(R.id.imageViewSmall);
             txtFilename = (TextView) findViewById(R.id.txtFilename);
@@ -148,7 +145,7 @@ public class ExtraFilesDetailsView extends BaseActivity
     {
         try
         {
-            if (!databaseAccess.deleteExtraFilesItem(extraFilesItem))
+            if (!databaseAccess().deleteExtraFilesItem(extraFilesItem))
                 return;
             finish();
         }

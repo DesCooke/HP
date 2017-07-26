@@ -23,10 +23,11 @@ import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.thirdpartyutils.BadgeView;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 public class NoteEdit extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     private ImageView imageView;
     public int holidayId;
     public int noteId;
@@ -38,7 +39,6 @@ public class NoteEdit extends BaseActivity
     public TextView txtBudgetPaid;
     public TextView txtBudgetUnpaid;
     public TextView txtBudgetNotes;
-    public MyMessages myMessages;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
     public MyColor myColor;
@@ -48,8 +48,6 @@ public class NoteEdit extends BaseActivity
     {
         try
         {
-            databaseAccess = new DatabaseAccess(this);
-            
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             
             Bundle extras = getIntent().getExtras();
@@ -63,7 +61,7 @@ public class NoteEdit extends BaseActivity
                     noteItem = new NoteItem();
                     noteItem.holidayId = holidayId;
                     noteItem.noteId = noteId;
-                    if (!databaseAccess.getNoteItem(holidayId, noteId, noteItem))
+                    if (!databaseAccess().getNoteItem(holidayId, noteId, noteItem))
                         return;
                     
                     actionBar = getSupportActionBar();
@@ -99,15 +97,15 @@ public class NoteEdit extends BaseActivity
             noteItem.notes = edtNote.getText().toString();
             
             MyBoolean noteExists = new MyBoolean();
-            if (!databaseAccess.noteExists(holidayId, noteItem.noteId, noteExists))
+            if (!databaseAccess().noteExists(holidayId, noteItem.noteId, noteExists))
                 return;
             if (noteExists.Value == false)
             {
-                if (!databaseAccess.addNoteItem(noteItem))
+                if (!databaseAccess().addNoteItem(noteItem))
                     return;
             } else
             {
-                if (!databaseAccess.updateNoteItem(noteItem))
+                if (!databaseAccess().updateNoteItem(noteItem))
                     return;
             }
             finish();

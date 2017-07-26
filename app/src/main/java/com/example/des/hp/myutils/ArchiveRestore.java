@@ -12,22 +12,21 @@ import java.util.Locale;
 
 import com.example.des.hp.R;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class ArchiveRestore 
 {
 
     private Context _context;
-    public MyMessages myMessages;
 
     public ArchiveRestore(Context context)
     {
         _context = context;
-
-        myMessages = new MyMessages(_context);
     }
 
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages.ShowError
+        myMessages().ShowError
                 (
                         "Error in ArchiveRestore::" + argFunction,
                         argMessage
@@ -44,7 +43,7 @@ public class ArchiveRestore
         try
         {
     
-            myMessages.ShowMessageLong("Archiving...");
+            myMessages().ShowMessageLong("Archiving...");
 
             String srcDir=_context.getString(R.string.application_file_path);
             String destDir=_context.getString(R.string.archive_path);
@@ -66,7 +65,7 @@ public class ArchiveRestore
             
             ZipUnzip.zip(srcDir, destDir, zipfilename, true);
 
-            myMessages.ShowMessageLong("Archiving...complete");
+            myMessages().ShowMessageLong("Archiving...complete");
 
             return(true);
         }
@@ -88,7 +87,7 @@ public class ArchiveRestore
     {
         try
         {
-            myMessages.ShowMessageLong("Restoring...");
+            myMessages().ShowMessageLong("Restoring...");
 
             String destDir=_context.getString(R.string.tmp_path);
           
@@ -104,12 +103,12 @@ public class ArchiveRestore
       
             if (ZipUnzip.unzip(filename, destDir)==true)
             {
-                myMessages.ShowMessageWithOk("ArchiveRestore::Restore()", "Completed Successfully",null);
+                myMessages().ShowMessageWithOk("ArchiveRestore::Restore()", "Completed Successfully",null);
                 return(true);
             }
             else
             {
-                myMessages.ShowMessageWithOk("ArchiveRestore::Restore()", "Error",null);
+                myMessages().ShowMessageWithOk("ArchiveRestore::Restore()", "Error",null);
                 return(false);
             }
         }

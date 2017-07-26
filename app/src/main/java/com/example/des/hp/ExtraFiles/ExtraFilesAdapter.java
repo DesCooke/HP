@@ -16,6 +16,8 @@ import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 /**
  ** Created by Des on 06/10/2016.
  */
@@ -26,7 +28,6 @@ class ExtraFilesAdapter extends RecyclerView.Adapter<ExtraFilesAdapter.ViewHolde
     private int layoutResourceId;
     public ArrayList<ExtraFilesItem> data = null;
     private DateUtils dateUtils;
-    private DatabaseAccess databaseAccess;
     private OnItemClickListener mOnItemClickListener;
     private ImageUtils imageUtils;
 
@@ -60,7 +61,6 @@ class ExtraFilesAdapter extends RecyclerView.Adapter<ExtraFilesAdapter.ViewHolde
     ExtraFilesAdapter(Activity activity, ArrayList<ExtraFilesItem> items) {
         this.context = activity;
         imageUtils = new ImageUtils(activity);
-        databaseAccess = new DatabaseAccess(activity);
         data = items;
     }
 
@@ -116,7 +116,7 @@ class ExtraFilesAdapter extends RecyclerView.Adapter<ExtraFilesAdapter.ViewHolde
         {
             items.get(i).sequenceNo=i+1;
         }
-        if(!databaseAccess.updateExtraFilesItems(items))
+        if(!databaseAccess().updateExtraFilesItems(items))
             return;
         notifyDataSetChanged();
     }

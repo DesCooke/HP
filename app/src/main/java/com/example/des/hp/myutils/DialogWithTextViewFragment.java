@@ -71,6 +71,8 @@ import android.widget.TextView;
 
 import com.example.des.hp.R;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class DialogWithTextViewFragment extends DialogFragment
 {
     public View.OnClickListener okClick;
@@ -82,7 +84,6 @@ public class DialogWithTextViewFragment extends DialogFragment
     private static String dialogTag;
     private static FragmentTransaction fragmentTransaction;
     public Context context;
-    public MyMessages myMessages;
 
     public DialogWithTextViewFragment()
     {
@@ -91,7 +92,7 @@ public class DialogWithTextViewFragment extends DialogFragment
 
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages.ShowError
+        myMessages().ShowError
                 (
                         "Error in DialogWithTextViewFragment::" + argFunction,
                         argMessage
@@ -122,7 +123,6 @@ public class DialogWithTextViewFragment extends DialogFragment
         // let's create a new one - giving all the defaults
         dialogWithTextViewFragment = new DialogWithTextViewFragment();
         dialogWithTextViewFragment.context = context;
-        dialogWithTextViewFragment.myMessages = new MyMessages(context);
 
         if(argOnOkClick==null)
         {

@@ -17,9 +17,9 @@ import static java.lang.Math.abs;
 
 class TableDay extends TableBase
 {
-    TableDay(Context context, SQLiteOpenHelper dbHelper, MyMessages myMessages)
+    TableDay(Context context, SQLiteOpenHelper dbHelper)
     {
-        super(context, dbHelper, myMessages);
+        super(context, dbHelper);
     }
 
     public void ShowError(String argFunction, String argMessage)

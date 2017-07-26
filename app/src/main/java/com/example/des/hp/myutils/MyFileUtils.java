@@ -14,6 +14,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 //
 // Simple class containing File Utility functions
 //
@@ -21,20 +23,18 @@ public class MyFileUtils
 {
     private Context _context;
     private Resources res;
-    private MyMessages myMessages;
     private MyUri myUri;
 
     public MyFileUtils(Context context)
     {
         _context = context;
         res = context.getResources();
-        myMessages = new MyMessages(_context);
         myUri = new MyUri(_context);
     }
 
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages.ShowError
+        myMessages().ShowError
                 (
                         "Error in MyFileUtils::" + argFunction,
                         argMessage
@@ -95,7 +95,7 @@ public class MyFileUtils
                 _context.startActivity(viewIntent);
             } else
             {
-                myMessages.ShowMessageWithOk("Unable to open file", aFile, null);
+                myMessages().ShowMessageWithOk("Unable to open file", aFile, null);
                 return(false);
             }
             return(true);
@@ -125,7 +125,7 @@ public class MyFileUtils
             {
                 if(!f99.mkdir())
                 {
-                    myMessages.ShowMessageWithOk("DatabaseAccess()", "Unable to create directory " +
+                    myMessages().ShowMessageWithOk("DatabaseAccess()", "Unable to create directory " +
                         "" + f99.getName(), null);
                 }
             }

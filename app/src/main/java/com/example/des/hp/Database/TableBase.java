@@ -18,9 +18,10 @@ import com.example.des.hp.myutils.MyString;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class TableBase
 {
-    private MyMessages _myMessages;
     private Context _context;
     private SQLiteOpenHelper _dbHelper;
     public Resources _resources;
@@ -32,11 +33,10 @@ public class TableBase
     private Cursor currentCursor;
 
     //region CONSTRUCTORS
-    public TableBase(Context context, SQLiteOpenHelper dbHelper, MyMessages myMessages)
+    public TableBase(Context context, SQLiteOpenHelper dbHelper)
     {
         _context=context;
         _dbHelper=dbHelper;
-        _myMessages=myMessages;
         _resources=_context.getResources();
         _dateUtils=new DateUtils(_context);
         _myFileUtils=new MyFileUtils(_context);
@@ -49,8 +49,6 @@ public class TableBase
         if(_context == null)
             return (false);
         if(_dbHelper == null)
-            return (false);
-        if(_myMessages == null)
             return (false);
         if(_myFileUtils == null)
             return (false);
@@ -79,7 +77,7 @@ public class TableBase
 
     public void ShowError(String argFunction, String argMessage)
     {
-        _myMessages.ShowError("Error in DatabaseAccess::" + argFunction, argMessage);
+        myMessages().ShowError("Error in DatabaseAccess::" + argFunction, argMessage);
     }
 
     // returns true/false
@@ -197,7 +195,7 @@ public class TableBase
 
             SQLiteDatabase db=_dbHelper.getReadableDatabase();
 
-            _myMessages.LogMessage("executeSQLGetInt from " + argFunction + ":"+argSql);
+            myMessages().LogMessage("executeSQLGetInt from " + argFunction + ":"+argSql);
 
             Cursor cursor=db.rawQuery(argSql, new String[]{});
             if(cursor == null)
@@ -212,7 +210,7 @@ public class TableBase
             db.close();
             retInt.Value=Integer.parseInt(str);
 
-            _myMessages.LogMessage("  return value: "+retInt.Value);
+            myMessages().LogMessage("  return value: "+retInt.Value);
 
             return (true);
         }
@@ -232,7 +230,7 @@ public class TableBase
 
             SQLiteDatabase db=_dbHelper.getWritableDatabase();
 
-            _myMessages.LogMessage("executeSQL from " + argFunction + ":"+argSql);
+            myMessages().LogMessage("executeSQL from " + argFunction + ":"+argSql);
 
             db.execSQL(argSql);
 
@@ -257,7 +255,7 @@ public class TableBase
         {
             SQLiteDatabase db=_dbHelper.getReadableDatabase();
 
-            _myMessages.LogMessage("executeSQLOpenCursor from " + argFunction + ":"+argSql);
+            myMessages().LogMessage("executeSQLOpenCursor from " + argFunction + ":"+argSql);
 
             Cursor cursor=db.rawQuery(argSql, new String[]{});
             if(cursor == null)

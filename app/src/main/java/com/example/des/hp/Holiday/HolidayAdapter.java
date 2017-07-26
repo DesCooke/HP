@@ -36,7 +36,6 @@ public class HolidayAdapter extends ArrayAdapter<HolidayItem> {
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.data = data;
-        DatabaseAccess databaseAccess = new DatabaseAccess(context);
         imageUtils = new ImageUtils(context);
     }
 

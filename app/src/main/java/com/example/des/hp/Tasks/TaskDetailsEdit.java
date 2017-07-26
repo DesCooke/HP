@@ -25,10 +25,12 @@ import com.example.des.hp.R;
 import java.io.InputStream;
 import java.util.Date;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class TaskDetailsEdit extends BaseActivity
 {
 
-    public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO=1;
     private ImageView imageViewSmall;
     private String action;
@@ -49,7 +51,6 @@ public class TaskDetailsEdit extends BaseActivity
     public TextView lblKnownDate;
     public CheckBox chkTaskComplete;
     public TextView txtTaskNotes;
-    public MyMessages myMessages;
 
     public void pickImage(View view)
     {
@@ -141,7 +142,7 @@ public class TaskDetailsEdit extends BaseActivity
     {
         try
         {
-            myMessages.ShowMessageShort("Saving " + taskDescription.getText().toString());
+            myMessages().ShowMessageShort("Saving " + taskDescription.getText().toString());
 
             taskItem.pictureAssigned=cbPicturePicked.isChecked();
             taskItem.taskDescription=taskDescription.getText().toString();
@@ -174,15 +175,15 @@ public class TaskDetailsEdit extends BaseActivity
                 MyInt myInt=new MyInt();
                 taskItem.holidayId=holidayId;
 
-                if(!databaseAccess.getNextTaskId(holidayId, myInt))
+                if(!databaseAccess().getNextTaskId(holidayId, myInt))
                     return;
                 taskItem.taskId=myInt.Value;
 
-                if(!databaseAccess.getNextTaskSequenceNo(holidayId, myInt))
+                if(!databaseAccess().getNextTaskSequenceNo(holidayId, myInt))
                     return;
                 taskItem.sequenceNo=myInt.Value;
 
-                if(!databaseAccess.addTaskItem(taskItem))
+                if(!databaseAccess().addTaskItem(taskItem))
                     return;
             }
 
@@ -190,7 +191,7 @@ public class TaskDetailsEdit extends BaseActivity
             {
                 taskItem.holidayId=holidayId;
                 taskItem.taskId=taskId;
-                if(!databaseAccess.updateTaskItem(taskItem))
+                if(!databaseAccess().updateTaskItem(taskItem))
                     return;
             }
 
@@ -309,11 +310,9 @@ public class TaskDetailsEdit extends BaseActivity
         {
             setContentView(R.layout.activity_task_details_edit);
 
-            databaseAccess=new DatabaseAccess(this);
             actionBar=getSupportActionBar();
             imageUtils=new ImageUtils(this);
             dateUtils=new DateUtils(this);
-            myMessages=new MyMessages(this);
 
             cbPicturePicked=(CheckBox) findViewById(R.id.picturePicked);
             imageViewSmall=(ImageView) findViewById(R.id.imageViewSmall);
@@ -348,7 +347,7 @@ public class TaskDetailsEdit extends BaseActivity
                     holidayId=extras.getInt("HOLIDAYID");
                     taskId=extras.getInt("TASKID");
                     taskItem=new TaskItem();
-                    if(!databaseAccess.getTaskItem(holidayId, taskId, taskItem))
+                    if(!databaseAccess().getTaskItem(holidayId, taskId, taskItem))
                         return;
 
                     taskDescription.setText(taskItem.taskDescription);

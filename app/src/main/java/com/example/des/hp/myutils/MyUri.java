@@ -9,22 +9,22 @@ import com.example.des.hp.R;
 
 import java.io.File;
 
+import static com.example.des.hp.myutils.MyLog.myLog;
+
 class MyUri
 {
     private Context _context;
     public Resources res;
-    private MyLog myLog;
 
     MyUri(Context context)
     {
         _context=context;
         res=_context.getResources();
-        myLog = new MyLog(_context);
     }
 
     public void LogMessage(String argMessage)
     {
-        myLog.WriteLogMessage(argMessage);
+        myLog().WriteLogMessage(argMessage);
     }
 
     Uri getUri(String filename)

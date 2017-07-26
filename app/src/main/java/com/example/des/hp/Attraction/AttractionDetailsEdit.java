@@ -15,10 +15,12 @@ import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class AttractionDetailsEdit extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO = 1;
     private ImageView imageViewSmall;
     private String action;
@@ -33,7 +35,6 @@ public class AttractionDetailsEdit extends BaseActivity
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public DialogWithMultiEditTextFragment dialogWithMultiEditTextFragment;
     public TextView txtAttractionNotes;
-    public MyMessages myMessages;
     
     public void pickImage(View view)
     {
@@ -130,7 +131,7 @@ public class AttractionDetailsEdit extends BaseActivity
         {
             MyInt retInt = new MyInt();
             
-            myMessages.ShowMessageShort("Saving " + attractionDescription.getText().toString());
+            myMessages().ShowMessageShort("Saving " + attractionDescription.getText().toString());
             
             attractionItem.pictureAssigned = cbPicturePicked.isChecked();
             attractionItem.attractionDescription = attractionDescription.getText().toString();
@@ -143,13 +144,13 @@ public class AttractionDetailsEdit extends BaseActivity
             if (action.equals("add"))
             {
                 attractionItem.holidayId = holidayId;
-                if (!databaseAccess.getNextAttractionId(holidayId, retInt))
+                if (!databaseAccess().getNextAttractionId(holidayId, retInt))
                     return;
                 attractionItem.attractionId = retInt.Value;
-                if (!databaseAccess.getNextAttractionSequenceNo(holidayId, retInt))
+                if (!databaseAccess().getNextAttractionSequenceNo(holidayId, retInt))
                     return;
                 attractionItem.sequenceNo = retInt.Value;
-                if (!databaseAccess.addAttractionItem(attractionItem))
+                if (!databaseAccess().addAttractionItem(attractionItem))
                     return;
             }
             
@@ -157,7 +158,7 @@ public class AttractionDetailsEdit extends BaseActivity
             {
                 attractionItem.holidayId = holidayId;
                 attractionItem.attractionId = attractionId;
-                if (!databaseAccess.updateAttractionItem(attractionItem))
+                if (!databaseAccess().updateAttractionItem(attractionItem))
                     return;
             }
             
@@ -281,10 +282,8 @@ public class AttractionDetailsEdit extends BaseActivity
         {
             setContentView(R.layout.activity_attraction_details_edit);
             
-            databaseAccess = new DatabaseAccess(this);
             actionBar = getSupportActionBar();
             imageUtils = new ImageUtils(this);
-            myMessages = new MyMessages(this);
             
             cbPicturePicked = (CheckBox) findViewById(R.id.picturePicked);
             imageViewSmall = (ImageView) findViewById(R.id.imageViewSmall);
@@ -314,7 +313,7 @@ public class AttractionDetailsEdit extends BaseActivity
                     holidayId = extras.getInt("HOLIDAYID");
                     attractionId = extras.getInt("ATTRACTIONID");
                     attractionItem = new AttractionItem();
-                    if (!databaseAccess.getAttractionItem(holidayId, attractionId, attractionItem))
+                    if (!databaseAccess().getAttractionItem(holidayId, attractionId, attractionItem))
                         return;
                     
                     attractionDescription.setText(attractionItem.attractionDescription);

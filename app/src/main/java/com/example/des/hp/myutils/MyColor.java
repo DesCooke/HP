@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.widget.ImageButton;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 //
 // Simple color related functions
 //
@@ -12,18 +14,16 @@ import android.widget.ImageButton;
 public class MyColor
 {
     private Context _context;
-    MyMessages myMessages;
-
+    
     public MyColor(Context context)
     {
         _context = context;
         Resources res = context.getResources();
-        myMessages = new MyMessages(_context);
     }
 
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages.ShowError
+        myMessages().ShowError
                 (
                         "Error in MyColor::" + argFunction,
                         argMessage

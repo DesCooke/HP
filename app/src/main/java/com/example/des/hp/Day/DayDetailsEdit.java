@@ -17,10 +17,12 @@ import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class DayDetailsEdit extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO = 1;
     private ImageView imageViewSmall;
     private String action;
@@ -38,7 +40,6 @@ public class DayDetailsEdit extends BaseActivity
     private RadioButton radEasy;
     private RadioButton radModerate;
     private RadioButton radBusy;
-    public MyMessages myMessages;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
     
@@ -165,7 +166,7 @@ public class DayDetailsEdit extends BaseActivity
     {
         try
         {
-            myMessages.ShowMessageShort("Saving Day");
+            myMessages().ShowMessageShort("Saving Day");
             
             dayItem.pictureAssigned = cbPicturePicked.isChecked();
             dayItem.dayName = dayName.getText().toString();
@@ -180,14 +181,14 @@ public class DayDetailsEdit extends BaseActivity
                 
                 dayItem.holidayId = holidayId;
                 
-                if (!databaseAccess.getNextDayId(holidayId, myInt))
+                if (!databaseAccess().getNextDayId(holidayId, myInt))
                     return;
                 dayItem.dayId = myInt.Value;
                 
-                if (!databaseAccess.getNextSequenceNo(holidayId, myInt))
+                if (!databaseAccess().getNextSequenceNo(holidayId, myInt))
                     return;
                 dayItem.sequenceNo = myInt.Value;
-                if (!databaseAccess.addDayItem(dayItem))
+                if (!databaseAccess().addDayItem(dayItem))
                     return;
             }
             
@@ -195,7 +196,7 @@ public class DayDetailsEdit extends BaseActivity
             {
                 dayItem.holidayId = holidayId;
                 dayItem.dayId = dayId;
-                if (!databaseAccess.updateDayItem(dayItem))
+                if (!databaseAccess().updateDayItem(dayItem))
                     return;
             }
             
@@ -264,11 +265,9 @@ public class DayDetailsEdit extends BaseActivity
         {
             setContentView(R.layout.activity_day_details_edit);
             
-            databaseAccess = new DatabaseAccess(this);
             dateUtils = new DateUtils(this);
             actionBar = getSupportActionBar();
             imageUtils = new ImageUtils(this);
-            myMessages = new MyMessages(this);
             
             cbPicturePicked = (CheckBox) findViewById(R.id.picturePicked);
             imageViewSmall = (ImageView) findViewById(R.id.imageViewSmall);
@@ -304,7 +303,7 @@ public class DayDetailsEdit extends BaseActivity
                     dayId = extras.getInt("DAYID");
                     holidayName = extras.getString("HOLIDAYNAME");
                     dayItem = new DayItem();
-                    if (!databaseAccess.getDayItem(holidayId, dayId, dayItem))
+                    if (!databaseAccess().getDayItem(holidayId, dayId, dayItem))
                         return;
                     
                     dayName.setText(dayItem.dayName);

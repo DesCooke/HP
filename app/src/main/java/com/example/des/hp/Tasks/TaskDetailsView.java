@@ -23,10 +23,11 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.Notes.NoteView;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 public class TaskDetailsView extends BaseActivity
 {
 
-    public DatabaseAccess databaseAccess;
     private ImageView imageView;
     private TextView txtTaskDate;
     public int holidayId;
@@ -38,7 +39,6 @@ public class TaskDetailsView extends BaseActivity
     public ActionBar actionBar;
     public CheckBox chkTaskComplete;
     public TextView txtTaskNotes;
-    public MyMessages myMessages;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
     public MyColor myColor;
@@ -66,10 +66,10 @@ public class TaskDetailsView extends BaseActivity
             if(taskItem.noteId == 0)
             {
                 MyInt myInt=new MyInt();
-                if(!databaseAccess.getNextNoteId(holidayId, myInt))
+                if(!databaseAccess().getNextNoteId(holidayId, myInt))
                     return;
                 taskItem.noteId=myInt.Value;
-                if(!databaseAccess.updateTaskItem(taskItem))
+                if(!databaseAccess().updateTaskItem(taskItem))
                     return;
             }
             intent2.putExtra("ACTION", "view");
@@ -90,8 +90,6 @@ public class TaskDetailsView extends BaseActivity
     {
         try
         {
-            databaseAccess=new DatabaseAccess(this);
-
             clearImage(null);
 
             Bundle extras=getIntent().getExtras();
@@ -103,7 +101,7 @@ public class TaskDetailsView extends BaseActivity
                     holidayId=extras.getInt("HOLIDAYID");
                     taskId=extras.getInt("TASKID");
                     taskItem=new TaskItem();
-                    if(!databaseAccess.getTaskItem(holidayId, taskId, taskItem))
+                    if(!databaseAccess().getTaskItem(holidayId, taskId, taskItem))
                         return;
 
                     actionBar=getSupportActionBar();
@@ -142,7 +140,7 @@ public class TaskDetailsView extends BaseActivity
                     lFileCount.Value=0;
                     if(taskItem.infoId > 0)
                     {
-                        if(!databaseAccess.getExtraFilesCount(taskItem.infoId, lFileCount))
+                        if(!databaseAccess().getExtraFilesCount(taskItem.infoId, lFileCount))
                             return;
                     }
                     btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
@@ -160,7 +158,7 @@ public class TaskDetailsView extends BaseActivity
                     }
 
                     NoteItem noteItem=new NoteItem();
-                    if(!databaseAccess.getNoteItem(taskItem.holidayId, taskItem.noteId, noteItem))
+                    if(!databaseAccess().getNoteItem(taskItem.holidayId, taskItem.noteId, noteItem))
                         return;
                     if(noteItem.notes.length() == 0)
                     {
@@ -189,7 +187,6 @@ public class TaskDetailsView extends BaseActivity
             setContentView(R.layout.activity_task_details_view);
 
             imageUtils=new ImageUtils(this);
-            myMessages=new MyMessages(this);
             myColor=new MyColor(this);
 
             imageView=(ImageView) findViewById(R.id.imageViewSmall);
@@ -240,10 +237,10 @@ public class TaskDetailsView extends BaseActivity
             if(taskItem.infoId == 0)
             {
                 MyInt myInt=new MyInt();
-                if(!databaseAccess.getNextFileGroupId(myInt))
+                if(!databaseAccess().getNextFileGroupId(myInt))
                     return;
                 taskItem.infoId=myInt.Value;
-                if(!databaseAccess.updateTaskItem(taskItem))
+                if(!databaseAccess().updateTaskItem(taskItem))
                     return;
             }
             intent2.putExtra("FILEGROUPID", taskItem.infoId);
@@ -263,7 +260,7 @@ public class TaskDetailsView extends BaseActivity
     {
         try
         {
-            if(!databaseAccess.deleteTaskItem(taskItem))
+            if(!databaseAccess().deleteTaskItem(taskItem))
                 return;
             finish();
         }

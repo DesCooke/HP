@@ -17,6 +17,8 @@ import com.example.des.hp.myutils.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 /**
  * * Created by Des on 02/11/2016.
  */
@@ -24,14 +26,12 @@ import java.util.Collections;
 public class TipGroupDetailsList extends BaseActivity
 {
 
-    public DatabaseAccess databaseAccess;
     public ArrayList<TipGroupItem> tipGroupList;
     public int holidayId;
     public TipGroupAdapter tipGroupAdapter;
     public String title;
     public String subtitle;
     public ActionBar actionBar;
-    public MyMessages myMessages;
 
     public void showTipGroupAdd(View view)
     {
@@ -67,7 +67,7 @@ public class TipGroupDetailsList extends BaseActivity
             }
 
             tipGroupList=new ArrayList<>();
-            if(!databaseAccess.getTipGroupList(holidayId, tipGroupList))
+            if(!databaseAccess().getTipGroupList(holidayId, tipGroupList))
                 return;
 
             RecyclerView recyclerView=(RecyclerView) findViewById(R.id.tipGroupListView);
@@ -192,9 +192,7 @@ public class TipGroupDetailsList extends BaseActivity
         {
             setContentView(R.layout.activity_tipgroup_list);
 
-            databaseAccess=new DatabaseAccess(this);
             actionBar=getSupportActionBar();
-            myMessages=new MyMessages(this);
 
             title="";
             subtitle="";

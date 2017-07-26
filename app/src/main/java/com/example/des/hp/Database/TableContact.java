@@ -14,9 +14,9 @@ import java.util.ArrayList;
 
 class TableContact extends TableBase
 {
-    TableContact(Context context, SQLiteOpenHelper dbHelper, MyMessages myMessages)
+    TableContact(Context context, SQLiteOpenHelper dbHelper)
     {
-        super(context, dbHelper, myMessages);
+        super(context, dbHelper);
     }
 
     public void ShowError(String argFunction, String argMessage)

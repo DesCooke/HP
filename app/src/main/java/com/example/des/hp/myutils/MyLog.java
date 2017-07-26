@@ -3,6 +3,8 @@ package com.example.des.hp.myutils;
 import android.content.Context;
 import android.content.res.Resources;
 
+import com.example.des.hp.Database.DatabaseAccess;
+import com.example.des.hp.MainActivity;
 import com.example.des.hp.R;
 
 import java.io.BufferedWriter;
@@ -17,11 +19,20 @@ import java.util.Date;
 class MyLog
 {
     private Resources res;
+    public static MyLog log=null;
 
     MyLog(Context context)
     {
         Context _context = context;
         res = context.getResources();
+    }
+
+    public static MyLog myLog()
+    {
+        if (log == null)
+            log = new MyLog(MainActivity.getInstance());
+        
+        return (log);
     }
 
     void WriteLogMessage(String argString)

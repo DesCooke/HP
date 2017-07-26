@@ -21,10 +21,11 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.Notes.NoteView;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 public class ContactDetailsView extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     private ImageView imageView;
     public int holidayId;
     public int contactId;
@@ -33,7 +34,6 @@ public class ContactDetailsView extends BaseActivity
     public TextView txtContactDescription;
     public ActionBar actionBar;
     public TextView txtContactNotes;
-    public MyMessages myMessages;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
     public MyColor myColor;
@@ -59,10 +59,10 @@ public class ContactDetailsView extends BaseActivity
             if (contactItem.noteId == 0)
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess.getNextNoteId(holidayId, myInt))
+                if (!databaseAccess().getNextNoteId(holidayId, myInt))
                     return;
                 contactItem.noteId = myInt.Value;
-                if (!databaseAccess.updateContactItem(contactItem))
+                if (!databaseAccess().updateContactItem(contactItem))
                     return;
             }
             intent2.putExtra("ACTION", "view");
@@ -82,8 +82,6 @@ public class ContactDetailsView extends BaseActivity
     {
         try
         {
-            databaseAccess = new DatabaseAccess(this);
-            
             clearImage(null);
             
             Bundle extras = getIntent().getExtras();
@@ -95,7 +93,7 @@ public class ContactDetailsView extends BaseActivity
                     holidayId = extras.getInt("HOLIDAYID");
                     contactId = extras.getInt("CONTACTID");
                     contactItem = new ContactItem();
-                    if (!databaseAccess.getContactItem(holidayId, contactId, contactItem))
+                    if (!databaseAccess().getContactItem(holidayId, contactId, contactItem))
                         return;
                     
                     actionBar = getSupportActionBar();
@@ -124,7 +122,7 @@ public class ContactDetailsView extends BaseActivity
                     lFileCount.Value = 0;
                     if (contactItem.infoId > 0)
                     {
-                        if (!databaseAccess.getExtraFilesCount(contactItem.infoId, lFileCount))
+                        if (!databaseAccess().getExtraFilesCount(contactItem.infoId, lFileCount))
                             return;
                     }
                     btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
@@ -142,7 +140,7 @@ public class ContactDetailsView extends BaseActivity
                     }
                     
                     NoteItem noteItem = new NoteItem();
-                    if (!databaseAccess.getNoteItem(contactItem.holidayId, contactItem.noteId, noteItem))
+                    if (!databaseAccess().getNoteItem(contactItem.holidayId, contactItem.noteId, noteItem))
                         return;
                     if (noteItem.notes.length() == 0)
                     {
@@ -172,7 +170,6 @@ public class ContactDetailsView extends BaseActivity
         {
             setContentView(R.layout.activity_contact_details_view);
             imageUtils = new ImageUtils(this);
-            myMessages = new MyMessages(this);
             myColor = new MyColor(this);
             
             imageView = (ImageView) findViewById(R.id.imageViewSmall);
@@ -215,7 +212,7 @@ public class ContactDetailsView extends BaseActivity
     {
         try
         {
-            if (!databaseAccess.deleteContactItem(contactItem))
+            if (!databaseAccess().deleteContactItem(contactItem))
                 return;
             finish();
         }
@@ -261,10 +258,10 @@ public class ContactDetailsView extends BaseActivity
             if (contactItem.infoId == 0)
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess.getNextFileGroupId(myInt))
+                if (!databaseAccess().getNextFileGroupId(myInt))
                     return;
                 contactItem.infoId = myInt.Value;
-                if (!databaseAccess.updateContactItem(contactItem))
+                if (!databaseAccess().updateContactItem(contactItem))
                     return;
             }
             intent2.putExtra("FILEGROUPID", contactItem.infoId);

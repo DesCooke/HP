@@ -16,6 +16,8 @@ import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 /**
  ** Created by Des on 06/10/2016.
  */
@@ -25,7 +27,6 @@ class TipGroupAdapter extends RecyclerView.Adapter<TipGroupAdapter.ViewHolder>
     private Context context;
     private int layoutResourceId;
     public ArrayList<TipGroupItem> data = null;
-    private DatabaseAccess databaseAccess;
     private OnItemClickListener mOnItemClickListener;
     private ImageUtils imageUtils;
 
@@ -61,7 +62,6 @@ class TipGroupAdapter extends RecyclerView.Adapter<TipGroupAdapter.ViewHolder>
     TipGroupAdapter(Activity activity, ArrayList<TipGroupItem> items) {
         this.context = activity;
         imageUtils = new ImageUtils(activity);
-        databaseAccess = new DatabaseAccess(activity);
         data = items;
     }
 
@@ -125,7 +125,7 @@ class TipGroupAdapter extends RecyclerView.Adapter<TipGroupAdapter.ViewHolder>
         {
             items.get(i).sequenceNo=i+1;
         }
-        if(!databaseAccess.updateTipGroupItems(items))
+        if(!databaseAccess().updateTipGroupItems(items))
             return;
         notifyDataSetChanged();
     }

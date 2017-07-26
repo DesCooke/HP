@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.example.des.hp.R;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class DialogWithMultiEditTextFragment extends DialogFragment
 {
     public View.OnClickListener okClick;
@@ -26,7 +28,6 @@ public class DialogWithMultiEditTextFragment extends DialogFragment
     private EditText editText;
     private String initialText;
     public Context context;
-    public MyMessages myMessages;
     public MyKeyboard myKeyboard;
 
     public DialogWithMultiEditTextFragment()
@@ -44,7 +45,7 @@ public class DialogWithMultiEditTextFragment extends DialogFragment
 
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages.ShowError
+        myMessages().ShowError
                 (
                         "Error in DialogWithMultiEditTextFragment::" + argFunction,
                         argMessage
@@ -76,7 +77,6 @@ public class DialogWithMultiEditTextFragment extends DialogFragment
         // let's create a new one - giving all the defaults
         dialogWithMultiEditTextFragment = new DialogWithMultiEditTextFragment();
         dialogWithMultiEditTextFragment.context = context;
-        dialogWithMultiEditTextFragment.myMessages = new MyMessages(context);
         dialogWithMultiEditTextFragment.myKeyboard = new MyKeyboard(context);
 
 

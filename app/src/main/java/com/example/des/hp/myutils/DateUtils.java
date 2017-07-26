@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
 import static java.lang.Math.abs;
 import static java.text.DateFormat.getDateInstance;
 
@@ -23,7 +24,6 @@ import static java.text.DateFormat.getDateInstance;
 //
 public class DateUtils extends BaseActivity
 {
-    private MyMessages myMessages;
     public static long unknownDate = 2051222400000L;
     public static long secondsInADay = 86400;
     public static long milliSecondsInADay = 86400 * 1000;
@@ -33,7 +33,6 @@ public class DateUtils extends BaseActivity
         try
         {
             Context _context = context;
-            myMessages = new MyMessages(_context);
         }
         catch (Exception e)
         {
@@ -283,9 +282,9 @@ public class DateUtils extends BaseActivity
             if (GetDay(ldate2, lday2) == false)
                 return (false);
             
-            myMessages.LogMessage("GetDiff Starts");
-            myMessages.LogMessage("date 1 " + lyear1.Value + ", " + lmonth1.Value + ", " + lday1.Value);
-            myMessages.LogMessage("date 2 " + lyear2.Value + ", " + lmonth2.Value + ", " + lday2.Value);
+            myMessages().LogMessage("GetDiff Starts");
+            myMessages().LogMessage("date 1 " + lyear1.Value + ", " + lmonth1.Value + ", " + lday1.Value);
+            myMessages().LogMessage("date 2 " + lyear2.Value + ", " + lmonth2.Value + ", " + lday2.Value);
             
             myDateDiff.year = lyear2.Value - lyear1.Value;
             myDateDiff.month = lmonth2.Value - lmonth1.Value;
@@ -296,17 +295,17 @@ public class DateUtils extends BaseActivity
                 Calendar c = Calendar.getInstance();
                 c.set(lyear1.Value, lyear2.Value, 1);
                 int lDaysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH);
-                myMessages.LogMessage("days in earlier month " + lyear1.Value + "/" + lmonth1.Value +
+                myMessages().LogMessage("days in earlier month " + lyear1.Value + "/" + lmonth1.Value +
                     " = " + lDaysInMonth);
                 
                 int lDaysStartOfNextMonth = lday2.Value;
-                myMessages.LogMessage("Days in next month " + lDaysStartOfNextMonth);
+                myMessages().LogMessage("Days in next month " + lDaysStartOfNextMonth);
                 
                 int lDaysEndOfThisMonth = lDaysInMonth - lday1.Value;
-                myMessages.LogMessage("Days to end of this month " + lDaysEndOfThisMonth);
+                myMessages().LogMessage("Days to end of this month " + lDaysEndOfThisMonth);
                 
                 myDateDiff.day = lDaysStartOfNextMonth + lDaysEndOfThisMonth;
-                myMessages.LogMessage("final number of days " + myDateDiff.day);
+                myMessages().LogMessage("final number of days " + myDateDiff.day);
                 
                 myDateDiff.month--;
             }
@@ -316,8 +315,8 @@ public class DateUtils extends BaseActivity
                 myDateDiff.month = 12 + myDateDiff.month;
                 myDateDiff.year--;
             }
-            myMessages.LogMessage("Diff " + myDateDiff.year + ", " + myDateDiff.month + ", " + myDateDiff.day);
-            myMessages.LogMessage("GetDiff Ends");
+            myMessages().LogMessage("Diff " + myDateDiff.year + ", " + myDateDiff.month + ", " + myDateDiff.day);
+            myMessages().LogMessage("GetDiff Ends");
             
         }
         catch (Exception e)

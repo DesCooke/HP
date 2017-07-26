@@ -27,10 +27,11 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.Notes.NoteView;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 public class ShowDetailsView extends BaseActivity
 {
 
-    public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO = 1;
     private final int MOVEITEM = 2;
     private ImageView imageViewSmall;
@@ -53,7 +54,6 @@ public class ShowDetailsView extends BaseActivity
     public CheckBox chkDepartureKnown;
     public TextView departs;
     public TextView txtBookingRef;
-    public MyMessages myMessages;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
     public RatingBar heartRating;
@@ -86,10 +86,10 @@ public class ShowDetailsView extends BaseActivity
         if(scheduleItem.noteId==0)
         {
             MyInt myInt = new MyInt();
-            if(!databaseAccess.getNextNoteId(holidayId, myInt))
+            if(!databaseAccess().getNextNoteId(holidayId, myInt))
                 return;
             scheduleItem.noteId = myInt.Value;
-            if(!databaseAccess.updateScheduleItem(scheduleItem))
+            if(!databaseAccess().updateScheduleItem(scheduleItem))
                 return;
         }
         intent2.putExtra("ACTION", "view");
@@ -128,7 +128,7 @@ public class ShowDetailsView extends BaseActivity
                             scheduleItem.showItem.attractionId = data.getIntExtra("ATTRACTIONID", 0);
                             scheduleItem.showItem.attractionAreaId = data.getIntExtra("ATTRACTIONAREAID", 0);
 
-                            databaseAccess.updateScheduleItem(scheduleItem);
+                            databaseAccess().updateScheduleItem(scheduleItem);
                             finish();
                         } catch (Exception e)
                         {
@@ -156,10 +156,8 @@ public class ShowDetailsView extends BaseActivity
         setContentView(R.layout.activity_show_details_view);
 
         actionBar = getSupportActionBar();
-        databaseAccess = new DatabaseAccess(this);
         dateUtils = new DateUtils(this);
         imageUtils = new ImageUtils(this);
-        myMessages = new MyMessages(this);
         myColor = new MyColor(this);
 
         cbPicturePicked=(CheckBox)findViewById(R.id.picturePicked);
@@ -210,7 +208,7 @@ public class ShowDetailsView extends BaseActivity
 
                 scheduleId = extras.getInt("SCHEDULEID");
                 scheduleItem = new ScheduleItem();
-                if (!databaseAccess.getScheduleItem(holidayId, dayId,
+                if (!databaseAccess().getScheduleItem(holidayId, dayId,
                         attractionId, attractionAreaId, scheduleId, scheduleItem))
                     return;
 
@@ -238,7 +236,7 @@ public class ShowDetailsView extends BaseActivity
                     MyInt lFileCount = new MyInt();
                     lFileCount.Value = 0;
                     if (scheduleItem.infoId > 0) {
-                        if (!databaseAccess.getExtraFilesCount(scheduleItem.infoId, lFileCount))
+                        if (!databaseAccess().getExtraFilesCount(scheduleItem.infoId, lFileCount))
                             return;
                     }
                     btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
@@ -253,7 +251,7 @@ public class ShowDetailsView extends BaseActivity
                             return;
                     }
                     NoteItem noteItem = new NoteItem();
-                    if(!databaseAccess.getNoteItem(scheduleItem.holidayId, scheduleItem.noteId, noteItem))
+                    if(!databaseAccess().getNoteItem(scheduleItem.holidayId, scheduleItem.noteId, noteItem))
                         return;
                     if (noteItem.notes.length() == 0)
                     {
@@ -339,7 +337,7 @@ return true;
     {
         try
         {
-        if(!databaseAccess.deleteScheduleItem(scheduleItem))
+        if(!databaseAccess().deleteScheduleItem(scheduleItem))
             return;
 
         finish();
@@ -473,10 +471,10 @@ return true;
         if(scheduleItem.infoId==0)
         {
             MyInt myInt = new MyInt();
-            if(!databaseAccess.getNextFileGroupId(myInt))
+            if(!databaseAccess().getNextFileGroupId(myInt))
                 return;
             scheduleItem.infoId = myInt.Value;
-            if(!databaseAccess.updateScheduleItem(scheduleItem))
+            if(!databaseAccess().updateScheduleItem(scheduleItem))
                 return;
         }
         intent2.putExtra("FILEGROUPID", scheduleItem.infoId);

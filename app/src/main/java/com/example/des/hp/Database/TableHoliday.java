@@ -22,9 +22,9 @@ import static java.lang.Math.abs;
 
 class TableHoliday extends TableBase
 {
-    TableHoliday(Context context, SQLiteOpenHelper dbHelper, MyMessages myMessages)
+    TableHoliday(Context context, SQLiteOpenHelper dbHelper)
     {
-        super(context, dbHelper, myMessages);
+        super(context, dbHelper);
     }
 
     public void ShowError(String argFunction, String argMessage)

@@ -15,10 +15,12 @@ import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class AttractionAreaDetailsEdit extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO = 1;
     private ImageView imageViewSmall;
     private String action;
@@ -34,7 +36,6 @@ public class AttractionAreaDetailsEdit extends BaseActivity
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public DialogWithMultiEditTextFragment dialogWithMultiEditTextFragment;
     public TextView txtAttractionAreaNotes;
-    public MyMessages myMessages;
     
     public void pickImage(View view)
     {
@@ -130,7 +131,7 @@ public class AttractionAreaDetailsEdit extends BaseActivity
         MyInt retInt = new MyInt();
         try
         {
-            myMessages.ShowMessageShort("Saving " + attractionAreaDescription.getText().toString());
+            myMessages().ShowMessageShort("Saving " + attractionAreaDescription.getText().toString());
             
             attractionAreaItem.pictureAssigned = cbPicturePicked.isChecked();
             attractionAreaItem.attractionAreaDescription = attractionAreaDescription.getText().toString();
@@ -144,13 +145,13 @@ public class AttractionAreaDetailsEdit extends BaseActivity
             {
                 attractionAreaItem.holidayId = holidayId;
                 attractionAreaItem.attractionId = attractionId;
-                if (!databaseAccess.getNextAttractionAreaId(holidayId, attractionId, retInt))
+                if (!databaseAccess().getNextAttractionAreaId(holidayId, attractionId, retInt))
                     return;
                 attractionAreaItem.attractionAreaId = retInt.Value;
-                if (!databaseAccess.getNextAttractionAreaSequenceNo(holidayId, attractionId, retInt))
+                if (!databaseAccess().getNextAttractionAreaSequenceNo(holidayId, attractionId, retInt))
                     return;
                 attractionAreaItem.sequenceNo = retInt.Value;
-                if (!databaseAccess.addAttractionAreaItem(attractionAreaItem))
+                if (!databaseAccess().addAttractionAreaItem(attractionAreaItem))
                     return;
             }
             
@@ -159,7 +160,7 @@ public class AttractionAreaDetailsEdit extends BaseActivity
                 attractionAreaItem.holidayId = holidayId;
                 attractionAreaItem.attractionId = attractionId;
                 attractionAreaItem.attractionAreaId = attractionAreaId;
-                if (!databaseAccess.updateAttractionAreaItem(attractionAreaItem))
+                if (!databaseAccess().updateAttractionAreaItem(attractionAreaItem))
                     return;
             }
             
@@ -285,10 +286,8 @@ public class AttractionAreaDetailsEdit extends BaseActivity
         
         try
         {
-            databaseAccess = new DatabaseAccess(this);
             actionBar = getSupportActionBar();
             imageUtils = new ImageUtils(this);
-            myMessages = new MyMessages(this);
             
             cbPicturePicked = (CheckBox) findViewById(R.id.picturePicked);
             imageViewSmall = (ImageView) findViewById(R.id.imageViewSmall);
@@ -320,7 +319,7 @@ public class AttractionAreaDetailsEdit extends BaseActivity
                     attractionId = extras.getInt("ATTRACTIONID");
                     attractionAreaId = extras.getInt("ATTRACTIONAREAID");
                     attractionAreaItem = new AttractionAreaItem();
-                    if (!databaseAccess.getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
+                    if (!databaseAccess().getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
                         return;
                     
                     attractionAreaDescription.setText(attractionAreaItem.attractionAreaDescription);

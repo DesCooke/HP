@@ -20,10 +20,11 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.Notes.NoteView;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 public class AttractionAreaView extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO = 1;
     private ImageView imageViewSmall;
     private String action;
@@ -35,7 +36,6 @@ public class AttractionAreaView extends BaseActivity
     public AttractionAreaItem attractionAreaItem;
     private ImageUtils imageUtils;
     public TextView txtAttractionAreaNotes;
-    public MyMessages myMessages;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
     public MyColor myColor;
@@ -62,10 +62,10 @@ public class AttractionAreaView extends BaseActivity
             if (attractionAreaItem.noteId == 0)
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess.getNextNoteId(holidayId, myInt))
+                if (!databaseAccess().getNextNoteId(holidayId, myInt))
                     return;
                 attractionAreaItem.noteId = myInt.Value;
-                if (!databaseAccess.updateAttractionAreaItem(attractionAreaItem))
+                if (!databaseAccess().updateAttractionAreaItem(attractionAreaItem))
                     return;
             }
             intent2.putExtra("ACTION", "view");
@@ -99,7 +99,7 @@ public class AttractionAreaView extends BaseActivity
                 attractionId = extras.getInt("ATTRACTIONID");
                 attractionAreaId = extras.getInt("ATTRACTIONAREAID");
                 attractionAreaItem = new AttractionAreaItem();
-                if (!databaseAccess.getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
+                if (!databaseAccess().getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
                     return;
                 
                 attractionAreaDescription.setText(attractionAreaItem.attractionAreaDescription);
@@ -115,7 +115,7 @@ public class AttractionAreaView extends BaseActivity
                 lFileCount.Value = 0;
                 if (attractionAreaItem.infoId > 0)
                 {
-                    if (!databaseAccess.getExtraFilesCount(attractionAreaItem.infoId, lFileCount))
+                    if (!databaseAccess().getExtraFilesCount(attractionAreaItem.infoId, lFileCount))
                         return;
                 }
                 btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
@@ -132,7 +132,7 @@ public class AttractionAreaView extends BaseActivity
                         return;
                 }
                 NoteItem noteItem = new NoteItem();
-                if (!databaseAccess.getNoteItem(attractionAreaItem.holidayId, attractionAreaItem.noteId, noteItem))
+                if (!databaseAccess().getNoteItem(attractionAreaItem.holidayId, attractionAreaItem.noteId, noteItem))
                     return;
                 if (noteItem.notes.length() == 0)
                 {
@@ -159,10 +159,10 @@ public class AttractionAreaView extends BaseActivity
             if (attractionAreaItem.infoId == 0)
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess.getNextFileGroupId(myInt))
+                if (!databaseAccess().getNextFileGroupId(myInt))
                     return;
                 attractionAreaItem.infoId = myInt.Value;
-                if (!databaseAccess.updateAttractionAreaItem(attractionAreaItem))
+                if (!databaseAccess().updateAttractionAreaItem(attractionAreaItem))
                     return;
             }
             intent2.putExtra("FILEGROUPID", attractionAreaItem.infoId);
@@ -201,10 +201,8 @@ public class AttractionAreaView extends BaseActivity
         {
             setContentView(R.layout.activity_attractionarea_view);
             
-            databaseAccess = new DatabaseAccess(this);
             actionBar = getSupportActionBar();
             imageUtils = new ImageUtils(this);
-            myMessages = new MyMessages(this);
             myColor = new MyColor(this);
             
             imageViewSmall = (ImageView) findViewById(R.id.imageViewSmall);

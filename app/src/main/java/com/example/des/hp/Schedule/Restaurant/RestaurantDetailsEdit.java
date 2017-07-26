@@ -19,10 +19,12 @@ import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.Schedule.*;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class RestaurantDetailsEdit extends BaseActivity
 {
 
-    public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO=1;
     private ImageView imageViewSmall;
     private String action;
@@ -45,7 +47,6 @@ public class RestaurantDetailsEdit extends BaseActivity
     public TextView departs;
     public TextView txtBookingRef;
     public MyColor myColor;
-    public MyMessages myMessages;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
     public RadioButton radUnknown;
@@ -246,7 +247,7 @@ public class RestaurantDetailsEdit extends BaseActivity
         try
         {
             MyInt myInt=new MyInt();
-            myMessages.ShowMessageShort("Saving Schedule");
+            myMessages().ShowMessageShort("Saving Schedule");
 
             scheduleItem.pictureAssigned=cbPicturePicked.isChecked();
             scheduleItem.schedName=txtSchedName.getText().toString();
@@ -269,11 +270,11 @@ public class RestaurantDetailsEdit extends BaseActivity
                 scheduleItem.attractionId=attractionId;
                 scheduleItem.attractionAreaId=attractionAreaId;
 
-                if(!databaseAccess.getNextScheduleId(holidayId, dayId, attractionId, attractionAreaId, myInt))
+                if(!databaseAccess().getNextScheduleId(holidayId, dayId, attractionId, attractionAreaId, myInt))
                     return;
                 scheduleItem.scheduleId=myInt.Value;
 
-                if(!databaseAccess.getNextScheduleSequenceNo(holidayId, dayId, attractionId, attractionAreaId, myInt))
+                if(!databaseAccess().getNextScheduleSequenceNo(holidayId, dayId, attractionId, attractionAreaId, myInt))
                     return;
                 scheduleItem.sequenceNo=myInt.Value;
 
@@ -293,7 +294,7 @@ public class RestaurantDetailsEdit extends BaseActivity
                 scheduleItem.restaurantItem.scheduleId=scheduleItem.scheduleId;
                 scheduleItem.restaurantItem.bookingReference=txtBookingRef.getText().toString();
 
-                if(!databaseAccess.addScheduleItem(scheduleItem))
+                if(!databaseAccess().addScheduleItem(scheduleItem))
                     return;
             }
 
@@ -310,7 +311,7 @@ public class RestaurantDetailsEdit extends BaseActivity
                     scheduleItem.restaurantItem.bookingReference=txtBookingRef.getText().toString();
                 }
 
-                if(!databaseAccess.updateScheduleItem(scheduleItem))
+                if(!databaseAccess().updateScheduleItem(scheduleItem))
                     return;
             }
 
@@ -357,7 +358,7 @@ public class RestaurantDetailsEdit extends BaseActivity
                 {
                     scheduleId=extras.getInt("SCHEDULEID");
                     scheduleItem=new ScheduleItem();
-                    if(!databaseAccess.getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, scheduleItem))
+                    if(!databaseAccess().getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, scheduleItem))
                         return;
 
                     chkCheckinKnown.setChecked(scheduleItem.startTimeKnown);
@@ -406,11 +407,9 @@ public class RestaurantDetailsEdit extends BaseActivity
             setContentView(R.layout.activity_restaurant_details_edit);
 
             actionBar=getSupportActionBar();
-            databaseAccess=new DatabaseAccess(this);
             dateUtils=new DateUtils(this);
             imageUtils=new ImageUtils(this);
             myColor=new MyColor(this);
-            myMessages=new MyMessages(this);
 
             cbPicturePicked=(CheckBox) findViewById(R.id.picturePicked);
             imageViewSmall=(ImageView) findViewById(R.id.imageViewSmall);
@@ -462,7 +461,7 @@ public class RestaurantDetailsEdit extends BaseActivity
     {
         try
         {
-            if(!databaseAccess.deleteScheduleItem(scheduleItem))
+            if(!databaseAccess().deleteScheduleItem(scheduleItem))
                 return;
 
             finish();

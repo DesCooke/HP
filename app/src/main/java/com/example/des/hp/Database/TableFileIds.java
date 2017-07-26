@@ -9,9 +9,9 @@ import com.example.des.hp.myutils.MyMessages;
 
 class TableFileIds extends TableBase
 {
-    TableFileIds(Context context, SQLiteOpenHelper dbHelper, MyMessages myMessages)
+    TableFileIds(Context context, SQLiteOpenHelper dbHelper)
     {
-        super(context, dbHelper, myMessages);
+        super(context, dbHelper);
     }
 
     public void ShowError(String argFunction, String argMessage)

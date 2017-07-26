@@ -21,10 +21,11 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.Notes.NoteView;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 public class BudgetDetailsView extends BaseActivity
 {
 
-    public DatabaseAccess databaseAccess;
     private ImageView imageView;
     public int holidayId;
     public int budgetId;
@@ -36,7 +37,6 @@ public class BudgetDetailsView extends BaseActivity
     public TextView txtBudgetPaid;
     public TextView txtBudgetUnpaid;
     public TextView txtBudgetNotes;
-    public MyMessages myMessages;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
     public MyColor myColor;
@@ -62,10 +62,10 @@ public class BudgetDetailsView extends BaseActivity
         if(budgetItem.noteId==0)
         {
             MyInt myInt = new MyInt();
-            if(!databaseAccess.getNextNoteId(holidayId, myInt))
+            if(!databaseAccess().getNextNoteId(holidayId, myInt))
                 return;
             budgetItem.noteId = myInt.Value;
-            if(!databaseAccess.updateBudgetItem(budgetItem))
+            if(!databaseAccess().updateBudgetItem(budgetItem))
                 return;
         }
         intent2.putExtra("ACTION", "view");
@@ -84,8 +84,6 @@ public class BudgetDetailsView extends BaseActivity
     public void showForm()
     {
         try {
-            databaseAccess = new DatabaseAccess(this);
-
             clearImage(null);
 
             Bundle extras = getIntent().getExtras();
@@ -95,7 +93,7 @@ public class BudgetDetailsView extends BaseActivity
                     holidayId = extras.getInt("HOLIDAYID");
                     budgetId = extras.getInt("BUDGETID");
                     budgetItem = new BudgetItem();
-                    if (!databaseAccess.getBudgetItem(holidayId, budgetId, budgetItem))
+                    if (!databaseAccess().getBudgetItem(holidayId, budgetId, budgetItem))
                         return;
 
                     actionBar = getSupportActionBar();
@@ -124,7 +122,7 @@ public class BudgetDetailsView extends BaseActivity
                     MyInt lFileCount = new MyInt();
                     lFileCount.Value = 0;
                     if (budgetItem.infoId > 0) {
-                        if (!databaseAccess.getExtraFilesCount(budgetItem.infoId, lFileCount))
+                        if (!databaseAccess().getExtraFilesCount(budgetItem.infoId, lFileCount))
                             return;
                     }
                     btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
@@ -141,7 +139,7 @@ public class BudgetDetailsView extends BaseActivity
                             return;
                     }
                     NoteItem noteItem = new NoteItem();
-                    if(!databaseAccess.getNoteItem(budgetItem.holidayId, budgetItem.noteId, noteItem))
+                    if(!databaseAccess().getNoteItem(budgetItem.holidayId, budgetItem.noteId, noteItem))
                         return;
                     if (noteItem.notes.length() == 0)
                     {
@@ -170,7 +168,6 @@ public class BudgetDetailsView extends BaseActivity
         try
         {
         imageUtils = new ImageUtils(this);
-        myMessages = new MyMessages(this);
         myColor = new MyColor(this);
 
         imageView = (ImageView)findViewById(R.id.imageViewSmall);
@@ -216,7 +213,7 @@ public class BudgetDetailsView extends BaseActivity
     {
         try
         {
-        if(!databaseAccess.deleteBudgetItem(budgetItem))
+        if(!databaseAccess().deleteBudgetItem(budgetItem))
             return;
         finish();
         }
@@ -261,10 +258,10 @@ public class BudgetDetailsView extends BaseActivity
         if(budgetItem.infoId==0)
         {
             MyInt myInt = new MyInt();
-            if(!databaseAccess.getNextFileGroupId(myInt))
+            if(!databaseAccess().getNextFileGroupId(myInt))
                 return;
             budgetItem.infoId = myInt.Value;
-            if(!databaseAccess.updateBudgetItem(budgetItem))
+            if(!databaseAccess().updateBudgetItem(budgetItem))
                 return;
         }
         intent2.putExtra("FILEGROUPID", budgetItem.infoId);

@@ -16,6 +16,8 @@ import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 /**
  ** Created by Des on 06/10/2016.
  */
@@ -24,7 +26,6 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
 {
     private Context context;
     public ArrayList<BudgetItem> data = null;
-    private DatabaseAccess databaseAccess;
     private OnItemClickListener mOnItemClickListener;
     private ImageUtils imageUtils;
 
@@ -65,7 +66,6 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
     BudgetAdapter(Activity activity, ArrayList<BudgetItem> items) {
         this.context = activity;
         imageUtils = new ImageUtils(activity);
-        databaseAccess = new DatabaseAccess(activity);
         data = items;
     }
 
@@ -132,7 +132,7 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
         {
             items.get(i).sequenceNo=i+1;
         }
-        if(!databaseAccess.updateBudgetItems(items))
+        if(!databaseAccess().updateBudgetItems(items))
             return;
         notifyDataSetChanged();
     }

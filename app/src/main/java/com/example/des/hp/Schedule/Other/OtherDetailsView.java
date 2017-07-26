@@ -33,10 +33,11 @@ import com.example.des.hp.Notes.NoteView;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 public class OtherDetailsView extends BaseActivity
 {
 
-    public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO=1;
     private final int MOVEITEM=2;
     private ImageView imageViewSmall;
@@ -61,7 +62,6 @@ public class OtherDetailsView extends BaseActivity
     public CheckBox chkDepartureKnown;
     public TextView departs;
     public TextView txtBookingRef;
-    public MyMessages myMessages;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
     public ImageButton btnShowInfo;
@@ -77,10 +77,10 @@ public class OtherDetailsView extends BaseActivity
             if(scheduleItem.noteId == 0)
             {
                 MyInt myInt=new MyInt();
-                if(!databaseAccess.getNextNoteId(holidayId, myInt))
+                if(!databaseAccess().getNextNoteId(holidayId, myInt))
                     return;
                 scheduleItem.noteId=myInt.Value;
-                if(!databaseAccess.updateScheduleItem(scheduleItem))
+                if(!databaseAccess().updateScheduleItem(scheduleItem))
                     return;
             }
             intent2.putExtra("ACTION", "view");
@@ -114,7 +114,7 @@ public class OtherDetailsView extends BaseActivity
                             scheduleItem.dayId=data.getIntExtra("DAYID", 0);
                             scheduleItem.attractionId=data.getIntExtra("ATTRACTIONID", 0);
                             scheduleItem.attractionAreaId=data.getIntExtra("ATTRACTIONAREAID", 0);
-                            databaseAccess.updateScheduleItem(scheduleItem);
+                            databaseAccess().updateScheduleItem(scheduleItem);
                             finish();
                         }
                         catch(Exception e)
@@ -154,10 +154,8 @@ public class OtherDetailsView extends BaseActivity
             setContentView(R.layout.activity_other_details_view);
 
             actionBar=getSupportActionBar();
-            databaseAccess=new DatabaseAccess(this);
             dateUtils=new DateUtils(this);
             imageUtils=new ImageUtils(this);
-            myMessages=new MyMessages(this);
             myColor=new MyColor(this);
 
             cbPicturePicked=(CheckBox) findViewById(R.id.picturePicked);
@@ -210,7 +208,7 @@ public class OtherDetailsView extends BaseActivity
                     scheduleItem=new ScheduleItem();
                     if(scheduleItem == null)
                         return;
-                    if(!databaseAccess.getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, scheduleItem))
+                    if(!databaseAccess().getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, scheduleItem))
                         return;
 
                     if(scheduleItem.schedType == getResources().getInteger(R.integer.schedule_type_unknown))
@@ -227,7 +225,7 @@ public class OtherDetailsView extends BaseActivity
                     lFileCount.Value=0;
                     if(scheduleItem.infoId > 0)
                     {
-                        if(!databaseAccess.getExtraFilesCount(scheduleItem.infoId, lFileCount))
+                        if(!databaseAccess().getExtraFilesCount(scheduleItem.infoId, lFileCount))
                             return;
                     }
                     btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
@@ -252,7 +250,7 @@ public class OtherDetailsView extends BaseActivity
                     if(imageUtils.getPageHeaderImage(this, scheduleItem.schedPicture, imageViewSmall) == false)
                         return;
                     NoteItem noteItem=new NoteItem();
-                    if(!databaseAccess.getNoteItem(scheduleItem.holidayId, scheduleItem.noteId, noteItem))
+                    if(!databaseAccess().getNoteItem(scheduleItem.holidayId, scheduleItem.noteId, noteItem))
                         return;
                     if(noteItem.notes.length() == 0)
                     {
@@ -380,10 +378,10 @@ public class OtherDetailsView extends BaseActivity
             if(scheduleItem.infoId == 0)
             {
                 MyInt myInt=new MyInt();
-                if(!databaseAccess.getNextFileGroupId(myInt))
+                if(!databaseAccess().getNextFileGroupId(myInt))
                     return;
                 scheduleItem.infoId=myInt.Value;
-                if(!databaseAccess.updateScheduleItem(scheduleItem))
+                if(!databaseAccess().updateScheduleItem(scheduleItem))
                     return;
             }
             intent2.putExtra("FILEGROUPID", scheduleItem.infoId);
@@ -402,7 +400,7 @@ public class OtherDetailsView extends BaseActivity
     {
         try
         {
-            if(!databaseAccess.deleteScheduleItem(scheduleItem))
+            if(!databaseAccess().deleteScheduleItem(scheduleItem))
                 return;
 
             finish();

@@ -10,9 +10,9 @@ import com.example.des.hp.myutils.MyMessages;
 
 class TableFlight extends TableBase
 {
-    TableFlight(Context context, SQLiteOpenHelper dbHelper, MyMessages myMessages)
+    TableFlight(Context context, SQLiteOpenHelper dbHelper)
     {
-        super(context, dbHelper, myMessages);
+        super(context, dbHelper);
     }
 
     public void ShowError(String argFunction, String argMessage)

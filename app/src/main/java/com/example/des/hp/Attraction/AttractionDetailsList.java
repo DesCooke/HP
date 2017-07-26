@@ -23,6 +23,8 @@ import com.example.des.hp.myutils.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 /**
  * * Created by Des on 02/11/2016.
  */
@@ -30,14 +32,12 @@ import java.util.Collections;
 public class AttractionDetailsList extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     public ArrayList<AttractionItem> attractionList;
     public int holidayId;
     public AttractionAdapter attractionAdapter;
     public String title;
     public String subtitle;
     public ActionBar actionBar;
-    public MyMessages myMessages;
     
     public void showAttractionAdd(View view)
     {
@@ -72,7 +72,7 @@ public class AttractionDetailsList extends BaseActivity
             }
             
             attractionList = new ArrayList<>();
-            if (!databaseAccess.getAttractionList(holidayId, attractionList))
+            if (!databaseAccess().getAttractionList(holidayId, attractionList))
                 return;
             
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.attractionListView);
@@ -206,8 +206,6 @@ public class AttractionDetailsList extends BaseActivity
         
         try
         {
-            databaseAccess = new DatabaseAccess(this);
-            myMessages = new MyMessages(this);
             actionBar = getSupportActionBar();
             
             title = "";

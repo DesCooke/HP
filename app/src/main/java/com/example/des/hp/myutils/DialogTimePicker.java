@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.example.des.hp.R;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 /**
  ** Created by Des on 27/10/2016.
  */
@@ -26,18 +28,16 @@ public class DialogTimePicker extends Dialog implements android.view.View.OnClic
     public int minute;
     public boolean timeKnown;
     public String title;
-    public MyMessages myMessages;
 
     public DialogTimePicker(Activity a)
     {
         super(a);
         Activity activity = a;
-        myMessages = new MyMessages(a);
     }
 
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages.ShowError
+        myMessages().ShowError
                 (
                         "Error in DialogTimePicker::" + argFunction,
                         argMessage

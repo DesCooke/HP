@@ -17,9 +17,9 @@ class TableTask extends TableBase
 {
     private DateUtils dateUtils;
 
-    TableTask(Context context, SQLiteOpenHelper dbHelper, MyMessages myMessages)
+    TableTask(Context context, SQLiteOpenHelper dbHelper)
     {
-        super(context, dbHelper, myMessages);
+        super(context, dbHelper);
         dateUtils=new DateUtils(context);
     }
 

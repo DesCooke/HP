@@ -22,6 +22,8 @@ import com.example.des.hp.myutils.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 /**
  * * Created by Des on 02/11/2016.
  */
@@ -29,7 +31,6 @@ import java.util.Collections;
 public class ScheduleAreaList extends BaseActivity
 {
 
-    public DatabaseAccess databaseAccess;
     public ArrayList<ScheduleAreaItem> scheduleAreaList;
     public int holidayId;
     public int dayId;
@@ -41,7 +42,6 @@ public class ScheduleAreaList extends BaseActivity
     public String subtitle;
     public ActionBar actionBar;
     public AttractionItem attractionItem;
-    public MyMessages myMessages;
 
     public void showForm()
     {
@@ -54,7 +54,7 @@ public class ScheduleAreaList extends BaseActivity
             }
 
             scheduleAreaList=new ArrayList<>();
-            if(!databaseAccess.getScheduleAreaList(holidayId, scheduleAreaList))
+            if(!databaseAccess().getScheduleAreaList(holidayId, scheduleAreaList))
                 return;
 
             RecyclerView recyclerView=(RecyclerView) findViewById(R.id.scheduleAreaListView);
@@ -93,9 +93,7 @@ public class ScheduleAreaList extends BaseActivity
         {
             setContentView(R.layout.activity_schedulearea_list);
 
-            databaseAccess=new DatabaseAccess(this);
             actionBar=getSupportActionBar();
-            myMessages=new MyMessages(this);
 
             title="";
             subtitle="";

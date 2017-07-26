@@ -22,6 +22,8 @@ import com.example.des.hp.myutils.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 /**
  ** Created by Des on 02/11/2016.
  */
@@ -29,7 +31,6 @@ import java.util.Collections;
 public class TipDetailsList extends BaseActivity
 {
 
-    public DatabaseAccess databaseAccess;
     public ArrayList<TipItem> tipList;
     public int holidayId;
     public int tipGroupId;
@@ -38,7 +39,6 @@ public class TipDetailsList extends BaseActivity
     public String subtitle;
     public ActionBar actionBar;
     public TipGroupItem tipGroupItem;
-    public MyMessages myMessages;
 
     public void showTipAdd(View view)
     {
@@ -71,11 +71,11 @@ public class TipDetailsList extends BaseActivity
             }
 
             tipGroupItem = new TipGroupItem();
-            if (!databaseAccess.getTipGroupItem(holidayId, tipGroupId, tipGroupItem))
+            if (!databaseAccess().getTipGroupItem(holidayId, tipGroupId, tipGroupItem))
                 return;
 
             tipList = new ArrayList<>();
-            if (!databaseAccess.getTipList(holidayId, tipGroupId, tipList))
+            if (!databaseAccess().getTipList(holidayId, tipGroupId, tipList))
                 return;
 
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.tipListView);
@@ -204,9 +204,7 @@ public class TipDetailsList extends BaseActivity
         {
         setContentView(R.layout.activity_tip_list);
 
-        databaseAccess = new DatabaseAccess(this);
         actionBar = getSupportActionBar();
-        myMessages = new MyMessages(this);
 
         title = "";
         subtitle = "";
@@ -270,7 +268,7 @@ public class TipDetailsList extends BaseActivity
         try
         {
 
-        if(!databaseAccess.deleteTipGroupItem(tipGroupItem))
+        if(!databaseAccess().deleteTipGroupItem(tipGroupItem))
             return;
         finish();
         }

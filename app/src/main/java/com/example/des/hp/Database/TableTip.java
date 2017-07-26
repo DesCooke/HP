@@ -16,9 +16,9 @@ import java.util.ArrayList;
 class TableTip extends TableBase
 {
 
-    TableTip(Context context, SQLiteOpenHelper dbHelper, MyMessages myMessages)
+    TableTip(Context context, SQLiteOpenHelper dbHelper)
     {
-        super(context, dbHelper, myMessages);
+        super(context, dbHelper);
         DateUtils dateUtils=new DateUtils(context);
     }
 

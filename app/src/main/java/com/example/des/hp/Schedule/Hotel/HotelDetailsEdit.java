@@ -26,10 +26,12 @@ import com.example.des.hp.Schedule.*;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class HotelDetailsEdit extends BaseActivity
 {
 
-    public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO = 1;
     private ImageView imageViewSmall;
     private String originalFileName;
@@ -53,7 +55,6 @@ public class HotelDetailsEdit extends BaseActivity
     public CheckBox chkDepartureKnown;
     public TextView departs;
     public TextView txtBookingRef;
-    public MyMessages myMessages;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
 
@@ -249,7 +250,7 @@ public class HotelDetailsEdit extends BaseActivity
         try {
             MyInt myInt = new MyInt();
 
-            myMessages.ShowMessageShort("Saving Schedule");
+            myMessages().ShowMessageShort("Saving Schedule");
 
             scheduleItem.pictureAssigned = cbPicturePicked.isChecked();
             scheduleItem.schedName = txtSchedName.getText().toString();
@@ -264,11 +265,11 @@ public class HotelDetailsEdit extends BaseActivity
                 scheduleItem.attractionId = attractionId;
                 scheduleItem.attractionAreaId = attractionAreaId;
 
-                if (!databaseAccess.getNextScheduleId(holidayId, dayId, attractionId, attractionAreaId, myInt))
+                if (!databaseAccess().getNextScheduleId(holidayId, dayId, attractionId, attractionAreaId, myInt))
                     return;
                 scheduleItem.scheduleId = myInt.Value;
 
-                if (!databaseAccess.getNextScheduleSequenceNo(holidayId, dayId, attractionId, attractionAreaId, myInt))
+                if (!databaseAccess().getNextScheduleSequenceNo(holidayId, dayId, attractionId, attractionAreaId, myInt))
                     return;
                 scheduleItem.sequenceNo = myInt.Value;
 
@@ -290,7 +291,7 @@ public class HotelDetailsEdit extends BaseActivity
 
                 scheduleItem.hotelItem = hotelItem;
 
-                if (!databaseAccess.addScheduleItem(scheduleItem))
+                if (!databaseAccess().addScheduleItem(scheduleItem))
                     return;
             }
 
@@ -305,7 +306,7 @@ public class HotelDetailsEdit extends BaseActivity
                     scheduleItem.hotelItem.bookingReference = txtBookingRef.getText().toString();
                 }
 
-                if (!databaseAccess.updateScheduleItem(scheduleItem))
+                if (!databaseAccess().updateScheduleItem(scheduleItem))
                     return;
             }
 
@@ -325,10 +326,8 @@ public class HotelDetailsEdit extends BaseActivity
             setContentView(R.layout.activity_hotel_details_edit);
 
             actionBar = getSupportActionBar();
-            databaseAccess = new DatabaseAccess(this);
             dateUtils = new DateUtils(this);
             imageUtils = new ImageUtils(this);
-            myMessages = new MyMessages(this);
 
             cbPicturePicked = (CheckBox) findViewById(R.id.picturePicked);
             imageViewSmall = (ImageView) findViewById(R.id.imageViewSmall);
@@ -364,7 +363,7 @@ public class HotelDetailsEdit extends BaseActivity
                 if (action != null && action.equals("edit")) {
                     scheduleId = extras.getInt("SCHEDULEID");
                     scheduleItem = new ScheduleItem();
-                    if (!databaseAccess.getScheduleItem(holidayId, dayId,
+                    if (!databaseAccess().getScheduleItem(holidayId, dayId,
                             attractionId, attractionAreaId, scheduleId, scheduleItem))
                         return;
 

@@ -17,22 +17,22 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.InputStream;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class ImageUtils
 {
     private Context _context;
     private Resources res;
-    private MyMessages myMessages;
 
     public ImageUtils(Context context)
     {
         _context = context;
         res = context.getResources();
-        myMessages = new MyMessages(_context);
     }
 
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages.ShowError
+        myMessages().ShowError
                 (
                         "Error in ImageUtils::" + argFunction,
                         argMessage

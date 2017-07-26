@@ -16,6 +16,8 @@ import com.example.des.hp.myutils.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 /**
  * * Created by Des on 02/11/2016.
  */
@@ -23,14 +25,12 @@ import java.util.Collections;
 public class ContactDetailsList extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     public ArrayList<ContactItem> contactList;
     public int holidayId;
     public ContactAdapter contactAdapter;
     public String title;
     public String subtitle;
     public ActionBar actionBar;
-    public MyMessages myMessages;
     
     public void showContactAdd(View view)
     {
@@ -65,7 +65,7 @@ public class ContactDetailsList extends BaseActivity
             }
             
             contactList = new ArrayList<>();
-            if (!databaseAccess.getContactList(holidayId, contactList))
+            if (!databaseAccess().getContactList(holidayId, contactList))
                 return;
             
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.contactListView);
@@ -199,9 +199,7 @@ public class ContactDetailsList extends BaseActivity
         
         try
         {
-            databaseAccess = new DatabaseAccess(this);
             actionBar = getSupportActionBar();
-            myMessages = new MyMessages(this);
             
             title = "";
             subtitle = "";

@@ -19,10 +19,11 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.Notes.NoteView;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 public class TipGroupDetailsView extends BaseActivity
 {
 
-    public DatabaseAccess databaseAccess;
     private ImageView imageView;
     public int holidayId;
     public int tipGroupId;
@@ -32,7 +33,6 @@ public class TipGroupDetailsView extends BaseActivity
     public TextView txtTipGroupDescription;
     public ActionBar actionBar;
     public TextView txtTipGroupNotes;
-    public MyMessages myMessages;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
     public MyColor myColor;
@@ -59,10 +59,10 @@ public class TipGroupDetailsView extends BaseActivity
         if(tipGroupItem.noteId==0)
         {
             MyInt myInt = new MyInt();
-            if(!databaseAccess.getNextNoteId(holidayId, myInt))
+            if(!databaseAccess().getNextNoteId(holidayId, myInt))
                 return;
             tipGroupItem.noteId = myInt.Value;
-            if(!databaseAccess.updateTipGroupItem(tipGroupItem))
+            if(!databaseAccess().updateTipGroupItem(tipGroupItem))
                 return;
         }
         intent2.putExtra("ACTION", "view");
@@ -82,8 +82,6 @@ public class TipGroupDetailsView extends BaseActivity
     public void showForm()
     {
         try {
-            databaseAccess = new DatabaseAccess(this);
-
             clearImage(null);
 
             Bundle extras = getIntent().getExtras();
@@ -93,7 +91,7 @@ public class TipGroupDetailsView extends BaseActivity
                     holidayId = extras.getInt("HOLIDAYID");
                     tipGroupId = extras.getInt("TIPGROUPID");
                     tipGroupItem = new TipGroupItem();
-                    if (!databaseAccess.getTipGroupItem(holidayId, tipGroupId, tipGroupItem))
+                    if (!databaseAccess().getTipGroupItem(holidayId, tipGroupId, tipGroupItem))
                         return;
 
                     actionBar = getSupportActionBar();
@@ -117,7 +115,7 @@ public class TipGroupDetailsView extends BaseActivity
                     MyInt lFileCount = new MyInt();
                     lFileCount.Value = 0;
                     if (tipGroupItem.infoId > 0) {
-                        if (!databaseAccess.getExtraFilesCount(tipGroupItem.infoId, lFileCount))
+                        if (!databaseAccess().getExtraFilesCount(tipGroupItem.infoId, lFileCount))
                             return;
                     }
                     btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
@@ -132,7 +130,7 @@ public class TipGroupDetailsView extends BaseActivity
                             return;
                     }
                     NoteItem noteItem = new NoteItem();
-                    if(!databaseAccess.getNoteItem(tipGroupItem.holidayId, tipGroupItem.noteId, noteItem))
+                    if(!databaseAccess().getNoteItem(tipGroupItem.holidayId, tipGroupItem.noteId, noteItem))
                         return;
                     if (noteItem.notes.length() == 0)
                     {
@@ -161,7 +159,6 @@ public class TipGroupDetailsView extends BaseActivity
         setContentView(R.layout.activity_tipgroup_details_view);
 
         imageUtils = new ImageUtils(this);
-        myMessages = new MyMessages(this);
         myColor = new MyColor(this);
 
         imageView = (ImageView)findViewById(R.id.imageViewSmall);
@@ -190,10 +187,10 @@ public class TipGroupDetailsView extends BaseActivity
         if(tipGroupItem.infoId==0)
         {
             MyInt myInt = new MyInt();
-            if(!databaseAccess.getNextFileGroupId(myInt))
+            if(!databaseAccess().getNextFileGroupId(myInt))
                 return;
             tipGroupItem.infoId = myInt.Value;
-            if(!databaseAccess.updateTipGroupItem(tipGroupItem))
+            if(!databaseAccess().updateTipGroupItem(tipGroupItem))
                 return;
         }
         intent2.putExtra("FILEGROUPID", tipGroupItem.infoId);
@@ -233,7 +230,7 @@ public class TipGroupDetailsView extends BaseActivity
     {
         try
         {
-        if(!databaseAccess.deleteTipGroupItem(tipGroupItem))
+        if(!databaseAccess().deleteTipGroupItem(tipGroupItem))
             return;
         finish();
         }

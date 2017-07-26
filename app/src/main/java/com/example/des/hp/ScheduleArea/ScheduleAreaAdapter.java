@@ -24,7 +24,6 @@ class ScheduleAreaAdapter extends RecyclerView.Adapter<ScheduleAreaAdapter.ViewH
 {
     private Context context;
     public ArrayList<ScheduleAreaItem> data = null;
-    private DatabaseAccess databaseAccess;
     private OnItemClickListener mOnItemClickListener;
     private ImageUtils imageUtils;
 
@@ -60,7 +59,6 @@ class ScheduleAreaAdapter extends RecyclerView.Adapter<ScheduleAreaAdapter.ViewH
     ScheduleAreaAdapter(Activity activity, ArrayList<ScheduleAreaItem> items) {
         this.context = activity;
         imageUtils = new ImageUtils(activity);
-        databaseAccess = new DatabaseAccess(activity);
         data = items;
     }
 

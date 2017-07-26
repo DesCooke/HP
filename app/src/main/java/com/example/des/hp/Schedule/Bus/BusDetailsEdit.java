@@ -26,10 +26,12 @@ import com.example.des.hp.Schedule.*;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class BusDetailsEdit extends BaseActivity
 {
     
-    public DatabaseAccess databaseAccess;
     private final int SELECT_PHOTO = 1;
     private ImageView imageViewSmall;
     private String originalFileName;
@@ -53,7 +55,6 @@ public class BusDetailsEdit extends BaseActivity
     public CheckBox chkArriveKnown;
     public TextView arrives;
     public TextView txtBookingRef;
-    public MyMessages myMessages;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
     
@@ -244,7 +245,7 @@ public class BusDetailsEdit extends BaseActivity
     {
         try
         {
-            myMessages.ShowMessageShort("Saving Schedule");
+            myMessages().ShowMessageShort("Saving Schedule");
             
             MyInt myInt = new MyInt();
             
@@ -261,11 +262,11 @@ public class BusDetailsEdit extends BaseActivity
                 scheduleItem.dayId = dayId;
                 scheduleItem.attractionId = attractionId;
                 scheduleItem.attractionAreaId = attractionAreaId;
-                if (!databaseAccess.getNextScheduleId(holidayId, dayId, attractionId, attractionAreaId, myInt))
+                if (!databaseAccess().getNextScheduleId(holidayId, dayId, attractionId, attractionAreaId, myInt))
                     return;
                 scheduleItem.scheduleId = myInt.Value;
                 
-                if (!databaseAccess.getNextScheduleSequenceNo(holidayId, dayId, attractionId, attractionAreaId, myInt))
+                if (!databaseAccess().getNextScheduleSequenceNo(holidayId, dayId, attractionId, attractionAreaId, myInt))
                     return;
                 scheduleItem.sequenceNo = myInt.Value;
                 
@@ -287,7 +288,7 @@ public class BusDetailsEdit extends BaseActivity
                 
                 scheduleItem.busItem = busItem;
                 
-                if (!databaseAccess.addScheduleItem(scheduleItem))
+                if (!databaseAccess().addScheduleItem(scheduleItem))
                     return;
             }
             
@@ -304,7 +305,7 @@ public class BusDetailsEdit extends BaseActivity
                     scheduleItem.busItem.bookingReference = txtBookingRef.getText().toString();
                 }
                 
-                if (!databaseAccess.updateScheduleItem(scheduleItem))
+                if (!databaseAccess().updateScheduleItem(scheduleItem))
                     return;
             }
             
@@ -326,10 +327,8 @@ public class BusDetailsEdit extends BaseActivity
             setContentView(R.layout.activity_bus_details_edit);
             
             actionBar = getSupportActionBar();
-            databaseAccess = new DatabaseAccess(this);
             dateUtils = new DateUtils(this);
             imageUtils = new ImageUtils(this);
-            myMessages = new MyMessages(this);
             
             cbPicturePicked = (CheckBox) findViewById(R.id.picturePicked);
             imageViewSmall = (ImageView) findViewById(R.id.imageViewSmall);
@@ -368,7 +367,7 @@ public class BusDetailsEdit extends BaseActivity
                 {
                     scheduleId = extras.getInt("SCHEDULEID");
                     scheduleItem = new ScheduleItem();
-                    if (!databaseAccess.getScheduleItem(holidayId, dayId,
+                    if (!databaseAccess().getScheduleItem(holidayId, dayId,
                         attractionId, attractionAreaId, scheduleId, scheduleItem))
                         return;
                     
@@ -437,7 +436,7 @@ public class BusDetailsEdit extends BaseActivity
     {
         try
         {
-            if (!databaseAccess.deleteScheduleItem(scheduleItem))
+            if (!databaseAccess().deleteScheduleItem(scheduleItem))
                 return;
             
             finish();

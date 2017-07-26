@@ -22,10 +22,11 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.Notes.NoteView;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 public class TipDetailsView extends BaseActivity
 {
 
-    public DatabaseAccess databaseAccess;
     private ImageView imageView;
     public int holidayId;
     public int tipGroupId;
@@ -36,7 +37,6 @@ public class TipDetailsView extends BaseActivity
     public TextView txtTipDescription;
     public ActionBar actionBar;
     public TextView txtTipNotes;
-    public MyMessages myMessages;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
     public MyColor myColor;
@@ -63,10 +63,10 @@ public class TipDetailsView extends BaseActivity
             if(tipItem.noteId == 0)
             {
                 MyInt myInt=new MyInt();
-                if(!databaseAccess.getNextNoteId(holidayId, myInt))
+                if(!databaseAccess().getNextNoteId(holidayId, myInt))
                     return;
                 tipItem.noteId=myInt.Value;
-                if(!databaseAccess.updateTipItem(tipItem))
+                if(!databaseAccess().updateTipItem(tipItem))
                     return;
             }
             intent2.putExtra("ACTION", "view");
@@ -87,8 +87,7 @@ public class TipDetailsView extends BaseActivity
     {
         try
         {
-            databaseAccess=new DatabaseAccess(this);
-
+            
             clearImage(null);
 
             Bundle extras=getIntent().getExtras();
@@ -101,7 +100,7 @@ public class TipDetailsView extends BaseActivity
                     tipGroupId=extras.getInt("TIPGROUPID");
                     tipId=extras.getInt("TIPID");
                     tipItem=new TipItem();
-                    if(!databaseAccess.getTipItem(holidayId, tipGroupId, tipId, tipItem))
+                    if(!databaseAccess().getTipItem(holidayId, tipGroupId, tipId, tipItem))
                         return;
 
                     actionBar=getSupportActionBar();
@@ -130,7 +129,7 @@ public class TipDetailsView extends BaseActivity
                     lFileCount.Value=0;
                     if(tipItem.infoId > 0)
                     {
-                        if(!databaseAccess.getExtraFilesCount(tipItem.infoId, lFileCount))
+                        if(!databaseAccess().getExtraFilesCount(tipItem.infoId, lFileCount))
                             return;
                     }
                     btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
@@ -147,7 +146,7 @@ public class TipDetailsView extends BaseActivity
                             return;
                     }
                     NoteItem noteItem=new NoteItem();
-                    if(!databaseAccess.getNoteItem(tipItem.holidayId, tipItem.noteId, noteItem))
+                    if(!databaseAccess().getNoteItem(tipItem.holidayId, tipItem.noteId, noteItem))
                         return;
                     if(noteItem.notes.length() == 0)
                     {
@@ -175,10 +174,10 @@ public class TipDetailsView extends BaseActivity
             if(tipItem.infoId == 0)
             {
                 MyInt myInt=new MyInt();
-                if(!databaseAccess.getNextFileGroupId(myInt))
+                if(!databaseAccess().getNextFileGroupId(myInt))
                     return;
                 tipItem.infoId=myInt.Value;
-                if(!databaseAccess.updateTipItem(tipItem))
+                if(!databaseAccess().updateTipItem(tipItem))
                     return;
             }
             intent2.putExtra("FILEGROUPID", tipItem.infoId);
@@ -203,7 +202,6 @@ public class TipDetailsView extends BaseActivity
             setContentView(R.layout.activity_tip_details_view);
 
             imageUtils=new ImageUtils(this);
-            myMessages=new MyMessages(this);
             myColor=new MyColor(this);
 
             imageView=(ImageView) findViewById(R.id.imageViewSmall);
@@ -248,7 +246,7 @@ public class TipDetailsView extends BaseActivity
     {
         try
         {
-            if(!databaseAccess.deleteTipItem(tipItem))
+            if(!databaseAccess().deleteTipItem(tipItem))
                 return;
             finish();
         }

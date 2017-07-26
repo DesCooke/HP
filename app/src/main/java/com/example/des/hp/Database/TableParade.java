@@ -10,9 +10,9 @@ import com.example.des.hp.myutils.MyMessages;
 
 class TableParade extends TableBase
 {
-    TableParade(Context context, SQLiteOpenHelper dbHelper, MyMessages myMessages)
+    TableParade(Context context, SQLiteOpenHelper dbHelper)
     {
-        super(context, dbHelper, myMessages);
+        super(context, dbHelper);
     }
 
     public void ShowError(String argFunction, String argMessage)

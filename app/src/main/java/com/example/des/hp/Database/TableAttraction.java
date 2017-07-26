@@ -15,9 +15,9 @@ import java.util.ArrayList;
 
 class TableAttraction extends TableBase
 {
-    TableAttraction(Context context, SQLiteOpenHelper dbHelper, MyMessages myMessages)
+    TableAttraction(Context context, SQLiteOpenHelper dbHelper)
     {
-        super(context, dbHelper, myMessages);
+        super(context, dbHelper);
     }
 
     public void ShowError(String argFunction, String argMessage)

@@ -14,6 +14,8 @@ import com.example.des.hp.R;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 
 /**
  ** Created by Des on 27/10/2016.
@@ -26,18 +28,16 @@ public class DialogDatePicker extends Dialog implements android.view.View.OnClic
     private DatePicker datePicker;
     private boolean setInitialDate;
     private Date initialDate;
-    private MyMessages myMessages;
 
     public DialogDatePicker(Activity a)
     {
         super(a);
         setInitialDate = false;
-        myMessages = new MyMessages(a);
     }
 
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages.ShowError
+        myMessages().ShowError
                 (
                         "Error in DialogDatePicker::" + argFunction,
                         argMessage
