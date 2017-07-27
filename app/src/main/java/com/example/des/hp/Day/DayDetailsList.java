@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
+import com.example.des.hp.Dialog.BaseFullPageRecycleView;
 import com.example.des.hp.R;
 import com.example.des.hp.Holiday.*;
 import com.example.des.hp.myutils.*;
@@ -25,10 +26,10 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
  * * Created by Des on 02/11/2016.
  */
 
-public class DayDetailsList extends BaseActivity
+public class DayDetailsList extends BaseFullPageRecycleView
 {
     public ArrayList<DayItem> dayList;
-    public int holidayId;
+
     public HolidayItem holidayItem;
     public DayAdapter dayAdapter;
     
@@ -50,33 +51,24 @@ public class DayDetailsList extends BaseActivity
     public void showForm()
     {
         super.showForm();
-        myMessages().ShowMessageShort("BaseActivity::showForm");
         try
         {
+            allowCellMove=true;
+
             holidayItem = new HolidayItem();
             if (!databaseAccess().getHolidayItem(holidayId, holidayItem))
                 return;
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null)
-            {
-                actionBar.setTitle(holidayItem.holidayName);
-                actionBar.setSubtitle("Itinerary");
-            }
-            
+
+            SetTitles(holidayItem.holidayName, "Itinerary");
+
             databaseAccess().currentStartDate = holidayItem.startDateDate;
             dayList = new ArrayList<>();
             if (!databaseAccess().getDayList(holidayId, dayList))
                 return;
-            
-            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.dayListView);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this/*getActivity()*/));
-            recyclerView.setHasFixedSize(true);
-            //listView1.setDivider(null);
             dayAdapter = new DayAdapter(this, dayList);
-            recyclerView.setAdapter(dayAdapter);
-            
-            itemTouchHelper.attachToRecyclerView(recyclerView);
-            
+
+            CreateRecyclerView(R.id.dayListView, dayAdapter);
+
             dayAdapter.setOnItemClickListener
                 (
                     new DayAdapter.OnItemClickListener()
@@ -101,91 +93,24 @@ public class DayDetailsList extends BaseActivity
         
     }
     
-    // handle swipe to delete, and draggable
-    ItemTouchHelper itemTouchHelper =
-        new ItemTouchHelper
-            (
-                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)
-                {
-                    int dragFrom = -1;
-                    int dragTo = -1;
-                    
-                    @Override
-                    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
-                    {
-                        int fromPosition = viewHolder.getAdapterPosition();
-                        int toPosition = target.getAdapterPosition();
-                        
-                        
-                        if (dragFrom == -1)
-                        {
-                            dragFrom = fromPosition;
-                        }
-                        dragTo = toPosition;
-                        
-                        if (fromPosition < toPosition)
-                        {
-                            for (int i = fromPosition; i < toPosition; i++)
-                            {
-                                Collections.swap(dayAdapter.data, i, i + 1);
-                            }
-                        } else
-                        {
-                            for (int i = fromPosition; i > toPosition; i--)
-                            {
-                                Collections.swap(dayAdapter.data, i, i - 1);
-                            }
-                        }
-                        dayAdapter.notifyItemMoved(fromPosition, toPosition);
-                        
-                        return true;
-                    }
-                    
-                    @Override
-                    public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
-                    {
-                        int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-                        int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-                        return makeMovementFlags(dragFlags, swipeFlags);
-                    }
-                    
-                    @Override
-                    public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction)
-                    {
-                    }
-                    
-                    @Override
-                    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
-                    {
-                        super.clearView(recyclerView, viewHolder);
-                        
-                        if (dragFrom != -1 && dragTo != -1 && dragFrom != dragTo)
-                        {
-                            dayAdapter.onItemMove(dragFrom, dragTo);
-                        }
-                        
-                        dragFrom = dragTo = -1;
-                    }
-                    
-                }
-            );
-/*
     @Override
-    protected void onResume()
+    public void SwapItems(int from, int to)
     {
-        super.onResume();
-        
-        try
-        {
-            showForm();
-        }
-        catch (Exception e)
-        {
-            ShowError("onResume", e.getMessage());
-        }
-        
+        Collections.swap(dayAdapter.data, from, to);
     }
-*/
+
+    @Override
+    public void OnItemMove(int from, int to)
+    {
+        dayAdapter.onItemMove(from, to);
+    }
+
+    @Override
+    public void NotifyItemMoved(int from, int to)
+    {
+        dayAdapter.notifyItemMoved(from, to);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
