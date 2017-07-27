@@ -14,105 +14,185 @@ import java.util.Collections;
  * Created by cooked on 26/07/2017.
  */
 
-public abstract class BaseFullPageRecycleView  extends BaseActivity
+public abstract class BaseFullPageRecycleView extends BaseActivity
 {
     public int holidayId=0;
     public boolean allowCellMove=false;
     public boolean allowCellSwipe=false;
+    public RecyclerView recyclerView;
+    private final String KEY_RECYCLER_STATE="recycler_state";
+    private static Bundle mBundleRecyclerViewState;
+
 
     public void CreateRecyclerView(int pView, RecyclerView.Adapter adapter)
     {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.dayListView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this/*getActivity()*/));
+        try
+        {
+        recyclerView=(RecyclerView) findViewById(pView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         //listView1.setDivider(null);
         recyclerView.setAdapter(adapter);
 
-
         itemTouchHelper.attachToRecyclerView(recyclerView);
+        }
+        catch(Exception e)
+        {
+            ShowError("CreateRecyclerView", e.getMessage());
+        }
 
     }
 
 
-
     public abstract void OnItemMove(int from, int to);
+
     public abstract void SwapItems(int from, int to);
+
     public abstract void NotifyItemMoved(int from, int to);
 
     // handle swipe to delete, and draggable
-    ItemTouchHelper itemTouchHelper =
-        new ItemTouchHelper
-            (
-                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)
+    ItemTouchHelper itemTouchHelper=new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)
+    {
+        int dragFrom=-1;
+        int dragTo=-1;
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
+        {
+            int fromPosition=viewHolder.getAdapterPosition();
+            int toPosition=target.getAdapterPosition();
+
+            try
+            {
+                if(dragFrom == -1)
                 {
-                    int dragFrom = -1;
-                    int dragTo = -1;
-
-                    @Override
-                    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
-                    {
-                        int fromPosition = viewHolder.getAdapterPosition();
-                        int toPosition = target.getAdapterPosition();
-
-
-                        if (dragFrom == -1)
-                        {
-                            dragFrom = fromPosition;
-                        }
-                        dragTo = toPosition;
-
-                        if (fromPosition < toPosition)
-                        {
-                            for (int i = fromPosition; i < toPosition; i++)
-                            {
-                                SwapItems(i, i+1); //Collections.swap(dayAdapter.data, i, i + 1);
-                            }
-                        } else
-                        {
-                            for (int i = fromPosition; i > toPosition; i--)
-                            {
-                                SwapItems(i, i-1); //Collections.swap(dayAdapter.data, i, i - 1);
-                            }
-                        }
-                        NotifyItemMoved(fromPosition, toPosition);//dayAdapter.notifyItemMoved(fromPosition, toPosition);
-
-                        return true;
-                    }
-
-                    @Override
-                    public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
-                    {
-                        int dragFlags=0;
-                        int swipeFlags=0;
-
-                        if(allowCellMove)
-                            dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-
-                        if(allowCellSwipe)
-                            swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-
-                        return makeMovementFlags(dragFlags, swipeFlags);
-                    }
-
-                    @Override
-                    public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction)
-                    {
-                    }
-
-                    @Override
-                    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
-                    {
-                        super.clearView(recyclerView, viewHolder);
-
-                        if (dragFrom != -1 && dragTo != -1 && dragFrom != dragTo)
-                        {
-                            OnItemMove(dragFrom, dragTo);
-                        }
-
-                        dragFrom = dragTo = -1;
-                    }
-
+                    dragFrom=fromPosition;
                 }
-            );
+                dragTo=toPosition;
 
+                if(fromPosition < toPosition)
+                {
+                    for(int i=fromPosition; i < toPosition; i++)
+                    {
+                        SwapItems(i, i + 1);
+                    }
+                } else
+                {
+                    for(int i=fromPosition; i > toPosition; i--)
+                    {
+                        SwapItems(i, i - 1);
+                    }
+                }
+                NotifyItemMoved(fromPosition, toPosition);
+            }
+            catch(Exception e)
+            {
+                ShowError("onMove", e.getMessage());
+            }
+
+            return true;
+        }
+
+        @Override
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
+        {
+            int dragFlags=0;
+            int swipeFlags=0;
+
+            if(allowCellMove)
+                dragFlags=ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+
+            if(allowCellSwipe)
+                swipeFlags=ItemTouchHelper.START | ItemTouchHelper.END;
+
+            return makeMovementFlags(dragFlags, swipeFlags);
+        }
+
+        @Override
+        public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction)
+        {
+        }
+
+        @Override
+        public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
+        {
+            super.clearView(recyclerView, viewHolder);
+
+            try
+            {
+                if(dragFrom != -1 && dragTo != -1 && dragFrom != dragTo)
+                {
+                    OnItemMove(dragFrom, dragTo);
+                }
+
+                dragFrom=dragTo=-1;
+            }
+            catch(Exception e)
+            {
+                ShowError("clearView", e.getMessage());
+            }
+
+        }
+
+    });
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        try
+        {
+            // save RecyclerView state
+            mBundleRecyclerViewState=new Bundle();
+            Parcelable listState=recyclerView.getLayoutManager().onSaveInstanceState();
+            mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
+        }
+        catch(Exception e)
+        {
+            ShowError("onPause", e.getMessage());
+        }
+
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        try
+        {
+            // restore RecyclerView state
+            if(mBundleRecyclerViewState != null)
+            {
+                Parcelable listState=mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
+                recyclerView.getLayoutManager().onRestoreInstanceState(listState);
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("onResume", e.getMessage());
+        }
+
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        try
+        {
+            Bundle extras=getIntent().getExtras();
+            if(extras != null)
+            {
+                holidayId=extras.getInt("HOLIDAYID");
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("onCreate", e.getMessage());
+        }
+
+    }
 }
