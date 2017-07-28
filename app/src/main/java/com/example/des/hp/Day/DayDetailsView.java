@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
+import com.example.des.hp.Dialog.BaseFullPageRecycleView;
 import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
 import com.example.des.hp.Highlight.PageHighlightsFragment;
 import com.example.des.hp.PageFragmentAdapter;
@@ -31,7 +32,11 @@ import com.example.des.hp.Schedule.Park.*;
 import com.example.des.hp.Schedule.Parade.*;
 import com.example.des.hp.Schedule.Cinema.*;
 import com.example.des.hp.Schedule.Other.*;
+import com.example.des.hp.Schedule.Restaurant.RestaurantDetailsView;
 import com.example.des.hp.Schedule.Ride.RideDetailsEdit;
+import com.example.des.hp.Schedule.Ride.RideDetailsView;
+import com.example.des.hp.Schedule.ScheduleAdapter;
+import com.example.des.hp.Schedule.ScheduleItem;
 import com.example.des.hp.Schedule.Show.*;
 import com.example.des.hp.Schedule.Restaurant.RestaurantDetailsEdit;
 import com.example.des.hp.myutils.*;
@@ -39,35 +44,30 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.Notes.NoteView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static java.security.AccessController.getContext;
 
-public class DayDetailsView extends BaseActivity
+public class DayDetailsView extends BaseFullPageRecycleView
 {
     
     private final int SELECT_PHOTO = 1;
     private ImageView imageView;
-    public int holidayId;
-    public int dayId;
     public DateUtils dateUtils;
     public LinearLayout grpStartDate;
     public String holidayName;
     public CheckBox cb;
     public DayItem dayItem;
     private ImageUtils imageUtils;
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
-    private PageScheduleFragment f_schedule;
-    private PageHighlightsFragment f_highlights;
-    private ActionBar actionBar;
     private TextView txtDayCat;
-    public ImageButton btnShowInfo;
-    public BadgeView btnShowInfoBadge;
     public MyColor myColor;
     public LinearLayout grpMenuFile;
-    public ImageButton btnShowNotes;
+    public ArrayList<ScheduleItem> scheduleList;
+    public ScheduleAdapter scheduleAdapter;
     
     public void clearImage(View view)
     {
@@ -82,49 +82,6 @@ public class DayDetailsView extends BaseActivity
         
     }
     
-    public void showNotes(View view)
-    {
-        try
-        {
-            Intent intent2 = new Intent(getApplicationContext(), NoteView.class);
-            if (dayItem.noteId == 0)
-            {
-                MyInt myInt = new MyInt();
-                if (!databaseAccess().getNextNoteId(holidayId, myInt))
-                    return;
-                dayItem.noteId = myInt.Value;
-                if (!databaseAccess().updateDayItem(dayItem))
-                    return;
-            }
-            intent2.putExtra("ACTION", "view");
-            intent2.putExtra("HOLIDAYID", dayItem.holidayId);
-            intent2.putExtra("NOTEID", dayItem.noteId);
-            intent2.putExtra("TITLE", dayItem.dayName);
-            intent2.putExtra("SUBTITLE", "Notes");
-            startActivity(intent2);
-        }
-        catch (Exception e)
-        {
-            ShowError("showNotes", e.getMessage());
-        }
-    }
-    
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        
-        try
-        {
-            showForm();
-        }
-        catch (Exception e)
-        {
-            ShowError("onResume", e.getMessage());
-        }
-        
-    }
-    
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -133,22 +90,15 @@ public class DayDetailsView extends BaseActivity
         {
             setContentView(R.layout.activity_day_details_view);
             
+            afterCreate();
+            
             dateUtils = new DateUtils(this);
             imageUtils = new ImageUtils(this);
             myColor = new MyColor(this);
             
-            viewPager = (ViewPager) findViewById(R.id.viewpager);
             imageView = (ImageView) findViewById(R.id.imageView);
-            tabLayout = (TabLayout) findViewById(R.id.tabs);
-            actionBar = getSupportActionBar();
             txtDayCat = (TextView) findViewById(R.id.txtDayCat);
-            btnShowInfo = (ImageButton) findViewById(R.id.btnShowInfo);
             grpMenuFile = (LinearLayout) findViewById(R.id.grpMenuFile);
-            btnShowNotes = (ImageButton) findViewById(R.id.btnShowNotes);
-            
-            btnShowInfoBadge = new BadgeView(this, btnShowInfo);
-            btnShowInfoBadge.setText(Integer.toString(0));
-            btnShowInfoBadge.show();
             
             showForm();
         }
@@ -159,243 +109,273 @@ public class DayDetailsView extends BaseActivity
         
     }
     
-    public void showInfo(View view)
+    @Override
+    public int getInfoId()
     {
-        try
-        {
-            Intent intent2 = new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
-            if (dayItem.infoId == 0)
-            {
-                MyInt myInt = new MyInt();
-                if (!databaseAccess().getNextFileGroupId(myInt))
-                    return;
-                dayItem.infoId = myInt.Value;
-                if (!databaseAccess().updateDayItem(dayItem))
-                    return;
-            }
-            intent2.putExtra("FILEGROUPID", dayItem.infoId);
-            intent2.putExtra("TITLE", dayItem.dayName);
-            intent2.putExtra("SUBTITLE", "Info");
-            startActivity(intent2);
-        }
-        catch (Exception e)
-        {
-            ShowError("showInfo", e.getMessage());
-        }
+        return (dayItem.infoId);
     }
     
-    
-    private void setupViewPager(ViewPager viewPager)
+    public void setNoteId(int pNoteId)
     {
-        try
-        {
-            PageFragmentAdapter adapter = new PageFragmentAdapter(getSupportFragmentManager());
-            if (f_schedule == null)
-            {
-                f_schedule = new PageScheduleFragment();
-                if (actionBar != null)
-                {
-                    if (actionBar.getTitle() != null)
-                        f_schedule.title = actionBar.getTitle().toString();
-                    if (actionBar.getSubtitle() != null)
-                        f_schedule.subTitle = actionBar.getSubtitle().toString();
-                }
-            }
-            
-            if (f_highlights == null)
-            {
-                f_highlights = new PageHighlightsFragment();
-            }
-            
-            adapter.addFragment(f_schedule, getString(R.string.tab_schedule));
-            adapter.addFragment(f_highlights, getString(R.string.tab_highlights));
-            
-            viewPager.setAdapter(adapter);
-        }
-        catch (Exception e)
-        {
-            ShowError("setupViewPager", e.getMessage());
-        }
+        dayItem.noteId = pNoteId;
+        if (!databaseAccess().updateDayItem(dayItem))
+            return;
+    }
+    
+    @Override
+    public int getNoteId()
+    {
+        return (dayItem.noteId);
+    }
+    
+    @Override
+    public void setInfoId(int pInfoId)
+    {
+        dayItem.infoId = pInfoId;
+        if (!databaseAccess().updateDayItem(dayItem))
+            return;
     }
     
     public void showForm()
     {
+        super.showForm();
         try
         {
+            allowCellMove = true;
+            
             clearImage(null);
             
-            Bundle extras = getIntent().getExtras();
-            if (extras != null)
+            if (action != null && action.equals("view"))
             {
-                String action = extras.getString("ACTION");
-                if (action != null && action.equals("view"))
+                dayItem = new DayItem();
+                if (!databaseAccess().getDayItem(holidayId, dayId, dayItem))
+                    return;
+                
+                HolidayItem holidayItem = new HolidayItem();
+                if (!databaseAccess().getHolidayItem(holidayId, holidayItem))
+                    return;
+                
+                String originalFileName = dayItem.dayPicture;
+                if (imageUtils.getPageHeaderImage(this, dayItem.dayPicture, imageView) == false)
+                    return;
+                
+                String lSubTitle;
+                MyBoolean isUnknown = new MyBoolean();
+                if (!dateUtils.IsUnknown(databaseAccess().currentStartDate, isUnknown))
+                    return;
+                if (isUnknown.Value)
                 {
-                    holidayId = extras.getInt("HOLIDAYID");
-                    dayId = extras.getInt("DAYID");
-                    dayItem = new DayItem();
-                    if (!databaseAccess().getDayItem(holidayId, dayId, dayItem))
+                    lSubTitle = String.format(Locale.ENGLISH, getResources().getString(R.string.fmt_day_line), dayItem.sequenceNo);
+                } else
+                {
+                    Date lcurrdate = new Date();
+                    
+                    // we subtract 1 because sequenceno starts at 1 - but we want to add 0 days for the
+                    // first element
+                    if (dateUtils.AddDays(databaseAccess().currentStartDate, (dayItem.sequenceNo - 1), lcurrdate) == false)
                         return;
                     
-                    HolidayItem holidayItem = new HolidayItem();
-                    if (!databaseAccess().getHolidayItem(holidayId, holidayItem))
+                    MyString myString = new MyString();
+                    if (dateUtils.DateToStr(lcurrdate, myString) == false)
                         return;
-                    
-                    String originalFileName = dayItem.dayPicture;
-                    if (imageUtils.getPageHeaderImage(this, dayItem.dayPicture, imageView) == false)
-                        return;
-                    
-                    String lSubTitle;
-                    MyBoolean isUnknown = new MyBoolean();
-                    if (!dateUtils.IsUnknown(databaseAccess().currentStartDate, isUnknown))
-                        return;
-                    if (isUnknown.Value)
-                    {
-                        lSubTitle = String.format(Locale.ENGLISH, getResources().getString(R.string.fmt_day_line), dayItem.sequenceNo);
-                    } else
-                    {
-                        Date lcurrdate = new Date();
-                        
-                        // we subtract 1 because sequenceno starts at 1 - but we want to add 0 days for the
-                        // first element
-                        if (dateUtils.AddDays(databaseAccess().currentStartDate, (dayItem.sequenceNo - 1), lcurrdate) == false)
-                            return;
-                        
-                        MyString myString = new MyString();
-                        if (dateUtils.DateToStr(lcurrdate, myString) == false)
-                            return;
-                        lSubTitle = String.format(Locale.ENGLISH, getResources().getString(R.string.fmt_date_line), myString.Value);
-                    }
-                    
-                    
-                    if (actionBar != null)
-                    {
-                        actionBar.setTitle(holidayItem.holidayName);
-                        actionBar.setSubtitle(dayItem.dayName + " / " + lSubTitle);
-                    }
-                    
-                    int lColor = -1;
-                    String lDayCat = "Day Category: <unknown>";
-                    if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_easy))
-                    {
-                        lColor = getColor(R.color.colorEasy);
-                        lDayCat = "Day Category: Easy";
-                    }
-                    if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_moderate))
-                    {
-                        lColor = getColor(R.color.colorModerate);
-                        lDayCat = "Day Category: Moderate";
-                    }
-                    if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_busy))
-                    {
-                        lColor = getColor(R.color.colorBusy);
-                        lDayCat = "Day Category: VBusy";
-                    }
-                    
-                    txtDayCat.setText(lDayCat);
-                    if (lColor != -1)
-                    {
-                        viewPager.setBackgroundColor(lColor);
-                        txtDayCat.setBackgroundColor(lColor);
-                        grpMenuFile.setBackgroundColor(lColor);
-                    }
-                    
-                    MyInt lFileCount = new MyInt();
-                    lFileCount.Value = 0;
-                    if (dayItem.infoId > 0)
-                    {
-                        if (!databaseAccess().getExtraFilesCount(dayItem.infoId, lFileCount))
-                            return;
-                    }
-                    btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
-                    
-                    if (lFileCount.Value == 0)
-                    {
-                        btnShowInfoBadge.setVisibility(View.INVISIBLE);
-                        if (myColor.SetImageButtonTint(btnShowInfo, R.color.colorDisabled) == false)
-                            return;
-                    } else
-                    {
-                        btnShowInfoBadge.setVisibility(View.VISIBLE);
-                        if (myColor.SetImageButtonTint(btnShowInfo, R.color.colorEnabled) == false)
-                            return;
-                    }
-                    
-                    NoteItem noteItem = new NoteItem();
-                    if (!databaseAccess().getNoteItem(dayItem.holidayId, dayItem.noteId, noteItem))
-                        return;
-                    if (noteItem.notes.length() == 0)
-                    {
-                        if (myColor.SetImageButtonTint(btnShowNotes, R.color.colorDisabled) == false)
-                            return;
-                    } else
-                    {
-                        if (myColor.SetImageButtonTint(btnShowNotes, R.color.colorEnabled) == false)
-                            return;
-                    }
+                    lSubTitle = String.format(Locale.ENGLISH, getResources().getString(R.string.fmt_date_line), myString.Value);
                 }
                 
+                
+                SetTitles(holidayItem.holidayName, dayItem.dayName + " / " + lSubTitle);
+                
+                
+                int lColor = -1;
+                String lDayCat = "Day Category: <unknown>";
+                if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_easy))
+                {
+                    lColor = getColor(R.color.colorEasy);
+                    lDayCat = "Day Category: Easy";
+                }
+                if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_moderate))
+                {
+                    lColor = getColor(R.color.colorModerate);
+                    lDayCat = "Day Category: Moderate";
+                }
+                if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_busy))
+                {
+                    lColor = getColor(R.color.colorBusy);
+                    lDayCat = "Day Category: VBusy";
+                }
+                
+                txtDayCat.setText(lDayCat);
+                if (lColor != -1)
+                {
+                    txtDayCat.setBackgroundColor(lColor);
+                    grpMenuFile.setBackgroundColor(lColor);
+                }
+                
+                scheduleList = new ArrayList<>();
+                if (!databaseAccess().getScheduleList(holidayId, dayId, attractionId, attractionAreaId, scheduleList))
+                    return;
+                scheduleAdapter = new ScheduleAdapter(this, scheduleList);
+                
+                CreateRecyclerView(R.id.dayListView, scheduleAdapter);
+                if (lColor != -1)
+                    recyclerView.setBackgroundColor(lColor);
+                
+                scheduleAdapter.setOnItemClickListener(new ScheduleAdapter.OnItemClickListener()
+                {
+                    @Override
+                    public void onItemClick(View view, ScheduleItem obj, int position)
+                    {
+                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_flight))
+                        {
+                            Intent intent = new Intent(getApplicationContext(), FlightDetailsView.class);
+                            intent.putExtra("ACTION", "view");
+                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
+                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
+                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
+                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
+                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
+                            intent.putExtra("TITLE", title);
+                            intent.putExtra("SUBTITLE", subTitle);
+                            
+                            startActivity(intent);
+                        }
+                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_hotel))
+                        {
+                            Intent intent = new Intent(getApplicationContext(), HotelDetailsView.class);
+                            intent.putExtra("ACTION", "view");
+                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
+                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
+                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
+                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
+                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
+                            intent.putExtra("TITLE", title);
+                            intent.putExtra("SUBTITLE", subTitle);
+                            
+                            startActivity(intent);
+                        }
+                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_bus))
+                        {
+                            Intent intent = new Intent(getApplicationContext(), BusDetailsView.class);
+                            intent.putExtra("ACTION", "edit");
+                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
+                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
+                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
+                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
+                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
+                            intent.putExtra("TITLE", title);
+                            intent.putExtra("SUBTITLE", subTitle);
+                            
+                            startActivity(intent);
+                        }
+                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_show))
+                        {
+                            Intent intent = new Intent(getApplicationContext(), ShowDetailsView.class);
+                            intent.putExtra("ACTION", "view");
+                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
+                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
+                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
+                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
+                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
+                            intent.putExtra("TITLE", title);
+                            intent.putExtra("SUBTITLE", subTitle);
+                            
+                            startActivity(intent);
+                        }
+                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_restaurant))
+                        {
+                            Intent intent = new Intent(getApplicationContext(), RestaurantDetailsView.class);
+                            intent.putExtra("ACTION", "view");
+                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
+                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
+                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
+                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
+                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
+                            intent.putExtra("TITLE", title);
+                            intent.putExtra("SUBTITLE", subTitle);
+                            
+                            startActivity(intent);
+                        }
+                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_ride))
+                        {
+                            Intent intent = new Intent(getApplicationContext(), RideDetailsView.class);
+                            intent.putExtra("ACTION", "view");
+                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
+                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
+                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
+                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
+                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
+                            intent.putExtra("TITLE", title);
+                            intent.putExtra("SUBTITLE", subTitle);
+                            
+                            startActivity(intent);
+                        }
+                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_cinema))
+                        {
+                            Intent intent = new Intent(getApplicationContext(), CinemaDetailsView.class);
+                            intent.putExtra("ACTION", "edit");
+                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
+                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
+                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
+                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
+                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
+                            intent.putExtra("TITLE", title);
+                            intent.putExtra("SUBTITLE", subTitle);
+                            
+                            startActivity(intent);
+                        }
+                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_park))
+                        {
+                            Intent intent = new Intent(getApplicationContext(), ParkDetailsView.class);
+                            intent.putExtra("ACTION", "view");
+                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
+                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
+                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
+                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
+                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
+                            intent.putExtra("TITLE", title);
+                            intent.putExtra("SUBTITLE", subTitle);
+                            
+                            startActivity(intent);
+                        }
+                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_parade))
+                        {
+                            Intent intent = new Intent(getApplicationContext(), ParadeDetailsView.class);
+                            intent.putExtra("ACTION", "view");
+                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
+                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
+                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
+                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
+                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
+                            intent.putExtra("TITLE", title);
+                            intent.putExtra("SUBTITLE", subTitle);
+                            
+                            startActivity(intent);
+                        }
+                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_other))
+                        {
+                            Intent intent = new Intent(getApplicationContext(), OtherDetailsView.class);
+                            intent.putExtra("ACTION", "view");
+                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
+                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
+                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
+                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
+                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
+                            intent.putExtra("TITLE", title);
+                            intent.putExtra("SUBTITLE", subTitle);
+                            
+                            startActivity(intent);
+                        }
+                    }
+                });
+                afterShow();
             }
-            setupViewPager(viewPager);
             
-            tabLayout.setupWithViewPager(viewPager);
-            setupTabIcons();
-            setupTabClick();
+            
         }
         catch (Exception e)
         {
             ShowError("showForm", e.getMessage());
         }
         
-    }
-    
-    private void setupTabClick()
-    {
-        /*
-        try
-        {
-            tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
-            {
-                @Override
-                public void onTabSelected(TabLayout.Tab tab)
-                {
-                    int position = tab.getPosition();
-                    viewPager.setCurrentItem(position);
-                }
-                
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab)
-                {
-                }
-                
-                @Override
-                public void onTabReselected(TabLayout.Tab tab)
-                {
-                }
-            });
-        }
-        catch (Exception e)
-        {
-            ShowError("setupTabClick", e.getMessage());
-        }
-        */
-        
-    }
-    
-    private void setupTabIcons()
-    {
-        try
-        {
-            TabLayout.Tab lScheduleTab = tabLayout.getTabAt(0);
-            TabLayout.Tab lHighlightsTab = tabLayout.getTabAt(1);
-            if (lScheduleTab != null)
-                lScheduleTab.setText(getResources().getString(R.string.tab_schedule));
-            if (lHighlightsTab != null)
-                lHighlightsTab.setText(getResources().getString(R.string.tab_highlights));
-        }
-        catch (Exception e)
-        {
-            ShowError("setupTabIcons", e.getMessage());
-        }
     }
     
     public void editDay()
@@ -422,15 +402,8 @@ public class DayDetailsView extends BaseActivity
             intent.putExtra("ACTION", "add");
             intent.putExtra("HOLIDAYID", holidayId);
             intent.putExtra("DAYID", dayId);
-            if (actionBar != null)
-            {
-                CharSequence lTitle = actionBar.getTitle();
-                if (lTitle != null)
-                    intent.putExtra("TITLE", lTitle.toString());
-                CharSequence lSubTitle = actionBar.getSubtitle();
-                if (lSubTitle != null)
-                    intent.putExtra("SUBTITLE", lSubTitle.toString());
-            }
+            intent.putExtra("TITLE", title);
+            intent.putExtra("SUBTITLE", subTitle);
             startActivity(intent);
         }
         catch (Exception e)
@@ -449,15 +422,8 @@ public class DayDetailsView extends BaseActivity
             intent.putExtra("DAYID", dayId);
             intent.putExtra("ATTRACTIONID", 0);
             intent.putExtra("ATTRACTIONAREAID", 0);
-            if (actionBar != null)
-            {
-                CharSequence lTitle = actionBar.getTitle();
-                if (lTitle != null)
-                    intent.putExtra("TITLE", lTitle.toString());
-                CharSequence lSubTitle = actionBar.getSubtitle();
-                if (lSubTitle != null)
-                    intent.putExtra("SUBTITLE", lSubTitle.toString());
-            }
+            intent.putExtra("TITLE", title);
+            intent.putExtra("SUBTITLE", subTitle);
             startActivity(intent);
         }
         catch (Exception e)
@@ -476,15 +442,8 @@ public class DayDetailsView extends BaseActivity
             intent.putExtra("DAYID", dayId);
             intent.putExtra("ATTRACTIONID", 0);
             intent.putExtra("ATTRACTIONAREAID", 0);
-            if (actionBar != null)
-            {
-                CharSequence lTitle = actionBar.getTitle();
-                if (lTitle != null)
-                    intent.putExtra("TITLE", lTitle.toString());
-                CharSequence lSubTitle = actionBar.getSubtitle();
-                if (lSubTitle != null)
-                    intent.putExtra("SUBTITLE", lSubTitle.toString());
-            }
+            intent.putExtra("TITLE", title);
+            intent.putExtra("SUBTITLE", subTitle);
             startActivity(intent);
         }
         catch (Exception e)
@@ -504,15 +463,8 @@ public class DayDetailsView extends BaseActivity
             intent.putExtra("DAYID", dayId);
             intent.putExtra("ATTRACTIONID", 0);
             intent.putExtra("ATTRACTIONAREAID", 0);
-            if (actionBar != null)
-            {
-                CharSequence lTitle = actionBar.getTitle();
-                if (lTitle != null)
-                    intent.putExtra("TITLE", lTitle.toString());
-                CharSequence lSubTitle = actionBar.getSubtitle();
-                if (lSubTitle != null)
-                    intent.putExtra("SUBTITLE", lSubTitle.toString());
-            }
+            intent.putExtra("TITLE", title);
+            intent.putExtra("SUBTITLE", subTitle);
             startActivity(intent);
         }
         catch (Exception e)
@@ -531,15 +483,8 @@ public class DayDetailsView extends BaseActivity
             intent.putExtra("DAYID", dayId);
             intent.putExtra("ATTRACTIONID", 0);
             intent.putExtra("ATTRACTIONAREAID", 0);
-            if (actionBar != null)
-            {
-                CharSequence lTitle = actionBar.getTitle();
-                if (lTitle != null)
-                    intent.putExtra("TITLE", lTitle.toString());
-                CharSequence lSubTitle = actionBar.getSubtitle();
-                if (lSubTitle != null)
-                    intent.putExtra("SUBTITLE", lSubTitle.toString());
-            }
+            intent.putExtra("TITLE", title);
+            intent.putExtra("SUBTITLE", subTitle);
             startActivity(intent);
         }
         catch (Exception e)
@@ -558,15 +503,8 @@ public class DayDetailsView extends BaseActivity
             intent.putExtra("DAYID", dayId);
             intent.putExtra("ATTRACTIONID", 0);
             intent.putExtra("ATTRACTIONAREAID", 0);
-            if (actionBar != null)
-            {
-                CharSequence lTitle = actionBar.getTitle();
-                if (lTitle != null)
-                    intent.putExtra("TITLE", lTitle.toString());
-                CharSequence lSubTitle = actionBar.getSubtitle();
-                if (lSubTitle != null)
-                    intent.putExtra("SUBTITLE", lSubTitle.toString());
-            }
+            intent.putExtra("TITLE", title);
+            intent.putExtra("SUBTITLE", subTitle);
             startActivity(intent);
         }
         catch (Exception e)
@@ -585,15 +523,8 @@ public class DayDetailsView extends BaseActivity
             intent.putExtra("DAYID", dayId);
             intent.putExtra("ATTRACTIONID", 0);
             intent.putExtra("ATTRACTIONAREAID", 0);
-            if (actionBar != null)
-            {
-                CharSequence lTitle = actionBar.getTitle();
-                if (lTitle != null)
-                    intent.putExtra("TITLE", lTitle.toString());
-                CharSequence lSubTitle = actionBar.getSubtitle();
-                if (lSubTitle != null)
-                    intent.putExtra("SUBTITLE", lSubTitle.toString());
-            }
+            intent.putExtra("TITLE", title);
+            intent.putExtra("SUBTITLE", subTitle);
             startActivity(intent);
         }
         catch (Exception e)
@@ -613,15 +544,8 @@ public class DayDetailsView extends BaseActivity
             intent.putExtra("DAYID", dayId);
             intent.putExtra("ATTRACTIONID", 0);
             intent.putExtra("ATTRACTIONAREAID", 0);
-            if (actionBar != null)
-            {
-                CharSequence lTitle = actionBar.getTitle();
-                if (lTitle != null)
-                    intent.putExtra("TITLE", lTitle.toString());
-                CharSequence lSubTitle = actionBar.getSubtitle();
-                if (lSubTitle != null)
-                    intent.putExtra("SUBTITLE", lSubTitle.toString());
-            }
+            intent.putExtra("TITLE", title);
+            intent.putExtra("SUBTITLE", subTitle);
             startActivity(intent);
         }
         catch (Exception e)
@@ -640,15 +564,8 @@ public class DayDetailsView extends BaseActivity
             intent.putExtra("DAYID", dayId);
             intent.putExtra("ATTRACTIONID", 0);
             intent.putExtra("ATTRACTIONAREAID", 0);
-            if (actionBar != null)
-            {
-                CharSequence lTitle = actionBar.getTitle();
-                if (lTitle != null)
-                    intent.putExtra("TITLE", lTitle.toString());
-                CharSequence lSubTitle = actionBar.getSubtitle();
-                if (lSubTitle != null)
-                    intent.putExtra("SUBTITLE", lSubTitle.toString());
-            }
+            intent.putExtra("TITLE", title);
+            intent.putExtra("SUBTITLE", subTitle);
             startActivity(intent);
         }
         catch (Exception e)
@@ -667,15 +584,8 @@ public class DayDetailsView extends BaseActivity
             intent.putExtra("DAYID", dayId);
             intent.putExtra("ATTRACTIONID", 0);
             intent.putExtra("ATTRACTIONAREAID", 0);
-            if (actionBar != null)
-            {
-                CharSequence lTitle = actionBar.getTitle();
-                if (lTitle != null)
-                    intent.putExtra("TITLE", lTitle.toString());
-                CharSequence lSubTitle = actionBar.getSubtitle();
-                if (lSubTitle != null)
-                    intent.putExtra("SUBTITLE", lSubTitle.toString());
-            }
+            intent.putExtra("TITLE", title);
+            intent.putExtra("SUBTITLE", subTitle);
             startActivity(intent);
         }
         catch (Exception e)
@@ -766,4 +676,23 @@ public class DayDetailsView extends BaseActivity
         }
         return true;
     }
+    
+    @Override
+    public void SwapItems(int from, int to)
+    {
+        Collections.swap(scheduleAdapter.data, from, to);
+    }
+    
+    @Override
+    public void OnItemMove(int from, int to)
+    {
+        scheduleAdapter.onItemMove(from, to);
+    }
+    
+    @Override
+    public void NotifyItemMoved(int from, int to)
+    {
+        scheduleAdapter.notifyItemMoved(from, to);
+    }
+    
 }

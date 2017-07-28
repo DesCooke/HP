@@ -24,7 +24,7 @@ import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
  ** Created by Des on 06/10/2016.
  */
 
-class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder>
+public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder>
 {
     private Context context;
     private int layoutResourceId;
@@ -42,14 +42,15 @@ class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder>
     private Drawable drawableOther;
     private Drawable drawableRide;
 
-    interface OnItemClickListener {
+    public interface OnItemClickListener {
         void onItemClick(View view, ScheduleItem obj, int position);
     }
 
-    void setOnItemClickListener(final OnItemClickListener mItemClickListener)
+    public void setOnItemClickListener(final OnItemClickListener mItemClickListener)
     {
         this.mOnItemClickListener = mItemClickListener;
     }
+    
 
     class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
@@ -80,7 +81,7 @@ class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder>
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    ScheduleAdapter(Activity activity, ArrayList<ScheduleItem> items) {
+    public ScheduleAdapter(Activity activity, ArrayList<ScheduleItem> items) {
         this.context = activity;
         imageUtils = new ImageUtils(activity);
         DateUtils dateUtils = new DateUtils(activity);
@@ -238,7 +239,7 @@ class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder>
         notifyDataSetChanged();
     }
 
-    boolean onItemMove(int fromPosition, int toPosition) {
+    public boolean onItemMove(int fromPosition, int toPosition) {
         updateGlobalData(data);
         return true;
     }

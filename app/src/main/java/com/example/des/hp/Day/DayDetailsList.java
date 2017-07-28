@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.des.hp.Dialog.BaseFullPageRecycleView;
+import com.example.des.hp.Dialog.BaseItem;
 import com.example.des.hp.R;
 import com.example.des.hp.Holiday.*;
 
@@ -19,6 +20,16 @@ public class DayDetailsList extends BaseFullPageRecycleView
     public ArrayList<DayItem> dayList;
     public HolidayItem holidayItem;
     public DayAdapter dayAdapter;
+
+    @Override
+    public void setInfoId(int pInfoId){}
+    @Override
+    public int getInfoId(){return 0;}
+    
+    @Override
+    public void setNoteId(int pNoteId){}
+    @Override
+    public int getNoteId(){return 0;}
 
     public void showDayAdd(View view)
     {

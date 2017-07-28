@@ -2,11 +2,13 @@ package com.example.des.hp.Day;
 
 import android.graphics.Bitmap;
 
+import com.example.des.hp.Dialog.BaseItem;
+
 /**
  ** Created by Des on 16/10/2016.
  */
 
-public class DayItem
+public class DayItem extends BaseItem
 {
     // Fields
     public int holidayId;

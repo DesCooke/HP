@@ -10,6 +10,9 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class BaseActivity extends AppCompatActivity
 {
+    public String title;
+    public String subTitle;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -19,8 +22,11 @@ public class BaseActivity extends AppCompatActivity
         MyMessages.SetContext(this);
     }
 
-    public void SetTitles(String title, String subTitle)
+    public void SetTitles(String pTitle, String pSubTitle)
     {
+        title=pTitle;
+        subTitle= pSubTitle;
+        
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null)
         {

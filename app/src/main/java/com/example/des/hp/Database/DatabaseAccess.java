@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.des.hp.Dialog.BaseItem;
 import com.example.des.hp.MainActivity;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.R;
