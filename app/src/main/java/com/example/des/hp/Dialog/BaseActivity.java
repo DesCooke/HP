@@ -53,7 +53,28 @@ public class BaseActivity extends AppCompatActivity
         
         ErrorDialog.Show("Error in " + lv_title, argMessage);
     }
-    
+
+    public int getInfoId()
+    {
+        return(0);
+    }
+
+    public int getNoteId()
+    {
+        return(0);
+    }
+
+    public void setInfoId(int pInfoId)
+    {
+
+    }
+
+    public void setNoteId(int pNoteId)
+    {
+
+    }
+
+
     @Override
     protected void onResume()
     {

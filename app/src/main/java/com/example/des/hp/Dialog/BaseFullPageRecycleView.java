@@ -21,12 +21,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 /**
  * Created by cooked on 26/07/2017.
  */
 
-public abstract class BaseFullPageRecycleView extends BaseActivity
+public class BaseFullPageRecycleView extends BaseActivity
 {
     // Inter Intent variables
     public int holidayId = 0;
@@ -187,19 +188,19 @@ public abstract class BaseFullPageRecycleView extends BaseActivity
         }
     }
     
-    public abstract void OnItemMove(int from, int to);
+    public void OnItemMove(int from, int to)
+    {
+    }
     
-    public abstract void SwapItems(int from, int to);
+    public void SwapItems(int from, int to)
+    {
+
+    }
     
-    public abstract void NotifyItemMoved(int from, int to);
-    
-    public abstract int getInfoId();
-    
-    public abstract int getNoteId();
-    
-    public abstract void setInfoId(int pInfoId);
-    
-    public abstract void setNoteId(int pNoteId);
+    public void NotifyItemMoved(int from, int to)
+    {
+
+    }
 
     // handle swipe to delete, and draggable
     ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)

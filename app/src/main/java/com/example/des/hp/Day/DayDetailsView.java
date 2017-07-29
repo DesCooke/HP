@@ -1,5 +1,6 @@
 package com.example.des.hp.Day;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -50,6 +51,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
 import static java.security.AccessController.getContext;
 
 public class DayDetailsView extends BaseFullPageRecycleView
@@ -394,29 +396,11 @@ public class DayDetailsView extends BaseFullPageRecycleView
         }
     }
     
-    public void addFlight()
+    public void StartNewIntent(Class neededClass)
     {
         try
         {
-            Intent intent = new Intent(getApplicationContext(), FlightDetailsEdit.class);
-            intent.putExtra("ACTION", "add");
-            intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("DAYID", dayId);
-            intent.putExtra("TITLE", title);
-            intent.putExtra("SUBTITLE", subTitle);
-            startActivity(intent);
-        }
-        catch (Exception e)
-        {
-            ShowError("addFlight", e.getMessage());
-        }
-    }
-    
-    public void addHotel()
-    {
-        try
-        {
-            Intent intent = new Intent(getApplicationContext(), HotelDetailsEdit.class);
+            Intent intent = new Intent(getApplicationContext(), neededClass);
             intent.putExtra("ACTION", "add");
             intent.putExtra("HOLIDAYID", holidayId);
             intent.putExtra("DAYID", dayId);
@@ -428,172 +412,11 @@ public class DayDetailsView extends BaseFullPageRecycleView
         }
         catch (Exception e)
         {
-            ShowError("addHotel", e.getMessage());
+            ShowError("StartNewIntent", e.getMessage());
         }
     }
-    
-    public void addCinema()
-    {
-        try
-        {
-            Intent intent = new Intent(getApplicationContext(), CinemaDetailsEdit.class);
-            intent.putExtra("ACTION", "add");
-            intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("DAYID", dayId);
-            intent.putExtra("ATTRACTIONID", 0);
-            intent.putExtra("ATTRACTIONAREAID", 0);
-            intent.putExtra("TITLE", title);
-            intent.putExtra("SUBTITLE", subTitle);
-            startActivity(intent);
-        }
-        catch (Exception e)
-        {
-            ShowError("addCinema", e.getMessage());
-        }
-        
-    }
-    
-    public void addPark()
-    {
-        try
-        {
-            Intent intent = new Intent(getApplicationContext(), ParkDetailsEdit.class);
-            intent.putExtra("ACTION", "add");
-            intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("DAYID", dayId);
-            intent.putExtra("ATTRACTIONID", 0);
-            intent.putExtra("ATTRACTIONAREAID", 0);
-            intent.putExtra("TITLE", title);
-            intent.putExtra("SUBTITLE", subTitle);
-            startActivity(intent);
-        }
-        catch (Exception e)
-        {
-            ShowError("addPark", e.getMessage());
-        }
-    }
-    
-    public void addRide()
-    {
-        try
-        {
-            Intent intent = new Intent(getApplicationContext(), RideDetailsEdit.class);
-            intent.putExtra("ACTION", "add");
-            intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("DAYID", dayId);
-            intent.putExtra("ATTRACTIONID", 0);
-            intent.putExtra("ATTRACTIONAREAID", 0);
-            intent.putExtra("TITLE", title);
-            intent.putExtra("SUBTITLE", subTitle);
-            startActivity(intent);
-        }
-        catch (Exception e)
-        {
-            ShowError("addRide", e.getMessage());
-        }
-    }
-    
-    public void addParade()
-    {
-        try
-        {
-            Intent intent = new Intent(getApplicationContext(), ParadeDetailsEdit.class);
-            intent.putExtra("ACTION", "add");
-            intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("DAYID", dayId);
-            intent.putExtra("ATTRACTIONID", 0);
-            intent.putExtra("ATTRACTIONAREAID", 0);
-            intent.putExtra("TITLE", title);
-            intent.putExtra("SUBTITLE", subTitle);
-            startActivity(intent);
-        }
-        catch (Exception e)
-        {
-            ShowError("addParade", e.getMessage());
-        }
-    }
-    
-    public void addOther()
-    {
-        try
-        {
-            Intent intent = new Intent(getApplicationContext(), OtherDetailsEdit.class);
-            intent.putExtra("ACTION", "add");
-            intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("DAYID", dayId);
-            intent.putExtra("ATTRACTIONID", 0);
-            intent.putExtra("ATTRACTIONAREAID", 0);
-            intent.putExtra("TITLE", title);
-            intent.putExtra("SUBTITLE", subTitle);
-            startActivity(intent);
-        }
-        catch (Exception e)
-        {
-            ShowError("addOther", e.getMessage());
-        }
-        
-    }
-    
-    public void addBus()
-    {
-        try
-        {
-            Intent intent = new Intent(getApplicationContext(), BusDetailsEdit.class);
-            intent.putExtra("ACTION", "add");
-            intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("DAYID", dayId);
-            intent.putExtra("ATTRACTIONID", 0);
-            intent.putExtra("ATTRACTIONAREAID", 0);
-            intent.putExtra("TITLE", title);
-            intent.putExtra("SUBTITLE", subTitle);
-            startActivity(intent);
-        }
-        catch (Exception e)
-        {
-            ShowError("addBus", e.getMessage());
-        }
-    }
-    
-    public void addShow()
-    {
-        try
-        {
-            Intent intent = new Intent(getApplicationContext(), ShowDetailsEdit.class);
-            intent.putExtra("ACTION", "add");
-            intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("DAYID", dayId);
-            intent.putExtra("ATTRACTIONID", 0);
-            intent.putExtra("ATTRACTIONAREAID", 0);
-            intent.putExtra("TITLE", title);
-            intent.putExtra("SUBTITLE", subTitle);
-            startActivity(intent);
-        }
-        catch (Exception e)
-        {
-            ShowError("addShow", e.getMessage());
-        }
-    }
-    
-    public void addRestaurant()
-    {
-        try
-        {
-            Intent intent = new Intent(getApplicationContext(), RestaurantDetailsEdit.class);
-            intent.putExtra("ACTION", "add");
-            intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("DAYID", dayId);
-            intent.putExtra("ATTRACTIONID", 0);
-            intent.putExtra("ATTRACTIONAREAID", 0);
-            intent.putExtra("TITLE", title);
-            intent.putExtra("SUBTITLE", subTitle);
-            startActivity(intent);
-        }
-        catch (Exception e)
-        {
-            ShowError("addRestaurant", e.getMessage());
-        }
-    }
-    
+
+
     public void deleteDay()
     {
         try
@@ -623,34 +446,34 @@ public class DayDetailsView extends BaseFullPageRecycleView
                     deleteDay();
                     return true;
                 case R.id.action_add_flight:
-                    addFlight();
+                    StartNewIntent(FlightDetailsEdit.class);
                     return true;
                 case R.id.action_add_hotel:
-                    addHotel();
+                    StartNewIntent(HotelDetailsEdit.class);
                     return true;
                 case R.id.action_add_show:
-                    addShow();
+                    StartNewIntent(ShowDetailsEdit.class);
                     return true;
                 case R.id.action_add_bus:
-                    addBus();
+                    StartNewIntent(BusDetailsEdit.class);
                     return true;
                 case R.id.action_add_restaurant:
-                    addRestaurant();
+                    StartNewIntent(RestaurantDetailsEdit.class);
                     return true;
                 case R.id.action_add_cinema:
-                    addCinema();
+                    StartNewIntent(CinemaDetailsEdit.class);
                     return true;
                 case R.id.action_add_park:
-                    addPark();
+                    StartNewIntent(ParkDetailsEdit.class);
                     return true;
                 case R.id.action_add_parade:
-                    addParade();
+                    StartNewIntent(ParadeDetailsEdit.class);
                     return true;
                 case R.id.action_add_ride:
-                    addRide();
+                    StartNewIntent(RideDetailsEdit.class);
                     return true;
                 case R.id.action_add_other:
-                    addOther();
+                    StartNewIntent(OtherDetailsEdit.class);
                     return true;
                 default:
                     return super.onOptionsItemSelected(item);
