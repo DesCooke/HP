@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyColor.myColor;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 /**
@@ -29,26 +30,12 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class BaseFullPageRecycleView extends BaseActivity
 {
-    // Inter Intent variables
-    public int holidayId = 0;
-    public int dayId = 0;
-    public int attractionId = 0;
-    public int attractionAreaId = 0;
-    public String action;
-    
+
     public boolean allowCellMove = false;
     public boolean allowCellSwipe = false;
     public RecyclerView recyclerView;
     private final String KEY_RECYCLER_STATE = "recycler_state";
     private Bundle mBundleRecyclerViewState;
-    
-    public boolean showInfoEnabled;
-    public ImageButton btnShowInfo;
-    public BadgeView btnShowInfoBadge;
-    
-    public boolean showNotesEnabled;
-    public ImageButton btnShowNotes;
-    public MyColor myColor;
     
     public void CreateRecyclerView(int pView, RecyclerView.Adapter adapter)
     {
@@ -69,125 +56,8 @@ public class BaseFullPageRecycleView extends BaseActivity
         
     }
     
-    public void showNotes(View view)
-    {
-        try
-        {
-            Intent intent2 = new Intent(getApplicationContext(), NoteView.class);
-            int lNoteId = getNoteId();
-            if (lNoteId == 0)
-            {
-                MyInt myInt = new MyInt();
-                if (!databaseAccess().getNextNoteId(holidayId, myInt))
-                    return;
-                lNoteId = myInt.Value;
-                setNoteId(lNoteId);
-            }
-            intent2.putExtra("ACTION", "view");
-            intent2.putExtra("HOLIDAYID", holidayId);
-            intent2.putExtra("NOTEID", lNoteId);
-            intent2.putExtra("TITLE", subTitle);
-            intent2.putExtra("SUBTITLE", "Notes");
-            startActivity(intent2);
-        }
-        catch (Exception e)
-        {
-            ShowError("showNotes", e.getMessage());
-        }
-    }
-    
-    
-    public void afterCreate()
-    {
-        showInfoEnabled = false;
-        btnShowInfo = (ImageButton) findViewById(R.id.btnShowInfo);
-        if (btnShowInfo != null)
-            showInfoEnabled = true;
-        
-        showNotesEnabled = false;
-        btnShowNotes = (ImageButton) findViewById(R.id.btnShowNotes);
-        if (btnShowNotes != null)
-            showNotesEnabled = true;
-        
-        if (showInfoEnabled)
-        {
-            btnShowInfoBadge = new BadgeView(this, btnShowInfo);
-            btnShowInfoBadge.setText(Integer.toString(0));
-            btnShowInfoBadge.show();
-        }
-    }
-    
-    public void showInfo(View view)
-    {
-        try
-        {
-            int lInfoId;
-            lInfoId = getInfoId();
-            Intent intent2 = new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
-            if (lInfoId == 0)
-            {
-                MyInt myInt = new MyInt();
-                if (!databaseAccess().getNextFileGroupId(myInt))
-                    return;
-                lInfoId = myInt.Value;
-                setInfoId(lInfoId);
-            }
-            intent2.putExtra("FILEGROUPID", lInfoId);
-            intent2.putExtra("TITLE", subTitle);
-            intent2.putExtra("SUBTITLE", "Info");
-            startActivity(intent2);
-        }
-        catch (Exception e)
-        {
-            ShowError("showInfo", e.getMessage());
-        }
-    }
-    
-    public void afterShow()
-    {
-        if(showInfoEnabled)
-        {
-            MyInt lFileCount = new MyInt();
-            lFileCount.Value = 0;
-            int lInfoId = getInfoId();
-            if (lInfoId > 0)
-            {
-                if (!databaseAccess().getExtraFilesCount(lInfoId, lFileCount))
-                    return;
-            }
-            btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
-    
-            if (lFileCount.Value == 0)
-            {
-                btnShowInfoBadge.setVisibility(View.INVISIBLE);
-                if (myColor.SetImageButtonTint(btnShowInfo, R.color.colorDisabled) == false)
-                    return;
-            } else
-            {
-                btnShowInfoBadge.setVisibility(View.VISIBLE);
-                if (myColor.SetImageButtonTint(btnShowInfo, R.color.colorEnabled) == false)
-                    return;
-            }
-        }
-        
-        if(showNotesEnabled)
-        {
-            int lNoteId = getNoteId();
-            NoteItem noteItem = new NoteItem();
-            if (!databaseAccess().getNoteItem(holidayId, lNoteId, noteItem))
-                return;
-            if (noteItem.notes.length() == 0)
-            {
-                if (myColor.SetImageButtonTint(btnShowNotes, R.color.colorDisabled) == false)
-                    return;
-            } else
-            {
-                if (myColor.SetImageButtonTint(btnShowNotes, R.color.colorEnabled) == false)
-                    return;
-            }
-        }
-    }
-    
+
+
     public void OnItemMove(int from, int to)
     {
     }
@@ -332,25 +202,5 @@ public class BaseFullPageRecycleView extends BaseActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        
-        try
-        {
-            myColor = new MyColor(this);
-            
-            Bundle extras = getIntent().getExtras();
-            if (extras != null)
-            {
-                holidayId = extras.getInt("HOLIDAYID", 0);
-                dayId = extras.getInt("DAYID", 0);
-                attractionAreaId = extras.getInt("ATTRACTIONAREAID", 0);
-                attractionId = extras.getInt("ATTRACTIONID", 0);
-                action = extras.getString("ACTION", "");
-            }
-        }
-        catch (Exception e)
-        {
-            ShowError("onCreate", e.getMessage());
-        }
-        
     }
 }

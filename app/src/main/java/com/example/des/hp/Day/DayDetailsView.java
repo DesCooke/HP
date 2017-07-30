@@ -1,30 +1,19 @@
 package com.example.des.hp.Day;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.graphics.BitmapFactory;
 import android.widget.TextView;
 
-import com.example.des.hp.Database.DatabaseAccess;
-import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.Dialog.BaseFullPageRecycleView;
-import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
-import com.example.des.hp.Highlight.PageHighlightsFragment;
-import com.example.des.hp.PageFragmentAdapter;
 import com.example.des.hp.R;
-import com.example.des.hp.Schedule.PageScheduleFragment;
 import com.example.des.hp.Holiday.*;
 import com.example.des.hp.Schedule.Flight.*;
 import com.example.des.hp.Schedule.Hotel.*;
@@ -41,9 +30,6 @@ import com.example.des.hp.Schedule.ScheduleItem;
 import com.example.des.hp.Schedule.Show.*;
 import com.example.des.hp.Schedule.Restaurant.RestaurantDetailsEdit;
 import com.example.des.hp.myutils.*;
-import com.example.des.hp.thirdpartyutils.BadgeView;
-import com.example.des.hp.Notes.NoteItem;
-import com.example.des.hp.Notes.NoteView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,13 +37,11 @@ import java.util.Date;
 import java.util.Locale;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
-import static com.example.des.hp.myutils.MyMessages.myMessages;
-import static java.security.AccessController.getContext;
 
 public class DayDetailsView extends BaseFullPageRecycleView
 {
-    
-    private final int SELECT_PHOTO = 1;
+
+    private final int SELECT_PHOTO=1;
     private ImageView imageView;
     public DateUtils dateUtils;
     public LinearLayout grpStartDate;
@@ -70,20 +54,20 @@ public class DayDetailsView extends BaseFullPageRecycleView
     public LinearLayout grpMenuFile;
     public ArrayList<ScheduleItem> scheduleList;
     public ScheduleAdapter scheduleAdapter;
-    
+
     public void clearImage(View view)
     {
         try
         {
             imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("clearImage", e.getMessage());
         }
-        
+
     }
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -91,316 +75,231 @@ public class DayDetailsView extends BaseFullPageRecycleView
         try
         {
             setContentView(R.layout.activity_day_details_view);
-            
+
             afterCreate();
-            
-            dateUtils = new DateUtils(this);
-            imageUtils = new ImageUtils(this);
-            myColor = new MyColor(this);
-            
-            imageView = (ImageView) findViewById(R.id.imageView);
-            txtDayCat = (TextView) findViewById(R.id.txtDayCat);
-            grpMenuFile = (LinearLayout) findViewById(R.id.grpMenuFile);
-            
+
+            dateUtils=new DateUtils(this);
+            imageUtils=new ImageUtils(this);
+            myColor=new MyColor(this);
+
+            imageView=(ImageView) findViewById(R.id.imageView);
+            txtDayCat=(TextView) findViewById(R.id.txtDayCat);
+            grpMenuFile=(LinearLayout) findViewById(R.id.grpMenuFile);
+
             showForm();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
-        
+
     }
-    
+
     @Override
     public int getInfoId()
     {
         return (dayItem.infoId);
     }
-    
+
     public void setNoteId(int pNoteId)
     {
-        dayItem.noteId = pNoteId;
-        if (!databaseAccess().updateDayItem(dayItem))
+        dayItem.noteId=pNoteId;
+        if(!databaseAccess().updateDayItem(dayItem))
             return;
     }
-    
+
     @Override
     public int getNoteId()
     {
         return (dayItem.noteId);
     }
-    
+
     @Override
     public void setInfoId(int pInfoId)
     {
-        dayItem.infoId = pInfoId;
-        if (!databaseAccess().updateDayItem(dayItem))
+        dayItem.infoId=pInfoId;
+        if(!databaseAccess().updateDayItem(dayItem))
             return;
     }
-    
+
     public void showForm()
     {
         super.showForm();
         try
         {
-            allowCellMove = true;
-            
+            allowCellMove=true;
+
             clearImage(null);
-            
-            if (action != null && action.equals("view"))
+
+            if(action != null && action.equals("view"))
             {
-                dayItem = new DayItem();
-                if (!databaseAccess().getDayItem(holidayId, dayId, dayItem))
+                dayItem=new DayItem();
+                if(!databaseAccess().getDayItem(holidayId, dayId, dayItem))
                     return;
-                
-                HolidayItem holidayItem = new HolidayItem();
-                if (!databaseAccess().getHolidayItem(holidayId, holidayItem))
+
+                HolidayItem holidayItem=new HolidayItem();
+                if(!databaseAccess().getHolidayItem(holidayId, holidayItem))
                     return;
-                
-                String originalFileName = dayItem.dayPicture;
-                if (imageUtils.getPageHeaderImage(this, dayItem.dayPicture, imageView) == false)
+
+                String originalFileName=dayItem.dayPicture;
+                if(imageUtils.getPageHeaderImage(this, dayItem.dayPicture, imageView) == false)
                     return;
-                
+
                 String lSubTitle;
-                MyBoolean isUnknown = new MyBoolean();
-                if (!dateUtils.IsUnknown(databaseAccess().currentStartDate, isUnknown))
+                MyBoolean isUnknown=new MyBoolean();
+                if(!dateUtils.IsUnknown(databaseAccess().currentStartDate, isUnknown))
                     return;
-                if (isUnknown.Value)
+                if(isUnknown.Value)
                 {
-                    lSubTitle = String.format(Locale.ENGLISH, getResources().getString(R.string.fmt_day_line), dayItem.sequenceNo);
+                    lSubTitle=String.format(Locale.ENGLISH, getResources().getString(R.string.fmt_day_line), dayItem.sequenceNo);
                 } else
                 {
-                    Date lcurrdate = new Date();
-                    
+                    Date lcurrdate=new Date();
+
                     // we subtract 1 because sequenceno starts at 1 - but we want to add 0 days for the
                     // first element
-                    if (dateUtils.AddDays(databaseAccess().currentStartDate, (dayItem.sequenceNo - 1), lcurrdate) == false)
+                    if(dateUtils.AddDays(databaseAccess().currentStartDate, (dayItem.sequenceNo - 1), lcurrdate) == false)
                         return;
-                    
-                    MyString myString = new MyString();
-                    if (dateUtils.DateToStr(lcurrdate, myString) == false)
+
+                    MyString myString=new MyString();
+                    if(dateUtils.DateToStr(lcurrdate, myString) == false)
                         return;
-                    lSubTitle = String.format(Locale.ENGLISH, getResources().getString(R.string.fmt_date_line), myString.Value);
+                    lSubTitle=String.format(Locale.ENGLISH, getResources().getString(R.string.fmt_date_line), myString.Value);
                 }
-                
-                
+
+
                 SetTitles(holidayItem.holidayName, dayItem.dayName + " / " + lSubTitle);
-                
-                
-                int lColor = -1;
-                String lDayCat = "Day Category: <unknown>";
-                if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_easy))
+
+
+                int lColor=-1;
+                String lDayCat="Day Category: <unknown>";
+                if(dayItem.dayCat == getResources().getInteger(R.integer.day_cat_easy))
                 {
-                    lColor = getColor(R.color.colorEasy);
-                    lDayCat = "Day Category: Easy";
+                    lColor=getColor(R.color.colorEasy);
+                    lDayCat="Day Category: Easy";
                 }
-                if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_moderate))
+                if(dayItem.dayCat == getResources().getInteger(R.integer.day_cat_moderate))
                 {
-                    lColor = getColor(R.color.colorModerate);
-                    lDayCat = "Day Category: Moderate";
+                    lColor=getColor(R.color.colorModerate);
+                    lDayCat="Day Category: Moderate";
                 }
-                if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_busy))
+                if(dayItem.dayCat == getResources().getInteger(R.integer.day_cat_busy))
                 {
-                    lColor = getColor(R.color.colorBusy);
-                    lDayCat = "Day Category: VBusy";
+                    lColor=getColor(R.color.colorBusy);
+                    lDayCat="Day Category: VBusy";
                 }
-                
+
                 txtDayCat.setText(lDayCat);
-                if (lColor != -1)
+                if(lColor != -1)
                 {
                     txtDayCat.setBackgroundColor(lColor);
                     grpMenuFile.setBackgroundColor(lColor);
                 }
-                
-                scheduleList = new ArrayList<>();
-                if (!databaseAccess().getScheduleList(holidayId, dayId, attractionId, attractionAreaId, scheduleList))
+
+                scheduleList=new ArrayList<>();
+                if(!databaseAccess().getScheduleList(holidayId, dayId, attractionId, attractionAreaId, scheduleList))
                     return;
-                scheduleAdapter = new ScheduleAdapter(this, scheduleList);
-                
+                scheduleAdapter=new ScheduleAdapter(this, scheduleList);
+
                 CreateRecyclerView(R.id.dayListView, scheduleAdapter);
-                if (lColor != -1)
+                if(lColor != -1)
                     recyclerView.setBackgroundColor(lColor);
-                
+
                 scheduleAdapter.setOnItemClickListener(new ScheduleAdapter.OnItemClickListener()
                 {
                     @Override
                     public void onItemClick(View view, ScheduleItem obj, int position)
                     {
-                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_flight))
+                        if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_flight))
                         {
-                            Intent intent = new Intent(getApplicationContext(), FlightDetailsView.class);
-                            intent.putExtra("ACTION", "view");
-                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
-                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
-                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
-                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
-                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
-                            intent.putExtra("TITLE", title);
-                            intent.putExtra("SUBTITLE", subTitle);
-                            
-                            startActivity(intent);
+                            StartNewEditIntent(FlightDetailsView.class, position);
                         }
-                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_hotel))
+                        if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_hotel))
                         {
-                            Intent intent = new Intent(getApplicationContext(), HotelDetailsView.class);
-                            intent.putExtra("ACTION", "view");
-                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
-                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
-                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
-                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
-                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
-                            intent.putExtra("TITLE", title);
-                            intent.putExtra("SUBTITLE", subTitle);
-                            
-                            startActivity(intent);
+                            StartNewEditIntent(HotelDetailsView.class, position);
                         }
-                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_bus))
+                        if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_bus))
                         {
-                            Intent intent = new Intent(getApplicationContext(), BusDetailsView.class);
-                            intent.putExtra("ACTION", "edit");
-                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
-                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
-                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
-                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
-                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
-                            intent.putExtra("TITLE", title);
-                            intent.putExtra("SUBTITLE", subTitle);
-                            
-                            startActivity(intent);
+                            StartNewEditIntent(BusDetailsView.class, position);
                         }
-                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_show))
+                        if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_show))
                         {
-                            Intent intent = new Intent(getApplicationContext(), ShowDetailsView.class);
-                            intent.putExtra("ACTION", "view");
-                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
-                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
-                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
-                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
-                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
-                            intent.putExtra("TITLE", title);
-                            intent.putExtra("SUBTITLE", subTitle);
-                            
-                            startActivity(intent);
+                            StartNewEditIntent(ShowDetailsView.class, position);
                         }
-                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_restaurant))
+                        if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_restaurant))
                         {
-                            Intent intent = new Intent(getApplicationContext(), RestaurantDetailsView.class);
-                            intent.putExtra("ACTION", "view");
-                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
-                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
-                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
-                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
-                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
-                            intent.putExtra("TITLE", title);
-                            intent.putExtra("SUBTITLE", subTitle);
-                            
-                            startActivity(intent);
+                            StartNewEditIntent(RestaurantDetailsView.class, position);
                         }
-                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_ride))
+                        if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_ride))
                         {
-                            Intent intent = new Intent(getApplicationContext(), RideDetailsView.class);
-                            intent.putExtra("ACTION", "view");
-                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
-                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
-                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
-                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
-                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
-                            intent.putExtra("TITLE", title);
-                            intent.putExtra("SUBTITLE", subTitle);
-                            
-                            startActivity(intent);
+                            StartNewEditIntent(RideDetailsView.class, position);
                         }
-                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_cinema))
+                        if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_cinema))
                         {
-                            Intent intent = new Intent(getApplicationContext(), CinemaDetailsView.class);
-                            intent.putExtra("ACTION", "edit");
-                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
-                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
-                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
-                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
-                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
-                            intent.putExtra("TITLE", title);
-                            intent.putExtra("SUBTITLE", subTitle);
-                            
-                            startActivity(intent);
+                            StartNewEditIntent(CinemaDetailsView.class, position);
                         }
-                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_park))
+                        if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_park))
                         {
-                            Intent intent = new Intent(getApplicationContext(), ParkDetailsView.class);
-                            intent.putExtra("ACTION", "view");
-                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
-                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
-                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
-                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
-                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
-                            intent.putExtra("TITLE", title);
-                            intent.putExtra("SUBTITLE", subTitle);
-                            
-                            startActivity(intent);
+                            StartNewEditIntent(ParkDetailsView.class, position);
                         }
-                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_parade))
+                        if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_parade))
                         {
-                            Intent intent = new Intent(getApplicationContext(), ParadeDetailsView.class);
-                            intent.putExtra("ACTION", "view");
-                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
-                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
-                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
-                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
-                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
-                            intent.putExtra("TITLE", title);
-                            intent.putExtra("SUBTITLE", subTitle);
-                            
-                            startActivity(intent);
+                            StartNewEditIntent(ParadeDetailsView.class, position);
                         }
-                        if (scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_other))
+                        if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_other))
                         {
-                            Intent intent = new Intent(getApplicationContext(), OtherDetailsView.class);
-                            intent.putExtra("ACTION", "view");
-                            intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
-                            intent.putExtra("DAYID", scheduleList.get(position).dayId);
-                            intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
-                            intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
-                            intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
-                            intent.putExtra("TITLE", title);
-                            intent.putExtra("SUBTITLE", subTitle);
-                            
-                            startActivity(intent);
+                            StartNewEditIntent(OtherDetailsView.class, position);
                         }
                     }
                 });
                 afterShow();
             }
-            
-            
+
+
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("showForm", e.getMessage());
         }
-        
+
     }
-    
+
     public void editDay()
     {
         try
         {
-            Intent intent = new Intent(getApplicationContext(), DayDetailsEdit.class);
+            Intent intent=new Intent(getApplicationContext(), DayDetailsEdit.class);
             intent.putExtra("ACTION", "modify");
             intent.putExtra("HOLIDAYID", holidayId);
             intent.putExtra("DAYID", dayId);
             startActivity(intent);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("editDay", e.getMessage());
         }
     }
-    
-    public void StartNewIntent(Class neededClass)
+
+    public void StartNewEditIntent(Class neededClass, int position)
+    {
+        Intent intent=new Intent(getApplicationContext(), neededClass);
+        intent.putExtra("ACTION", "view");
+        intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
+        intent.putExtra("DAYID", scheduleList.get(position).dayId);
+        intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
+        intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
+        intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
+        intent.putExtra("TITLE", title);
+        intent.putExtra("SUBTITLE", subTitle);
+
+        startActivity(intent);
+    }
+
+    public void StartNewAddIntent(Class neededClass)
     {
         try
         {
-            Intent intent = new Intent(getApplicationContext(), neededClass);
+            Intent intent=new Intent(getApplicationContext(), neededClass);
             intent.putExtra("ACTION", "add");
             intent.putExtra("HOLIDAYID", holidayId);
             intent.putExtra("DAYID", dayId);
@@ -410,9 +309,9 @@ public class DayDetailsView extends BaseFullPageRecycleView
             intent.putExtra("SUBTITLE", subTitle);
             startActivity(intent);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
-            ShowError("StartNewIntent", e.getMessage());
+            ShowError("StartNewAddIntent", e.getMessage());
         }
     }
 
@@ -421,23 +320,23 @@ public class DayDetailsView extends BaseFullPageRecycleView
     {
         try
         {
-            if (!databaseAccess().deleteDayItem(dayItem))
+            if(!databaseAccess().deleteDayItem(dayItem))
                 return;
             finish();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("deleteDay", e.getMessage());
         }
     }
-    
-    
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         try
         {
-            switch (item.getItemId())
+            switch(item.getItemId())
             {
                 case R.id.action_edit_day:
                     editDay();
@@ -446,76 +345,76 @@ public class DayDetailsView extends BaseFullPageRecycleView
                     deleteDay();
                     return true;
                 case R.id.action_add_flight:
-                    StartNewIntent(FlightDetailsEdit.class);
+                    StartNewAddIntent(FlightDetailsEdit.class);
                     return true;
                 case R.id.action_add_hotel:
-                    StartNewIntent(HotelDetailsEdit.class);
+                    StartNewAddIntent(HotelDetailsEdit.class);
                     return true;
                 case R.id.action_add_show:
-                    StartNewIntent(ShowDetailsEdit.class);
+                    StartNewAddIntent(ShowDetailsEdit.class);
                     return true;
                 case R.id.action_add_bus:
-                    StartNewIntent(BusDetailsEdit.class);
+                    StartNewAddIntent(BusDetailsEdit.class);
                     return true;
                 case R.id.action_add_restaurant:
-                    StartNewIntent(RestaurantDetailsEdit.class);
+                    StartNewAddIntent(RestaurantDetailsEdit.class);
                     return true;
                 case R.id.action_add_cinema:
-                    StartNewIntent(CinemaDetailsEdit.class);
+                    StartNewAddIntent(CinemaDetailsEdit.class);
                     return true;
                 case R.id.action_add_park:
-                    StartNewIntent(ParkDetailsEdit.class);
+                    StartNewAddIntent(ParkDetailsEdit.class);
                     return true;
                 case R.id.action_add_parade:
-                    StartNewIntent(ParadeDetailsEdit.class);
+                    StartNewAddIntent(ParadeDetailsEdit.class);
                     return true;
                 case R.id.action_add_ride:
-                    StartNewIntent(RideDetailsEdit.class);
+                    StartNewAddIntent(RideDetailsEdit.class);
                     return true;
                 case R.id.action_add_other:
-                    StartNewIntent(OtherDetailsEdit.class);
+                    StartNewAddIntent(OtherDetailsEdit.class);
                     return true;
                 default:
                     return super.onOptionsItemSelected(item);
             }
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onOptionsItemSelected", e.getMessage());
         }
         return true;
     }
-    
+
     public boolean onCreateOptionsMenu(Menu menu)
     {
         try
         {
-            MenuInflater inflater = getMenuInflater();
+            MenuInflater inflater=getMenuInflater();
             inflater.inflate(R.menu.daydetailsformmenu, menu);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreateOptionsMenu", e.getMessage());
         }
         return true;
     }
-    
+
     @Override
     public void SwapItems(int from, int to)
     {
         Collections.swap(scheduleAdapter.data, from, to);
     }
-    
+
     @Override
     public void OnItemMove(int from, int to)
     {
         scheduleAdapter.onItemMove(from, to);
     }
-    
+
     @Override
     public void NotifyItemMoved(int from, int to)
     {
         scheduleAdapter.notifyItemMoved(from, to);
     }
-    
+
 }

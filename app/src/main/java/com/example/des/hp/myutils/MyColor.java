@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.widget.ImageButton;
 
+import com.example.des.hp.MainActivity;
+
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 //
@@ -14,7 +16,16 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 public class MyColor
 {
     private Context _context;
-    
+    public static MyColor myInternalColor=null;
+
+    public static MyColor myColor()
+    {
+        if (myInternalColor == null)
+            myInternalColor = new MyColor(MainActivity.getInstance());
+
+        return (myInternalColor);
+    }
+
     public MyColor(Context context)
     {
         _context = context;
