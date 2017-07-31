@@ -10,6 +10,7 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.widget.ImageView;
 
+import com.example.des.hp.MainActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.thirdpartyutils.*;
 import com.squareup.picasso.Picasso;
@@ -23,11 +24,20 @@ public class ImageUtils
 {
     private Context _context;
     private Resources res;
+    public static ImageUtils myImageUtils=null;
 
     public ImageUtils(Context context)
     {
         _context = context;
         res = context.getResources();
+    }
+
+    public static ImageUtils imageUtils()
+    {
+        if (myImageUtils == null)
+            myImageUtils = new ImageUtils(MainActivity.getInstance());
+        
+        return (myImageUtils);
     }
 
     private void ShowError(String argFunction, String argMessage)

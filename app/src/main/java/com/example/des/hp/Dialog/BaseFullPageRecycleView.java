@@ -1,5 +1,52 @@
 package com.example.des.hp.Dialog;
 
+/*
+** BASEACTIVITY->BASEFULLPAGERECYCLEVIEW
+**
+** In the onCreate, the first thing you do is setup the View: -
+**
+** In the onCreate, the first thing you do is setup the View: -
+**   setContentView(R.layout.activity_day_list);
+**
+** Then you call the showForm
+**   In here you create and fill your adapter
+**      dayList=new ArrayList<>();
+        if(!databaseAccess().getDayList(holidayId, dayList))
+          return;
+        dayAdapter=new DayAdapter(this, dayList);
+**
+**   Now you call the base CreateRecyclerView with the View and Adapter
+**
+**            CreateRecyclerView(R.id.dayListView, dayAdapter);
+**
+**   Now continue to setup your Adapter onClick events etc
+**     dayAdapter.setOnItemClickListener(new DayAdapter.OnItemClickListener()
+       {
+         @Override
+         public void onItemClick(View view, DayItem obj, int position)
+         {
+           Intent intent=new Intent(getApplicationContext(), DayDetailsView.class);
+           intent.putExtra("ACTION", "view");
+           intent.putExtra("HOLIDAYID", dayList.get(position).holidayId);
+           intent.putExtra("DAYID", dayList.get(position).dayId);
+           startActivity(intent);
+         }
+       }
+       );
+**
+**  Ability to Move Cells Around
+**
+**  In showForm, set allowCellMove to true
+**
+**  Create three new functions
+**    SwapItems(from, to)
+**      allows you to swap items in the collection
+**    OnItemMove(from, to)
+**      allows you to inform the adapter
+**    NotifyItemMoved(from, to)
+**      Sends a message to the Recycler to redraw area
+**
+*/
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -23,10 +70,6 @@ import java.util.Collections;
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyColor.myColor;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
-
-/**
- * Created by cooked on 26/07/2017.
- */
 
 public class BaseFullPageRecycleView extends BaseActivity
 {

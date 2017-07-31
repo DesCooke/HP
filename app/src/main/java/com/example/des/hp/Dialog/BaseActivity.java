@@ -1,5 +1,49 @@
 package com.example.des.hp.Dialog;
 
+/*
+** BASEACTIVITY
+**
+** Inter-Intent variables
+**   want to pass to and from Intents, then create a variable to hold it (place in the
+**   InterIntent variable section.  Call the intent with PutExtra....
+**   The OnCreate automatically parses the Bundle and sets up the member variables
+**
+** Title and SubTitle
+**   Make sure your View has a SupportActionBar, then simply call SetTitles (title, subTitle)
+**     This function also saves the title/subTitle in member variables so you don't have to
+**     go hunting for them
+**
+**  Errors and Messages
+**    This automatically sets the Context of the Error Dialogs and Message dialogs to this
+**    activity - it also resets it onResume (when you come back to this activity.
+**    They are all single instances also - so you can simply start using them - don't need to
+**    create anything.
+**      ErrorDialog().Show(<title>, <description>)
+**        for errors you can use the member function ShowError (this prefixes the title with
+**          the current class name)
+**      MessageDialog().Show(<title>, <description>)
+**        shows a message box with an OK button
+**      myMessages().ShowMessageShort() / myMessages().ShowMessageLong()
+**
+**  Notes and Info
+**    You can have a notes button or info button or both.
+**    Notes, button must be called btnShowNotes
+**      You must provide a function to getNoteId() which returns the current NoteId
+**      and also setNoteId(), to record the NoteId
+**      It will automatically handle the showNotes button press
+**
+**    ShowInfo, button must be called btnShowInfo
+**      You must provide a function to getInfoId() which returns the current InfoId
+**      and also setInfoId(), to record the InfoId
+**      If will automatically handle the showInfo button press
+**
+**   If you have wither Notes or Info then you have to call
+**     afterCreate() at the end of the onCreate function, this will detect the
+**       field in the view and initialise some variables
+**     afterShow() at the end of the onShow function, this will enable the button and set
+**       the badge if needed
+*/
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -31,6 +75,7 @@ public class BaseActivity extends AppCompatActivity
     public int fileGroupId=0;
     public String title;
     public String subTitle;
+    public String holidayName="";
 
     public boolean showInfoEnabled;
     public ImageButton btnShowInfo;
@@ -180,6 +225,7 @@ public class BaseActivity extends AppCompatActivity
             fileGroupId=extras.getInt("FILEGROUPID", 0);
             title=extras.getString("TITLE", "");
             subTitle=extras.getString("SUBTITLE", "");
+            holidayName=extras.getString("HOLIDAYNAME", "");
         }
     }
 
