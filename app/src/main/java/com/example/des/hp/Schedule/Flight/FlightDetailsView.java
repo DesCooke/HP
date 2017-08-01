@@ -35,28 +35,11 @@ import java.io.InputStream;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
-public class FlightDetailsView extends BaseActivity
+public class FlightDetailsView extends BaseScheduleView
 {
 
-    private final int SELECT_PHOTO=1;
-    private final int MOVEITEM=2;
-    private ImageView imageViewSmall;
-    private String originalFileName;
-    private String action;
-    public int holidayId;
-    public int dayId;
-    public int attractionId;
-    public int attractionAreaId;
-    public int scheduleId;
-    public DateUtils dateUtils;
     public LinearLayout grpStartDate;
-    public TextView txtSchedName;
-    public String holidayName;
-    public ActionBar actionBar;
-    public ScheduleItem scheduleItem;
     public FlightItem flightItem;
-    public CheckBox cbPicturePicked;
-    private ImageUtils imageUtils;
     public CheckBox chkCheckinKnown;
     public TextView checkIn;
     public CheckBox chkDepartureKnown;
@@ -66,88 +49,6 @@ public class FlightDetailsView extends BaseActivity
     public TextView txtFlightNo;
     public TextView txtTerminal;
     public TextView txtBookingRef;
-    public DialogWithEditTextFragment dialogWithEditTextFragment;
-    public View.OnClickListener dwetOnOkClick;
-    public ImageButton btnShowInfo;
-    public BadgeView btnShowInfoBadge;
-    public MyColor myColor;
-    public ImageButton btnShowNotes;
-
-    public void clearImage(View view)
-    {
-        try
-        {
-            cbPicturePicked.setChecked(false);
-            imageViewSmall.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
-        }
-        catch(Exception e)
-        {
-            ShowError("clearImage", e.getMessage());
-        }
-
-    }
-
-    public void showNotes(View view)
-    {
-        try
-        {
-            Intent intent2=new Intent(getApplicationContext(), NoteView.class);
-            if(scheduleItem.noteId == 0)
-            {
-                MyInt myInt=new MyInt();
-                if(!databaseAccess().getNextNoteId(holidayId, myInt))
-                    return;
-                scheduleItem.noteId=myInt.Value;
-                if(!databaseAccess().updateScheduleItem(scheduleItem))
-                    return;
-            }
-            intent2.putExtra("ACTION", "view");
-            intent2.putExtra("HOLIDAYID", scheduleItem.holidayId);
-            intent2.putExtra("NOTEID", scheduleItem.noteId);
-            intent2.putExtra("TITLE", scheduleItem.schedName);
-            intent2.putExtra("SUBTITLE", "scheduleItem");
-            startActivity(intent2);
-        }
-        catch(Exception e)
-        {
-            ShowError("showNotes", e.getMessage());
-        }
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-        try
-        {
-            switch(requestCode)
-            {
-                case MOVEITEM:
-                    if(resultCode == RESULT_OK)
-                    {
-                        try
-                        {
-                            scheduleItem.dayId=data.getIntExtra("DAYID", 0);
-                            scheduleItem.attractionId=data.getIntExtra("ATTRACTIONID", 0);
-                            scheduleItem.attractionAreaId=data.getIntExtra("ATTRACTIONAREAID", 0);
-                            databaseAccess().updateScheduleItem(scheduleItem);
-                            finish();
-                        }
-                        catch(Exception e)
-                        {
-                            ShowError("onActivityResult-MOVEITEM", e.getMessage());
-                        }
-                    }
-                    break;
-
-            }
-        }
-        catch(Exception e)
-        {
-            ShowError("onActivityResult", e.getMessage());
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -158,14 +59,6 @@ public class FlightDetailsView extends BaseActivity
         {
             setContentView(R.layout.activity_flight_details_view);
 
-            actionBar=getSupportActionBar();
-            dateUtils=new DateUtils(this);
-            imageUtils=new ImageUtils(this);
-            myColor=new MyColor(this);
-
-            cbPicturePicked=(CheckBox) findViewById(R.id.picturePicked);
-            imageViewSmall=(ImageView) findViewById(R.id.imageViewSmall);
-            txtSchedName=(TextView) findViewById(R.id.txtSchedName);
             checkIn=(TextView) findViewById(R.id.txtCheckin);
             departs=(TextView) findViewById(R.id.txtDeparture);
             arrives=(TextView) findViewById(R.id.txtArrival);
@@ -175,12 +68,8 @@ public class FlightDetailsView extends BaseActivity
             chkCheckinKnown=(CheckBox) findViewById(R.id.chkCheckinKnown);
             chkDepartureKnown=(CheckBox) findViewById(R.id.chkDepartureKnown);
             chkArriveKnown=(CheckBox) findViewById(R.id.chkArrivalKnown);
-            btnShowInfo=(ImageButton) findViewById(R.id.btnShowInfo);
-            btnShowNotes=(ImageButton) findViewById(R.id.btnShowNotes);
 
-            btnShowInfoBadge=new BadgeView(this, btnShowInfo);
-            btnShowInfoBadge.setText(Integer.toString(0));
-            btnShowInfoBadge.show();
+            afterCreate();
 
             showForm();
         }
@@ -193,113 +82,32 @@ public class FlightDetailsView extends BaseActivity
 
     public void showForm()
     {
+        super.showForm();
+
         try
         {
-            clearImage(null);
-            Bundle extras=getIntent().getExtras();
-            if(extras != null)
-            {
-                String title=extras.getString("TITLE");
-                String subtitle=extras.getString("SUBTITLE");
-                actionBar.setTitle(title);
-                actionBar.setSubtitle(subtitle);
+            chkCheckinKnown.setChecked(scheduleItem.startTimeKnown);
+            setTimeText(checkIn, scheduleItem.startHour, scheduleItem.startMin);
 
-                holidayId=extras.getInt("HOLIDAYID");
-                dayId=extras.getInt("DAYID");
-                attractionId=extras.getInt("ATTRACTIONID");
-                attractionAreaId=extras.getInt("ATTRACTIONAREAID");
-                holidayName=extras.getString("HOLIDAYNAME");
+            chkDepartureKnown.setChecked(scheduleItem.flightItem.departsKnown);
+            setTimeText(departs, scheduleItem.flightItem.departsHour, scheduleItem.flightItem.departsMin);
 
-                action=extras.getString("ACTION");
-                if(action != null && action.equals("view"))
-                {
-                    scheduleId=extras.getInt("SCHEDULEID");
-                    scheduleItem=new ScheduleItem();
-                    if(!databaseAccess().getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, scheduleItem))
-                        return;
+            chkArriveKnown.setChecked(scheduleItem.endTimeKnown);
+            setTimeText(arrives, scheduleItem.endHour, scheduleItem.endMin);
 
-                    if(scheduleItem.schedType == getResources().getInteger(R.integer.schedule_type_unknown))
-                    {
-                        finish();
-                        return;
-                    }
-                    chkCheckinKnown.setChecked(scheduleItem.startTimeKnown);
-                    setTimeText(checkIn, scheduleItem.startHour, scheduleItem.startMin);
+            txtSchedName.setText(scheduleItem.schedName);
+            txtFlightNo.setText(scheduleItem.flightItem.flightNo);
+            txtTerminal.setText(scheduleItem.flightItem.terminal);
+            txtBookingRef.setText(scheduleItem.flightItem.bookingReference);
 
-                    chkDepartureKnown.setChecked(scheduleItem.flightItem.departsKnown);
-                    setTimeText(departs, scheduleItem.flightItem.departsHour, scheduleItem.flightItem.departsMin);
-
-                    chkArriveKnown.setChecked(scheduleItem.endTimeKnown);
-                    setTimeText(arrives, scheduleItem.endHour, scheduleItem.endMin);
-
-                    txtSchedName.setText(scheduleItem.schedName);
-                    txtFlightNo.setText(scheduleItem.flightItem.flightNo);
-                    txtTerminal.setText(scheduleItem.flightItem.terminal);
-                    txtBookingRef.setText(scheduleItem.flightItem.bookingReference);
-
-                    originalFileName=scheduleItem.schedPicture;
-
-                    if(imageUtils.getPageHeaderImage(this, scheduleItem.schedPicture, imageViewSmall) == false)
-                        return;
-
-                    cbPicturePicked.setChecked(scheduleItem.pictureAssigned);
-
-                    MyInt lFileCount=new MyInt();
-                    lFileCount.Value=0;
-                    if(scheduleItem.infoId > 0)
-                    {
-                        if(!databaseAccess().getExtraFilesCount(scheduleItem.infoId, lFileCount))
-                            return;
-                    }
-                    btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
-
-                    if(lFileCount.Value == 0)
-                    {
-                        btnShowInfoBadge.hide();
-                        if(myColor.SetImageButtonTint(btnShowInfo, R.color.colorDisabled) == false)
-                            return;
-                    } else
-                    {
-                        btnShowInfoBadge.show();
-                        if(myColor.SetImageButtonTint(btnShowInfo, R.color.colorEnabled) == false)
-                            return;
-                    }
-                    NoteItem noteItem=new NoteItem();
-                    if(!databaseAccess().getNoteItem(scheduleItem.holidayId, scheduleItem.noteId, noteItem))
-                        return;
-                    if(noteItem.notes.length() == 0)
-                    {
-                        if(myColor.SetImageButtonTint(btnShowNotes, R.color.colorDisabled) == false)
-                            return;
-                    } else
-                    {
-                        if(myColor.SetImageButtonTint(btnShowNotes, R.color.colorEnabled) == false)
-                            return;
-                    }
-                }
-            }
         }
         catch(Exception e)
+
         {
             ShowError("showForm", e.getMessage());
         }
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        try
-        {
-            showForm();
-        }
-        catch(Exception e)
-        {
-            ShowError("onResume", e.getMessage());
-        }
 
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
@@ -309,10 +117,10 @@ public class FlightDetailsView extends BaseActivity
             switch(item.getItemId())
             {
                 case R.id.action_delete_flight:
-                    deleteFlight();
+                    deleteSchedule();
                     return true;
                 case R.id.action_edit_flight:
-                    editFlight();
+                    editSchedule(FlightDetailsEdit.class);
                     return true;
                 case R.id.action_move:
                     move();
@@ -329,76 +137,6 @@ public class FlightDetailsView extends BaseActivity
 
     }
 
-    public void move()
-    {
-        try
-        {
-            Intent intent=new Intent(getApplicationContext(), ScheduleAreaList.class);
-            intent.putExtra("ACTION", "move");
-            intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("DAYID", dayId);
-            intent.putExtra("ATTRACTIONID", attractionId);
-            intent.putExtra("ATTRACTIONAREAID", attractionAreaId);
-            intent.putExtra("SCHEDULEID", scheduleId);
-            startActivityForResult(intent, MOVEITEM);
-        }
-        catch(Exception e)
-        {
-            ShowError("move", e.getMessage());
-        }
-    }
-
-
-    public void editFlight()
-    {
-        try
-        {
-            Intent intent=new Intent(getApplicationContext(), FlightDetailsEdit.class);
-            intent.putExtra("ACTION", "edit");
-            intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("DAYID", dayId);
-            intent.putExtra("ATTRACTIONID", attractionId);
-            intent.putExtra("ATTRACTIONAREAID", attractionAreaId);
-            intent.putExtra("SCHEDULEID", scheduleId);
-            intent.putExtra("HOLIDAYNAME", holidayName);
-            intent.putExtra("TITLE", actionBar.getTitle());
-            intent.putExtra("SUBTITLE", actionBar.getSubtitle());
-
-            startActivity(intent);
-        }
-        catch(Exception e)
-        {
-            ShowError("editFlight", e.getMessage());
-        }
-
-    }
-
-    public void showInfo(View view)
-    {
-        try
-        {
-            Intent intent2=new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
-            if(scheduleItem.infoId == 0)
-            {
-                MyInt myInt=new MyInt();
-                if(!databaseAccess().getNextFileGroupId(myInt))
-                    return;
-                scheduleItem.infoId=myInt.Value;
-                if(!databaseAccess().updateScheduleItem(scheduleItem))
-                    return;
-            }
-            intent2.putExtra("FILEGROUPID", scheduleItem.infoId);
-            intent2.putExtra("TITLE", scheduleItem.schedName);
-            intent2.putExtra("SUBTITLE", "Info");
-            startActivity(intent2);
-        }
-        catch(Exception e)
-        {
-            ShowError("showInfo", e.getMessage());
-        }
-
-    }
-
     public boolean onCreateOptionsMenu(Menu menu)
     {
         try
@@ -412,126 +150,6 @@ public class FlightDetailsView extends BaseActivity
             ShowError("onCreateOptionsMenu", e.getMessage());
         }
         return true;
-    }
-
-    public void deleteFlight()
-    {
-        try
-        {
-            if(!databaseAccess().deleteScheduleItem(scheduleItem))
-                return;
-
-            finish();
-        }
-        catch(Exception e)
-        {
-            ShowError("deleteFlight", e.getMessage());
-        }
-
-    }
-
-
-    private int getHour(TextView textview)
-    {
-        try
-        {
-            String[] sarray=textview.getText().toString().split(":");
-            int lHour=Integer.parseInt(sarray[0]);
-            if(lHour < 0)
-                lHour=0;
-            if(lHour > 23)
-                lHour=23;
-            return (lHour);
-        }
-        catch(Exception e)
-        {
-            ShowError("getHour", e.getMessage());
-        }
-        return 0;
-
-    }
-
-    private int getMinute(TextView textview)
-    {
-        try
-        {
-            String[] sarray=textview.getText().toString().split(":");
-            int lMinute=Integer.parseInt(sarray[1]);
-            if(lMinute < 0)
-                lMinute=0;
-            if(lMinute > 59)
-                lMinute=59;
-            return (lMinute);
-        }
-        catch(Exception e)
-        {
-            ShowError("getMinute", e.getMessage());
-        }
-        return 0;
-    }
-
-    public void checkInClick(View view)
-    {
-        handleTime(checkIn, chkCheckinKnown, "Select Check-in Time");
-    }
-
-    public void departureClick(View view)
-    {
-        handleTime(departs, chkDepartureKnown, "Select Departure Time");
-    }
-
-    public void arrivalClick(View view)
-    {
-        handleTime(arrives, chkArriveKnown, "Select Arrival Time");
-    }
-
-    private void handleTime(TextView txtTime, CheckBox chkTime, String title)
-    {
-        try
-        {
-            DialogTimePicker mTimePicker;
-            int hour;
-            int minute;
-
-            hour=getHour(txtTime);
-            minute=getMinute(txtTime);
-
-            mTimePicker=new DialogTimePicker(this);
-            mTimePicker.title=title;
-            mTimePicker.chkTimeKnown=chkTime;
-            mTimePicker.txtStartTime=txtTime;
-            mTimePicker.hour=hour;
-            mTimePicker.minute=minute;
-            mTimePicker.timeKnown=chkTime.isChecked();
-            mTimePicker.show();
-        }
-        catch(Exception e)
-        {
-            ShowError("handleTime", e.getMessage());
-        }
-
-    }
-
-    private void setTimeText(TextView textView, int hour, int minute)
-    {
-        try
-        {
-            String lTime;
-            lTime="";
-            if(hour < 10)
-                lTime="0";
-            lTime=lTime + hour;
-            lTime=lTime + ":";
-            if(minute < 10)
-                lTime=lTime + "0";
-            lTime=lTime + minute;
-            textView.setText(lTime);
-        }
-        catch(Exception e)
-        {
-            ShowError("setTimeText", e.getMessage());
-        }
-
     }
 
 }
