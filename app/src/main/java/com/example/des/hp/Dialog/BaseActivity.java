@@ -61,6 +61,7 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyColor.myColor;
+import static com.example.des.hp.myutils.MyLog.myLog;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class BaseActivity extends AppCompatActivity
@@ -257,6 +258,8 @@ public class BaseActivity extends AppCompatActivity
         String lv_title;
         
         lv_title = this.getLocalClassName() + "::" + argFunction;
+        
+        myLog().WriteLogMessage("Error in " + lv_title + ". " + argMessage);
         
         ErrorDialog.Show("Error in " + lv_title, argMessage);
     }

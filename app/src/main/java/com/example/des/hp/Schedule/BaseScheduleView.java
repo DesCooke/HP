@@ -30,66 +30,66 @@ public class BaseScheduleView extends BaseView
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
     public ImageButton btnShowNotes;
-
+    
     @Override
     public int getNoteId()
     {
         try
         {
-        return (scheduleItem.noteId);
+            return (scheduleItem.noteId);
         }
         catch (Exception e)
         {
             ShowError("getNoteId", e.getMessage());
         }
-        return(0);
+        return (0);
     }
-
+    
     @Override
     public void setNoteId(int noteId)
     {
         try
         {
-        scheduleItem.noteId = noteId;
-        if (!databaseAccess().updateScheduleItem(scheduleItem))
-            return;
+            scheduleItem.noteId = noteId;
+            if (!databaseAccess().updateScheduleItem(scheduleItem))
+                return;
         }
         catch (Exception e)
         {
             ShowError("setNoteId", e.getMessage());
         }
     }
-
+    
     @Override
     public int getInfoId()
     {
         try
         {
-        return (scheduleItem.infoId);
+            return (scheduleItem.infoId);
         }
         catch (Exception e)
         {
             ShowError("getInfoId", e.getMessage());
         }
-        return(0);
+        return (0);
     }
-
+    
     @Override
     public void setInfoId(int infoId)
     {
         try
         {
-            scheduleItem.infoId=infoId;
-            if(!databaseAccess().updateScheduleItem(scheduleItem))
+            scheduleItem.infoId = infoId;
+            if (!databaseAccess().updateScheduleItem(scheduleItem))
                 return;
         }
         catch (Exception e)
         {
             ShowError("setInfoId", e.getMessage());
         }
-
+        
     }
-
+    
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -115,7 +115,7 @@ public class BaseScheduleView extends BaseView
                         }
                     }
                     break;
-
+                
             }
         }
         catch (Exception e)
@@ -123,12 +123,12 @@ public class BaseScheduleView extends BaseView
             ShowError("onActivityResult", e.getMessage());
         }
     }
-
+    
     @Override
     public void afterCreate()
     {
         super.afterCreate();
-
+        
         try
         {
             dateUtils = new DateUtils(this);
@@ -139,12 +139,12 @@ public class BaseScheduleView extends BaseView
             ShowError("afterCreate", e.getMessage());
         }
     }
-
+    
     @Override
     public void showForm()
     {
         super.showForm();
-
+        
         try
         {
             scheduleItem = new ScheduleItem();
@@ -152,14 +152,13 @@ public class BaseScheduleView extends BaseView
             {
                 txtSchedName.setText("");
                 SetImage("");
-            }
-            else
+            } else
             {
                 if (!databaseAccess().getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, scheduleItem))
                     return;
-
+                
                 txtSchedName.setText(scheduleItem.schedName);
-
+                
                 SetImage(scheduleItem.schedPicture);
             }
         }
@@ -168,7 +167,7 @@ public class BaseScheduleView extends BaseView
             ShowError("showForm", e.getMessage());
         }
     }
-
+    
     @Override
     protected void onResume()
     {
@@ -181,9 +180,9 @@ public class BaseScheduleView extends BaseView
         {
             ShowError("onResume", e.getMessage());
         }
-
+        
     }
-
+    
     public void move()
     {
         try
@@ -202,14 +201,14 @@ public class BaseScheduleView extends BaseView
             ShowError("move", e.getMessage());
         }
     }
-
+    
     public void deleteSchedule()
     {
         try
         {
             if (!databaseAccess().deleteScheduleItem(scheduleItem))
                 return;
-
+            
             finish();
         }
         catch (Exception e)
@@ -217,7 +216,7 @@ public class BaseScheduleView extends BaseView
             ShowError("deleteSchedule", e.getMessage());
         }
     }
-
+    
     public void editSchedule(Class classNeeded)
     {
         try
@@ -232,7 +231,7 @@ public class BaseScheduleView extends BaseView
             intent.putExtra("HOLIDAYNAME", holidayName);
             intent.putExtra("TITLE", title);
             intent.putExtra("SUBTITLE", subTitle);
-
+            
             startActivity(intent);
         }
         catch (Exception e)
@@ -240,7 +239,7 @@ public class BaseScheduleView extends BaseView
             ShowError("editSchedule", e.getMessage());
         }
     }
-
+    
     public int getHour(TextView textview)
     {
         int lHour = 0;
@@ -259,7 +258,7 @@ public class BaseScheduleView extends BaseView
         }
         return (lHour);
     }
-
+    
     public int getMinute(TextView textview)
     {
         int lMinute = 0;
@@ -278,7 +277,7 @@ public class BaseScheduleView extends BaseView
         }
         return (lMinute);
     }
-
+    
     public void handleTime(TextView txtTime, CheckBox chkTime, String title)
     {
         try
@@ -286,10 +285,10 @@ public class BaseScheduleView extends BaseView
             DialogTimePicker mTimePicker;
             int hour;
             int minute;
-
+            
             hour = getHour(txtTime);
             minute = getMinute(txtTime);
-
+            
             mTimePicker = new DialogTimePicker(this);
             mTimePicker.title = title;
             mTimePicker.chkTimeKnown = chkTime;
@@ -304,7 +303,7 @@ public class BaseScheduleView extends BaseView
             ShowError("handleTime", e.getMessage());
         }
     }
-
+    
     public void setTimeText(TextView textView, int hour, int minute)
     {
         try
@@ -325,14 +324,13 @@ public class BaseScheduleView extends BaseView
             ShowError("setTimeText", e.getMessage());
         }
     }
-
-
-
+    
+    
     @Override
     public void afterShow()
     {
         super.afterShow();
-
+        
         try
         {
             if (action != null && action.equals("add"))
@@ -340,17 +338,16 @@ public class BaseScheduleView extends BaseView
                 scheduleItem = new ScheduleItem();
                 txtSchedName.setText("");
                 SetImage("");
-            }
-            else
+            } else
             {
                 scheduleItem = new ScheduleItem();
                 if (!databaseAccess().getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, scheduleItem))
                     return;
-
+                
                 txtSchedName.setText(scheduleItem.schedName);
-
+                
                 SetImage(scheduleItem.schedPicture);
-
+                
             }
         }
         catch (Exception e)
@@ -358,5 +355,5 @@ public class BaseScheduleView extends BaseView
             ShowError("afterShow", e.getMessage());
         }
     }
-
+    
 }

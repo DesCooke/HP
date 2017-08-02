@@ -16,7 +16,7 @@ import java.util.Date;
 //
 // Simple class containing File Utility functions
 //
-class MyLog
+public class MyLog
 {
     private Resources res;
     public static MyLog log=null;
@@ -35,7 +35,7 @@ class MyLog
         return (log);
     }
 
-    void WriteLogMessage(String argString)
+    public void WriteLogMessage(String argString)
     {
         try
         {
@@ -60,7 +60,7 @@ class MyLog
         }
     }
 
-    void RemoveLog()
+    public void RemoveLog()
     {
         try
         {

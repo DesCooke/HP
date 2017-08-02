@@ -15,7 +15,6 @@ public class BusDetailsView extends BaseScheduleView
 {
 
     public LinearLayout grpStartDate;
-    public BusItem busItem;
     public CheckBox chkCheckinKnown;
     public TextView checkIn;
     public CheckBox chkArriveKnown;

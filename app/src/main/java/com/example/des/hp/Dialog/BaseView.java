@@ -27,14 +27,14 @@ import static com.example.des.hp.myutils.ImageUtils.imageUtils;
 public class BaseView extends BaseActivity
 {
     public ImageView imageView;
-    public CheckBox imagePicked;
+    public boolean imagePicked;
     public Bitmap imageDefault;
     
     public void clearImage()
     {
         try
         {
-            imagePicked.setChecked(false);
+            imagePicked = false;
             imageView.setImageBitmap(imageDefault);
         }
         catch (Exception e)
@@ -51,7 +51,6 @@ public class BaseView extends BaseActivity
         try
         {
             imageDefault = BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing);
-            imagePicked = (CheckBox) findViewById(R.id.picturePicked);
             imageView = (ImageView) findViewById(R.id.imageViewSmall);
         }
         catch (Exception e)
@@ -62,16 +61,16 @@ public class BaseView extends BaseActivity
     
     public void SetImage(String picture)
     {
-        imagePicked.setChecked(false);
+        imagePicked = false;
         try
         {
             clearImage();
             
-            if(picture.length()>0)
+            if(picture != null && picture.length()>0)
             {
                 if (imageUtils().getPageHeaderImage(this, picture, imageView) == false)
                     return;
-                imagePicked.setChecked(true);
+                imagePicked = true;
             }
             
         }
