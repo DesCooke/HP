@@ -55,7 +55,9 @@ public class ParadeDetailsView extends BaseScheduleView
             
             txtSchedName.setText(scheduleItem.schedName);
             txtBookingRef.setText(scheduleItem.paradeItem.bookingReference);
-            
+
+            afterShow();
+
         }
         catch (Exception e)
         {

@@ -12,7 +12,6 @@ import com.example.des.hp.Schedule.*;
 
 public class CinemaDetailsView extends BaseScheduleView
 {
-
     public LinearLayout grpStartDate;
     public CheckBox chkCheckinKnown;
     public TextView checkIn;
@@ -57,6 +56,7 @@ public class CinemaDetailsView extends BaseScheduleView
 
             txtSchedName.setText(scheduleItem.schedName);
             txtBookingRef.setText(scheduleItem.cinemaItem.bookingReference);
+
             afterShow();
         }
         catch(Exception e)

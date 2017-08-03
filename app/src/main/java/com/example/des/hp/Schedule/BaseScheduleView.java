@@ -1,18 +1,14 @@
 package com.example.des.hp.Schedule;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.des.hp.Dialog.BaseView;
 import com.example.des.hp.R;
 import com.example.des.hp.ScheduleArea.ScheduleAreaList;
 import com.example.des.hp.myutils.DateUtils;
-import com.example.des.hp.myutils.DialogTimePicker;
 import com.example.des.hp.myutils.DialogWithEditTextFragment;
 import com.example.des.hp.thirdpartyutils.BadgeView;
 
@@ -51,8 +47,7 @@ public class BaseScheduleView extends BaseView
         try
         {
             scheduleItem.noteId = noteId;
-            if (!databaseAccess().updateScheduleItem(scheduleItem))
-                return;
+            databaseAccess().updateScheduleItem(scheduleItem);
         }
         catch (Exception e)
         {
@@ -80,8 +75,7 @@ public class BaseScheduleView extends BaseView
         try
         {
             scheduleItem.infoId = infoId;
-            if (!databaseAccess().updateScheduleItem(scheduleItem))
-                return;
+            databaseAccess().updateScheduleItem(scheduleItem);
         }
         catch (Exception e)
         {
@@ -277,33 +271,7 @@ public class BaseScheduleView extends BaseView
         }
         return (lMinute);
     }
-    
-    public void handleTime(TextView txtTime, CheckBox chkTime, String title)
-    {
-        try
-        {
-            DialogTimePicker mTimePicker;
-            int hour;
-            int minute;
-            
-            hour = getHour(txtTime);
-            minute = getMinute(txtTime);
-            
-            mTimePicker = new DialogTimePicker(this);
-            mTimePicker.title = title;
-            mTimePicker.chkTimeKnown = chkTime;
-            mTimePicker.txtStartTime = txtTime;
-            mTimePicker.hour = hour;
-            mTimePicker.minute = minute;
-            mTimePicker.timeKnown = chkTime.isChecked();
-            mTimePicker.show();
-        }
-        catch (Exception e)
-        {
-            ShowError("handleTime", e.getMessage());
-        }
-    }
-    
+
     public void setTimeText(TextView textView, int hour, int minute)
     {
         try
@@ -324,8 +292,7 @@ public class BaseScheduleView extends BaseView
             ShowError("setTimeText", e.getMessage());
         }
     }
-    
-    
+
     @Override
     public void afterShow()
     {

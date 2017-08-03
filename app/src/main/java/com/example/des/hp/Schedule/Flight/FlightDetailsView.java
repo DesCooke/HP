@@ -17,11 +17,11 @@ public class FlightDetailsView extends BaseScheduleView
     public TextView checkIn;
     public CheckBox chkDepartureKnown;
     public TextView departs;
+    public TextView txtBookingRef;
     public CheckBox chkArriveKnown;
     public TextView arrives;
     public TextView txtFlightNo;
     public TextView txtTerminal;
-    public TextView txtBookingRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -72,6 +72,9 @@ public class FlightDetailsView extends BaseScheduleView
             txtFlightNo.setText(scheduleItem.flightItem.flightNo);
             txtTerminal.setText(scheduleItem.flightItem.terminal);
             txtBookingRef.setText(scheduleItem.flightItem.bookingReference);
+
+            afterShow();
+
         }
         catch(Exception e)
 

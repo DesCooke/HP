@@ -10,9 +10,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import com.example.des.hp.R;
 import com.example.des.hp.Schedule.*;
-import com.example.des.hp.myutils.MyLog;
-
-import static com.example.des.hp.myutils.MyLog.myLog;
 
 public class ShowDetailsView extends BaseScheduleView
 {
@@ -71,6 +68,9 @@ public class ShowDetailsView extends BaseScheduleView
             heartRating.setRating(scheduleItem.showItem.heartRating);
             thrillRating.setRating(scheduleItem.showItem.thrillRating);
             scenicRating.setRating(scheduleItem.showItem.scenicRating);
+
+            afterShow();
+
         }
         catch (Exception e)
         {

@@ -55,6 +55,9 @@ public class ParkDetailsView extends BaseScheduleView
             
             txtSchedName.setText(scheduleItem.schedName);
             txtBookingRef.setText(scheduleItem.parkItem.bookingReference);
+
+            afterShow();
+
         }
         catch (Exception e)
         {

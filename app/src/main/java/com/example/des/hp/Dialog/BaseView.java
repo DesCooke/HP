@@ -16,8 +16,6 @@ package com.example.des.hp.Dialog;
 **
 */
 
-import android.os.Bundle;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -68,7 +66,7 @@ public class BaseView extends BaseActivity
             
             if(picture != null && picture.length()>0)
             {
-                if (imageUtils().getPageHeaderImage(this, picture, imageView) == false)
+                if (!imageUtils().getPageHeaderImage(this, picture, imageView))
                     return;
                 imagePicked = true;
             }

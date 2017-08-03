@@ -323,10 +323,35 @@ public class RestaurantDetailsEdit extends BaseActivity
         }
     }
 
-    public void showForm()
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
     {
+        super.onCreate(savedInstanceState);
+
         try
         {
+            setContentView(R.layout.activity_restaurant_details_edit);
+
+            actionBar=getSupportActionBar();
+            dateUtils=new DateUtils(this);
+            imageUtils=new ImageUtils(this);
+            myColor=new MyColor(this);
+
+            cbPicturePicked=(CheckBox) findViewById(R.id.picturePicked);
+            imageViewSmall=(ImageView) findViewById(R.id.imageViewSmall);
+            txtSchedName=(TextView) findViewById(R.id.txtSchedName);
+            checkIn=(TextView) findViewById(R.id.txtCheckin);
+            departs=(TextView) findViewById(R.id.txtDeparture);
+            txtBookingRef=(TextView) findViewById(R.id.txtBookingRef);
+            chkCheckinKnown=(CheckBox) findViewById(R.id.chkCheckinKnown);
+            chkDepartureKnown=(CheckBox) findViewById(R.id.chkDepartureKnown);
+            radUnknown=(RadioButton) findViewById(R.id.radUnknown);
+            radWalkIn=(RadioButton) findViewById(R.id.radWalkIn);
+            radOnTheDay=(RadioButton) findViewById(R.id.radOnTheDay);
+            rad180Days=(RadioButton) findViewById(R.id.rad180Days);
+
+            clearImage(null);
+
             Bundle extras=getIntent().getExtras();
             if(extras != null)
             {
@@ -390,43 +415,6 @@ public class RestaurantDetailsEdit extends BaseActivity
                         rad180Days.setChecked(true);
                 }
             }
-        }
-        catch(Exception e)
-        {
-            ShowError("showForm", e.getMessage());
-        }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        try
-        {
-            setContentView(R.layout.activity_restaurant_details_edit);
-
-            actionBar=getSupportActionBar();
-            dateUtils=new DateUtils(this);
-            imageUtils=new ImageUtils(this);
-            myColor=new MyColor(this);
-
-            cbPicturePicked=(CheckBox) findViewById(R.id.picturePicked);
-            imageViewSmall=(ImageView) findViewById(R.id.imageViewSmall);
-            txtSchedName=(TextView) findViewById(R.id.txtSchedName);
-            checkIn=(TextView) findViewById(R.id.txtCheckin);
-            departs=(TextView) findViewById(R.id.txtDeparture);
-            txtBookingRef=(TextView) findViewById(R.id.txtBookingRef);
-            chkCheckinKnown=(CheckBox) findViewById(R.id.chkCheckinKnown);
-            chkDepartureKnown=(CheckBox) findViewById(R.id.chkDepartureKnown);
-            radUnknown=(RadioButton) findViewById(R.id.radUnknown);
-            radWalkIn=(RadioButton) findViewById(R.id.radWalkIn);
-            radOnTheDay=(RadioButton) findViewById(R.id.radOnTheDay);
-            rad180Days=(RadioButton) findViewById(R.id.rad180Days);
-
-            clearImage(null);
-
-            showForm();
         }
         catch(Exception e)
         {

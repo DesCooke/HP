@@ -272,9 +272,27 @@ public class RideDetailsEdit extends BaseActivity
         }
     }
 
-    public void showForm()
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
     {
-        try {
+        super.onCreate(savedInstanceState);
+
+        try
+        {
+        setContentView(R.layout.activity_ride_details_edit);
+
+        actionBar = getSupportActionBar();
+        dateUtils = new DateUtils(this);
+        imageUtils = new ImageUtils(this);
+        myColor = new MyColor(this);
+
+        cbPicturePicked=(CheckBox)findViewById(R.id.picturePicked);
+        imageViewSmall = (ImageView)findViewById(R.id.imageViewSmall);
+        txtSchedName=(TextView)findViewById(R.id.txtSchedName);
+        heartRating=(RatingBar)findViewById(R.id.rbHeartRating);
+        scenicRating=(RatingBar)findViewById(R.id.rbScenicRating);
+        thrillRating=(RatingBar)findViewById(R.id.rbThrillRating);
+
             clearImage(null);
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
@@ -301,7 +319,7 @@ public class RideDetailsEdit extends BaseActivity
                     scheduleId = extras.getInt("SCHEDULEID");
                     scheduleItem = new ScheduleItem();
                     if (!databaseAccess().getScheduleItem(holidayId, dayId,
-                            attractionId, attractionAreaId, scheduleId, scheduleItem))
+                        attractionId, attractionAreaId, scheduleId, scheduleItem))
                         return;
 
                     if (imageUtils.getPageHeaderImage(this, scheduleItem.schedPicture, imageViewSmall) == false)
@@ -320,36 +338,6 @@ public class RideDetailsEdit extends BaseActivity
                     }
                 }
             }
-        }
-        catch(Exception e)
-        {
-            ShowError("showForm", e.getMessage());
-        }
-
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        try
-        {
-        setContentView(R.layout.activity_ride_details_edit);
-
-        actionBar = getSupportActionBar();
-        dateUtils = new DateUtils(this);
-        imageUtils = new ImageUtils(this);
-        myColor = new MyColor(this);
-
-        cbPicturePicked=(CheckBox)findViewById(R.id.picturePicked);
-        imageViewSmall = (ImageView)findViewById(R.id.imageViewSmall);
-        txtSchedName=(TextView)findViewById(R.id.txtSchedName);
-        heartRating=(RatingBar)findViewById(R.id.rbHeartRating);
-        scenicRating=(RatingBar)findViewById(R.id.rbScenicRating);
-        thrillRating=(RatingBar)findViewById(R.id.rbThrillRating);
-
-        showForm();
         }
         catch(Exception e)
         {

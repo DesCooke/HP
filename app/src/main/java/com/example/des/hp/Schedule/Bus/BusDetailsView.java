@@ -61,6 +61,7 @@ public class BusDetailsView extends BaseScheduleView
             txtBookingRef.setText(scheduleItem.busItem.bookingReference);
 
             SetImage(scheduleItem.schedPicture);
+
             afterShow();
         }
         catch(Exception e)

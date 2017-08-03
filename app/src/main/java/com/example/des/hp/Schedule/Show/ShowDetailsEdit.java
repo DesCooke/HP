@@ -333,19 +333,6 @@ public class ShowDetailsEdit extends BaseActivity
             scenicRating=(RatingBar) findViewById(R.id.rbScenicRating);
             thrillRating=(RatingBar) findViewById(R.id.rbThrillRating);
 
-            showForm();
-        }
-        catch(Exception e)
-        {
-            ShowError("onCreate", e.getMessage());
-        }
-
-    }
-
-    public void showForm()
-    {
-        try
-        {
             clearImage(null);
             Bundle extras=getIntent().getExtras();
             if(extras != null)
@@ -404,9 +391,11 @@ public class ShowDetailsEdit extends BaseActivity
         }
         catch(Exception e)
         {
-            ShowError("showForm", e.getMessage());
+            ShowError("onCreate", e.getMessage());
         }
+
     }
+
 
     private int getHour(TextView textview)
     {

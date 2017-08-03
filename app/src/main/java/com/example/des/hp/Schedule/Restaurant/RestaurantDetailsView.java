@@ -83,7 +83,10 @@ public class RestaurantDetailsView extends BaseScheduleView
             
             txtSchedName.setText(scheduleItem.schedName);
             txtBookingRef.setText(scheduleItem.restaurantItem.bookingReference);
-            
+
+
+            afterShow();
+
         }
         catch (Exception e)
         {

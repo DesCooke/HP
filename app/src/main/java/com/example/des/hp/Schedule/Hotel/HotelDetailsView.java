@@ -59,6 +59,9 @@ public class HotelDetailsView extends BaseScheduleView
             
             txtSchedName.setText(scheduleItem.schedName);
             txtBookingRef.setText(scheduleItem.hotelItem.bookingReference);
+
+            afterShow();
+
         }
         catch (Exception e)
         {

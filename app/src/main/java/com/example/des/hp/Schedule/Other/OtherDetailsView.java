@@ -57,7 +57,10 @@ public class OtherDetailsView extends BaseScheduleView
             
             txtSchedName.setText(scheduleItem.schedName);
             txtBookingRef.setText(scheduleItem.otherItem.bookingReference);
-            
+
+
+            afterShow();
+
         }
         catch (Exception e)
         {

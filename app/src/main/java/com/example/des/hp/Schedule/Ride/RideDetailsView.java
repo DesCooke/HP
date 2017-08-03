@@ -53,7 +53,9 @@ public class RideDetailsView extends BaseScheduleView
             scenicRating.setRating(scheduleItem.rideItem.scenicRating);
             
             txtSchedName.setText(scheduleItem.schedName);
-            
+
+            afterShow();
+
         }
         catch (Exception e)
         {
