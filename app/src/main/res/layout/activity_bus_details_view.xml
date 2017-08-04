@@ -1,55 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
     <TextView
-        android:text="Bus Details"
+        android:text="@string/bus_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/lblTitle"
         android:textSize="36sp"
         android:textAlignment="center" />
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <include
+        layout="@layout/included_schedule_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageButton
-            android:id="@+id/btnClear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:onClick="btnClearImage"
-            app:srcCompat="@android:drawable/ic_menu_delete"/>
-
-        <ImageButton
-            android:layout_width="284dp"
-            android:layout_height="256dp"
-            app:srcCompat="@drawable/imagemissing"
-            android:id="@+id/imageViewSmall"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="49dp"
-            android:layout_marginStart="49dp"
-            android:scaleType="fitXY"
-            android:layout_weight="0.78" />
-    </LinearLayout>
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="1"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        >
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -59,7 +40,7 @@
                 android:layout_weight="1">
 
                 <TextView
-                    android:text="Bus Arrives"
+                    android:text="@string/bus_arrives"
                     android:layout_width="match_parent"
                     android:id="@+id/lblCheckin"
                     android:layout_height="wrap_content"
@@ -67,7 +48,7 @@
                     android:gravity="center_vertical|center_horizontal" />
 
                 <TextView
-                    android:text="00:00"
+                    android:text="@string/zero_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtCheckin"
@@ -86,7 +67,7 @@
 
 
                 <TextView
-                    android:text="Journey Ends"
+                    android:text="@string/journey_ends"
                     android:layout_width="match_parent"
                     android:id="@+id/lblArrival"
                     android:layout_height="wrap_content"
@@ -94,7 +75,7 @@
                     android:gravity="center_vertical|center_horizontal" />
 
                 <TextView
-                    android:text="00:00"
+                    android:text="@string/zero_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtArrival"
@@ -112,7 +93,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="Description"
+                android:text="@string/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/txtSchedNameCaption"
@@ -134,7 +115,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="Booking Ref"
+                android:text="@string/booking_ref"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/txtBookingRefCaption"
@@ -164,7 +145,8 @@
                 android:clickable="false"
                 android:background="@android:drawable/alert_light_frame"
                 android:tint="@color/colorDisabled"
-                android:onClick="showInfo"/>
+                android:onClick="showInfo"
+                tools:ignore="ContentDescription"/>
 
             <Space
                 android:layout_width="20dp"
@@ -178,7 +160,8 @@
                 android:scaleType="centerInside"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:onClick="showNotes"/>
+                android:onClick="showNotes"
+                tools:ignore="ContentDescription"/>
 
             <Space
                 android:layout_width="20dp"
@@ -186,36 +169,23 @@
         </LinearLayout>
 
         <CheckBox
-            android:text="CheckBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/picturePicked"
-            android:visibility="invisible" />
-
-        <CheckBox
-            android:text="CheckBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/chkCheckinKnown"
-            android:visibility="invisible" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/checkbox"
+            android:visibility="gone"/>
 
         <CheckBox
-            android:text="CheckBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/chkArrivalKnown"
-            android:visibility="invisible" />
-
-        <Button
-            android:text="Save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btnSave"
-            android:onClick="saveSchedule"
-            android:layout_marginTop="12dp"
-            android:layout_below="@+id/button"
-            android:layout_alignLeft="@+id/button"
-            android:layout_alignStart="@+id/button" />
+            android:text="@string/checkbox"
+            android:visibility="gone"/>
+
+        <include
+            layout="@layout/included_schedule_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -50,9 +50,6 @@ public class BusDetailsView extends BaseScheduleView
             grpEndTime=(LinearLayout) findViewById(R.id.grpEndTime);
             grpBookingRef=(LinearLayout) findViewById(R.id.grpBookingRef);
 
-            btnClear.setVisibility(View.INVISIBLE);
-            btnSave.setVisibility(View.INVISIBLE);
-
             afterCreate();
 
             showForm();

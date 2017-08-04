@@ -78,5 +78,14 @@
     <string name="fmt_date_line">%s</string>
     <string name="fmt_hr_line">%d Hr</string>
     <string name="fmt_hrs_line">%d Hrs</string>
+    <string name="zero_time">00:00</string>
+    <string name="booking_ref">Booking Ref</string>
+    <string name="bus_arrives">Bus Arrives</string>
+    <string name="bus_details">Bus Details</string>
+    <string name="checkbox">CheckBox</string>
+    <string name="checkbox3">CheckBox</string>
+    <string name="description">Description</string>
+    <string name="journey_ends">Journey Ends</string>
+    <string name="save">Save</string>
 
 </resources>

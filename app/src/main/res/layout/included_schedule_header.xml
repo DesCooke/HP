@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="UselessParent">
+
+        <ImageButton
+            android:id="@+id/btnClear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription=""
+            android:onClick="btnClearImage"
+            android:visibility="gone"
+            app:srcCompat="@android:drawable/ic_menu_delete"
+            tools:ignore="ContentDescription"/>
+
+        <ImageButton
+            android:id="@+id/imageViewSmall"
+            android:layout_width="match_parent"
+            android:layout_height="176dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/imagemissing"
+            tools:ignore="ContentDescription,RtlHardcoded"/>
+    </LinearLayout>
+
+
+</LinearLayout>
