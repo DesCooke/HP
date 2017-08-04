@@ -59,10 +59,11 @@ import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyMessages;
 import com.example.des.hp.thirdpartyutils.BadgeView;
 
+import java.util.Locale;
+
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyColor.myColor;
 import static com.example.des.hp.myutils.MyLog.myLog;
-import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class BaseActivity extends AppCompatActivity
 {
@@ -78,6 +79,8 @@ public class BaseActivity extends AppCompatActivity
     public String subTitle;
     public String holidayName="";
 
+    public boolean reloadOnShow=true;
+
     public boolean showInfoEnabled;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
@@ -90,6 +93,7 @@ public class BaseActivity extends AppCompatActivity
     {
         try
         {
+            reloadOnShow=false;
             Intent intent2 = new Intent(getApplicationContext(), NoteView.class);
             int lNoteId = getNoteId();
             if (lNoteId == 0)
@@ -128,7 +132,7 @@ public class BaseActivity extends AppCompatActivity
         if (showInfoEnabled)
         {
             btnShowInfoBadge = new BadgeView(this, btnShowInfo);
-            btnShowInfoBadge.setText(Integer.toString(0));
+            btnShowInfoBadge.setText("0");
             btnShowInfoBadge.show();
         }
     }
@@ -137,6 +141,7 @@ public class BaseActivity extends AppCompatActivity
     {
         try
         {
+            reloadOnShow=false;
             int lInfoId;
             lInfoId = getInfoId();
             Intent intent2 = new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
@@ -159,7 +164,7 @@ public class BaseActivity extends AppCompatActivity
         }
     }
 
-    public void afterShow()
+    public void displayShowInfo()
     {
         if(showInfoEnabled)
         {
@@ -171,21 +176,22 @@ public class BaseActivity extends AppCompatActivity
                 if (!databaseAccess().getExtraFilesCount(lInfoId, lFileCount))
                     return;
             }
-            btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
+            btnShowInfoBadge.setText(String.format(Locale.getDefault(), "%d", lFileCount.Value));
 
             if (lFileCount.Value == 0)
             {
                 btnShowInfoBadge.setVisibility(View.INVISIBLE);
-                if (myColor().SetImageButtonTint(btnShowInfo, R.color.colorDisabled) == false)
-                    return;
+                myColor().SetImageButtonTint(btnShowInfo, R.color.colorDisabled);
             } else
             {
                 btnShowInfoBadge.setVisibility(View.VISIBLE);
-                if (myColor().SetImageButtonTint(btnShowInfo, R.color.colorEnabled) == false)
-                    return;
+                myColor().SetImageButtonTint(btnShowInfo, R.color.colorEnabled);
             }
         }
+    }
 
+    public void displayShowNotes()
+    {
         if(showNotesEnabled)
         {
             int lNoteId = getNoteId();
@@ -194,14 +200,18 @@ public class BaseActivity extends AppCompatActivity
                 return;
             if (noteItem.notes.length() == 0)
             {
-                if (myColor().SetImageButtonTint(btnShowNotes, R.color.colorDisabled) == false)
-                    return;
+                myColor().SetImageButtonTint(btnShowNotes, R.color.colorDisabled);
             } else
             {
-                if (myColor().SetImageButtonTint(btnShowNotes, R.color.colorEnabled) == false)
-                    return;
+                myColor().SetImageButtonTint(btnShowNotes, R.color.colorEnabled);
             }
         }
+    }
+
+    public void afterShow()
+    {
+        displayShowInfo();
+        displayShowNotes();
     }
 
 
@@ -292,6 +302,13 @@ public class BaseActivity extends AppCompatActivity
         ErrorDialog.SetContext(this);
         MessageDialog.SetContext(this);
         MyMessages.SetContext(this);
-        showForm();
+
+        if(reloadOnShow)
+        {
+            showForm();
+        }
+        displayShowInfo();
+        displayShowNotes();
+        reloadOnShow=true;
     }
 }

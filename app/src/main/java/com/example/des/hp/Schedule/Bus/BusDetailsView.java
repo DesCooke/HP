@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,6 +23,12 @@ public class BusDetailsView extends BaseScheduleView
     public CheckBox chkArriveKnown;
     public TextView arrives;
     public TextView txtBookingRef;
+    public LinearLayout grpBookingRef;
+    public ImageButton btnClear;
+    public Button btnSave;
+    public LinearLayout grpStartTime;
+    public LinearLayout grpEndTime;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -35,6 +44,14 @@ public class BusDetailsView extends BaseScheduleView
             txtBookingRef=(TextView) findViewById(R.id.txtBookingRef);
             chkCheckinKnown=(CheckBox) findViewById(R.id.chkCheckinKnown);
             chkArriveKnown=(CheckBox) findViewById(R.id.chkArrivalKnown);
+            btnClear=(ImageButton) findViewById(R.id.btnClear);
+            btnSave=(Button) findViewById(R.id.btnSave);
+            grpStartTime=(LinearLayout) findViewById(R.id.grpStartTime);
+            grpEndTime=(LinearLayout) findViewById(R.id.grpEndTime);
+            grpBookingRef=(LinearLayout) findViewById(R.id.grpBookingRef);
+
+            btnClear.setVisibility(View.INVISIBLE);
+            btnSave.setVisibility(View.INVISIBLE);
 
             afterCreate();
 
@@ -51,6 +68,11 @@ public class BusDetailsView extends BaseScheduleView
         super.showForm();
         try
         {
+            if(action != null)
+                if(action.equals("add"))
+                    if(scheduleItem.busItem == null)
+                        scheduleItem.busItem=new BusItem();
+
             chkCheckinKnown.setChecked(scheduleItem.startTimeKnown);
             setTimeText(checkIn, scheduleItem.startHour, scheduleItem.startMin);
 

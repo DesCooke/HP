@@ -19,6 +19,14 @@
         android:layout_height="wrap_content">
 
         <ImageButton
+            android:id="@+id/btnClear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:onClick="btnClearImage"
+            app:srcCompat="@android:drawable/ic_menu_delete"/>
+
+        <ImageButton
             android:layout_width="284dp"
             android:layout_height="256dp"
             app:srcCompat="@drawable/imagemissing"
@@ -45,6 +53,7 @@
 
             <LinearLayout
                 android:orientation="vertical"
+                android:id="@+id/grpStartTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
@@ -70,6 +79,7 @@
 
             <LinearLayout
                 android:orientation="vertical"
+                android:id="@+id/grpEndTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
@@ -97,6 +107,7 @@
 
         <LinearLayout
             android:orientation="horizontal"
+            android:id="@+id/grpSchedName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -118,6 +129,7 @@
 
         <LinearLayout
             android:orientation="horizontal"
+            android:id="@+id/grpBookingRef"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -194,6 +206,16 @@
             android:id="@+id/chkArrivalKnown"
             android:visibility="invisible" />
 
+        <Button
+            android:text="Save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnSave"
+            android:onClick="saveSchedule"
+            android:layout_marginTop="12dp"
+            android:layout_below="@+id/button"
+            android:layout_alignLeft="@+id/button"
+            android:layout_alignStart="@+id/button" />
     </LinearLayout>
 
 </LinearLayout>
