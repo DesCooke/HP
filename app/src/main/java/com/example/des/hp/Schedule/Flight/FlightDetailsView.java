@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.des.hp.R;
@@ -12,7 +14,6 @@ import com.example.des.hp.Schedule.*;
 
 public class FlightDetailsView extends BaseScheduleView
 {
-    public LinearLayout grpStartDate;
     public CheckBox chkCheckinKnown;
     public TextView checkIn;
     public CheckBox chkDepartureKnown;
@@ -22,6 +23,15 @@ public class FlightDetailsView extends BaseScheduleView
     public TextView arrives;
     public TextView txtFlightNo;
     public TextView txtTerminal;
+    public ImageButton btnClear;
+    public Button btnSave;
+
+    public LinearLayout grpCheckin;
+    public LinearLayout grpDeparture;
+    public LinearLayout grpArrival;
+    public LinearLayout grpFlightNo;
+    public LinearLayout grpTerminal;
+    public LinearLayout grpBookingRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -30,6 +40,8 @@ public class FlightDetailsView extends BaseScheduleView
 
         try
         {
+            scheduleTypeDescription = getString(R.string.schedule_desc_flight);
+
             setContentView(R.layout.activity_flight_details_view);
 
             checkIn=(TextView) findViewById(R.id.txtCheckin);
@@ -41,6 +53,15 @@ public class FlightDetailsView extends BaseScheduleView
             chkCheckinKnown=(CheckBox) findViewById(R.id.chkCheckinKnown);
             chkDepartureKnown=(CheckBox) findViewById(R.id.chkDepartureKnown);
             chkArriveKnown=(CheckBox) findViewById(R.id.chkArrivalKnown);
+            btnClear=(ImageButton) findViewById(R.id.btnClear);
+            btnSave=(Button) findViewById(R.id.btnSave);
+
+            grpCheckin=(LinearLayout) findViewById(R.id.grpCheckin);
+            grpDeparture=(LinearLayout) findViewById(R.id.grpDeparture);
+            grpArrival=(LinearLayout) findViewById(R.id.grpArrival);
+            grpFlightNo=(LinearLayout) findViewById(R.id.grpFlightNo);
+            grpTerminal=(LinearLayout) findViewById(R.id.grpTerminal);
+            grpBookingRef=(LinearLayout) findViewById(R.id.grpBookingRef);
 
             afterCreate();
 
@@ -59,6 +80,11 @@ public class FlightDetailsView extends BaseScheduleView
 
         try
         {
+            if(action != null)
+                if(action.equals("add"))
+                    if(scheduleItem.flightItem == null)
+                        scheduleItem.flightItem=new FlightItem();
+
             chkCheckinKnown.setChecked(scheduleItem.startTimeKnown);
             setTimeText(checkIn, scheduleItem.startHour, scheduleItem.startMin);
 

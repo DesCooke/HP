@@ -1,191 +1,93 @@
 package com.example.des.hp.Schedule.Flight;
 
-import android.content.Intent;
-import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v7.app.ActionBar;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.widget.TextView;
 
-import com.example.des.hp.Database.DatabaseAccess;
-import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
-import com.example.des.hp.Schedule.*;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
-public class FlightDetailsEdit extends BaseActivity
+public class FlightDetailsEdit extends FlightDetailsView implements View.OnClickListener
 {
-
-    private final int SELECT_PHOTO=1;
-    private ImageView imageViewSmall;
-    private String originalFileName;
-    private String action;
-    public int holidayId;
-    public int dayId;
-    public int attractionId;
-    public int attractionAreaId;
-    public int scheduleId;
-    public DateUtils dateUtils;
-    public LinearLayout grpStartDate;
-    public TextView txtSchedName;
-    public String holidayName;
-    public ActionBar actionBar;
-    public ScheduleItem scheduleItem;
-    public FlightItem flightItem;
-    public CheckBox cbPicturePicked;
-    private ImageUtils imageUtils;
-    public CheckBox chkCheckinKnown;
-    public TextView checkIn;
-    public CheckBox chkDepartureKnown;
-    public TextView departs;
-    public CheckBox chkArriveKnown;
-    public TextView arrives;
-    public TextView txtFlightNo;
-    public TextView txtTerminal;
-    public TextView txtBookingRef;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
 
-    public void pickImage(View view)
-    {
-        try
-        {
-            Intent photoPickerIntent=new Intent(Intent.ACTION_PICK);
-            photoPickerIntent.setType("image/*");
-            startActivityForResult(photoPickerIntent, SELECT_PHOTO);
-        }
-        catch(Exception e)
-        {
-            ShowError("pickImage", e.getMessage());
-        }
-    }
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent)
+    protected void onCreate(Bundle savedInstanceState)
     {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        super.onCreate(savedInstanceState);
+
         try
         {
-            switch(requestCode)
+            btnClear.setVisibility(View.VISIBLE);
+            btnSave.setVisibility(View.VISIBLE);
+
+            if(action != null && action.equals("add"))
             {
-                case SELECT_PHOTO:
-                    if(resultCode == RESULT_OK)
-                    {
-                        try
-                        {
-                            MyBitmap myBitmap=new MyBitmap();
-                            Boolean lRetCode=imageUtils.ScaleBitmapFromUrl(imageReturnedIntent.getData(), getContentResolver(), myBitmap);
-                            if(lRetCode == false)
-                                return;
-
-                            // assign new bitmap and set scale type
-                            imageViewSmall.setImageBitmap(myBitmap.Value);
-
-                            cbPicturePicked.setChecked(true);
-
-                            scheduleItem.pictureChanged=true;
-
-
-                        }
-                        catch(Exception e)
-                        {
-                            ShowError("onActivityResult-selectphoto", e.getMessage());
-                        }
-                    }
+                grpMenuFile.setVisibility(View.GONE);
+                txtSchedName.setText("");
             }
+
+            grpCheckin.setOnClickListener(this);
+            grpBookingRef.setOnClickListener(this);
+            grpSchedName.setOnClickListener(this);
+            grpDeparture.setOnClickListener(this);
+            grpArrival.setOnClickListener(this);
+            grpTerminal.setOnClickListener(this);
+            imageView.setOnClickListener(this);
+            grpFlightNo.setOnClickListener(this);
         }
         catch(Exception e)
         {
-            ShowError("onActivityResult", e.getMessage());
+            ShowError("onCreate", e.getMessage());
         }
     }
 
-    public void clearImage(View view)
+    public void onClick(View view)
     {
-        try
+        switch(view.getId())
         {
-            cbPicturePicked.setChecked(false);
-            imageViewSmall.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
-        }
-        catch(Exception e)
-        {
-            ShowError("clearImage", e.getMessage());
-        }
-    }
 
-    public void btnClearImage(View view)
-    {
-        try
-        {
-            clearImage(view);
-            scheduleItem.pictureChanged=true;
-        }
-        catch(Exception e)
-        {
-            ShowError("btnClearImage", e.getMessage());
-        }
+            case R.id.grpCheckin:
+                checkInClick(view);
+                break;
 
-    }
+            case R.id.grpBookingRef:
+                pickBookingRef(view);
+                break;
 
-    public void SchedNamePicked(View view)
-    {
-        try
-        {
-            txtSchedName.setText(dialogWithEditTextFragment.getFinalText());
+            case R.id.grpSchedName:
+                pickSchedName(view);
+                break;
 
-            dialogWithEditTextFragment.dismiss();
-        }
-        catch(Exception e)
-        {
-            ShowError("SchedNamePicked", e.getMessage());
-        }
+            case R.id.grpDeparture:
+                departureClick(view);
+                break;
 
-    }
+            case R.id.imageViewSmall:
+                pickImage(view);
+                break;
 
-    public void pickSchedName(View view)
-    {
-        try
-        {
-            dwetOnOkClick=new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    SchedNamePicked(view);
-                }
-            };
+            case R.id.grpArrival:
+                arrivalClick(view);
+                break;
 
-            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
-                "hihi",            // unique name for this dialog type
-                "Flight",    // form caption
-                "Flight",             // form message
-                R.drawable.attachment, txtSchedName.getText().toString(), // initial text
-                dwetOnOkClick, this, false
-            );
+            case R.id.grpTerminal:
+                pickTerminal(view);
+                break;
 
-            dialogWithEditTextFragment.showIt();
-        }
-        catch(Exception e)
-        {
-            ShowError("pickSchedName", e.getMessage());
+            case R.id.grpFlightNo:
+                pickFlightNo(view);
+                break;
         }
     }
 
+
+    // orig code
     public void BookingRefPicked(View view)
     {
         try
@@ -315,6 +217,13 @@ public class FlightDetailsEdit extends BaseActivity
         }
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        /* disable the menu entirely */
+        return false;
+    }
+
     public void saveSchedule(View view)
     {
         try
@@ -323,12 +232,25 @@ public class FlightDetailsEdit extends BaseActivity
 
             myMessages().ShowMessageShort("Saving Schedule");
 
-            scheduleItem.pictureAssigned=cbPicturePicked.isChecked();
+            scheduleItem.pictureAssigned=imageSet;
+            scheduleItem.pictureChanged=imageChanged;
             scheduleItem.schedName=txtSchedName.getText().toString();
             scheduleItem.scheduleBitmap=null;
-            if(scheduleItem.pictureAssigned)
-                scheduleItem.scheduleBitmap=((BitmapDrawable) imageViewSmall.getDrawable()).getBitmap();
+            if(imageSet)
+                scheduleItem.scheduleBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
+            scheduleItem.startTimeKnown=chkCheckinKnown.isChecked();
+            scheduleItem.startHour=getHour(checkIn);
+            scheduleItem.startMin=getMinute(checkIn);
+            scheduleItem.endTimeKnown=chkArriveKnown.isChecked();
+            scheduleItem.endHour=getHour(arrives);
+            scheduleItem.endMin=getMinute(arrives);
+            scheduleItem.flightItem.departsKnown=chkDepartureKnown.isChecked();
+            scheduleItem.flightItem.departsHour=getHour(departs);
+            scheduleItem.flightItem.departsMin=getMinute(departs);
+            scheduleItem.flightItem.flightNo=txtFlightNo.getText().toString();
+            scheduleItem.flightItem.terminal=txtTerminal.getText().toString();
+            scheduleItem.flightItem.bookingReference=txtBookingRef.getText().toString();
 
             if(action.equals("add"))
             {
@@ -345,28 +267,14 @@ public class FlightDetailsEdit extends BaseActivity
                     return;
                 scheduleItem.sequenceNo=myInt.Value;
 
-                scheduleItem.startTimeKnown=chkCheckinKnown.isChecked();
-                scheduleItem.startHour=getHour(checkIn);
-                scheduleItem.startMin=getMinute(checkIn);
-                scheduleItem.endTimeKnown=chkArriveKnown.isChecked();
-                scheduleItem.endHour=getHour(arrives);
-                scheduleItem.endMin=getMinute(arrives);
                 scheduleItem.schedType=getResources().getInteger(R.integer.schedule_type_flight);
 
 
-                flightItem.holidayId=holidayId;
-                flightItem.dayId=dayId;
-                flightItem.attractionId=attractionId;
-                flightItem.attractionAreaId=attractionAreaId;
-                flightItem.scheduleId=scheduleItem.scheduleId;
-                flightItem.departsKnown=chkDepartureKnown.isChecked();
-                flightItem.departsHour=getHour(departs);
-                flightItem.departsMin=getMinute(departs);
-                flightItem.flightNo=txtFlightNo.getText().toString();
-                flightItem.terminal=txtTerminal.getText().toString();
-                flightItem.bookingReference=txtBookingRef.getText().toString();
-
-                scheduleItem.flightItem=flightItem;
+                scheduleItem.flightItem.holidayId=holidayId;
+                scheduleItem.flightItem.dayId=dayId;
+                scheduleItem.flightItem.attractionId=attractionId;
+                scheduleItem.flightItem.attractionAreaId=attractionAreaId;
+                scheduleItem.flightItem.scheduleId=scheduleItem.scheduleId;
 
                 if(!databaseAccess().addScheduleItem(scheduleItem))
                     return;
@@ -374,22 +282,6 @@ public class FlightDetailsEdit extends BaseActivity
 
             if(action.equals("edit"))
             {
-                scheduleItem.startTimeKnown=chkCheckinKnown.isChecked();
-                scheduleItem.startHour=getHour(checkIn);
-                scheduleItem.startMin=getMinute(checkIn);
-                scheduleItem.endTimeKnown=chkArriveKnown.isChecked();
-                scheduleItem.endHour=getHour(arrives);
-                scheduleItem.endMin=getMinute(arrives);
-                if(scheduleItem.flightItem != null)
-                {
-                    scheduleItem.flightItem.departsKnown=chkDepartureKnown.isChecked();
-                    scheduleItem.flightItem.departsHour=getHour(departs);
-                    scheduleItem.flightItem.departsMin=getMinute(departs);
-                    scheduleItem.flightItem.flightNo=txtFlightNo.getText().toString();
-                    scheduleItem.flightItem.terminal=txtTerminal.getText().toString();
-                    scheduleItem.flightItem.bookingReference=txtBookingRef.getText().toString();
-                }
-
                 if(!databaseAccess().updateScheduleItem(scheduleItem))
                     return;
             }
@@ -400,184 +292,6 @@ public class FlightDetailsEdit extends BaseActivity
         {
             ShowError("SaveSchedule", e.getMessage());
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        try
-        {
-            setContentView(R.layout.activity_flight_details_edit);
-
-            actionBar=getSupportActionBar();
-            dateUtils=new DateUtils(this);
-            imageUtils=new ImageUtils(this);
-
-            cbPicturePicked=(CheckBox) findViewById(R.id.picturePicked);
-            imageViewSmall=(ImageView) findViewById(R.id.imageViewSmall);
-            txtSchedName=(TextView) findViewById(R.id.txtSchedName);
-            checkIn=(TextView) findViewById(R.id.txtCheckin);
-            departs=(TextView) findViewById(R.id.txtDeparture);
-            arrives=(TextView) findViewById(R.id.txtArrival);
-            txtFlightNo=(TextView) findViewById(R.id.txtFlightNo);
-            txtTerminal=(TextView) findViewById(R.id.txtTerminal);
-            txtBookingRef=(TextView) findViewById(R.id.txtBookingRef);
-            chkCheckinKnown=(CheckBox) findViewById(R.id.chkCheckinKnown);
-            chkDepartureKnown=(CheckBox) findViewById(R.id.chkDepartureKnown);
-            chkArriveKnown=(CheckBox) findViewById(R.id.chkArrivalKnown);
-
-            clearImage(null);
-            Bundle extras=getIntent().getExtras();
-            if(extras != null)
-            {
-                String title=extras.getString("TITLE");
-                String subtitle=extras.getString("SUBTITLE");
-                actionBar.setTitle(title);
-                actionBar.setSubtitle(subtitle);
-
-                holidayId=extras.getInt("HOLIDAYID");
-                dayId=extras.getInt("DAYID");
-                attractionId=extras.getInt("ATTRACTIONID");
-                attractionAreaId=extras.getInt("ATTRACTIONAREAID");
-                holidayName=extras.getString("HOLIDAYNAME");
-
-                action=extras.getString("ACTION");
-                if(action != null && action.equals("add"))
-                {
-                    scheduleItem=new ScheduleItem();
-                    flightItem=new FlightItem();
-
-                    txtSchedName.setText("");
-                    cbPicturePicked.setChecked(false);
-                }
-                if(action != null && action.equals("edit"))
-                {
-                    scheduleId=extras.getInt("SCHEDULEID");
-                    scheduleItem=new ScheduleItem();
-                    if(!databaseAccess().getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, scheduleItem))
-                        return;
-
-                    chkCheckinKnown.setChecked(scheduleItem.startTimeKnown);
-                    setTimeText(checkIn, scheduleItem.startHour, scheduleItem.startMin);
-
-                    chkDepartureKnown.setChecked(scheduleItem.flightItem.departsKnown);
-                    setTimeText(departs, scheduleItem.flightItem.departsHour, scheduleItem.flightItem.departsMin);
-
-                    chkArriveKnown.setChecked(scheduleItem.endTimeKnown);
-                    setTimeText(arrives, scheduleItem.endHour, scheduleItem.endMin);
-
-                    txtSchedName.setText(scheduleItem.schedName);
-                    txtFlightNo.setText(scheduleItem.flightItem.flightNo);
-                    txtTerminal.setText(scheduleItem.flightItem.terminal);
-                    txtBookingRef.setText(scheduleItem.flightItem.bookingReference);
-
-                    originalFileName=scheduleItem.schedPicture;
-
-                    if(imageUtils.getPageHeaderImage(this, scheduleItem.schedPicture, imageViewSmall) == false)
-                        return;
-
-                    cbPicturePicked.setChecked(scheduleItem.pictureAssigned);
-
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            ShowError("onCreate", e.getMessage());
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        try
-        {
-            switch(item.getItemId())
-            {
-                case R.id.action_delete_flight:
-                    deleteFlight();
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
-        }
-        catch(Exception e)
-        {
-            ShowError("onOptionsItemSelected", e.getMessage());
-        }
-        return true;
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        try
-        {
-            MenuInflater inflater=getMenuInflater();
-            inflater.inflate(R.menu.flightdetailsformmenu, menu);
-            return true;
-        }
-        catch(Exception e)
-        {
-            ShowError("onCreateOptionsMenu", e.getMessage());
-        }
-        return true;
-    }
-
-    public void deleteFlight()
-    {
-        try
-        {
-            if(!databaseAccess().deleteScheduleItem(scheduleItem))
-                return;
-
-            finish();
-        }
-        catch(Exception e)
-        {
-            ShowError("deleteFlight", e.getMessage());
-        }
-    }
-
-
-    private int getHour(TextView textview)
-    {
-        try
-        {
-            String[] sarray=textview.getText().toString().split(":");
-            int lHour=Integer.parseInt(sarray[0]);
-            if(lHour < 0)
-                lHour=0;
-            if(lHour > 23)
-                lHour=23;
-            return (lHour);
-        }
-        catch(Exception e)
-        {
-            ShowError("getHour", e.getMessage());
-        }
-        return 0;
-    }
-
-    private int getMinute(TextView textview)
-    {
-        try
-        {
-            String[] sarray=textview.getText().toString().split(":");
-            int lMinute=Integer.parseInt(sarray[1]);
-            if(lMinute < 0)
-                lMinute=0;
-            if(lMinute > 59)
-                lMinute=59;
-            return (lMinute);
-
-        }
-        catch(Exception e)
-        {
-            ShowError("getMinute", e.getMessage());
-        }
-        return 0;
     }
 
     public void checkInClick(View view)
@@ -593,54 +307,6 @@ public class FlightDetailsEdit extends BaseActivity
     public void arrivalClick(View view)
     {
         handleTime(arrives, chkArriveKnown, "Select Arrival Time");
-    }
-
-    private void handleTime(TextView txtTime, CheckBox chkTime, String title)
-    {
-        try
-        {
-            DialogTimePicker mTimePicker;
-            int hour;
-            int minute;
-
-            hour=getHour(txtTime);
-            minute=getMinute(txtTime);
-
-            mTimePicker=new DialogTimePicker(this);
-            mTimePicker.title=title;
-            mTimePicker.chkTimeKnown=chkTime;
-            mTimePicker.txtStartTime=txtTime;
-            mTimePicker.hour=hour;
-            mTimePicker.minute=minute;
-            mTimePicker.timeKnown=chkTime.isChecked();
-            mTimePicker.show();
-        }
-        catch(Exception e)
-        {
-            ShowError("handleTime", e.getMessage());
-        }
-
-    }
-
-    private void setTimeText(TextView textView, int hour, int minute)
-    {
-        try
-        {
-            String lTime;
-            lTime="";
-            if(hour < 10)
-                lTime="0";
-            lTime=lTime + hour;
-            lTime=lTime + ":";
-            if(minute < 10)
-                lTime=lTime + "0";
-            lTime=lTime + minute;
-            textView.setText(lTime);
-        }
-        catch(Exception e)
-        {
-            ShowError("setTimeText", e.getMessage());
-        }
     }
 
 }

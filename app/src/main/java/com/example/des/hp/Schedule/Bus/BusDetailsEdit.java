@@ -3,8 +3,6 @@ package com.example.des.hp.Schedule.Bus;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.example.des.hp.R;
@@ -18,6 +16,78 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
 
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        try
+        {
+            btnClear.setVisibility(View.VISIBLE);
+            btnSave.setVisibility(View.VISIBLE);
+
+            if(action != null && action.equals("add"))
+            {
+                grpMenuFile.setVisibility(View.GONE);
+                txtSchedName.setText("");
+            }
+
+            grpStartTime.setOnClickListener(this);
+            grpBookingRef.setOnClickListener(this);
+            grpSchedName.setOnClickListener(this);
+            grpEndTime.setOnClickListener(this);
+            imageView.setOnClickListener(this);
+        }
+        catch(Exception e)
+        {
+            ShowError("onCreate", e.getMessage());
+        }
+    }
+
+    public void onClick(View view)
+    {
+        switch(view.getId())
+        {
+
+            case R.id.grpStartTime:
+                checkInClick(view);
+                break;
+
+            case R.id.grpBookingRef:
+                pickBookingRef(view);
+                break;
+
+            case R.id.grpSchedName:
+                pickSchedName(view);
+                break;
+
+            case R.id.grpEndTime:
+                arrivesClick(view);
+                break;
+
+            case R.id.imageViewSmall:
+                pickImage(view);
+                break;
+        }
+    }
+
+    public void checkInClick(View view)
+    {
+        handleTime(checkIn, chkCheckinKnown, "Bus Arrives");
+    }
+
+    public void arrivesClick(View view)
+    {
+        handleTime(arrives, chkArriveKnown, "Journey Ends");
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        /* disable the menu entirely */
+        return false;
+    }
 
     public void BookingRefPicked(View view)
     {
@@ -125,108 +195,5 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
 
-        try
-        {
-            btnClear.setVisibility(View.VISIBLE);
-            btnSave.setVisibility(View.VISIBLE);
-
-            if(action != null && action.equals("add"))
-                txtSchedName.setText("");
-
-            grpStartTime.setOnClickListener(this);
-            grpBookingRef.setOnClickListener(this);
-            grpSchedName.setOnClickListener(this);
-            grpEndTime.setOnClickListener(this);
-            imageView.setOnClickListener(this);
-        }
-        catch(Exception e)
-        {
-            ShowError("onCreate", e.getMessage());
-        }
-    }
-
-    public void onClick(View view)
-    {
-        switch(view.getId())
-        {
-
-            case R.id.grpStartTime:
-                checkInClick(view);
-                break;
-
-            case R.id.grpBookingRef:
-                pickBookingRef(view);
-                break;
-
-            case R.id.grpSchedName:
-                pickSchedName(view);
-                break;
-
-            case R.id.grpEndTime:
-                arrivesClick(view);
-                break;
-
-            case R.id.imageViewSmall:
-                pickImage(view);
-                break;
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        try
-        {
-            switch(item.getItemId())
-            {
-                case R.id.action_delete_bus:
-                    deleteSchedule();
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
-        }
-        catch(Exception e)
-        {
-            ShowError("onOptionsItemSelected", e.getMessage());
-        }
-        return true;
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        try
-        {
-            MenuInflater inflater=getMenuInflater();
-            inflater.inflate(R.menu.busdetailsformmenu, menu);
-        }
-        catch(Exception e)
-        {
-            ShowError("onCreateOptionsMenu", e.getMessage());
-        }
-
-        return true;
-    }
-
-    public void checkInClick(View view)
-    {
-        handleTime(checkIn, chkCheckinKnown, "Bus Arrives");
-    }
-
-    public void arrivesClick(View view)
-    {
-        handleTime(arrives, chkArriveKnown, "Journey Ends");
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
-        /* disable the menu entirely */
-        return false;
-    }
 }

@@ -30,6 +30,8 @@ public class BaseScheduleView extends BaseView
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
     public ImageButton btnShowNotes;
+    public String scheduleTypeDescription="";
+    public LinearLayout grpMenuFile;
 
     public void SchedNamePicked(View view)
     {
@@ -59,8 +61,8 @@ public class BaseScheduleView extends BaseView
 
             dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
-                "Bus",    // form caption
-                "Bus",             // form message
+                scheduleTypeDescription,    // form caption
+                scheduleTypeDescription,             // form message
                 R.drawable.attachment, txtSchedName.getText().toString(), // initial text
                 dwetOnOkClick, this, false
             );
@@ -174,6 +176,7 @@ public class BaseScheduleView extends BaseView
             dateUtils=new DateUtils(this);
             txtSchedName=(TextView) findViewById(R.id.txtSchedName);
             grpSchedName=(LinearLayout) findViewById(R.id.grpSchedName);
+            grpMenuFile=(LinearLayout) findViewById(R.id.grpMenuFile);
         }
         catch(Exception e)
         {

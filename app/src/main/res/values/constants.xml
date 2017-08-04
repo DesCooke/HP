@@ -25,6 +25,18 @@
     <integer name="schedule_type_other">9</integer>
     <integer name="schedule_type_ride">10</integer>
 
+    <string name="schedule_desc_unknown">Unknown</string>
+    <string name="schedule_desc_flight">Flight</string>
+    <string name="schedule_desc_hotel">Hotel</string>
+    <string name="schedule_desc_show">Show</string>
+    <string name="schedule_desc_restaurant">Restaurant</string>
+    <string name="schedule_desc_bus">Bus</string>
+    <string name="schedule_desc_cinema">Cinema</string>
+    <string name="schedule_desc_park">Park</string>
+    <string name="schedule_desc_parade">Parade</string>
+    <string name="schedule_desc_other">Other</string>
+    <string name="schedule_desc_ride">Ride</string>
+
     <integer name="day_cat_unknown">0</integer>
     <integer name="day_cat_easy">1</integer>
     <integer name="day_cat_moderate">2</integer>

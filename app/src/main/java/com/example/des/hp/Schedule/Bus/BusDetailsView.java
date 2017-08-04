@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
@@ -37,6 +36,8 @@ public class BusDetailsView extends BaseScheduleView
 
         try
         {
+            scheduleTypeDescription = getString(R.string.schedule_desc_bus);
+
             setContentView(R.layout.activity_bus_details_view);
 
             checkIn=(TextView) findViewById(R.id.txtCheckin);
