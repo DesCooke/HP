@@ -14,9 +14,12 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 public class BusDetailsEdit extends BusDetailsView implements View.OnClickListener
 {
 
+    //region Member variables
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
+    //endregion
 
+    //region Constructors/Destructors
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -45,6 +48,16 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
         }
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        /* disable the menu entirely */
+        return false;
+    }
+
+    //endregion
+
+    //region OnClick Events
     public void onClick(View view)
     {
         switch(view.getId())
@@ -80,13 +93,6 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
     public void arrivesClick(View view)
     {
         handleTime(arrives, chkArriveKnown, "Journey Ends");
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
-        /* disable the menu entirely */
-        return false;
     }
 
     public void BookingRefPicked(View view)
@@ -131,6 +137,9 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
         }
     }
 
+    //endregion
+
+    //region Saving
     public void saveSchedule(View view)
     {
         try
@@ -153,7 +162,6 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
             scheduleItem.endHour=getHour(arrives);
             scheduleItem.endMin=getMinute(arrives);
             scheduleItem.busItem.bookingReference=txtBookingRef.getText().toString();
-
 
             if(action.equals("add"))
             {
@@ -194,6 +202,6 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
             ShowError("SaveSchedule", e.getMessage());
         }
     }
-
+    //endregion
 
 }

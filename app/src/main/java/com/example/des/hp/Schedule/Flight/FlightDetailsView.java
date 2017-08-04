@@ -14,6 +14,8 @@ import com.example.des.hp.Schedule.*;
 
 public class FlightDetailsView extends BaseScheduleView
 {
+
+    //region Member variables
     public CheckBox chkCheckinKnown;
     public TextView checkIn;
     public CheckBox chkDepartureKnown;
@@ -25,14 +27,15 @@ public class FlightDetailsView extends BaseScheduleView
     public TextView txtTerminal;
     public ImageButton btnClear;
     public Button btnSave;
-
     public LinearLayout grpCheckin;
     public LinearLayout grpDeparture;
     public LinearLayout grpArrival;
     public LinearLayout grpFlightNo;
     public LinearLayout grpTerminal;
     public LinearLayout grpBookingRef;
+    //endregion
 
+    //region Constructors/Destructors
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -71,9 +74,25 @@ public class FlightDetailsView extends BaseScheduleView
         {
             ShowError("onCreate", e.getMessage());
         }
-
     }
 
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        try
+        {
+            MenuInflater inflater=getMenuInflater();
+            inflater.inflate(R.menu.flightdetailsformmenu, menu);
+            return true;
+        }
+        catch(Exception e)
+        {
+            ShowError("onCreateOptionsMenu", e.getMessage());
+        }
+        return true;
+    }
+    //endregion
+
+    //region Regular Form Activities
     public void showForm()
     {
         super.showForm();
@@ -100,16 +119,16 @@ public class FlightDetailsView extends BaseScheduleView
             txtBookingRef.setText(scheduleItem.flightItem.bookingReference);
 
             afterShow();
-
         }
         catch(Exception e)
 
         {
             ShowError("showForm", e.getMessage());
         }
-
     }
+    //endregion
 
+    //region OnClick Events
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -135,22 +154,7 @@ public class FlightDetailsView extends BaseScheduleView
             ShowError("onOptionsItemSelected", e.getMessage());
         }
         return true;
-
     }
-
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        try
-        {
-            MenuInflater inflater=getMenuInflater();
-            inflater.inflate(R.menu.flightdetailsformmenu, menu);
-            return true;
-        }
-        catch(Exception e)
-        {
-            ShowError("onCreateOptionsMenu", e.getMessage());
-        }
-        return true;
-    }
+    //endregion
 
 }

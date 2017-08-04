@@ -13,9 +13,13 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class FlightDetailsEdit extends FlightDetailsView implements View.OnClickListener
 {
+
+    //region Member variables
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
+    //endregion
 
+    //region Constructors/Destructors
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -47,6 +51,16 @@ public class FlightDetailsEdit extends FlightDetailsView implements View.OnClick
         }
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        /* disable the menu entirely */
+        return false;
+    }
+
+    //endregion
+
+    //region OnClick Events
     public void onClick(View view)
     {
         switch(view.getId())
@@ -86,8 +100,6 @@ public class FlightDetailsEdit extends FlightDetailsView implements View.OnClick
         }
     }
 
-
-    // orig code
     public void BookingRefPicked(View view)
     {
         try
@@ -217,13 +229,25 @@ public class FlightDetailsEdit extends FlightDetailsView implements View.OnClick
         }
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
+    public void checkInClick(View view)
     {
-        /* disable the menu entirely */
-        return false;
+        handleTime(checkIn, chkCheckinKnown, "Select Check-in Time");
     }
 
+    public void departureClick(View view)
+    {
+        handleTime(departs, chkDepartureKnown, "Select Departure Time");
+    }
+
+    public void arrivalClick(View view)
+    {
+        handleTime(arrives, chkArriveKnown, "Select Arrival Time");
+    }
+
+
+    //endregion
+
+    //region Saving
     public void saveSchedule(View view)
     {
         try
@@ -293,20 +317,6 @@ public class FlightDetailsEdit extends FlightDetailsView implements View.OnClick
             ShowError("SaveSchedule", e.getMessage());
         }
     }
-
-    public void checkInClick(View view)
-    {
-        handleTime(checkIn, chkCheckinKnown, "Select Check-in Time");
-    }
-
-    public void departureClick(View view)
-    {
-        handleTime(departs, chkDepartureKnown, "Select Departure Time");
-    }
-
-    public void arrivalClick(View view)
-    {
-        handleTime(arrives, chkArriveKnown, "Select Arrival Time");
-    }
+    //endregion
 
 }

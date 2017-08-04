@@ -16,6 +16,7 @@ import com.example.des.hp.Schedule.*;
 public class BusDetailsView extends BaseScheduleView
 {
 
+    //region Member variables
     public LinearLayout grpStartDate;
     public CheckBox chkCheckinKnown;
     public TextView checkIn;
@@ -27,8 +28,9 @@ public class BusDetailsView extends BaseScheduleView
     public Button btnSave;
     public LinearLayout grpStartTime;
     public LinearLayout grpEndTime;
+    //endregion
 
-
+    //region Constructors/Destructors
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -61,6 +63,23 @@ public class BusDetailsView extends BaseScheduleView
         }
     }
 
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        try
+        {
+            MenuInflater inflater=getMenuInflater();
+            inflater.inflate(R.menu.busdetailsformmenu, menu);
+        }
+        catch(Exception e)
+        {
+            ShowError("onCreateOptionsMenu", e.getMessage());
+        }
+
+        return true;
+    }
+    //endregion
+
+    //region Regular Form Activities
     public void showForm()
     {
         super.showForm();
@@ -89,8 +108,9 @@ public class BusDetailsView extends BaseScheduleView
             ShowError("showForm", e.getMessage());
         }
     }
+    //endregion
 
-
+    //region OnClick Events
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -117,21 +137,6 @@ public class BusDetailsView extends BaseScheduleView
         }
         return true;
     }
-
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        try
-        {
-            MenuInflater inflater=getMenuInflater();
-            inflater.inflate(R.menu.busdetailsformmenu, menu);
-        }
-        catch(Exception e)
-        {
-            ShowError("onCreateOptionsMenu", e.getMessage());
-        }
-
-        return true;
-    }
-
+    //endregion
 
 }
