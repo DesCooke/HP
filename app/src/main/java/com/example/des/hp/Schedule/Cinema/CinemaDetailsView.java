@@ -100,8 +100,10 @@ public class CinemaDetailsView extends BaseScheduleView
                     if(scheduleItem.cinemaItem == null)
                         scheduleItem.cinemaItem=new CinemaItem();
 
+            chkCheckinKnown.setChecked(scheduleItem.startTimeKnown);
             setTimeText(checkIn, scheduleItem.startHour, scheduleItem.startMin);
 
+            chkDepartureKnown.setChecked(scheduleItem.endTimeKnown);
             setTimeText(departs, scheduleItem.endHour, scheduleItem.endMin);
 
             txtSchedName.setText(scheduleItem.schedName);

@@ -58,6 +58,7 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
     //endregion
 
     //region OnClick Events
+
     public void onClick(View view)
     {
         switch(view.getId())

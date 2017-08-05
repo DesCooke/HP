@@ -32,6 +32,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/grpStartTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -57,6 +58,7 @@
 
 
             <LinearLayout
+                android:id="@+id/grpEndTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -84,6 +86,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/grpSchedName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -105,6 +108,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/grpBookingRef"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
