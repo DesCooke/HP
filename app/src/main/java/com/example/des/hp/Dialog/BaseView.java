@@ -21,99 +21,143 @@ import android.view.View;
 import android.widget.ImageView;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
 import com.example.des.hp.R;
+import com.example.des.hp.myutils.DialogWithYesNoFragment;
 import com.example.des.hp.myutils.MyBitmap;
 
 import static com.example.des.hp.myutils.ImageUtils.imageUtils;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class BaseView extends BaseActivity
 {
-    private final int SELECT_PHOTO=1;
+    private final int SELECT_PHOTO = 1;
     public ImageView imageView;
-    public boolean imageSet=false;
-    public boolean imageChanged=false;
+    public boolean imageSet = false;
+    public boolean imageChanged = false;
     public Bitmap imageDefault;
-
+    public DialogWithYesNoFragment dialogWithYesNoFragment;
+          
+    
     public void clearImage()
     {
         try
         {
             imageView.setImageBitmap(imageDefault);
-            imageSet=false;
-            imageChanged=true;
+            imageSet = false;
+            imageChanged = true;
         }
         catch (Exception e)
         {
             ShowError("clearImage", e.getMessage());
         }
     }
-
+    
     public void btnClearImage(View view)
     {
         try
         {
             clearImage();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("btnClearImage", e.getMessage());
         }
     }
-
-
-    public void pickImage(View view)
+    
+    
+    public void selectFromDevice(View view)
     {
         try
         {
-            Intent photoPickerIntent=new Intent(Intent.ACTION_PICK);
+            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
             photoPickerIntent.setType("image/*");
             startActivityForResult(photoPickerIntent, SELECT_PHOTO);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("pickImage", e.getMessage());
         }
     }
-
+    
+    public void pickImage(View view)
+    {
+        try
+        {
+            dialogWithYesNoFragment =
+                DialogWithYesNoFragment.newInstance
+                    (
+                        getFragmentManager(),     // for the transaction bit
+                        "DeviceOrApplication",            // unique name for this dialog type
+                        "Where do you want to pick the image from?",    // form caption
+                        "Yes=Device, No=Images already Loaded?", // form message
+                        R.drawable.attachment,
+                        new View.OnClickListener()
+                        {
+                            public void onClick(View view)
+                            {
+                                dialogWithYesNoFragment.dismiss();
+                                selectFromDevice(view);
+                            }
+                        },
+                        new View.OnClickListener()
+                        {
+                            public void onClick(View view)
+                            {
+                                myMessages().ShowMessageShort("No picked");
+                            }
+                        },
+                        this
+                    );
+            
+            dialogWithYesNoFragment.showIt();
+        }
+        catch (Exception e)
+        {
+            ShowError("handleRename", e.getMessage());
+        }
+    }
+    
+    
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent)
     {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         try
         {
-            switch(requestCode)
+            switch (requestCode)
             {
                 case SELECT_PHOTO:
-                    if(resultCode == RESULT_OK)
+                    if (resultCode == RESULT_OK)
                     {
                         try
                         {
-                            MyBitmap myBitmap=new MyBitmap();
-                            Boolean lRetCode=imageUtils().ScaleBitmapFromUrl(imageReturnedIntent.getData(), getContentResolver(), myBitmap);
-                            if(!lRetCode)
+                            MyBitmap myBitmap = new MyBitmap();
+                            Boolean lRetCode = imageUtils().ScaleBitmapFromUrl(imageReturnedIntent.getData(), getContentResolver(), myBitmap);
+                            if (!lRetCode)
                                 return;
-
+                            
                             // assign new bitmap and set scale type
                             imageView.setImageBitmap(myBitmap.Value);
-
-                            imageSet=true;
-                            reloadOnShow=false;
-                            imageChanged=true;
-
+                            
+                            imageSet = true;
+                            reloadOnShow = false;
+                            imageChanged = true;
+                            
                         }
-                        catch(Exception e)
+                        catch (Exception e)
                         {
                             ShowError("onActivityResult-selectphoto", e.getMessage());
                         }
                     }
             }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("onActivityResult", e.getMessage());
         }
     }
-
+    
     @Override
     public void afterCreate()
     {
@@ -136,7 +180,7 @@ public class BaseView extends BaseActivity
         {
             clearImage();
             
-            if(picture != null && picture.length()>0)
+            if (picture != null && picture.length() > 0)
             {
                 if (!imageUtils().getPageHeaderImage(this, picture, imageView))
                     return;

@@ -10,6 +10,7 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.widget.ImageView;
 
+import com.example.des.hp.InternalImages.InternalImageItem;
 import com.example.des.hp.MainActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.thirdpartyutils.*;
@@ -17,21 +18,23 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 
+import static com.example.des.hp.myutils.MyLog.myLog;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class ImageUtils
 {
     private Context _context;
     private Resources res;
-    public static ImageUtils myImageUtils=null;
-
+    public static ImageUtils myImageUtils = null;
+    
     public ImageUtils(Context context)
     {
         _context = context;
         res = context.getResources();
     }
-
+    
     public static ImageUtils imageUtils()
     {
         if (myImageUtils == null)
@@ -39,16 +42,16 @@ public class ImageUtils
         
         return (myImageUtils);
     }
-
+    
     private void ShowError(String argFunction, String argMessage)
     {
         myMessages().ShowError
-                (
-                        "Error in ImageUtils::" + argFunction,
-                        argMessage
-                );
+            (
+                "Error in ImageUtils::" + argFunction,
+                argMessage
+            );
     }
-
+    
     //
     // resizes image to 100x100
     // makes it a circle
@@ -59,37 +62,52 @@ public class ImageUtils
     public boolean getListIcon(Context context, String argFilename, ImageView destImageView)
     {
         MyBoolean lValid = new MyBoolean();
-        if(validFilename(argFilename, lValid)==false)
-            return(false);
+        if (validFilename(argFilename, lValid) == false)
+            return (false);
         try
         {
             if (lValid.Value == true)
             {
                 Uri uri = Uri.fromFile(new File(res.getString(R.string.picture_path) + "/" + argFilename));
-
+                
                 Picasso.with(context)
-                        .load(uri)
-                        .resize(100, 100)
-                        .transform(new CircleTransform())
-                        .into(destImageView);
+                    .load(uri)
+                    .resize(100, 100)
+                    .transform(new CircleTransform())
+                    .into(destImageView);
             } else
             {
                 Picasso.with(context)
-                        .load(R.drawable.imagemissing)
-                        .resize(100, 100)
-                        .transform(new CircleTransform())
-                        .into(destImageView);
+                    .load(R.drawable.imagemissing)
+                    .resize(100, 100)
+                    .transform(new CircleTransform())
+                    .into(destImageView);
             }
-            return(true);
+            return (true);
         }
         catch (Exception e)
         {
             ShowError("getListIcon", e.getMessage());
-            return(false);
+            return (false);
         }
-
+        
     }
-
+    
+    public ArrayList<InternalImageItem> listInternalImages()
+    {
+        ArrayList<InternalImageItem> l_array = new ArrayList<InternalImageItem>();
+        
+        File directory = new File(res.getString(R.string.picture_path));
+        File[] files = directory.listFiles();
+        for (int i = 0; i < files.length; i++)
+        {
+            myLog().WriteLogMessage("Collecting file: " + files[i].getName());
+            
+            l_array.add(new InternalImageItem(files[i].getName()));
+        }
+        return (l_array);
+    }
+    
     //
     // Checks to make sure a filename exists
     // Returns: true(worked)/false(failed)
@@ -102,15 +120,16 @@ public class ImageUtils
                 return (false);
             File f = new File(res.getString(R.string.picture_path) + "/" + filename);
             retBoolean.Value = f.exists();
-            return(true);
+            return (true);
         }
         catch (Exception e)
         {
             ShowError("validFilename", e.getMessage());
-            return(false);
+            return (false);
         }
-
+        
     }
+    
     /*
     ** resizes image to 256x256
     ** puts image in destImageView
@@ -120,37 +139,37 @@ public class ImageUtils
     public boolean getLargeListIcon(Context context, String argFilename, ImageView destImageView)
     {
         MyBoolean lValid = new MyBoolean();
-
-        if(validFilename(argFilename, lValid)==false)
-            return(false);
-
+        
+        if (validFilename(argFilename, lValid) == false)
+            return (false);
+        
         try
         {
             if (lValid.Value == true)
             {
                 Uri uri = Uri.fromFile(new File(res.getString(R.string.picture_path) + "/" + argFilename));
-
+                
                 Picasso.with(context)
-                        .load(uri)
-                        .resize(256, 256)
-                        .into(destImageView);
+                    .load(uri)
+                    .resize(256, 256)
+                    .into(destImageView);
             } else
             {
                 Picasso.with(context)
-                        .load(R.drawable.imagemissing)
-                        .resize(256, 256)
-                        .into(destImageView);
+                    .load(R.drawable.imagemissing)
+                    .resize(256, 256)
+                    .into(destImageView);
             }
-            return(true);
+            return (true);
         }
         catch (Exception e)
         {
             ShowError("getLargeListIcon", e.getMessage());
-            return(false);
+            return (false);
         }
-
+        
     }
-
+    
     /*
     ** resizes image to 256x256
     ** puts image in destImageView
@@ -160,39 +179,39 @@ public class ImageUtils
     public boolean getPageHeaderImage(Context context, String argFilename, ImageView destImageView)
     {
         MyBoolean lValid = new MyBoolean();
-
-        if(argFilename.length()==0)
-            return(true);
-
-        if(validFilename(argFilename, lValid)==false)
-            return(false);
-
+        
+        if (argFilename.length() == 0)
+            return (true);
+        
+        if (validFilename(argFilename, lValid) == false)
+            return (false);
+        
         try
         {
             if (lValid.Value == true)
             {
                 Uri uri = Uri.fromFile(new File(res.getString(R.string.picture_path) + "/" + argFilename));
-
+                
                 Picasso.with(context)
-                        .load(uri)
-                        .resize(512, 512)
-                        .into(destImageView);
+                    .load(uri)
+                    .resize(512, 512)
+                    .into(destImageView);
             } else
             {
                 Picasso.with(context)
-                        .load(R.drawable.imagemissing)
-                        .resize(512, 512)
-                        .into(destImageView);
+                    .load(R.drawable.imagemissing)
+                    .resize(512, 512)
+                    .into(destImageView);
             }
-            return(true);
+            return (true);
         }
         catch (Exception e)
         {
             ShowError("getPageHeaderImage", e.getMessage());
-            return(false);
+            return (false);
         }
     }
-
+    
     // Returns: true(worked)/false(failed)
     private boolean ScaleKeepingAspectRatio(Point currPoint, Point idealPoint, Point retPoint)
     {
@@ -205,21 +224,20 @@ public class ImageUtils
                 // make the width the ideal width and calculate height
                 retPoint.x = idealPoint.x;
                 retPoint.y = (((currPoint.y * 10000) / currPoint.x) * idealPoint.x) / 10000;
-            }
-            else
+            } else
             {
                 retPoint.y = idealPoint.y;
                 retPoint.x = (((currPoint.x * 10000) / currPoint.y) * idealPoint.y) / 10000;
             }
-            return(true);
+            return (true);
         }
         catch (Exception e)
         {
             ShowError("ScaleKeepingAspectRatio", e.getMessage());
-            return(false);
+            return (false);
         }
     }
-
+    
     // Returns: true(worked)/false(failed)
     public boolean ScaleBitmapFromUrl(Uri imageUri, ContentResolver cr, MyBitmap retBitmap)
     {
@@ -228,20 +246,20 @@ public class ImageUtils
             _context.grantUriPermission("com.example.des.hp", imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             InputStream imageStream = cr.openInputStream(imageUri);
             Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-
+            
             Point lCurrPoint = new Point(selectedImage.getWidth(), selectedImage.getHeight());
             Point lIdealPoint = new Point(512, 512);
             Point lNewPoint = new Point(0, 0);
             if (ScaleKeepingAspectRatio(lCurrPoint, lIdealPoint, lNewPoint) == false)
                 return (false);
             retBitmap.Value = Bitmap.createScaledBitmap(selectedImage, lNewPoint.x, lNewPoint.y, false);
-
+            
             return (true);
         }
         catch (Exception e)
         {
             ShowError("ScaleBitmapFromUrl", e.getMessage());
-            return(false);
+            return (false);
         }
     }
 }
