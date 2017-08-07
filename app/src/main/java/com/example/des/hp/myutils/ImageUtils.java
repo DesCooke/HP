@@ -92,7 +92,41 @@ public class ImageUtils
         }
         
     }
-    
+
+    public boolean getGridIcon(Context context, String argFilename, ImageView destImageView)
+    {
+        MyBoolean lValid = new MyBoolean();
+        if (validFilename(argFilename, lValid) == false)
+            return (false);
+        try
+        {
+            if (lValid.Value == true)
+            {
+                Uri uri = Uri.fromFile(new File(res.getString(R.string.picture_path) + "/" + argFilename));
+
+                Picasso.with(context)
+                    .load(uri)
+                    .resize(150, 150)
+                    //.transform(new CircleTransform())
+                    .into(destImageView);
+            } else
+            {
+                Picasso.with(context)
+                    .load(R.drawable.imagemissing)
+                    .resize(150, 150)
+                    //.transform(new CircleTransform())
+                    .into(destImageView);
+            }
+            return (true);
+        }
+        catch (Exception e)
+        {
+            ShowError("getListIcon", e.getMessage());
+            return (false);
+        }
+
+    }
+
     public ArrayList<InternalImageItem> listInternalImages()
     {
         ArrayList<InternalImageItem> l_array = new ArrayList<InternalImageItem>();
@@ -254,6 +288,32 @@ public class ImageUtils
                 return (false);
             retBitmap.Value = Bitmap.createScaledBitmap(selectedImage, lNewPoint.x, lNewPoint.y, false);
             
+            return (true);
+        }
+        catch (Exception e)
+        {
+            ShowError("ScaleBitmapFromUrl", e.getMessage());
+            return (false);
+        }
+    }
+
+    public boolean ScaleBitmapFromFile(String lfile, ContentResolver cr, MyBitmap retBitmap)
+    {
+        try
+        {
+            Uri uri = Uri.fromFile(new File(res.getString(R.string.picture_path) + "/" + lfile));
+
+            _context.grantUriPermission("com.example.des.hp", uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            InputStream imageStream = cr.openInputStream(uri);
+            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+
+            Point lCurrPoint = new Point(selectedImage.getWidth(), selectedImage.getHeight());
+            Point lIdealPoint = new Point(512, 512);
+            Point lNewPoint = new Point(0, 0);
+            if (ScaleKeepingAspectRatio(lCurrPoint, lIdealPoint, lNewPoint) == false)
+                return (false);
+            retBitmap.Value = Bitmap.createScaledBitmap(selectedImage, lNewPoint.x, lNewPoint.y, false);
+
             return (true);
         }
         catch (Exception e)

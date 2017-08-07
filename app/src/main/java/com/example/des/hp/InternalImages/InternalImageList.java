@@ -1,5 +1,6 @@
 package com.example.des.hp.InternalImages;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -34,6 +35,8 @@ public class InternalImageList extends BaseFullPageRecycleView
             
             internalImageAdapter=new InternalImageAdapter(this, internalImageList);
 
+            gridLayout=true;
+
             CreateRecyclerView(R.id.internalImageListView, internalImageAdapter);
 
             internalImageAdapter.setOnItemClickListener(new InternalImageAdapter.OnItemClickListener()
@@ -41,15 +44,10 @@ public class InternalImageList extends BaseFullPageRecycleView
                 @Override
                 public void onItemClick(View view, InternalImageItem obj, int position)
                 {
-                    myMessages().ShowMessageShort("You picked one");
-                    /*
-                    Intent intent=new Intent(getApplicationContext(), DayDetailsView.class);
-                    intent.putExtra("ACTION", "view");
-                    intent.putExtra("HOLIDAYID", dayList.get(position).holidayId);
-                    intent.putExtra("DAYID", dayList.get(position).dayId);
-                    startActivity(intent);
-                    */
-                }
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("selectedfile", internalImageList.get(position).internalImageFilename);
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();                }
             });
 
         }
@@ -63,6 +61,7 @@ public class InternalImageList extends BaseFullPageRecycleView
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+
         super.onCreate(savedInstanceState);
 
         try

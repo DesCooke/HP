@@ -79,10 +79,10 @@ class InternalImageAdapter extends RecyclerView.Adapter<InternalImageAdapter.Vie
         final InternalImageItem c = data.get(position);
 
         if(c.internalImageFilename.length()>0)
-            if(imageUtils.getListIcon(context, c.internalImageFilename, holder.internalImage)==false)
+            if(imageUtils.getGridIcon(context, c.internalImageFilename, holder.internalImage)==false)
                 return;
-/*
-        holder.dayItemCell.setOnClickListener(new View.OnClickListener()
+
+        holder.internalImage.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -93,7 +93,7 @@ class InternalImageAdapter extends RecyclerView.Adapter<InternalImageAdapter.Vie
                 }
             }
         });
-*/
+
     }
 
 

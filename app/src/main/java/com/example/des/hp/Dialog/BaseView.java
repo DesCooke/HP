@@ -17,11 +17,13 @@ package com.example.des.hp.Dialog;
 */
 
 import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.example.des.hp.InternalImages.InternalImageList;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.DialogWithYesNoFragment;
 import com.example.des.hp.myutils.MyBitmap;
@@ -31,7 +33,8 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class BaseView extends BaseActivity
 {
-    private final int SELECT_PHOTO = 1;
+    private final int SELECT_DEVICE_PHOTO = 1;
+    private final int SELECT_INTERNAL_PHOTO = 3;
     public ImageView imageView;
     public boolean imageSet = false;
     public boolean imageChanged = false;
@@ -72,14 +75,27 @@ public class BaseView extends BaseActivity
         {
             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
             photoPickerIntent.setType("image/*");
-            startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+            startActivityForResult(photoPickerIntent, SELECT_DEVICE_PHOTO);
         }
         catch (Exception e)
         {
             ShowError("pickImage", e.getMessage());
         }
     }
-    
+
+    public void selectFromApplication(View view)
+    {
+        try
+        {
+            Intent intent=new Intent(getApplicationContext(), InternalImageList.class);
+            startActivityForResult(intent, SELECT_INTERNAL_PHOTO);
+        }
+        catch(Exception e)
+        {
+            ShowError("showDayAdd", e.getMessage());
+        }
+    }
+
     public void pickImage(View view)
     {
         try
@@ -88,9 +104,9 @@ public class BaseView extends BaseActivity
                 DialogWithYesNoFragment.newInstance
                     (
                         getFragmentManager(),     // for the transaction bit
-                        "DeviceOrApplication",            // unique name for this dialog type
-                        "Where do you want to pick the image from?",    // form caption
-                        "Yes=Device, No=Images already Loaded?", // form message
+                        "SELECTPICTURELOCATION2",        // unique name for this dialog type
+                        "Select Picture Location",            // unique name for this dialog type
+                        "Yes=Device, No=Images already stored", // form message
                         R.drawable.attachment,
                         new View.OnClickListener()
                         {
@@ -104,7 +120,8 @@ public class BaseView extends BaseActivity
                         {
                             public void onClick(View view)
                             {
-                                myMessages().ShowMessageShort("No picked");
+                                dialogWithYesNoFragment.dismiss();
+                                selectFromApplication(view);
                             }
                         },
                         this
@@ -127,13 +144,14 @@ public class BaseView extends BaseActivity
         {
             switch (requestCode)
             {
-                case SELECT_PHOTO:
+                case SELECT_DEVICE_PHOTO:
                     if (resultCode == RESULT_OK)
                     {
                         try
                         {
                             MyBitmap myBitmap = new MyBitmap();
-                            Boolean lRetCode = imageUtils().ScaleBitmapFromUrl(imageReturnedIntent.getData(), getContentResolver(), myBitmap);
+                            Uri luri = imageReturnedIntent.getData();
+                            Boolean lRetCode = imageUtils().ScaleBitmapFromUrl(luri, getContentResolver(), myBitmap);
                             if (!lRetCode)
                                 return;
                             
@@ -150,6 +168,32 @@ public class BaseView extends BaseActivity
                             ShowError("onActivityResult-selectphoto", e.getMessage());
                         }
                     }
+                    break;
+                case SELECT_INTERNAL_PHOTO:
+                    if (resultCode == RESULT_OK)
+                    {
+                        try
+                        {
+                            MyBitmap myBitmap = new MyBitmap();
+                            String lfile = imageReturnedIntent.getStringExtra("selectedfile");
+                            Boolean lRetCode = imageUtils().ScaleBitmapFromFile(lfile, getContentResolver(), myBitmap);
+                            if (!lRetCode)
+                                return;
+
+                            // assign new bitmap and set scale type
+                            imageView.setImageBitmap(myBitmap.Value);
+
+                            imageSet = true;
+                            reloadOnShow = false;
+                            imageChanged = true;
+
+                        }
+                        catch (Exception e)
+                        {
+                            ShowError("onActivityResult-selectphoto", e.getMessage());
+                        }
+                    }
+
             }
         }
         catch (Exception e)

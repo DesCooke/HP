@@ -79,6 +79,7 @@
         <activity android:name=".ScheduleArea.ScheduleAreaList"></activity>
         <activity android:name=".Notes.NoteEdit"></activity>
         <activity android:name=".Notes.NoteView"></activity>
+        <activity android:name=".InternalImages.InternalImageList"></activity>
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"

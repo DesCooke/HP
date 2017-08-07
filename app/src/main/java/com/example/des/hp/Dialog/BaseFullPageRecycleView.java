@@ -50,6 +50,7 @@ package com.example.des.hp.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -76,6 +77,7 @@ public class BaseFullPageRecycleView extends BaseActivity
 
     public boolean allowCellMove = false;
     public boolean allowCellSwipe = false;
+    public boolean gridLayout = false; // ie. vertical list
     public RecyclerView recyclerView;
     private final String KEY_RECYCLER_STATE = "recycler_state";
     private Bundle mBundleRecyclerViewState;
@@ -85,7 +87,14 @@ public class BaseFullPageRecycleView extends BaseActivity
         try
         {
             recyclerView = (RecyclerView) findViewById(pView);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            if(gridLayout==false)
+            {
+                recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            }
+            else
+            {
+                recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
+            }
             recyclerView.setHasFixedSize(true);
             //listView1.setDivider(null);
             recyclerView.setAdapter(adapter);
