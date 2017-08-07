@@ -17,6 +17,7 @@
     <string name="action_add_parade">Add Parade</string>
     <string name="action_add_other">Add Other</string>
     <string name="action_add_ride">Add Ride</string>
+    <string name="action_add_generalattraction">Add Attraction</string>
     <string name="action_delete_holiday">Delete Holiday</string>
     <string name="action_delete_flight">Delete Flight</string>
     <string name="action_delete_hotel">Delete Hotel</string>
@@ -28,6 +29,7 @@
     <string name="action_delete_parade">Delete Parade</string>
     <string name="action_delete_other">Delete Other</string>
     <string name="action_delete_ride">Delete Ride</string>
+    <string name="action_delete_generalattraction">Delete Attraction</string>
     <string name="action_delete_extra_files">Delete</string>
     <string name="action_delete_show">Delete Show</string>
     <string name="action_delete_task">Delete Task</string>
@@ -54,6 +56,7 @@
     <string name="action_edit_restaurantfull">Edit Restaurant</string>
     <string name="action_edit_budget">Edit Budget</string>
     <string name="action_edit_ride">Edit Ride</string>
+    <string name="action_edit_generalattraction">Edit Attraction</string>
     <string name="action_edit_show">Edit Show</string>
     <string name="action_edit_tipgroup">Edit Tip Group</string>
     <string name="action_edit_tip">Edit Tip</string>

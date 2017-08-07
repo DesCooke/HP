@@ -1,4 +1,4 @@
-package com.example.des.hp.Schedule.Bus;
+package com.example.des.hp.Schedule.GeneralAttraction;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -11,9 +11,8 @@ import com.example.des.hp.myutils.*;
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
-public class BusDetailsEdit extends BusDetailsView implements View.OnClickListener
+public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView implements View.OnClickListener
 {
-
     //region Member variables
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
@@ -30,24 +29,28 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
 
+            heartRating.setIsIndicator(false);
+            scenicRating.setIsIndicator(false);
+            thrillRating.setIsIndicator(false);
+
             if(action != null && action.equals("add"))
             {
                 grpMenuFile.setVisibility(View.GONE);
                 txtSchedName.setText("");
+                heartRating.setRating(Float.valueOf(getString(R.string.default_rating)));
+                scenicRating.setRating(Float.valueOf(getString(R.string.default_rating)));
+                thrillRating.setRating(Float.valueOf(getString(R.string.default_rating)));
             }
 
-            grpStartTime.setOnClickListener(this);
-            grpBookingRef.setOnClickListener(this);
             grpSchedName.setOnClickListener(this);
-            grpEndTime.setOnClickListener(this);
             imageView.setOnClickListener(this);
         }
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
-    }
 
+    }
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
@@ -62,20 +65,8 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
         switch(view.getId())
         {
 
-            case R.id.grpStartTime:
-                checkInClick(view);
-                break;
-
-            case R.id.grpBookingRef:
-                pickBookingRef(view);
-                break;
-
             case R.id.grpSchedName:
                 pickSchedName(view);
-                break;
-
-            case R.id.grpEndTime:
-                arrivesClick(view);
                 break;
 
             case R.id.imageViewSmall:
@@ -83,59 +74,6 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
                 break;
         }
     }
-
-    public void checkInClick(View view)
-    {
-        handleTime(checkIn, chkCheckinKnown, "Bus Arrives");
-    }
-
-    public void arrivesClick(View view)
-    {
-        handleTime(arrives, chkArriveKnown, "Journey Ends");
-    }
-
-    public void BookingRefPicked(View view)
-    {
-        try
-        {
-            txtBookingRef.setText(dialogWithEditTextFragment.getFinalText());
-
-            dialogWithEditTextFragment.dismiss();
-        }
-        catch(Exception e)
-        {
-            ShowError("BookingRefPicked", e.getMessage());
-        }
-    }
-
-    public void pickBookingRef(View view)
-    {
-        try
-        {
-            dwetOnOkClick=new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    BookingRefPicked(view);
-                }
-            };
-
-            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
-                "hihi",            // unique name for this dialog type
-                "Booking Ref",    // form caption
-                "Booking Ref",             // form message
-                R.drawable.attachment, txtBookingRef.getText().toString(), // initial text
-                dwetOnOkClick, this, false
-            );
-
-            dialogWithEditTextFragment.showIt();
-        }
-        catch(Exception e)
-        {
-            ShowError("pickBookingRef", e.getMessage());
-        }
-    }
-
     //endregion
 
     //region Saving
@@ -154,13 +92,16 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
             scheduleItem.scheduleBitmap=null;
             if(imageSet)
                 scheduleItem.scheduleBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
-            scheduleItem.startTimeKnown=chkCheckinKnown.isChecked();
-            scheduleItem.startHour=getHour(checkIn);
-            scheduleItem.startMin=getMinute(checkIn);
-            scheduleItem.endTimeKnown=chkArriveKnown.isChecked();
-            scheduleItem.endHour=getHour(arrives);
-            scheduleItem.endMin=getMinute(arrives);
-            scheduleItem.busItem.bookingReference=txtBookingRef.getText().toString();
+
+            scheduleItem.startTimeKnown=false;
+            scheduleItem.startHour=0;
+            scheduleItem.startMin=0;
+            scheduleItem.endTimeKnown=false;
+            scheduleItem.endHour=0;
+            scheduleItem.endMin=0;
+            scheduleItem.generalAttractionItem.heartRating=heartRating.getRating();
+            scheduleItem.generalAttractionItem.scenicRating=scenicRating.getRating();
+            scheduleItem.generalAttractionItem.thrillRating=thrillRating.getRating();
 
             if(action.equals("add"))
             {
@@ -168,6 +109,7 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
                 scheduleItem.dayId=dayId;
                 scheduleItem.attractionId=attractionId;
                 scheduleItem.attractionAreaId=attractionAreaId;
+
                 if(!databaseAccess().getNextScheduleId(holidayId, dayId, attractionId, attractionAreaId, myInt))
                     return;
                 scheduleItem.scheduleId=myInt.Value;
@@ -176,13 +118,13 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
                     return;
                 scheduleItem.sequenceNo=myInt.Value;
 
-                scheduleItem.schedType=getResources().getInteger(R.integer.schedule_type_bus);
+                scheduleItem.schedType=getResources().getInteger(R.integer.schedule_type_generalattraction);
 
-                scheduleItem.busItem.holidayId=holidayId;
-                scheduleItem.busItem.dayId=dayId;
-                scheduleItem.busItem.attractionId=attractionId;
-                scheduleItem.busItem.attractionAreaId=attractionAreaId;
-                scheduleItem.busItem.scheduleId=scheduleItem.scheduleId;
+                scheduleItem.generalAttractionItem.holidayId=holidayId;
+                scheduleItem.generalAttractionItem.dayId=dayId;
+                scheduleItem.generalAttractionItem.attractionId=attractionId;
+                scheduleItem.generalAttractionItem.attractionAreaId=attractionAreaId;
+                scheduleItem.generalAttractionItem.scheduleId=scheduleItem.scheduleId;
 
                 if(!databaseAccess().addScheduleItem(scheduleItem))
                     return;
@@ -190,6 +132,7 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
 
             if(action.equals("edit"))
             {
+
                 if(!databaseAccess().updateScheduleItem(scheduleItem))
                     return;
             }

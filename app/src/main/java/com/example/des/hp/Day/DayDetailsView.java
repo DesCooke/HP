@@ -16,6 +16,8 @@ import com.example.des.hp.Dialog.BaseFullPageRecycleView;
 import com.example.des.hp.R;
 import com.example.des.hp.Holiday.*;
 import com.example.des.hp.Schedule.Flight.*;
+import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionDetailsEdit;
+import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionDetailsView;
 import com.example.des.hp.Schedule.Hotel.*;
 import com.example.des.hp.Schedule.Bus.*;
 import com.example.des.hp.Schedule.Park.*;
@@ -250,6 +252,10 @@ public class DayDetailsView extends BaseFullPageRecycleView
                         {
                             StartNewEditIntent(OtherDetailsView.class, position);
                         }
+                        if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_generalattraction))
+                        {
+                            StartNewEditIntent(GeneralAttractionDetailsView.class, position);
+                        }
                     }
                 });
                 afterShow();
@@ -373,6 +379,9 @@ public class DayDetailsView extends BaseFullPageRecycleView
                     return true;
                 case R.id.action_add_other:
                     StartNewAddIntent(OtherDetailsEdit.class);
+                    return true;
+                case R.id.action_add_generalattraction:
+                    StartNewAddIntent(GeneralAttractionDetailsEdit.class);
                     return true;
                 default:
                     return super.onOptionsItemSelected(item);

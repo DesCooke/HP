@@ -14,6 +14,7 @@ import com.example.des.hp.Day.*;
 import com.example.des.hp.Schedule.*;
 import com.example.des.hp.Schedule.Bus.BusItem;
 import com.example.des.hp.Schedule.Flight.*;
+import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionItem;
 import com.example.des.hp.Schedule.Hotel.*;
 import com.example.des.hp.Schedule.Restaurant.*;
 import com.example.des.hp.Schedule.Ride.RideItem;
@@ -47,7 +48,7 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 public class DatabaseAccess extends SQLiteOpenHelper
 {
     //region MEMBERVARIABLES
-    private static final int DATABASE_VERSION=41;
+    private static final int DATABASE_VERSION=42;
     public static Date currentStartDate;
     public static DatabaseAccess database=null;
     
@@ -76,6 +77,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
     private TableHighlightGroup tableHighlightGroup;
     private TableHighlight tableHighlight;
     private TableRide tableRide;
+    private TableGeneralAttraction tableGeneralAttraction;
     private TableNotes tableNotes;
     private DateUtils dateUtils;
     //endregion
@@ -97,6 +99,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
             tableHotel=new TableHotel(context, this);
             tableRestaurant=new TableRestaurant(context, this);
             tableRide=new TableRide(context, this);
+            tableGeneralAttraction=new TableGeneralAttraction(context, this);
             tableShow=new TableShow(context, this);
             tableBus=new TableBus(context, this);
             tableCinema=new TableCinema(context, this);
@@ -176,6 +179,8 @@ public class DatabaseAccess extends SQLiteOpenHelper
             return;
         if(!tableRide.onCreate(db))
             return;
+        if(!tableGeneralAttraction.onCreate(db))
+            return;
         if(!tableShow.onCreate(db))
             return;
         if(!tableBus.onCreate(db))
@@ -232,6 +237,8 @@ public class DatabaseAccess extends SQLiteOpenHelper
         if(!tableRestaurant.onUpgrade(db, oldVersion, newVersion))
             return;
         if(!tableRide.onUpgrade(db, oldVersion, newVersion))
+            return;
+        if(!tableGeneralAttraction.onUpgrade(db, oldVersion, newVersion))
             return;
         if(!tableShow.onUpgrade(db, oldVersion, newVersion))
             return;
@@ -538,6 +545,26 @@ public class DatabaseAccess extends SQLiteOpenHelper
 
     //endregion
 
+    //region GENERALATTRACTION functions
+    private boolean updateGeneralAttractionItem(GeneralAttractionItem item)
+    {
+        return (tableGeneralAttraction.updateGeneralAttractionItem(item));
+    }
+
+    private boolean deleteGeneralAttractionItem(GeneralAttractionItem item)
+    {
+        return (tableGeneralAttraction.deleteGeneralAttractionItem(item));
+    }
+
+    private boolean getGeneralAttractionItem(int holidayId, int dayId, int attractionId, int attractionAreaId,
+        int scheduleId, GeneralAttractionItem item)
+    {
+        return (tableGeneralAttraction.getGeneralAttractionItem(holidayId, dayId, attractionId, attractionAreaId,
+            scheduleId, item));
+    }
+
+    //endregion
+
     //region SHOW functions
     private boolean updateShowItem(ShowItem showItem)
     {
@@ -680,6 +707,10 @@ public class DatabaseAccess extends SQLiteOpenHelper
             if(tableRide.addRideItem(scheduleItem.rideItem) == false)
                 return (false);
 
+        if(scheduleItem.generalAttractionItem != null)
+            if(tableGeneralAttraction.addGeneralAttractionItem(scheduleItem.generalAttractionItem) == false)
+                return (false);
+
         if(scheduleItem.showItem != null)
             if(tableShow.addShowItem(scheduleItem.showItem) == false)
                 return (false);
@@ -794,6 +825,9 @@ public class DatabaseAccess extends SQLiteOpenHelper
             if(scheduleItem.rideItem != null)
                 if(deleteRideItem(scheduleItem.rideItem) == false)
                     return (false);
+            if(scheduleItem.generalAttractionItem != null)
+                if(deleteGeneralAttractionItem(scheduleItem.generalAttractionItem) == false)
+                    return (false);
 
             if(tableSchedule.deleteScheduleItem(scheduleItem) == false)
                 return (false);
@@ -818,6 +852,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
         litem.paradeItem=null;
         litem.parkItem=null;
         litem.otherItem=null;
+        litem.generalAttractionItem=null;
 
         if(litem.schedType == res.getInteger(R.integer.schedule_type_flight))
         {
@@ -896,6 +931,14 @@ public class DatabaseAccess extends SQLiteOpenHelper
             litem.otherItem=new OtherItem();
             if(getOtherItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, litem
                 .otherItem) == false)
+                return (false);
+        }
+
+        if(litem.schedType == res.getInteger(R.integer.schedule_type_generalattraction))
+        {
+            litem.generalAttractionItem=new GeneralAttractionItem();
+            if(getGeneralAttractionItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId,
+                litem.generalAttractionItem) == false)
                 return (false);
         }
 

@@ -26,6 +26,7 @@ import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.Notes.NoteView;
 import com.example.des.hp.PageFragmentAdapter;
 import com.example.des.hp.R;
+import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionDetailsEdit;
 import com.example.des.hp.Schedule.PageScheduleFragment;
 import com.example.des.hp.Holiday.*;
 import com.example.des.hp.Schedule.Flight.*;
@@ -633,7 +634,34 @@ public class AttractionAreaDetailsView extends BaseActivity
             ShowError("addRide", e.getMessage());
         }
     }
-    
+
+    public void addGeneralAttraction()
+    {
+        try
+        {
+            Intent intent = new Intent(getApplicationContext(), GeneralAttractionDetailsEdit.class);
+            intent.putExtra("ACTION", "add");
+            intent.putExtra("HOLIDAYID", holidayId);
+            intent.putExtra("DAYID", 0);
+            intent.putExtra("ATTRACTIONID", attractionId);
+            intent.putExtra("ATTRACTIONAREAID", attractionAreaId);
+            if (actionBar != null)
+            {
+                CharSequence lTitle = actionBar.getTitle();
+                if (lTitle != null)
+                    intent.putExtra("TITLE", lTitle.toString());
+                CharSequence lSubTitle = actionBar.getSubtitle();
+                if (lSubTitle != null)
+                    intent.putExtra("SUBTITLE", lSubTitle.toString());
+            }
+            startActivity(intent);
+        }
+        catch (Exception e)
+        {
+            ShowError("addGeneralAttraction", e.getMessage());
+        }
+    }
+
     public void deleteAttractionArea()
     {
         try
@@ -694,6 +722,9 @@ public class AttractionAreaDetailsView extends BaseActivity
                     break;
                 case R.id.action_add_other:
                     addOther();
+                    break;
+                case R.id.action_add_generalattraction:
+                    addGeneralAttraction();
                     break;
                 default:
                     return super.onOptionsItemSelected(item);

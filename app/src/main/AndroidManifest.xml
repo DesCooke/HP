@@ -49,6 +49,8 @@
         <activity android:name=".Schedule.Show.ShowDetailsView"></activity>
         <activity android:name=".Schedule.Ride.RideDetailsEdit"></activity>
         <activity android:name=".Schedule.Ride.RideDetailsView"></activity>
+        <activity android:name=".Schedule.GeneralAttraction.GeneralAttractionDetailsEdit"></activity>
+        <activity android:name=".Schedule.GeneralAttraction.GeneralAttractionDetailsView"></activity>
         <activity android:name=".ExtraFiles.ExtraFilesDetailsList"></activity>
         <activity android:name=".ExtraFiles.ExtraFilesDetailsView"></activity>
         <activity android:name=".ExtraFiles.ExtraFilesDetailsEdit"></activity>

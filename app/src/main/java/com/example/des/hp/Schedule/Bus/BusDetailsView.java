@@ -15,7 +15,6 @@ import com.example.des.hp.Schedule.*;
 
 public class BusDetailsView extends BaseScheduleView
 {
-
     //region Member variables
     public LinearLayout grpStartDate;
     public CheckBox chkCheckinKnown;

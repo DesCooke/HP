@@ -3,6 +3,7 @@ package com.example.des.hp.Schedule;
 import android.graphics.Bitmap;
 import java.util.Date;
 import com.example.des.hp.Schedule.Flight.*;
+import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionItem;
 import com.example.des.hp.Schedule.Hotel.*;
 import com.example.des.hp.Schedule.Restaurant.*;
 import com.example.des.hp.Schedule.Ride.RideItem;
@@ -76,6 +77,7 @@ public class ScheduleItem
     public ParadeItem paradeItem;
     public OtherItem otherItem;
     public RideItem rideItem;
+    public GeneralAttractionItem generalAttractionItem;
 
     public ScheduleItem()
     {
@@ -117,5 +119,6 @@ public class ScheduleItem
         restaurantItem=null;
         showItem=null;
         rideItem=null;
+        generalAttractionItem=null;
     }
 }

@@ -1,11 +1,10 @@
-package com.example.des.hp.Schedule.Show;
+package com.example.des.hp.Schedule.GeneralAttraction;
 
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -13,60 +12,47 @@ import android.widget.TextView;
 import com.example.des.hp.R;
 import com.example.des.hp.Schedule.*;
 
-public class ShowDetailsView extends BaseScheduleView
+public class GeneralAttractionDetailsView extends BaseScheduleView
 {
+
     //region Member variables
     public LinearLayout grpStartDate;
-    public CheckBox chkCheckinKnown;
-    public TextView checkIn;
-    public CheckBox chkDepartureKnown;
-    public TextView departs;
-    public TextView txtBookingRef;
+    public String holidayName;
     public RatingBar heartRating;
     public RatingBar scenicRating;
     public RatingBar thrillRating;
-    public LinearLayout grpBookingRef;
     public ImageButton btnClear;
     public Button btnSave;
-    public LinearLayout grpStartTime;
-    public LinearLayout grpEndTime;
     //endregion
 
     //region Constructors/Destructors
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        scheduleTypeDescription = getString(R.string.schedule_desc_generalattraction);
+
         super.onCreate(savedInstanceState);
-        
+
         try
         {
-            scheduleTypeDescription = getString(R.string.schedule_desc_show);
+            setContentView(R.layout.activity_generalattraction_details_view);
 
-            setContentView(R.layout.activity_show_details_view);
-            
-            checkIn = (TextView) findViewById(R.id.txtCheckin);
-            departs = (TextView) findViewById(R.id.txtDeparture);
-            txtBookingRef = (TextView) findViewById(R.id.txtBookingRef);
-            chkCheckinKnown = (CheckBox) findViewById(R.id.chkCheckinKnown);
-            chkDepartureKnown = (CheckBox) findViewById(R.id.chkDepartureKnown);
+            txtSchedName = (TextView) findViewById(R.id.txtSchedName);
             heartRating = (RatingBar) findViewById(R.id.rbHeartRatingView);
             scenicRating = (RatingBar) findViewById(R.id.rbScenicRatingView);
             thrillRating = (RatingBar) findViewById(R.id.rbThrillRatingView);
             btnClear=(ImageButton) findViewById(R.id.btnClear);
             btnSave=(Button) findViewById(R.id.btnSave);
-            grpStartTime=(LinearLayout) findViewById(R.id.grpStartTime);
-            grpEndTime=(LinearLayout) findViewById(R.id.grpEndTime);
-            grpBookingRef=(LinearLayout) findViewById(R.id.grpBookingRef);
 
             afterCreate();
-            
+
             showForm();
         }
         catch (Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu)
@@ -74,7 +60,7 @@ public class ShowDetailsView extends BaseScheduleView
         try
         {
             MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.showdetailsformmenu, menu);
+            inflater.inflate(R.menu.generalattractiondetailsformmenu, menu);
         }
         catch (Exception e)
         {
@@ -92,28 +78,20 @@ public class ShowDetailsView extends BaseScheduleView
         try
         {
             if(action != null)
-                if(action.equals("add"))
-                    if(scheduleItem.showItem == null)
-                        scheduleItem.showItem=new ShowItem();
-
-            if(!action.equals("add"))
             {
-                heartRating.setRating(scheduleItem.showItem.heartRating);
-                thrillRating.setRating(scheduleItem.showItem.thrillRating);
-                scenicRating.setRating(scheduleItem.showItem.scenicRating);
+                if(action.equals("add"))
+                    if(scheduleItem.generalAttractionItem == null)
+                        scheduleItem.generalAttractionItem=new GeneralAttractionItem();
+
+                if(!action.equals("add"))
+                {
+                    heartRating.setRating(scheduleItem.generalAttractionItem.heartRating);
+                    thrillRating.setRating(scheduleItem.generalAttractionItem.thrillRating);
+                    scenicRating.setRating(scheduleItem.generalAttractionItem.scenicRating);
+                }
             }
 
-
-            chkCheckinKnown.setChecked(scheduleItem.startTimeKnown);
-            setTimeText(checkIn, scheduleItem.startHour, scheduleItem.startMin);
-
-            chkDepartureKnown.setChecked(scheduleItem.endTimeKnown);
-            setTimeText(departs, scheduleItem.endHour, scheduleItem.endMin);
-
             txtSchedName.setText(scheduleItem.schedName);
-            txtBookingRef.setText(scheduleItem.showItem.bookingReference);
-
-            SetImage(scheduleItem.schedPicture);
 
             afterShow();
 
@@ -133,11 +111,11 @@ public class ShowDetailsView extends BaseScheduleView
         {
             switch (item.getItemId())
             {
-                case R.id.action_delete_show:
+                case R.id.action_delete_generalattraction:
                     deleteSchedule();
                     return true;
-                case R.id.action_edit_show:
-                    editSchedule(ShowDetailsEdit.class);
+                case R.id.action_edit_generalattraction:
+                    editSchedule(GeneralAttractionDetailsEdit.class);
                     return true;
                 case R.id.action_move:
                     move();

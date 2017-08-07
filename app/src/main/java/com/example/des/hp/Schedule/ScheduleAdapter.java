@@ -41,6 +41,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     private Drawable drawableParade;
     private Drawable drawableOther;
     private Drawable drawableRide;
+    private Drawable drawableGeneralAttraction;
+
 
     public interface OnItemClickListener {
         void onItemClick(View view, ScheduleItem obj, int position);
@@ -96,6 +98,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         drawableOther = context.getDrawable(R.drawable.other);
         drawableShow = context.getDrawable(R.drawable.show);
         drawableRide = context.getDrawable(R.drawable.ride);
+        drawableGeneralAttraction = context.getDrawable(R.drawable.attraction);
     }
 
     @Override
@@ -129,6 +132,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             imageView.setImageDrawable(drawableShow);
         if(schedType==context.getResources().getInteger(R.integer.schedule_type_ride))
             imageView.setImageDrawable(drawableRide);
+        if(schedType==context.getResources().getInteger(R.integer.schedule_type_generalattraction))
+            imageView.setImageDrawable(drawableGeneralAttraction);
     }
 
     private String formatTime(int hour, int minute)
@@ -195,6 +200,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             lShowRating = true;
         if(c.schedType==context.getResources().getInteger(R.integer.schedule_type_show))
             lShowRating = true;
+        if(c.schedType==context.getResources().getInteger(R.integer.schedule_type_generalattraction))
+            lShowRating = true;
         if(lShowRating)
         {
             holder.scenicRatingView.setVisibility(View.VISIBLE);
@@ -209,6 +216,11 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
                 holder.scenicRatingView.setRating(c.showItem.scenicRating);
                 holder.heartRatingView.setRating(c.showItem.heartRating);
                 holder.thrillRatingView.setRating(c.showItem.thrillRating);
+            }
+            if(c.generalAttractionItem!=null) {
+                holder.scenicRatingView.setRating(c.generalAttractionItem.scenicRating);
+                holder.heartRatingView.setRating(c.generalAttractionItem.heartRating);
+                holder.thrillRatingView.setRating(c.generalAttractionItem.thrillRating);
             }
         }
 
