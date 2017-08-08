@@ -18,45 +18,35 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
 
-        <ImageButton
-            android:layout_width="284dp"
-            android:layout_height="256dp"
-            app:srcCompat="@drawable/imagemissing"
-            android:id="@+id/imageViewSmall"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="49dp"
-            android:layout_marginStart="49dp"
-            android:scaleType="fitXY" />
+    <include
+        layout="@layout/included_schedule_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-        <TableLayout
+        <LinearLayout
+            android:id="@+id/grpAttractionDescription"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/txtAttractionDescriptionCaption"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Description"
+                android:textSize="18sp"/>
 
-                <TextView
-                    android:text="Description"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/txtAttractionDescriptionCaption"
-                    android:layout_weight="1"
-                    android:textSize="18sp"
-                    android:gravity="center_vertical"
-                    android:layout_width="130dp" />
-
-                <TextView
-                    android:text="TextView"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/txtAttractionDescription"
-                    android:layout_weight="1"
-                    android:textSize="18sp"
-                    android:gravity="center_vertical" />
-
-            </TableRow>
-
-        </TableLayout>
+            <TextView
+                android:id="@+id/txtAttractionDescription"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="TextView"
+                android:textSize="18sp"/>
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -95,27 +85,17 @@
                 android:layout_height="match_parent" />
         </LinearLayout>
 
-        <TextView
-            android:text="Notes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/lblNotes" />
-
-        <TextView
-            android:text="TextView"
-            android:layout_width="match_parent"
-            android:id="@+id/txtAttractionNotes"
-            android:textSize="18sp"
-            android:layout_height="100dp"
-            android:layout_weight="1.08"/>
-
         <CheckBox
             android:text="CheckBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/picturePicked"
-            android:visibility="invisible" />
+            android:visibility="gone" />
 
+        <include
+            layout="@layout/included_schedule_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 </RelativeLayout>

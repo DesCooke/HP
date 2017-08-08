@@ -40,7 +40,6 @@ public class BaseView extends BaseActivity
     public boolean imageChanged = false;
     public Bitmap imageDefault;
     public DialogWithYesNoFragment dialogWithYesNoFragment;
-          
     
     public void clearImage()
     {

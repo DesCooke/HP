@@ -135,7 +135,6 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
             ShowError("pickBookingRef", e.getMessage());
         }
     }
-
     //endregion
 
     //region Saving
