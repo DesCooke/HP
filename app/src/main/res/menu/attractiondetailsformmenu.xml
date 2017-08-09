@@ -11,9 +11,4 @@
         android:orderInCategory="100"
         android:title="@string/action_edit_attraction"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_view_attraction"
-        android:orderInCategory="100"
-        android:title="@string/action_view_attraction"
-        app:showAsAction="never" />
 </menu>

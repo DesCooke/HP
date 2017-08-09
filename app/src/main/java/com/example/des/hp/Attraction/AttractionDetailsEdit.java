@@ -123,7 +123,7 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
     //endregion
 
     //region Saving
-    public void saveAttraction(View view)
+    public void saveSchedule(View view)
     {
         try
         {

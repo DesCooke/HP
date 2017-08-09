@@ -4,6 +4,8 @@ Shows a list of  attractionarea items (futureword etc) for the current attractio
 package com.example.des.hp.AttractionArea;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.example.des.hp.Attraction.AttractionDetailsEdit;
 import com.example.des.hp.Attraction.AttractionDetailsView;
@@ -31,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.ImageUtils.imageUtils;
 
 /**
  * * Created by Des on 02/11/2016.
@@ -51,6 +55,20 @@ public class AttractionAreaDetailsList extends BaseActivity
     public ImageButton btnShowNotes;
     public MyColor myColor;
     public BadgeView btnShowInfoBadge;
+    public ImageView imageViewSmall;
+    public Bitmap imageDefault;
+
+    public void clearImage()
+    {
+        try
+        {
+            imageViewSmall.setImageBitmap(imageDefault);
+        }
+        catch (Exception e)
+        {
+            ShowError("clearImage", e.getMessage());
+        }
+    }
     
     public void showAttractionAreaAdd(View view)
     {
@@ -125,6 +143,24 @@ public class AttractionAreaDetailsList extends BaseActivity
     {
         try
         {
+            attractionItem = new AttractionItem();
+            if (!databaseAccess().getAttractionItem(holidayId, attractionId, attractionItem))
+                return;
+            
+            attractionAreaList = new ArrayList<>();
+            if (!databaseAccess().getAttractionAreaList(holidayId, attractionId, attractionAreaList))
+                return;
+
+
+            clearImage();
+            if(attractionItem.attractionPicture.length()>0)
+            {
+                if (!imageUtils().getPageHeaderImage(this, attractionItem.attractionPicture, imageViewSmall))
+                    return;
+            }
+
+            subtitle=attractionItem.attractionDescription;
+            subTitle=attractionItem.attractionDescription;
             if (actionBar != null)
             {
                 if (title.length() > 0)
@@ -137,14 +173,6 @@ public class AttractionAreaDetailsList extends BaseActivity
                     actionBar.setSubtitle("");
                 }
             }
-            
-            attractionItem = new AttractionItem();
-            if (!databaseAccess().getAttractionItem(holidayId, attractionId, attractionItem))
-                return;
-            
-            attractionAreaList = new ArrayList<>();
-            if (!databaseAccess().getAttractionAreaList(holidayId, attractionId, attractionAreaList))
-                return;
             
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.attractionAreaListView);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -313,6 +341,8 @@ public class AttractionAreaDetailsList extends BaseActivity
             myColor = new MyColor(this);
             btnShowInfo = (ImageButton) findViewById(R.id.btnShowInfo);
             btnShowNotes = (ImageButton) findViewById(R.id.btnShowNotes);
+            imageViewSmall = (ImageView) findViewById(R.id.imageViewSmall);
+            imageDefault = BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing);
             
             btnShowInfoBadge = new BadgeView(this, btnShowInfo);
             btnShowInfoBadge.setText(Integer.toString(0));
@@ -335,24 +365,6 @@ public class AttractionAreaDetailsList extends BaseActivity
             ShowError("onCreate", e.getMessage());
         }
         
-    }
-    
-    public void viewAttraction()
-    {
-        try
-        {
-            Intent intent = new Intent(getApplicationContext(), AttractionDetailsView.class);
-            intent.putExtra("ACTION", "view");
-            intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("ATTRACTIONID", attractionId);
-            intent.putExtra("TITLE", actionBar.getTitle());
-            intent.putExtra("SUBTITLE", actionBar.getSubtitle());
-            startActivity(intent);
-        }
-        catch (Exception e)
-        {
-            ShowError("viewAttraction", e.getMessage());
-        }
     }
     
     public void editAttraction()
@@ -411,11 +423,6 @@ public class AttractionAreaDetailsList extends BaseActivity
             {
                 case R.id.action_delete_attraction:
                     deleteAttraction();
-                    lv_return = true;
-                    break;
-                
-                case R.id.action_view_attraction:
-                    viewAttraction();
                     lv_return = true;
                     break;
                 

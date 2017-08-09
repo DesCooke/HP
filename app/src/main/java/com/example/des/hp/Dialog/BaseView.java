@@ -213,7 +213,7 @@ public class BaseView extends BaseActivity
         }
         catch (Exception e)
         {
-            ShowError("onCreate", e.getMessage());
+            ShowError("afterCreate", e.getMessage());
         }
     }
     
