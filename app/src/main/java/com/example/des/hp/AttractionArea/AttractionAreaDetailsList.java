@@ -70,7 +70,7 @@ public class AttractionAreaDetailsList extends BaseActivity
         }
     }
     
-    public void showAttractionAreaAdd(View view)
+    public void showAttractionAreaAdd()
     {
         try
         {
@@ -421,16 +421,21 @@ public class AttractionAreaDetailsList extends BaseActivity
         {
             switch (item.getItemId())
             {
+                case R.id.action_add_attractionarea:
+                    showAttractionAreaAdd();
+                    lv_return = true;
+                    break;
+
                 case R.id.action_delete_attraction:
                     deleteAttraction();
                     lv_return = true;
                     break;
-                
+
                 case R.id.action_edit_attraction:
                     editAttraction();
                     lv_return = true;
                     break;
-                
+
                 default:
                     lv_return = super.onOptionsItemSelected(item);
                     break;
@@ -442,7 +447,7 @@ public class AttractionAreaDetailsList extends BaseActivity
         }
         return (lv_return);
     }
-    
+
     
 }
 
