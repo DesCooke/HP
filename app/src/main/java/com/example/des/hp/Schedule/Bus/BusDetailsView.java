@@ -39,8 +39,9 @@ public class BusDetailsView extends BaseScheduleView
         {
             scheduleTypeDescription = getString(R.string.schedule_desc_bus);
 
+            layoutName="activity_bus_details_view";
             setContentView(R.layout.activity_bus_details_view);
-
+            
             checkIn=(TextView) findViewById(R.id.txtCheckin);
             arrives=(TextView) findViewById(R.id.txtArrival);
             txtBookingRef=(TextView) findViewById(R.id.txtBookingRef);

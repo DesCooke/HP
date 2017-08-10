@@ -43,6 +43,7 @@ public class RestaurantDetailsView extends BaseScheduleView
         {
             scheduleTypeDescription = getString(R.string.schedule_desc_restaurant);
 
+            layoutName="activity_restaurant_details_view";
             setContentView(R.layout.activity_restaurant_details_view);
             
             txtSchedName = (TextView) findViewById(R.id.txtSchedName);

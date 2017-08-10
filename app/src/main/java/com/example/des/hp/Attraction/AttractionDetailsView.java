@@ -32,6 +32,7 @@ public class AttractionDetailsView extends BaseView
         
         try
         {
+            layoutName="activity_attraction_details_view";
             setContentView(R.layout.activity_attraction_details_view);
             
             txtAttractionDescription = (TextView) findViewById(R.id.txtAttractionDescription);

@@ -35,6 +35,7 @@ public class RideDetailsView extends BaseScheduleView
         
         try
         {
+            layoutName="activity_ride_details_view";
             setContentView(R.layout.activity_ride_details_view);
             
             txtSchedName = (TextView) findViewById(R.id.txtSchedName);

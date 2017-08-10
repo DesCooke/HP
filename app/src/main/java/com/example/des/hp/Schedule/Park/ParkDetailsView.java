@@ -39,6 +39,7 @@ public class ParkDetailsView extends BaseScheduleView
         {
             scheduleTypeDescription = getString(R.string.schedule_desc_park);
 
+            layoutName="activity_park_details_view";
             setContentView(R.layout.activity_park_details_view);
             
             checkIn = (TextView) findViewById(R.id.txtCheckin);

@@ -38,6 +38,7 @@ public class HotelDetailsView extends BaseScheduleView
         {
             scheduleTypeDescription = getString(R.string.schedule_desc_hotel);
 
+            layoutName="activity_hotel_details_view";
             setContentView(R.layout.activity_hotel_details_view);
             
             checkIn = (TextView) findViewById(R.id.txtCheckin);

@@ -50,7 +50,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.Notes.NoteView;
@@ -74,26 +76,28 @@ public class BaseActivity extends AppCompatActivity
     public int attractionId = 0;
     public int attractionAreaId = 0;
     public String action;
-    public int fileGroupId=0;
+    public int fileGroupId = 0;
     public String title;
     public String subTitle;
-    public String holidayName="";
-
-    public boolean reloadOnShow=true;
-
+    public String holidayName = "";
+    
+    public boolean reloadOnShow = true;
+    
     public boolean showInfoEnabled;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
-
+    
     public boolean showNotesEnabled;
     public ImageButton btnShowNotes;
-
-
+    
+    public TextView txtProgramInfo;
+    public String layoutName = "";
+    
     public void showNotes(View view)
     {
         try
         {
-            reloadOnShow=false;
+            reloadOnShow = false;
             Intent intent2 = new Intent(getApplicationContext(), NoteView.class);
             int lNoteId = getNoteId();
             if (lNoteId == 0)
@@ -116,32 +120,34 @@ public class BaseActivity extends AppCompatActivity
             ShowError("showNotes", e.getMessage());
         }
     }
-
+    
     public void afterCreate()
     {
         showInfoEnabled = false;
         btnShowInfo = (ImageButton) findViewById(R.id.btnShowInfo);
         if (btnShowInfo != null)
             showInfoEnabled = true;
-
+        
         showNotesEnabled = false;
         btnShowNotes = (ImageButton) findViewById(R.id.btnShowNotes);
         if (btnShowNotes != null)
             showNotesEnabled = true;
-
+        
         if (showInfoEnabled)
         {
             btnShowInfoBadge = new BadgeView(this, btnShowInfo);
             btnShowInfoBadge.setText("0");
             btnShowInfoBadge.show();
         }
+        
+        txtProgramInfo = (TextView) findViewById(R.id.txtProgramInfo);
     }
-
+    
     public void showInfo(View view)
     {
         try
         {
-            reloadOnShow=false;
+            reloadOnShow = false;
             int lInfoId;
             lInfoId = getInfoId();
             Intent intent2 = new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
@@ -163,10 +169,10 @@ public class BaseActivity extends AppCompatActivity
             ShowError("showInfo", e.getMessage());
         }
     }
-
+    
     public void displayShowInfo()
     {
-        if(showInfoEnabled)
+        if (showInfoEnabled)
         {
             MyInt lFileCount = new MyInt();
             lFileCount.Value = 0;
@@ -177,7 +183,7 @@ public class BaseActivity extends AppCompatActivity
                     return;
             }
             btnShowInfoBadge.setText(String.format(Locale.getDefault(), "%d", lFileCount.Value));
-
+            
             if (lFileCount.Value == 0)
             {
                 btnShowInfoBadge.setVisibility(View.INVISIBLE);
@@ -189,10 +195,10 @@ public class BaseActivity extends AppCompatActivity
             }
         }
     }
-
+    
     public void displayShowNotes()
     {
-        if(showNotesEnabled)
+        if (showNotesEnabled)
         {
             int lNoteId = getNoteId();
             NoteItem noteItem = new NoteItem();
@@ -207,15 +213,29 @@ public class BaseActivity extends AppCompatActivity
             }
         }
     }
-
+    
     public void afterShow()
     {
         displayShowInfo();
         displayShowNotes();
+        displayProgramInfo();
     }
-
-
-
+    
+    public void displayProgramInfo()
+    {
+        if (txtProgramInfo != null)
+        {
+            txtProgramInfo.setText
+                (
+                    "Class: " + getClass().getSimpleName() + ", " +
+                        "View: " + layoutName + ", " +
+                        "Program Version: " + getString(R.string.program_version) + ", " +
+                        "Database Version: " + String.valueOf(DatabaseAccess.DATABASE_VERSION)
+                );
+        }
+    }
+    
+    
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -223,27 +243,27 @@ public class BaseActivity extends AppCompatActivity
         ErrorDialog.SetContext(this);
         MessageDialog.SetContext(this);
         MyMessages.SetContext(this);
-
+        
         Bundle extras = getIntent().getExtras();
         if (extras != null)
         {
             holidayId = extras.getInt("HOLIDAYID", 0);
             dayId = extras.getInt("DAYID", 0);
-            scheduleId=extras.getInt("SCHEDULEID", 0);
+            scheduleId = extras.getInt("SCHEDULEID", 0);
             attractionAreaId = extras.getInt("ATTRACTIONAREAID", 0);
             attractionId = extras.getInt("ATTRACTIONID", 0);
             action = extras.getString("ACTION", "");
-            fileGroupId=extras.getInt("FILEGROUPID", 0);
-            title=extras.getString("TITLE", "");
-            subTitle=extras.getString("SUBTITLE", "");
-            holidayName=extras.getString("HOLIDAYNAME", "");
+            fileGroupId = extras.getInt("FILEGROUPID", 0);
+            title = extras.getString("TITLE", "");
+            subTitle = extras.getString("SUBTITLE", "");
+            holidayName = extras.getString("HOLIDAYNAME", "");
         }
     }
-
+    
     public void SetTitles(String pTitle, String pSubTitle)
     {
-        title=pTitle;
-        subTitle= pSubTitle;
+        title = pTitle;
+        subTitle = pSubTitle;
         
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null)
@@ -252,11 +272,11 @@ public class BaseActivity extends AppCompatActivity
             actionBar.setSubtitle(subTitle);
         }
     }
-
+    
     public void showForm()
     {
     }
-
+    
     @Override
     protected void onPostCreate(Bundle savedInstanceState)
     {
@@ -273,28 +293,28 @@ public class BaseActivity extends AppCompatActivity
         
         ErrorDialog.Show("Error in " + lv_title, argMessage);
     }
-
+    
     public int getInfoId()
     {
-        return(0);
+        return (0);
     }
-
+    
     public int getNoteId()
     {
-        return(0);
+        return (0);
     }
-
+    
     public void setInfoId(int pInfoId)
     {
-
+        
     }
-
+    
     public void setNoteId(int pNoteId)
     {
-
+        
     }
-
-
+    
+    
     @Override
     protected void onResume()
     {
@@ -302,13 +322,13 @@ public class BaseActivity extends AppCompatActivity
         ErrorDialog.SetContext(this);
         MessageDialog.SetContext(this);
         MyMessages.SetContext(this);
-
-        if(reloadOnShow)
+        
+        if (reloadOnShow)
         {
             showForm();
         }
         displayShowInfo();
         displayShowNotes();
-        reloadOnShow=true;
+        reloadOnShow = true;
     }
 }

@@ -76,6 +76,7 @@ public class DayDetailsView extends BaseFullPageRecycleView
         super.onCreate(savedInstanceState);
         try
         {
+            layoutName="activity_day_details_view";
             setContentView(R.layout.activity_day_details_view);
 
             afterCreate();

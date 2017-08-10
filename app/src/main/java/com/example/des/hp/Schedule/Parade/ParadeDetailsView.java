@@ -39,6 +39,7 @@ public class ParadeDetailsView extends BaseScheduleView
         {
             scheduleTypeDescription = getString(R.string.schedule_desc_parade);
 
+            layoutName="activity_parade_details_view";
             setContentView(R.layout.activity_parade_details_view);
             
             checkIn = (TextView) findViewById(R.id.txtCheckin);

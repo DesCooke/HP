@@ -6,11 +6,18 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="UselessParent">
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/imageViewSmall"
+            android:layout_width="match_parent"
+            android:layout_height="176dp"
+            android:scaleType="fitXY"
+            android:visibility="visible"
+            app:srcCompat="@drawable/imagemissing"
+            tools:ignore="ContentDescription,RtlHardcoded"/>
 
         <ImageButton
             android:id="@+id/btnClear"
@@ -22,14 +29,7 @@
             app:srcCompat="@android:drawable/ic_menu_delete"
             tools:ignore="ContentDescription"/>
 
-        <ImageButton
-            android:id="@+id/imageViewSmall"
-            android:layout_width="match_parent"
-            android:layout_height="176dp"
-            android:scaleType="fitXY"
-            app:srcCompat="@drawable/imagemissing"
-            tools:ignore="ContentDescription,RtlHardcoded"/>
-    </LinearLayout>
+    </RelativeLayout>
 
 
 </LinearLayout>

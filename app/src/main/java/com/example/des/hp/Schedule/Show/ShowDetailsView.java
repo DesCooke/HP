@@ -43,6 +43,7 @@ public class ShowDetailsView extends BaseScheduleView
         {
             scheduleTypeDescription = getString(R.string.schedule_desc_show);
 
+            layoutName="activity_show_details_view";
             setContentView(R.layout.activity_show_details_view);
             
             checkIn = (TextView) findViewById(R.id.txtCheckin);

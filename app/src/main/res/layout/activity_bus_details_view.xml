@@ -2,190 +2,203 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
+
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
-
-    <TextView
-        android:text="@string/bus_details"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/lblTitle"
-        android:textSize="36sp"
-        android:textAlignment="center" />
-
-    <include
-        layout="@layout/included_schedule_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+              android:layout_height="match_parent"
+              android:orientation="horizontal">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="1"
-        >
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <include
+            layout="@layout/included_program_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/lblTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:baselineAligned="false">
+            android:text="@string/bus_details"
+            android:textAlignment="center"
+            android:textSize="36sp"/>
+
+        <include
+            layout="@layout/included_schedule_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="1"
+            >
 
             <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/grpStartTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:text="@string/bus_arrives"
-                    android:layout_width="match_parent"
-                    android:id="@+id/lblCheckin"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="gravity"
-                    android:gravity="center_vertical|center_horizontal" />
-
-                <TextView
-                    android:text="@string/zero_time"
+                <LinearLayout
+                    android:id="@+id/grpStartTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/txtCheckin"
-                    android:textSize="18sp"
-                    android:textAlignment="center"
-                    android:gravity="center_vertical|center_horizontal" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lblCheckin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/bus_arrives"
+                        android:textAlignment="gravity"/>
+
+                    <TextView
+                        android:id="@+id/txtCheckin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/zero_time"
+                        android:textAlignment="center"
+                        android:textSize="18sp"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/grpEndTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/lblArrival"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/journey_ends"
+                        android:textAlignment="gravity"/>
+
+                    <TextView
+                        android:id="@+id/txtArrival"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/zero_time"
+                        android:textAlignment="center"
+                        android:textSize="18sp"/>
+                </LinearLayout>
+
             </LinearLayout>
-
 
             <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/grpEndTime"
+                android:id="@+id/grpSchedName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-
-                <TextView
-                    android:text="@string/journey_ends"
-                    android:layout_width="match_parent"
-                    android:id="@+id/lblArrival"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="gravity"
-                    android:gravity="center_vertical|center_horizontal" />
+                android:orientation="horizontal">
 
                 <TextView
-                    android:text="@string/zero_time"
+                    android:id="@+id/txtSchedNameCaption"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/txtArrival"
-                    android:textSize="18sp"
-                    android:textAlignment="center"
-                    android:gravity="center_vertical|center_horizontal" />
+                    android:layout_weight="2"
+                    android:text="@string/description"
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:id="@+id/txtSchedName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"/>
             </LinearLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:id="@+id/grpSchedName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="@string/description"
+            <LinearLayout
+                android:id="@+id/grpBookingRef"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/txtSchedNameCaption"
-                android:layout_weight="2"
-                android:textSize="18sp" />
+                android:orientation="horizontal">
 
-            <TextView
+                <TextView
+                    android:id="@+id/txtBookingRefCaption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="@string/booking_ref"
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:id="@+id/txtBookingRef"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/grpMenuFile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/txtSchedName"
-                android:layout_weight="1"
-                android:textSize="18sp" />
-        </LinearLayout>
+                android:orientation="horizontal">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:id="@+id/grpBookingRef"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                <ImageButton
+                    android:id="@+id/btnShowInfo"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:background="@android:drawable/alert_light_frame"
+                    android:clickable="false"
+                    android:onClick="showInfo"
+                    android:scaleType="centerInside"
+                    android:tint="@color/colorDisabled"
+                    app:srcCompat="@android:drawable/ic_menu_info_details"
+                    tools:ignore="ContentDescription"/>
 
-            <TextView
-                android:text="@string/booking_ref"
+                <Space
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"/>
+
+                <ImageButton
+                    android:id="@+id/btnShowNotes"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:background="@android:drawable/alert_light_frame"
+                    android:onClick="showNotes"
+                    android:scaleType="centerInside"
+                    android:tint="@color/colorDisabled"
+                    app:srcCompat="@drawable/notepad"
+                    tools:ignore="ContentDescription"/>
+
+                <Space
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/chkCheckinKnown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/txtBookingRefCaption"
-                android:layout_weight="2"
-                android:textSize="18sp" />
+                android:text="@string/checkbox"
+                android:visibility="gone"/>
 
-            <TextView
+            <CheckBox
+                android:id="@+id/chkArrivalKnown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/txtBookingRef"
-                android:layout_weight="1"
-                android:textSize="18sp" />
+                android:text="@string/checkbox"
+                android:visibility="gone"/>
+
         </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/grpMenuFile">
-
-            <ImageButton
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                app:srcCompat="@android:drawable/ic_menu_info_details"
-                android:id="@+id/btnShowInfo"
-                android:scaleType="centerInside"
-                android:clickable="false"
-                android:background="@android:drawable/alert_light_frame"
-                android:tint="@color/colorDisabled"
-                android:onClick="showInfo"
-                tools:ignore="ContentDescription"/>
-
-            <Space
-                android:layout_width="20dp"
-                android:layout_height="match_parent" />
-
-            <ImageButton
-                app:srcCompat="@drawable/notepad"
-                android:id="@+id/btnShowNotes"
-                android:background="@android:drawable/alert_light_frame"
-                android:tint="@color/colorDisabled"
-                android:scaleType="centerInside"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:onClick="showNotes"
-                tools:ignore="ContentDescription"/>
-
-            <Space
-                android:layout_width="20dp"
-                android:layout_height="match_parent" />
-        </LinearLayout>
-
-        <CheckBox
-            android:id="@+id/chkCheckinKnown"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/checkbox"
-            android:visibility="gone"/>
-
-        <CheckBox
-            android:id="@+id/chkArrivalKnown"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/checkbox"
-            android:visibility="gone"/>
-
         <include
             layout="@layout/included_schedule_footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
 </LinearLayout>
