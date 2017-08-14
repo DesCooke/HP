@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.graphics.BitmapFactory;
 import android.widget.TextView;
 
-import com.example.des.hp.Dialog.BaseFullPageRecycleView;
+import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.Holiday.*;
 import com.example.des.hp.Schedule.Flight.*;
@@ -40,7 +40,7 @@ import java.util.Locale;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
-public class DayDetailsView extends BaseFullPageRecycleView
+public class DayDetailsView extends BaseActivity
 {
 
     private final int SELECT_PHOTO=1;

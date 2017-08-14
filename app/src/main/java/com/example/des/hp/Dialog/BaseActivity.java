@@ -45,18 +45,30 @@ package com.example.des.hp.Dialog;
 */
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
+import com.example.des.hp.InternalImages.InternalImageList;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.Notes.NoteView;
 import com.example.des.hp.R;
+import com.example.des.hp.myutils.DialogWithYesNoFragment;
+import com.example.des.hp.myutils.MyBitmap;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyMessages;
 import com.example.des.hp.thirdpartyutils.BadgeView;
@@ -64,6 +76,7 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 import java.util.Locale;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.ImageUtils.imageUtils;
 import static com.example.des.hp.myutils.MyColor.myColor;
 import static com.example.des.hp.myutils.MyLog.myLog;
 
@@ -93,6 +106,24 @@ public class BaseActivity extends AppCompatActivity
     public TextView txtProgramInfo;
     public String layoutName = "";
     
+    public boolean imagePresent = false;
+    public final int SELECT_DEVICE_PHOTO = 1;
+    public final int MOVEITEM=2;
+    public final int SELECT_INTERNAL_PHOTO = 3;
+    public ImageView imageView;
+    public boolean imageSet = false;
+    public boolean imageChanged = false;
+    public Bitmap imageDefault;
+    public DialogWithYesNoFragment dialogWithYesNoFragment;
+    
+    public boolean recyclerViewEnabled = false;
+    public boolean allowCellMove = false;
+    public boolean allowCellSwipe = false;
+    public boolean gridLayout = false; // ie. vertical list
+    public RecyclerView recyclerView;
+    private final String KEY_RECYCLER_STATE = "recycler_state";
+    private Bundle mBundleRecyclerViewState;
+    
     public void showNotes(View view)
     {
         try
@@ -121,6 +152,181 @@ public class BaseActivity extends AppCompatActivity
         }
     }
     
+    public void selectFromDevice(View view)
+    {
+        try
+        {
+            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+            photoPickerIntent.setType("image/*");
+            startActivityForResult(photoPickerIntent, SELECT_DEVICE_PHOTO);
+        }
+        catch (Exception e)
+        {
+            ShowError("pickImage", e.getMessage());
+        }
+    }
+    
+    public void selectFromApplication(View view)
+    {
+        try
+        {
+            Intent intent = new Intent(getApplicationContext(), InternalImageList.class);
+            startActivityForResult(intent, SELECT_INTERNAL_PHOTO);
+        }
+        catch (Exception e)
+        {
+            ShowError("showDayAdd", e.getMessage());
+        }
+    }
+    
+    public void pickImage(View view)
+    {
+        if (!imagePresent)
+            return;
+        
+        try
+        {
+            dialogWithYesNoFragment =
+                DialogWithYesNoFragment.newInstance
+                    (
+                        getFragmentManager(),     // for the transaction bit
+                        "SELECTPICTURELOCATION2",        // unique name for this dialog type
+                        "Select Picture Location",            // unique name for this dialog type
+                        "Yes=Device, No=Images already stored", // form message
+                        R.drawable.attachment,
+                        new View.OnClickListener()
+                        {
+                            public void onClick(View view)
+                            {
+                                dialogWithYesNoFragment.dismiss();
+                                selectFromDevice(view);
+                            }
+                        },
+                        new View.OnClickListener()
+                        {
+                            public void onClick(View view)
+                            {
+                                dialogWithYesNoFragment.dismiss();
+                                selectFromApplication(view);
+                            }
+                        },
+                        this
+                    );
+            
+            dialogWithYesNoFragment.showIt();
+        }
+        catch (Exception e)
+        {
+            ShowError("handleRename", e.getMessage());
+        }
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent)
+    {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        try
+        {
+            switch (requestCode)
+            {
+                case SELECT_DEVICE_PHOTO:
+                    if (imagePresent && resultCode == RESULT_OK)
+                    {
+                        try
+                        {
+                            MyBitmap myBitmap = new MyBitmap();
+                            Uri luri = imageReturnedIntent.getData();
+                            Boolean lRetCode = imageUtils().ScaleBitmapFromUrl(luri, getContentResolver(), myBitmap);
+                            if (!lRetCode)
+                                return;
+                            
+                            // assign new bitmap and set scale type
+                            imageView.setImageBitmap(myBitmap.Value);
+                            
+                            imageSet = true;
+                            reloadOnShow = false;
+                            imageChanged = true;
+                            
+                        }
+                        catch (Exception e)
+                        {
+                            ShowError("onActivityResult-selectphoto", e.getMessage());
+                        }
+                    }
+                    break;
+                case SELECT_INTERNAL_PHOTO:
+                    if (imagePresent && resultCode == RESULT_OK)
+                    {
+                        try
+                        {
+                            MyBitmap myBitmap = new MyBitmap();
+                            String lfile = imageReturnedIntent.getStringExtra("selectedfile");
+                            Boolean lRetCode = imageUtils().ScaleBitmapFromFile(lfile, getContentResolver(), myBitmap);
+                            if (!lRetCode)
+                                return;
+                            
+                            // assign new bitmap and set scale type
+                            imageView.setImageBitmap(myBitmap.Value);
+                            
+                            imageSet = true;
+                            reloadOnShow = false;
+                            imageChanged = true;
+                            
+                        }
+                        catch (Exception e)
+                        {
+                            ShowError("onActivityResult-selectphoto", e.getMessage());
+                        }
+                    }
+                
+            }
+        }
+        catch (Exception e)
+        {
+            ShowError("onActivityResult", e.getMessage());
+        }
+    }
+    
+    
+    public void SetImage(String picture)
+    {
+        if (!imagePresent)
+            return;
+        
+        try
+        {
+            btnClearImage(null);
+            
+            if (picture != null && picture.length() > 0)
+            {
+                if (!imageUtils().getPageHeaderImage(this, picture, imageView))
+                    return;
+                imageSet = true;
+            }
+            
+        }
+        catch (Exception e)
+        {
+            ShowError("SetImage", e.getMessage());
+        }
+    }
+    
+    public void btnClearImage(View view)
+    {
+        if (!imagePresent)
+            return;
+        try
+        {
+            imageView.setImageBitmap(imageDefault);
+            imageSet = false;
+            imageChanged = true;
+        }
+        catch (Exception e)
+        {
+            ShowError("clearImage", e.getMessage());
+        }
+    }
+    
     public void afterCreate()
     {
         showInfoEnabled = false;
@@ -141,6 +347,13 @@ public class BaseActivity extends AppCompatActivity
         }
         
         txtProgramInfo = (TextView) findViewById(R.id.txtProgramInfo);
+        
+        imageDefault = BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing);
+        imagePresent = false;
+        imageView = (ImageView) findViewById(R.id.imageViewSmall);
+        if (imageView != null)
+            imagePresent = true;
+        
     }
     
     public void showInfo(View view)
@@ -275,6 +488,8 @@ public class BaseActivity extends AppCompatActivity
     
     public void showForm()
     {
+        btnClearImage(null);
+        SetTitles(title, subTitle);
     }
     
     @Override
@@ -324,11 +539,173 @@ public class BaseActivity extends AppCompatActivity
         MyMessages.SetContext(this);
         
         if (reloadOnShow)
-        {
             showForm();
-        }
+        
         displayShowInfo();
         displayShowNotes();
+        
+        
+        // restore RecyclerView state
+        if (recyclerViewEnabled && mBundleRecyclerViewState != null)
+        {
+            Parcelable listState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
+            recyclerView.getLayoutManager().onRestoreInstanceState(listState);
+        }
+        
         reloadOnShow = true;
+        
+        
     }
+    
+    
+    public void CreateRecyclerView(int pView, RecyclerView.Adapter adapter)
+    {
+        try
+        {
+            recyclerView = (RecyclerView) findViewById(pView);
+            if (gridLayout == false)
+            {
+                recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            } else
+            {
+                recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
+            }
+            recyclerView.setHasFixedSize(true);
+            //listView1.setDivider(null);
+            recyclerView.setAdapter(adapter);
+            
+            itemTouchHelper.attachToRecyclerView(recyclerView);
+            recyclerViewEnabled = true;
+        }
+        catch (Exception e)
+        {
+            ShowError("CreateRecyclerView", e.getMessage());
+        }
+        
+    }
+    
+    
+    public void OnItemMove(int from, int to)
+    {
+    }
+    
+    public void SwapItems(int from, int to)
+    {
+        
+    }
+    
+    public void NotifyItemMoved(int from, int to)
+    {
+        
+    }
+    
+    // handle swipe to delete, and draggable
+    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)
+    {
+        int dragFrom = -1;
+        int dragTo = -1;
+        
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
+        {
+            int fromPosition = viewHolder.getAdapterPosition();
+            int toPosition = target.getAdapterPosition();
+            
+            try
+            {
+                if (dragFrom == -1)
+                {
+                    dragFrom = fromPosition;
+                }
+                dragTo = toPosition;
+                
+                if (fromPosition < toPosition)
+                {
+                    for (int i = fromPosition; i < toPosition; i++)
+                    {
+                        SwapItems(i, i + 1);
+                    }
+                } else
+                {
+                    for (int i = fromPosition; i > toPosition; i--)
+                    {
+                        SwapItems(i, i - 1);
+                    }
+                }
+                NotifyItemMoved(fromPosition, toPosition);
+            }
+            catch (Exception e)
+            {
+                ShowError("onMove", e.getMessage());
+            }
+            
+            return true;
+        }
+        
+        @Override
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
+        {
+            int dragFlags = 0;
+            int swipeFlags = 0;
+            
+            if (allowCellMove)
+                dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+            
+            if (allowCellSwipe)
+                swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+            
+            return makeMovementFlags(dragFlags, swipeFlags);
+        }
+        
+        @Override
+        public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction)
+        {
+        }
+        
+        @Override
+        public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
+        {
+            super.clearView(recyclerView, viewHolder);
+            
+            try
+            {
+                if (dragFrom != -1 && dragTo != -1 && dragFrom != dragTo)
+                {
+                    OnItemMove(dragFrom, dragTo);
+                }
+                
+                dragFrom = dragTo = -1;
+            }
+            catch (Exception e)
+            {
+                ShowError("clearView", e.getMessage());
+            }
+            
+        }
+        
+    });
+    
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        
+        try
+        {
+            if(recyclerViewEnabled)
+            {
+                // save RecyclerView state
+                mBundleRecyclerViewState = new Bundle();
+                Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
+                mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
+            }
+        }
+        catch (Exception e)
+        {
+            ShowError("onPause", e.getMessage());
+        }
+        
+    }
+    
+    
 }

@@ -2,17 +2,10 @@ package com.example.des.hp.ExtraFiles;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
-import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
-import com.example.des.hp.Dialog.BaseFullPageRecycleView;
 import com.example.des.hp.R;
-import com.example.des.hp.myutils.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +16,7 @@ import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
  * * Created by Des on 02/11/2016.
  */
 
-public class ExtraFilesDetailsList extends BaseFullPageRecycleView
+public class ExtraFilesDetailsList extends BaseActivity
 {
 
     public ArrayList<ExtraFilesItem> extraFilesList;

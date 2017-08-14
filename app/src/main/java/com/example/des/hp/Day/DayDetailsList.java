@@ -4,20 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.des.hp.Dialog.BaseFullPageRecycleView;
-import com.example.des.hp.Dialog.BaseItem;
+import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.Holiday.*;
-import com.example.des.hp.myutils.MyMessages;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
-import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 
-public class DayDetailsList extends BaseFullPageRecycleView
+public class DayDetailsList extends BaseActivity
 {
     public ArrayList<DayItem> dayList;
     public HolidayItem holidayItem;

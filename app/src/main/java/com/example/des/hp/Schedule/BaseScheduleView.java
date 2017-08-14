@@ -7,7 +7,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.des.hp.Dialog.BaseView;
+import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.ScheduleArea.ScheduleAreaList;
 import com.example.des.hp.myutils.DateUtils;
@@ -17,10 +17,9 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
-public class BaseScheduleView extends BaseView
+public class BaseScheduleView extends BaseActivity
 {
     public DateUtils dateUtils;
-    public final int MOVEITEM=2;
     public ScheduleItem scheduleItem;
     public TextView txtSchedName;
     public LinearLayout grpSchedName;

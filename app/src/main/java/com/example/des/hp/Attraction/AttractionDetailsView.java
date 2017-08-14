@@ -8,12 +8,12 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.des.hp.Dialog.BaseView;
+import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
-public class AttractionDetailsView extends BaseView
+public class AttractionDetailsView extends BaseActivity
 {
     //region Member variables
     public AttractionItem attractionItem;
