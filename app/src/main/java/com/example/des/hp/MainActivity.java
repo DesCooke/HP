@@ -7,12 +7,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 
-import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
-import com.example.des.hp.Dialog.ErrorDialog;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.Holiday.*;
 
@@ -23,46 +20,115 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class MainActivity extends BaseActivity
 {
-    
+        
+    //region Member variables
     public ArrayList<HolidayItem> holidayList;
     public ArchiveRestore archiveRestore;
     public boolean accessGranted = false;
     
     private static MainActivity instance;
+    //endregion
     
+    //region Single Instance Static
     public static MainActivity getInstance()
     {
         return instance;
     }
-
-    public void showHolidayAdd(View view)
+    //endregion
+    
+    //region Constructors/Destructors
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
     {
+        super.onCreate(savedInstanceState);
+        
         try
         {
-            Intent intent = new Intent(getApplicationContext(), HolidayDetailsEdit.class);
-            intent.putExtra("ACTION", "add");
-            startActivity(intent);
+            instance = this;
+            layoutName = "activity_main";
+            setContentView(R.layout.activity_main);
+
+            archiveRestore = new ArchiveRestore(this);
+            
+            myMessages().ClearLog();
+            
+            afterCreate();
+            
+            showForm();
         }
         catch (Exception e)
         {
-            ShowError("showHolidayAdd", e.getMessage());
+            ShowError("onCreate", e.getMessage());
         }
+        
     }
     
-    public void showForm()
+    public boolean onCreateOptionsMenu(Menu menu)
     {
         try
         {
-            ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
-            if (MyPermissions.checkIfAlreadyhavePermission(this) == false)
+            if (accessGranted)
+            {
+                MenuInflater inflater = getMenuInflater();
+                inflater.inflate(R.menu.mainactivitymenu, menu);
+            }
+        }
+        catch (Exception e)
+        {
+            ShowError("onCreateOptionsMenu", e.getMessage());
+        }
+        return true;
+    }
+    //endregion
+    
+    //region OnClick Events
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        boolean lv_result = false;
+        
+        try
+        {
+            switch (item.getItemId())
+            {
+                case R.id.action_backup:
+                    // don't care about return code
+                    backup();
+                    // consume click here
+                    lv_result = true;
+                    break;
+                case R.id.action_add_holiday:
+                    showHolidayAdd(null);
+                    // consume click here
+                    lv_result = true;
+                    break;
+                default:
+                    lv_result = super.onOptionsItemSelected(item);
+            }
+        }
+        catch (Exception e)
+        {
+            ShowError("onOptionsItemSelected", e.getMessage());
+        }
+        return (lv_result);
+    }
+    //endregion
+    
+    //region showForm
+    public void showForm()
+    {
+        super.showForm();
+        
+        try
+        {
+            SetTitles(getResources().getString(R.string.title_planner), "");
+
+            if (!MyPermissions.checkIfAlreadyhavePermission(this))
             {
                 setTitle(getResources().getString(R.string.title_waitingforpermission));
-                imageButton.setVisibility(View.INVISIBLE);
                 MyPermissions.requestForSpecificPermission(this);
             } else
             {
-                setTitle(getResources().getString(R.string.title_planner));
-                imageButton.setVisibility(View.VISIBLE);
                 accessGranted = true;
                 invalidateOptionsMenu();
                 
@@ -88,6 +154,7 @@ public class MainActivity extends BaseActivity
                 listView1.setDivider(null);
                 listView1.setAdapter(adapter);
                 
+                afterShow();
             }
         }
         catch (Exception e)
@@ -110,45 +177,21 @@ public class MainActivity extends BaseActivity
             ShowError("onResume", e.getMessage());
         }
     }
+    //endregion
     
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        instance = this;
-        setContentView(R.layout.activity_main);
-        
-        try
-        {
-            archiveRestore = new ArchiveRestore(this);
-            
-            myMessages().ClearLog();
-            
-            showForm();
-        }
-        catch (Exception e)
-        {
-            ShowError("onCreate", e.getMessage());
-        }
-        
-    }
-    
-    public boolean onCreateOptionsMenu(Menu menu)
+    //region form Functions
+    public void showHolidayAdd(View view)
     {
         try
         {
-            if (accessGranted == true)
-            {
-                MenuInflater inflater = getMenuInflater();
-                inflater.inflate(R.menu.mainactivitymenu, menu);
-            }
+            Intent intent = new Intent(getApplicationContext(), HolidayDetailsEdit.class);
+            intent.putExtra("ACTION", "add");
+            startActivity(intent);
         }
         catch (Exception e)
         {
-            ShowError("onCreateOptionsMenu", e.getMessage());
+            ShowError("showHolidayAdd", e.getMessage());
         }
-        return true;
     }
     
     public boolean backup()
@@ -165,31 +208,6 @@ public class MainActivity extends BaseActivity
         return (lv_result);
     }
     
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        boolean lv_result = false;
-        
-        try
-        {
-            switch (item.getItemId())
-            {
-                case R.id.action_backup:
-                    // don't care about return code
-                    backup();
-                    // consume click here
-                    lv_result = true;
-                    break;
-                default:
-                    lv_result = super.onOptionsItemSelected(item);
-            }
-        }
-        catch (Exception e)
-        {
-            ShowError("onOptionsItemSelected", e.getMessage());
-        }
-        return (lv_result);
-    }
-    
+    //endregion
     
 }

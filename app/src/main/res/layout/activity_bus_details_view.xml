@@ -194,6 +194,7 @@
                 android:visibility="gone"/>
 
         </LinearLayout>
+
         <include
             layout="@layout/included_schedule_footer"
             android:layout_width="match_parent"

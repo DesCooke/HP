@@ -6,7 +6,6 @@ package com.example.des.hp.Holiday;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,10 +18,7 @@ import android.widget.TextView;
 
 import com.example.des.hp.Budget.BudgetDetailsList;
 import com.example.des.hp.Contact.ContactDetailsList;
-import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
-import com.example.des.hp.Notes.NoteItem;
-import com.example.des.hp.Notes.NoteView;
 import com.example.des.hp.TipGroup.*;
 import com.example.des.hp.Attraction.*;
 import com.example.des.hp.Day.DayDetailsList;
@@ -30,17 +26,14 @@ import com.example.des.hp.ExtraFiles.*;
 import com.example.des.hp.R;
 import com.example.des.hp.Tasks.TaskDetailsList;
 import com.example.des.hp.myutils.*;
-import com.example.des.hp.thirdpartyutils.BadgeView;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
-import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class HolidayDetailsView extends BaseActivity
 {
     
-    private ImageView imageView;
+    //region Member variables
     private TextView txtStartDate;
-    public int holidayId;
     public HolidayItem holidayItem;
     public LinearLayout grpStartDate;
     public ImageButton btnShowItinerary;
@@ -50,8 +43,6 @@ public class HolidayDetailsView extends BaseActivity
     public ImageButton btnShowTips;
     public ImageButton btnShowAttractions;
     public ImageButton btnShowContacts;
-    public ImageButton btnShowInfo;
-    public ImageButton btnShowNotes;
     public TextView itineraryBadge;
     public TextView mapBadge;
     public TextView taskBadge;
@@ -59,44 +50,72 @@ public class HolidayDetailsView extends BaseActivity
     public TextView tipsBadge;
     public TextView attractionsBadge;
     public TextView contactsBadge;
-    public TextView btnShowInfoBadge;
-    private ImageUtils imageUtils;
-    public MyColor myColor;
     
-    //region R U Sure members
-    public DialogWithYesNoFragment rusureDialogFragment;
-    public String rusureDialogTag;
-    public View.OnClickListener rusureOnYesClick;
-    public View.OnClickListener rusureOnNoClick;
-    //endregion
-    
-    // region R U Really Sure members
-    public DialogWithYesNoFragment reallysureDialogFragment;
-    public String reallysureDialogTag;
-    public View.OnClickListener reallysureOnYesClick;
-    public View.OnClickListener reallysureOnNoClick;
-    //endregion
-    
-    //region EditText Dialog
+    // EditText Dialog
     public DialogWithEditTextFragment dialogWithEditTextFragment;
-    public String dwetDialogTag;
     public View.OnClickListener dwetOnOkClick;
-    //endregion
     
     public Context context;
+    //endregion
     
-    public void clearImage(View view)
+    //region Constructors/Destructors
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
     {
+        super.onCreate(savedInstanceState);
         try
         {
-            imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
+            layoutName = "activity_holiday_details_view";
+            setContentView(R.layout.activity_holiday_details_view);
+            
+            context = this;
+            
+            imageView = (ImageView) findViewById(R.id.imageView);
+            txtStartDate = (TextView) findViewById(R.id.txtStartDate);
+            grpStartDate = (LinearLayout) findViewById(R.id.grpStartDate);
+            btnShowItinerary = (ImageButton) findViewById(R.id.btnShowItinerary);
+            btnShowMaps = (ImageButton) findViewById(R.id.btnShowMaps);
+            btnShowTasks = (ImageButton) findViewById(R.id.btnShowTasks);
+            btnShowBudget = (ImageButton) findViewById(R.id.btnShowBudget);
+            btnShowTips = (ImageButton) findViewById(R.id.btnShowTips);
+            btnShowAttractions = (ImageButton) findViewById(R.id.btnShowAttractions);
+            btnShowContacts = (ImageButton) findViewById(R.id.btnShowContacts);
+            
+            itineraryBadge = (TextView) findViewById(R.id.txtItineraryBadge);
+            mapBadge = (TextView) findViewById(R.id.txtMapBadge);
+            taskBadge = (TextView) findViewById(R.id.txtTaskBadge);
+            budgetBadge = (TextView) findViewById(R.id.txtBudgetBadge);
+            contactsBadge = (TextView) findViewById(R.id.txtContactBadge);
+            tipsBadge = (TextView) findViewById(R.id.txtTipsBadge);
+            attractionsBadge = (TextView) findViewById(R.id.txtAttractionBadge);
+            
+            afterCreate();
+            
+            showForm();
         }
         catch (Exception e)
         {
-            ShowError("clearImage", e.getMessage());
+            ShowError("onCreate", e.getMessage());
         }
     }
     
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        try
+        {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.holidaydetailsformmenu, menu);
+        }
+        catch (Exception e)
+        {
+            ShowError("onCreateOptionsMenu", e.getMessage());
+        }
+        return true;
+    }
+    
+    //endregion
+    
+    //region form Functions
     public void showDay(View view)
     {
         try
@@ -110,149 +129,6 @@ public class HolidayDetailsView extends BaseActivity
             ShowError("showDay", e.getMessage());
         }
     }
-    
-    // region R U Sure procedures
-    public void rusureOnYesClickProc(View view)
-    {
-        try
-        {
-            rusureDialogFragment.dismiss();
-            
-            reallysureOnYesClick = new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    reallysureOnYesClickProc(view);
-                }
-            };
-            
-            reallysureOnNoClick = new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    reallysureOnNoClickProc(view);
-                }
-            };
-        }
-        catch (Exception e)
-        {
-            ShowError("rusureonYesClickProc", e.getMessage());
-        }
-        
-    }
-    
-    public void rusureOnNoClickProc(View view)
-    {
-        try
-        {
-            myMessages().ShowMessageLong("user clicked no");
-            // When button is clicked, call up to owning activity.
-            rusureDialogFragment.dismiss();
-        }
-        catch (Exception e)
-        {
-            ShowError("rusureOnNoClickProc", e.getMessage());
-        }
-    }
-    
-    
-    public void dwetOnOkClickProc(View view)
-    {
-        try
-        {
-            //MyMessages.ShowMessageLong(context, "user clicked ok" + dialogWithEditTextFragment.editText.getText().toString());
-            // When button is clicked, call up to owning activity.
-            dialogWithEditTextFragment.dismiss();
-        }
-        catch (Exception e)
-        {
-            ShowError("dwetOnOkClickProc", e.getMessage());
-        }
-    }
-    
-    public void showDialog(View view)
-    {
-        try
-        {
-            rusureOnYesClick = new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    rusureOnYesClickProc(view);
-                }
-            };
-            
-            rusureOnNoClick = new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    rusureOnNoClickProc(view);
-                }
-            };
-            
-            dwetOnOkClick = new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    dwetOnOkClickProc(view);
-                }
-            };
-            
-            // Create and show the dialog.
-            dialogWithEditTextFragment =
-                DialogWithEditTextFragment.newInstance
-                    (
-                        getFragmentManager(),
-                        rusureDialogTag,
-                        "File Already Exists",
-                        "Rename it?",
-                        R.drawable.airplane,
-                        "hi there",
-                        dwetOnOkClick,
-                        this,
-                        false
-                    );
-            
-            dialogWithEditTextFragment.showIt();
-        }
-        catch (Exception e)
-        {
-            ShowError("showDialog", e.getMessage());
-        }
-        
-    }
-    //endregion
-    
-    
-    // region R U Really Sure procedures
-    public void reallysureOnNoClickProc(View view)
-    {
-        try
-        {
-            myMessages().ShowMessageLong("ah ok");
-            // When button is clicked, call up to owning activity.
-            reallysureDialogFragment.dismiss();
-        }
-        catch (Exception e)
-        {
-            ShowError("reallysureOnNoClickProc", e.getMessage());
-        }
-    }
-    
-    public void reallysureOnYesClickProc(View view)
-    {
-        try
-        {
-            myMessages().ShowMessageLong("ah righty ho");
-            // When button is clicked, call up to owning activity.
-            reallysureDialogFragment.dismiss();
-        }
-        catch (Exception e)
-        {
-            ShowError("reallysureOnYesClickProc", e.getMessage());
-        }
-    }
-    // endregion
     
     public void showTasks(View view)
     {
@@ -359,210 +235,77 @@ public class HolidayDetailsView extends BaseActivity
         }
     }
     
-    public void showNotes(View view)
-    {
-        try
-        {
-            Intent intent2 = new Intent(getApplicationContext(), NoteView.class);
-            if (holidayItem.noteId == 0)
-            {
-                MyInt myInt = new MyInt();
-                if (!databaseAccess().getNextNoteId(holidayId, myInt))
-                    return;
-                holidayItem.noteId = myInt.Value;
-                if (!databaseAccess().updateHolidayItem(holidayItem))
-                    return;
-            }
-            intent2.putExtra("ACTION", "view");
-            intent2.putExtra("HOLIDAYID", holidayItem.holidayId);
-            intent2.putExtra("NOTEID", holidayItem.noteId);
-            intent2.putExtra("TITLE", holidayItem.holidayName);
-            intent2.putExtra("SUBTITLE", "Notes");
-            startActivity(intent2);
-        }
-        catch (Exception e)
-        {
-            ShowError("showNotes", e.getMessage());
-        }
-    }
-    
+    @Override
     public void showForm()
     {
+        super.showForm();
+        
         try
         {
-            clearImage(null);
+            MyInt myInt = new MyInt();
             
-            Bundle extras = getIntent().getExtras();
-            if (extras != null)
+            holidayItem = new HolidayItem();
+            if (!databaseAccess().getHolidayItem(holidayId, holidayItem))
+                return;
+            
+            SetTitles(holidayItem.holidayName, "Holiday");
+
+            if (!databaseAccess().getDayCount(holidayId, myInt))
+                return;
+            int dayCount = myInt.Value;
+            itineraryBadge.setText("Days (" + Integer.toString(dayCount) + ")");
+            
+            if (!databaseAccess().getExtraFilesCount(holidayItem.mapFileGroupId, myInt))
+                return;
+            int mapCount = myInt.Value;
+            mapBadge.setText("Maps (" + Integer.toString(mapCount) + ")");
+            
+            if (!databaseAccess().getTaskCount(holidayItem.holidayId, myInt))
+                return;
+            int taskCount = myInt.Value;
+            taskBadge.setText("Tasks (" + Integer.toString(taskCount) + ")");
+            
+            if (!databaseAccess().getBudgetCount(holidayItem.holidayId, myInt))
+                return;
+            int budgetCount = myInt.Value;
+            budgetBadge.setText("Budget (" + Integer.toString(budgetCount) + ")");
+            
+            if (!databaseAccess().getTipsCount(holidayItem.holidayId, myInt))
+                return;
+            int tipsCount = myInt.Value;
+            tipsBadge.setText("Tips (" + Integer.toString(tipsCount) + ")");
+            
+            if (!databaseAccess().getAttractionsCount(holidayItem.holidayId, myInt))
+                return;
+            int attractionsCount = myInt.Value;
+            attractionsBadge.setText("Attractions (" + Integer.toString(attractionsCount) + ")");
+            
+            if (!databaseAccess().getContactCount(holidayItem.holidayId, myInt))
+                return;
+            int contactCount = myInt.Value;
+            contactsBadge.setText("Contacts (" + Integer.toString(contactCount) + ")");
+            
+            SetImage(holidayItem.holidayPicture);
+            
+            if (!holidayItem.dateKnown)
             {
-                String action = extras.getString("ACTION");
-                if (action != null && action.equals("view"))
-                {
-                    MyInt myInt = new MyInt();
-                    
-                    holidayId = extras.getInt("HOLIDAYID");
-                    holidayItem = new HolidayItem();
-                    if (!databaseAccess().getHolidayItem(holidayId, holidayItem))
-                        return;
-                    
-                    if (!databaseAccess().getDayCount(holidayId, myInt))
-                        return;
-                    int dayCount = myInt.Value;
-                    itineraryBadge.setText("Days (" + Integer.toString(dayCount) + ")");
-                    
-                    if (!databaseAccess().getExtraFilesCount(holidayItem.mapFileGroupId, myInt))
-                        return;
-                    int mapCount = myInt.Value;
-                    mapBadge.setText("Maps (" + Integer.toString(mapCount) + ")");
-                    
-                    if (!databaseAccess().getTaskCount(holidayItem.holidayId, myInt))
-                        return;
-                    int taskCount = myInt.Value;
-                    taskBadge.setText("Tasks (" + Integer.toString(taskCount) + ")");
-                    
-                    if (!databaseAccess().getBudgetCount(holidayItem.holidayId, myInt))
-                        return;
-                    int budgetCount = myInt.Value;
-                    budgetBadge.setText("Budget (" + Integer.toString(budgetCount) + ")");
-                    
-                    if (!databaseAccess().getTipsCount(holidayItem.holidayId, myInt))
-                        return;
-                    int tipsCount = myInt.Value;
-                    tipsBadge.setText("Tips (" + Integer.toString(tipsCount) + ")");
-                    
-                    if (!databaseAccess().getAttractionsCount(holidayItem.holidayId, myInt))
-                        return;
-                    int attractionsCount = myInt.Value;
-                    attractionsBadge.setText("Attractions (" + Integer.toString(attractionsCount) + ")");
-                    
-                    if (!databaseAccess().getContactCount(holidayItem.holidayId, myInt))
-                        return;
-                    int contactCount = myInt.Value;
-                    contactsBadge.setText("Contacts (" + Integer.toString(contactCount) + ")");
-                    
-                    if (holidayItem.holidayPicture.length() > 0)
-                        if (imageUtils.getPageHeaderImage(this, holidayItem.holidayPicture, imageView) == false)
-                            return;
-                    
-                    if (!holidayItem.dateKnown)
-                    {
-                        grpStartDate.setVisibility(View.INVISIBLE);
-                    } else
-                    {
-                        grpStartDate.setVisibility(View.VISIBLE);
-                        txtStartDate.setText(holidayItem.startDateStr);
-                    }
-                    
-                    setTitle(holidayItem.holidayName);
-                    
-                    MyInt lFileCount = new MyInt();
-                    lFileCount.Value = 0;
-                    if (holidayItem.infoId > 0)
-                    {
-                        if (!databaseAccess().getExtraFilesCount(holidayItem.infoId, lFileCount))
-                            return;
-                    }
-                    btnShowInfoBadge.setText("Info (" + Integer.toString(lFileCount.Value) + ")");
-                    
-                    if (lFileCount.Value == 0)
-                    {
-                        if (myColor.SetImageButtonTint(btnShowInfo, R.color.colorDisabled) == false)
-                            return;
-                    } else
-                    {
-                        if (myColor.SetImageButtonTint(btnShowInfo, R.color.colorEnabled) == false)
-                            return;
-                    }
-                    NoteItem noteItem = new NoteItem();
-                    if (!databaseAccess().getNoteItem(holidayItem.holidayId, holidayItem.noteId, noteItem))
-                        return;
-                    if (noteItem.notes.length() == 0)
-                    {
-                        if (myColor.SetImageButtonTint(btnShowNotes, R.color.colorDisabled) == false)
-                            return;
-                    } else
-                    {
-                        if (myColor.SetImageButtonTint(btnShowNotes, R.color.colorEnabled) == false)
-                            return;
-                    }
-                }
+                grpStartDate.setVisibility(View.INVISIBLE);
+            } else
+            {
+                grpStartDate.setVisibility(View.VISIBLE);
+                txtStartDate.setText(holidayItem.startDateStr);
             }
+            
+            afterShow();
         }
-        catch (Exception e)
+        catch (
+            Exception e)
+        
         {
             ShowError("showForm", e.getMessage());
         }
+        
     }
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        try
-        {
-            setContentView(R.layout.activity_holiday_details_view);
-            imageUtils = new ImageUtils(this);
-            myColor = new MyColor(this);
-            context = this;
-            
-            rusureDialogTag = getResources().getString(R.string.rusureDialogTag);
-            dwetDialogTag = getResources().getString(R.string.dwetDialogTag);
-            
-            imageView = (ImageView) findViewById(R.id.imageView);
-            txtStartDate = (TextView) findViewById(R.id.txtStartDate);
-            grpStartDate = (LinearLayout) findViewById(R.id.grpStartDate);
-            btnShowItinerary = (ImageButton) findViewById(R.id.btnShowItinerary);
-            btnShowMaps = (ImageButton) findViewById(R.id.btnShowMaps);
-            btnShowTasks = (ImageButton) findViewById(R.id.btnShowTasks);
-            btnShowBudget = (ImageButton) findViewById(R.id.btnShowBudget);
-            btnShowTips = (ImageButton) findViewById(R.id.btnShowTips);
-            btnShowAttractions = (ImageButton) findViewById(R.id.btnShowAttractions);
-            btnShowContacts = (ImageButton) findViewById(R.id.btnShowContacts);
-            btnShowInfo = (ImageButton) findViewById(R.id.btnShowInfo);
-            btnShowNotes = (ImageButton) findViewById(R.id.btnShowNotes);
-            
-            itineraryBadge = (TextView) findViewById(R.id.txtItineraryBadge);
-            mapBadge = (TextView) findViewById(R.id.txtMapBadge);
-            taskBadge = (TextView) findViewById(R.id.txtTaskBadge);
-            budgetBadge = (TextView) findViewById(R.id.txtBudgetBadge);
-            contactsBadge = (TextView) findViewById(R.id.txtContactBadge);
-            tipsBadge = (TextView) findViewById(R.id.txtTipsBadge);
-            attractionsBadge = (TextView) findViewById(R.id.txtAttractionBadge);
-            btnShowInfoBadge = (TextView) findViewById(R.id.txtInfoBadge);
-            
-            showForm();
-        }
-        catch (Exception e)
-        {
-            ShowError("onCreate", e.getMessage());
-        }
-    }
-    
-    public void showInfo(View view)
-    {
-        try
-        {
-            Intent intent2 = new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
-            if (holidayItem.infoId == 0)
-            {
-                MyInt myInt = new MyInt();
-                if (!databaseAccess().getNextFileGroupId(myInt))
-                    return;
-                holidayItem.infoId = myInt.Value;
-                if (!databaseAccess().updateHolidayItem(holidayItem))
-                    return;
-            }
-            intent2.putExtra("FILEGROUPID", holidayItem.infoId);
-            intent2.putExtra("TITLE", holidayItem.holidayName);
-            intent2.putExtra("SUBTITLE", "Info");
-            startActivity(intent2);
-        }
-        catch (Exception e)
-        {
-            ShowError("showInfo", e.getMessage());
-        }
-    }
-    
     
     public void editHoliday()
     {
@@ -591,20 +334,6 @@ public class HolidayDetailsView extends BaseActivity
         {
             ShowError("deleteHoliday", e.getMessage());
         }
-    }
-    
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        try
-        {
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.holidaydetailsformmenu, menu);
-        }
-        catch (Exception e)
-        {
-            ShowError("onCreateOptionsMenu", e.getMessage());
-        }
-        return true;
     }
     
     @Override
@@ -645,4 +374,64 @@ public class HolidayDetailsView extends BaseActivity
         }
         return (true);
     }
+
+    @Override
+    public int getNoteId()
+    {
+        try
+        {
+            return (holidayItem.noteId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNoteId", e.getMessage());
+        }
+        return (0);
+    }
+
+    @Override
+    public void setNoteId(int noteId)
+    {
+        try
+        {
+            holidayItem.noteId=noteId;
+            databaseAccess().updateHolidayItem(holidayItem);
+        }
+        catch(Exception e)
+        {
+            ShowError("setNoteId", e.getMessage());
+        }
+    }
+
+    @Override
+    public int getInfoId()
+    {
+        try
+        {
+            return (holidayItem.infoId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getInfoId", e.getMessage());
+        }
+        return (0);
+    }
+
+    @Override
+    public void setInfoId(int infoId)
+    {
+        try
+        {
+            holidayItem.infoId=infoId;
+            databaseAccess().updateHolidayItem(holidayItem);
+        }
+        catch(Exception e)
+        {
+            ShowError("setInfoId", e.getMessage());
+        }
+
+    }
+
+    //endregion
+    
 }

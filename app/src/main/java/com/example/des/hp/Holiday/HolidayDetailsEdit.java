@@ -1,68 +1,115 @@
 package com.example.des.hp.Holiday;
 
-import android.content.Intent;
-import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v7.app.ActionBar;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.ImageView;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
-import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
 
-import java.io.InputStream;
 import java.util.Date;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.DateUtils.dateUtils;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
-public class HolidayDetailsEdit extends BaseActivity
+public class HolidayDetailsEdit extends BaseActivity  implements View.OnClickListener
 {
     
-    private final int SELECT_PHOTO = 1;
-    private ImageView imageViewSmall;
-    private String action;
-    public int holidayId;
-    public DateUtils dateUtils;
+    //region Member variables
     public LinearLayout grpStartDate;
+    public LinearLayout grpHolidayName;
     public TextView holidayName;
-    public CheckBox cb;
     public TextView txtStartDate;
     public Switch sw;
     public TextView lblKnownDates;
-    public ActionBar actionBar;
     public HolidayItem holidayItem;
-    public CheckBox cbPicturePicked;
-    private ImageUtils imageUtils;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
-    
-    public void pickImage(View view)
+    public ImageButton btnClear;
+    public Button btnSave;
+    //endregion
+        
+    //region Constructors/Destructors
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
     {
+        super.onCreate(savedInstanceState);
+        
         try
         {
-            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-            photoPickerIntent.setType("image/*");
-            startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+            layoutName = "activity_holiday_details_edit";
+            setContentView(R.layout.activity_holiday_details_edit);
+            
+            holidayName = (TextView) findViewById(R.id.txtHolidayName);
+            txtStartDate = (TextView) findViewById(R.id.txtStartDate);
+            sw = (Switch) findViewById(R.id.swKnownDates);
+            grpStartDate = (LinearLayout) findViewById(R.id.grpStartDate);
+            lblKnownDates = (TextView) findViewById(R.id.lblKnownDates);
+            grpHolidayName = (LinearLayout) findViewById(R.id.grpHolidayName);
+            btnClear=(ImageButton) findViewById(R.id.btnClear);
+            btnSave=(Button) findViewById(R.id.btnSave);
+
+            holidayItem = new HolidayItem();
+            
+            btnClear.setVisibility(View.VISIBLE);
+            btnSave.setVisibility(View.VISIBLE);
+
+            if (action != null && action.equals("add"))
+            {
+                SetTitles(getString(R.string.title_planner), "Add a Holiday");
+                holidayName.setText("");
+                datesAreUnknown();
+            }
+            else
+            {
+                if (!databaseAccess().getHolidayItem(holidayId, holidayItem))
+                    return;
+                
+                holidayName.setText(holidayItem.holidayName);
+                
+                txtStartDate.setText(holidayItem.startDateStr);
+                
+                if (holidayItem.startDateInt == DateUtils.unknownDate)
+                {
+                    sw.setChecked(false);
+                    datesAreUnknown();
+                } else
+                {
+                    sw.setChecked(true);
+                    datesAreKnown();
+                }
+                setTitle(holidayItem.holidayName);
+                SetImage(holidayItem.holidayPicture);
+            }
+            afterCreate();
+            imageView.setOnClickListener(this);
         }
         catch (Exception e)
         {
-            ShowError("pickImage", e.getMessage());
+            ShowError("onCreate", e.getMessage());
+        }
+        
+    }
+    //endregion
+    
+    //region OnClick Events
+    public void onClick(View view)
+    {
+        switch(view.getId())
+        {
+            case R.id.imageViewSmall:
+                pickImage(view);
+                break;
         }
     }
-    
+
     public void pickDateTime(View view)
     {
         try
@@ -70,7 +117,7 @@ public class HolidayDetailsEdit extends BaseActivity
             DialogDatePicker ddp = new DialogDatePicker(this);
             ddp.txtStartDate = (TextView) findViewById(R.id.txtStartDate);
             Date date = new Date();
-            if (dateUtils.StrToDate(ddp.txtStartDate.getText().toString(), date) == false)
+            if (!dateUtils().StrToDate(ddp.txtStartDate.getText().toString(), date))
                 return;
             ddp.setInitialDate(date);
             ddp.show();
@@ -129,75 +176,64 @@ public class HolidayDetailsEdit extends BaseActivity
         }
     }
     
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent)
+    public void datesAreUnknown()
     {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         try
         {
-            switch (requestCode)
+            grpStartDate.setVisibility(View.INVISIBLE);
+            lblKnownDates.setText(getString(R.string.dates_not_known));
+        }
+        catch (Exception e)
+        {
+            ShowError("datesAreUnknown", e.getMessage());
+        }
+    }
+    
+    public void datesAreKnown()
+    {
+        try
+        {
+            grpStartDate.setVisibility(View.VISIBLE);
+            lblKnownDates.setText(getString(R.string.dates_known));
+        }
+        catch (Exception e)
+        {
+            ShowError("datesAreKnown", e.getMessage());
+        }
+    }
+
+    public void toggleVisibility(View view)
+    {
+        try
+        {
+            if (sw.isChecked())
             {
-                case SELECT_PHOTO:
-                    if (resultCode == RESULT_OK)
-                    {
-                        try
-                        {
-                            MyBitmap myBitmap = new MyBitmap();
-                            Boolean lRetCode =
-                                imageUtils.ScaleBitmapFromUrl
-                                    (
-                                        imageReturnedIntent.getData(),
-                                        getContentResolver(),
-                                        myBitmap
-                                    );
-                            if (lRetCode == false)
-                                return;
-                            
-                            // assign new bitmap and set scale type
-                            imageViewSmall.setImageBitmap(myBitmap.Value);
-                            
-                            cbPicturePicked.setChecked(true);
-                            
-                            holidayItem.pictureChanged = true;
-                            
-                        }
-                        catch (Exception e)
-                        {
-                            ShowError("onActivityResult-selectphoto", e.getMessage());
-                        }
-                    }
+                MyString myString = new MyString();
+                if (!dateUtils().DateToStr(new Date(), myString))
+                    return;
+                txtStartDate.setText(myString.Value);
+                datesAreKnown();
+            } else
+            {
+                datesAreUnknown();
             }
         }
         catch (Exception e)
         {
-            ShowError("onActivityResult", e.getMessage());
+            ShowError("toggleVisibility", e.getMessage());
         }
     }
-    
-    public void clearImage(View view)
+    //endregion
+        
+    //region form Functions
+    @Override
+    public void showForm()
     {
-        try
-        {
-            cbPicturePicked.setChecked(false);
-            imageViewSmall.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
-        }
-        catch (Exception e)
-        {
-            ShowError("clearImage", e.getMessage());
-        }
-    }
-    
-    public void btnClearClick(View view)
-    {
-        try
-        {
-            clearImage(view);
-            holidayItem.pictureChanged = true;
-        }
-        catch (Exception e)
-        {
-            ShowError("btnClearClick", e.getMessage());
-        }
+        super.showForm();
+        
+        SetImage(holidayItem.holidayPicture);
+        
+        afterShow();
     }
     
     public void saveHoliday(View view)
@@ -206,14 +242,13 @@ public class HolidayDetailsEdit extends BaseActivity
         {
             myMessages().ShowMessageShort("Saving Holiday");
             
-            CheckBox cb = (CheckBox) findViewById(R.id.picturePicked);
-            holidayItem.pictureAssigned = cb.isChecked();
-            
+            holidayItem.pictureAssigned = imageSet;
+            holidayItem.pictureChanged = imageChanged;
             holidayItem.holidayName = holidayName.getText().toString();
             if (sw.isChecked())
             {
                 holidayItem.startDateDate = new Date();
-                if (dateUtils.StrToDate(txtStartDate.getText().toString(), holidayItem.startDateDate) == false)
+                if (!dateUtils().StrToDate(txtStartDate.getText().toString(), holidayItem.startDateDate))
                     return;
             } else
             {
@@ -221,14 +256,14 @@ public class HolidayDetailsEdit extends BaseActivity
             }
             
             MyLong myLong = new MyLong();
-            if (dateUtils.DateToInt(holidayItem.startDateDate, myLong) == false)
+            if (!dateUtils().DateToInt(holidayItem.startDateDate, myLong))
                 return;
             
             holidayItem.startDateInt = myLong.Value;
             
             holidayItem.holidayBitmap = null;
             if (holidayItem.pictureAssigned)
-                holidayItem.holidayBitmap = ((BitmapDrawable) imageViewSmall.getDrawable()).getBitmap();
+                holidayItem.holidayBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
             
             
             if (action.equals("add"))
@@ -256,147 +291,6 @@ public class HolidayDetailsEdit extends BaseActivity
             ShowError("saveHoliday", e.getMessage());
         }
     }
+    //endregion
     
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        
-        try
-        {
-            setContentView(R.layout.activity_holiday_details_edit);
-            
-            dateUtils = new DateUtils(this);
-            imageUtils = new ImageUtils(this);
-            
-            cbPicturePicked = (CheckBox) findViewById(R.id.picturePicked);
-            imageViewSmall = (ImageView) findViewById(R.id.imageViewSmall);
-            holidayName = (TextView) findViewById(R.id.txtHolidayName);
-            txtStartDate = (TextView) findViewById(R.id.txtStartDate);
-            sw = (Switch) findViewById(R.id.swKnownDates);
-            grpStartDate = (LinearLayout) findViewById(R.id.grpStartDate);
-            lblKnownDates = (TextView) findViewById(R.id.lblKnownDates);
-            
-            clearImage(null);
-            
-            Bundle extras = getIntent().getExtras();
-            if (extras != null)
-            {
-                action = extras.getString("ACTION");
-                if (action != null && action.equals("add"))
-                {
-                    holidayItem = new HolidayItem();
-                    
-                    actionBar = getSupportActionBar();
-                    if (actionBar != null)
-                    {
-                        actionBar.setTitle(R.string.title_planner);
-                        actionBar.setSubtitle("Add a Holiday");
-                    }
-                    
-                    holidayName.setText("");
-                    cbPicturePicked.setChecked(false);
-                    datesAreUnknown();
-                }
-                if (action != null && action.equals("modify"))
-                {
-                    holidayId = extras.getInt("HOLIDAYID");
-                    holidayItem = new HolidayItem();
-                    if (!databaseAccess().getHolidayItem(holidayId, holidayItem))
-                        return;
-                    
-                    holidayName.setText(holidayItem.holidayName);
-                    
-                    String originalFileName = holidayItem.holidayPicture;
-                    
-                    if (holidayItem.holidayPicture.length() > 0)
-                        if (imageUtils.getPageHeaderImage(this, holidayItem.holidayPicture, imageViewSmall) == false)
-                            return;
-                    
-                    cbPicturePicked.setChecked(holidayItem.pictureAssigned);
-                    txtStartDate.setText(holidayItem.startDateStr);
-                    
-                    if (holidayItem.startDateInt == DateUtils.unknownDate)
-                    {
-                        sw.setChecked(false);
-                        datesAreUnknown();
-                    } else
-                    {
-                        sw.setChecked(true);
-                        datesAreKnown();
-                    }
-                    setTitle(holidayItem.holidayName);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            ShowError("onCreate", e.getMessage());
-        }
-        
-    }
-    
-    public void datesAreUnknown()
-    {
-        try
-        {
-            grpStartDate.setVisibility(View.INVISIBLE);
-            lblKnownDates.setText("Dates not known");
-        }
-        catch (Exception e)
-        {
-            ShowError("datesAreUnknown", e.getMessage());
-        }
-    }
-    
-    public void datesAreKnown()
-    {
-        try
-        {
-            grpStartDate.setVisibility(View.VISIBLE);
-            lblKnownDates.setText("Dates are known");
-        }
-        catch (Exception e)
-        {
-            ShowError("datesAreKnown", e.getMessage());
-        }
-    }
-    
-    public void toggleVisibility(View view)
-    {
-        try
-        {
-            if (sw.isChecked())
-            {
-                MyString myString = new MyString();
-                if (dateUtils.DateToStr(new Date(), myString) == false)
-                    return;
-                txtStartDate.setText(myString.Value);
-                datesAreKnown();
-            } else
-            {
-                datesAreUnknown();
-            }
-        }
-        catch (Exception e)
-        {
-            ShowError("toggleVisibility", e.getMessage());
-        }
-    }
-    /*
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        try
-        {
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.holidaydetailsformmenu, menu);
-        }
-        catch (Exception e)
-        {
-            ShowError("onCreateOptionsMenu", e.getMessage());
-        }
-        
-        return true;
-    }
-    */
 }

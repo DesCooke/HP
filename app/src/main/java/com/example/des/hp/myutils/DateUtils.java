@@ -6,6 +6,7 @@ import android.widget.TimePicker;
 
 
 import com.example.des.hp.Dialog.BaseActivity;
+import com.example.des.hp.MainActivity;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -27,6 +28,16 @@ public class DateUtils extends BaseActivity
     public static long unknownDate = 2051222400000L;
     public static long secondsInADay = 86400;
     public static long milliSecondsInADay = 86400 * 1000;
+    public static DateUtils myDateUtils = null;
+    
+    public static DateUtils dateUtils()
+    {
+        if (myDateUtils == null)
+            myDateUtils = new DateUtils(MainActivity.getInstance());
+        
+        return (myDateUtils);
+    }
+    
     
     public DateUtils(Context context)
     {
