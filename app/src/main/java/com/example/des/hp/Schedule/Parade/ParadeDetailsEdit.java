@@ -14,6 +14,7 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 public class ParadeDetailsEdit  extends ParadeDetailsView implements View.OnClickListener
 {
 
+
     //region Member variables
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;

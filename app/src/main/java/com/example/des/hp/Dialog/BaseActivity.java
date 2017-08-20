@@ -472,6 +472,7 @@ public class BaseActivity extends AppCompatActivity
                     "Class: " + getClass().getSimpleName() + ", " +
                         "View: " + layoutName + ", " +
                         "Program Version: " + getString(R.string.program_version) + ", " +
+                        "Date: " + getString(R.string.program_date) + ", " +
                         "Database Version: " + String.valueOf(DatabaseAccess.DATABASE_VERSION)
                 );
         }

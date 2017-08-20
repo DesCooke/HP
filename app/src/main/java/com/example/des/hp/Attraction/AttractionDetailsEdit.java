@@ -34,6 +34,7 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
             {
                 grpMenuFile.setVisibility(View.GONE);
                 txtAttractionDescription.setText("");
+                title="Add a Main Attraction";
             }
 
             grpAttractionDescription.setOnClickListener(this);
