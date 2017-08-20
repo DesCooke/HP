@@ -25,7 +25,7 @@ public class MainActivity extends BaseActivity
     public ArrayList<HolidayItem> holidayList;
     public ArchiveRestore archiveRestore;
     public boolean accessGranted = false;
-    
+
     private static MainActivity instance;
     //endregion
     

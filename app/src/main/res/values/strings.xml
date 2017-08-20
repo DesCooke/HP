@@ -96,5 +96,14 @@
     <string name="description">Description</string>
     <string name="journey_ends">Journey Ends</string>
     <string name="save">Save</string>
+    <string name="attached_file">Attached File</string>
+
+    <string name="schedule_unknown">Unknown</string>
+    <string name="schedule_easy">Easy</string>
+    <string name="schedule_moderate">Moderate</string>
+    <string name="schedule_vbusy">V Busy</string>
+
+    <string name="caption_dayname">Day Name</string>
+
 
 </resources>

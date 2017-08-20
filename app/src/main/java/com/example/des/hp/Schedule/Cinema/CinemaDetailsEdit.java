@@ -46,6 +46,7 @@ public class CinemaDetailsEdit  extends CinemaDetailsView implements View.OnClic
         {
             ShowError("onCreate", e.getMessage());
         }
+
     }
 
     @Override

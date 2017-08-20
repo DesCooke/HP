@@ -5,7 +5,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.graphics.BitmapFactory;
@@ -14,49 +16,151 @@ import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
+import com.example.des.hp.Schedule.Bus.BusItem;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.ImageUtils.imageUtils;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
-public class DayDetailsEdit extends BaseActivity
+public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
 {
-    
-    private final int SELECT_PHOTO = 1;
-    private ImageView imageViewSmall;
-    private String action;
-    public int holidayId;
-    public int dayId;
-    public DateUtils dateUtils;
+
+    //region Member variables
     public LinearLayout grpStartDate;
     public TextView dayName;
     public String holidayName;
-    public ActionBar actionBar;
     public DayItem dayItem;
-    public CheckBox cbPicturePicked;
-    private ImageUtils imageUtils;
     private RadioButton radUnknown;
     private RadioButton radEasy;
     private RadioButton radModerate;
     private RadioButton radBusy;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
-    
-    public void pickImage(View view)
+    public LinearLayout grpDayName;
+    public ImageButton btnClear;
+    public Button btnSave;
+    //endregion
+
+    //region Constructors/Destructors
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
     {
+        super.onCreate(savedInstanceState);
+
         try
         {
-            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-            photoPickerIntent.setType("image/*");
-            startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+            layoutName="activity_day_details_edit";
+            setContentView(R.layout.activity_day_details_edit);
+
+            dayItem = new DayItem();
+
+            imageView = (ImageView) findViewById(R.id.imageViewSmall);
+            dayName = (TextView) findViewById(R.id.txtDayName);
+            radUnknown = (RadioButton) findViewById(R.id.radUnknown);
+            radEasy = (RadioButton) findViewById(R.id.radEasy);
+            radModerate = (RadioButton) findViewById(R.id.radModerate);
+            radBusy = (RadioButton) findViewById(R.id.radBusy);
+            grpDayName = (LinearLayout) findViewById(R.id.grpDayName);
+            btnClear=(ImageButton) findViewById(R.id.btnClear);
+            btnSave=(Button) findViewById(R.id.btnSave);
+
+            btnClear.setVisibility(View.VISIBLE);
+            btnSave.setVisibility(View.VISIBLE);
+
+            btnClearImage(null);
+
+            Bundle extras = getIntent().getExtras();
+            if (extras != null)
+            {
+                action = extras.getString("ACTION");
+                if (action != null && action.equals("add"))
+                {
+                    holidayId = extras.getInt("HOLIDAYID");
+                    holidayName = extras.getString("HOLIDAYNAME");
+                    dayName.setText("");
+                    SetTitles(holidayName, "Add a Day");
+                }
+                if (action != null && action.equals("modify"))
+                {
+                    holidayId = extras.getInt("HOLIDAYID");
+                    dayId = extras.getInt("DAYID");
+                    holidayName = extras.getString("HOLIDAYNAME");
+                    if (!databaseAccess().getDayItem(holidayId, dayId, dayItem))
+                        return;
+
+                    String originalFileName = dayItem.dayPicture;
+
+                    SetTitles(holidayName,dayItem.dayName);
+
+                }
+            }
+
+            grpDayName.setOnClickListener(this);
+            imageView.setOnClickListener(this);
+
+            afterCreate();
+
+            showForm();
+
         }
         catch (Exception e)
         {
-            ShowError("pickImage", e.getMessage());
+            ShowError("onCreate", e.getMessage());
+        }
+
+    }
+    //endregion
+
+    //region Regular Form Activities
+    public void showForm()
+    {
+        super.showForm();
+        try
+        {
+
+            dayName.setText(dayItem.dayName);
+            radUnknown.setChecked(false);
+            radEasy.setChecked(false);
+            radModerate.setChecked(false);
+            radBusy.setChecked(false);
+            if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_unknown))
+                radUnknown.setChecked(true);
+            if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_easy))
+                radEasy.setChecked(true);
+            if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_moderate))
+                radModerate.setChecked(true);
+            if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_busy))
+                radBusy.setChecked(true);
+
+            SetImage(dayItem.dayPicture);
+
+            afterShow();
+        }
+        catch(Exception e)
+        {
+            ShowError("showForm", e.getMessage());
         }
     }
-    
+    //endregion
+
+    //region OnClick events
+    public void onClick(View view)
+    {
+        switch(view.getId())
+        {
+
+            case R.id.grpDayName:
+                pickDayName(view);
+                break;
+
+            case R.id.imageViewSmall:
+                pickImage(view);
+                break;
+        }
+    }
+
     public void handleDayCatOnClick(View view)
     {
         try
@@ -73,7 +177,7 @@ public class DayDetailsEdit extends BaseActivity
             if (view != radBusy)
                 if (radBusy.isChecked())
                     radBusy.setChecked(false);
-            
+
             if (radUnknown.isChecked())
                 dayItem.dayCat = getResources().getInteger(R.integer.day_cat_unknown);
             if (radEasy.isChecked())
@@ -88,97 +192,76 @@ public class DayDetailsEdit extends BaseActivity
             ShowError("handleDayCatOnClick", e.getMessage());
         }
     }
-    
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent)
+    public void DayNamePicked(View view)
     {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         try
         {
-            switch (requestCode)
+            dayName.setText(dialogWithEditTextFragment.getFinalText());
+
+            dialogWithEditTextFragment.dismiss();
+        }
+        catch (Exception e)
+        {
+            ShowError("DayNamePicked", e.getMessage());
+        }
+    }
+
+    public void pickDayName(View view)
+    {
+        try
+        {
+            dwetOnOkClick = new View.OnClickListener()
             {
-                case SELECT_PHOTO:
-                    if (resultCode == RESULT_OK)
-                    {
-                        try
-                        {
-                            MyBitmap myBitmap = new MyBitmap();
-                            Boolean lRetCode =
-                                imageUtils.ScaleBitmapFromUrl
-                                    (
-                                        imageReturnedIntent.getData(),
-                                        getContentResolver(),
-                                        myBitmap
-                                    );
-                            if (lRetCode == false)
-                                return;
-                            
-                            // assign new bitmap and set scale type
-                            imageViewSmall.setImageBitmap(myBitmap.Value);
-                            
-                            cbPicturePicked.setChecked(true);
-                            
-                            dayItem.pictureChanged = true;
-                            
-                            
-                        }
-                        catch (Exception e)
-                        {
-                            ShowError("onActivityResult-selectphoto", e.getMessage());
-                        }
-                    }
-            }
+                public void onClick(View view)
+                {
+                    DayNamePicked(view);
+                }
+            };
+
+            dialogWithEditTextFragment =
+                DialogWithEditTextFragment.newInstance
+                    (
+                        getFragmentManager(),     // for the transaction bit
+                        "hihi",            // unique name for this dialog type
+                        "Day",    // form caption
+                        "Description",             // form message
+                        R.drawable.attachment,
+                        dayName.getText().toString(), // initial text
+                        dwetOnOkClick,
+                        this,
+                        false
+                    );
+
+            dialogWithEditTextFragment.showIt();
         }
         catch (Exception e)
         {
-            ShowError("onActivityResult", e.getMessage());
+            ShowError("pickDayName", e.getMessage());
         }
     }
-    
-    public void clearImage(View view)
-    {
-        try
-        {
-            cbPicturePicked.setChecked(false);
-            imageViewSmall.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
-        }
-        catch (Exception e)
-        {
-            ShowError("clearImage", e.getMessage());
-        }
-        
-    }
-    
-    public void btnClearImage(View view)
-    {
-        try
-        {
-            clearImage(view);
-            dayItem.pictureChanged = true;
-        }
-        catch (Exception e)
-        {
-            ShowError("btnClearImage", e.getMessage());
-        }
-    }
-    
-    public void saveDay(View view)
+
+    //endregion
+
+
+    //region Regular Form Activities
+    public void saveSchedule(View view)
     {
         try
         {
             myMessages().ShowMessageShort("Saving Day");
-            
-            dayItem.pictureAssigned = cbPicturePicked.isChecked();
+
+            MyInt myInt = new MyInt();
+
             dayItem.dayName = dayName.getText().toString();
+
+            dayItem.pictureAssigned=imageSet;
+            dayItem.pictureChanged=imageChanged;
             dayItem.dayBitmap = null;
-            if (dayItem.pictureAssigned)
-                dayItem.dayBitmap = ((BitmapDrawable) imageViewSmall.getDrawable()).getBitmap();
-            
-            
+            if (imageSet)
+                dayItem.dayBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+
             if (action.equals("add"))
             {
-                MyInt myInt = new MyInt();
-                
                 dayItem.holidayId = holidayId;
                 
                 if (!databaseAccess().getNextDayId(holidayId, myInt))
@@ -194,8 +277,6 @@ public class DayDetailsEdit extends BaseActivity
             
             if (action.equals("modify"))
             {
-                dayItem.holidayId = holidayId;
-                dayItem.dayId = dayId;
                 if (!databaseAccess().updateDayItem(dayItem))
                     return;
             }
@@ -208,136 +289,5 @@ public class DayDetailsEdit extends BaseActivity
         }
     }
     
-    public void DayNamePicked(View view)
-    {
-        try
-        {
-            dayName.setText(dialogWithEditTextFragment.getFinalText());
-            
-            dialogWithEditTextFragment.dismiss();
-        }
-        catch (Exception e)
-        {
-            ShowError("DayNamePicked", e.getMessage());
-        }
-    }
-    
-    public void pickDayName(View view)
-    {
-        try
-        {
-            dwetOnOkClick = new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    DayNamePicked(view);
-                }
-            };
-            
-            dialogWithEditTextFragment =
-                DialogWithEditTextFragment.newInstance
-                    (
-                        getFragmentManager(),     // for the transaction bit
-                        "hihi",            // unique name for this dialog type
-                        "Day",    // form caption
-                        "Description",             // form message
-                        R.drawable.attachment,
-                        dayName.getText().toString(), // initial text
-                        dwetOnOkClick,
-                        this,
-                        false
-                    );
-            
-            dialogWithEditTextFragment.showIt();
-        }
-        catch (Exception e)
-        {
-            ShowError("pickDayName", e.getMessage());
-        }
-    }
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        
-        try
-        {
-            setContentView(R.layout.activity_day_details_edit);
-            
-            dateUtils = new DateUtils(this);
-            actionBar = getSupportActionBar();
-            imageUtils = new ImageUtils(this);
-            
-            cbPicturePicked = (CheckBox) findViewById(R.id.picturePicked);
-            imageViewSmall = (ImageView) findViewById(R.id.imageViewSmall);
-            dayName = (TextView) findViewById(R.id.txtDayName);
-            radUnknown = (RadioButton) findViewById(R.id.radUnknown);
-            radEasy = (RadioButton) findViewById(R.id.radEasy);
-            radModerate = (RadioButton) findViewById(R.id.radModerate);
-            radBusy = (RadioButton) findViewById(R.id.radBusy);
-            
-            clearImage(null);
-            
-            Bundle extras = getIntent().getExtras();
-            if (extras != null)
-            {
-                action = extras.getString("ACTION");
-                if (action != null && action.equals("add"))
-                {
-                    dayItem = new DayItem();
-                    holidayId = extras.getInt("HOLIDAYID");
-                    holidayName = extras.getString("HOLIDAYNAME");
-                    dayName.setText("");
-                    cbPicturePicked.setChecked(false);
-                    actionBar.setTitle(holidayName);
-                    actionBar.setSubtitle("Add a Day");
-                    radUnknown.setChecked(true);
-                    radEasy.setChecked(false);
-                    radModerate.setChecked(false);
-                    radBusy.setChecked(false);
-                }
-                if (action != null && action.equals("modify"))
-                {
-                    holidayId = extras.getInt("HOLIDAYID");
-                    dayId = extras.getInt("DAYID");
-                    holidayName = extras.getString("HOLIDAYNAME");
-                    dayItem = new DayItem();
-                    if (!databaseAccess().getDayItem(holidayId, dayId, dayItem))
-                        return;
-                    
-                    dayName.setText(dayItem.dayName);
-                    
-                    String originalFileName = dayItem.dayPicture;
-                    
-                    if (imageUtils.getPageHeaderImage(this, dayItem.dayPicture, imageViewSmall) == false)
-                        return;
-                    
-                    cbPicturePicked.setChecked(dayItem.pictureAssigned);
-                    
-                    actionBar.setTitle(holidayName);
-                    actionBar.setSubtitle(dayItem.dayName);
-                    
-                    radUnknown.setChecked(false);
-                    radEasy.setChecked(false);
-                    radModerate.setChecked(false);
-                    radBusy.setChecked(false);
-                    if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_unknown))
-                        radUnknown.setChecked(true);
-                    if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_easy))
-                        radEasy.setChecked(true);
-                    if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_moderate))
-                        radModerate.setChecked(true);
-                    if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_busy))
-                        radBusy.setChecked(true);
-                    
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            ShowError("onCreate", e.getMessage());
-        }
-        
-    }
+    //endregion
 }

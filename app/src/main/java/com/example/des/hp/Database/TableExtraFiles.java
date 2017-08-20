@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.ExtraFiles.ExtraFilesItem;
 import com.example.des.hp.myutils.MyInt;
-import com.example.des.hp.myutils.MyMessages;
 import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;

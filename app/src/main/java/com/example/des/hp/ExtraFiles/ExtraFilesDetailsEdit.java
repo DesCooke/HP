@@ -1,50 +1,25 @@
 package com.example.des.hp.ExtraFiles;
 
 import android.content.Intent;
-import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v7.app.ActionBar;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.widget.TextView;
 
-import com.example.des.hp.Database.DatabaseAccess;
-import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
 import java.io.File;
-import java.io.InputStream;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyFileUtils.myFileUtils;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
-public class ExtraFilesDetailsEdit extends BaseActivity
+public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View.OnClickListener
 {
-    
-    private final int SELECT_PHOTO = 1;
-    private final int SELECT_PDF = 2;
-    private ImageView imageViewSmall;
-    private String action;
-    public int fileGroupId;
-    public int fileId;
-    public TextView fileDescription;
-    public TextView fileName;
-    public ActionBar actionBar;
-    public ExtraFilesItem extraFilesItem;
-    public CheckBox cbPicturePicked;
-    private ImageUtils imageUtils;
-    private MyFileUtils myFileUtils;
-    private Uri mySelectedFileUri;
-    public boolean FileSelected;
-    
+
+    //region Member variables
+
     //region Yes/No dialog
     public DialogWithYesNoFragment dialogWithYesNoFragment;
     public String dwynDialogTag;
@@ -60,22 +35,55 @@ public class ExtraFilesDetailsEdit extends BaseActivity
     
     public String origFilename;
     public String newFilename;
-    
-    
-    public void pickImage(View view)
+    //endregion
+
+    //region Constructors/Destructors
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
     {
+        super.onCreate(savedInstanceState);
+
         try
         {
-            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-            photoPickerIntent.setType("image/*");
-            startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+            btnClear.setVisibility(View.VISIBLE);
+            btnSave.setVisibility(View.VISIBLE);
+
+            dwynDialogTag = getResources().getString(R.string.dwynDialogTag);
+            dwetDialogTag = getResources().getString(R.string.dwetDialogTag);
+
+            imageView.setOnClickListener(this);
+            btnFile.setOnClickListener(this);
+
         }
         catch (Exception e)
         {
-            ShowError("pickImage", e.getMessage());
+            ShowError("onCreate", e.getMessage());
+        }
+
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        /* disable the menu entirely */
+        return false;
+    }
+    //endregion
+
+    //region OnClick Events
+    public void onClick(View view)
+    {
+        switch(view.getId())
+        {
+            case R.id.imageViewSmall:
+                pickImage(view);
+                break;
+            case R.id.btnFile:
+                pickPDF(view);
+                break;
         }
     }
-    
+
     public void pickPDF(View view)
     {
         try
@@ -94,120 +102,52 @@ public class ExtraFilesDetailsEdit extends BaseActivity
             ShowError("pickPDF", e.getMessage());
         }
     }
-    
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent)
-    {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        try
-        {
-            switch (requestCode)
-            {
-                case SELECT_PHOTO:
-                    if (resultCode == RESULT_OK)
-                    {
-                        try
-                        {
-                            MyBitmap myBitmap = new MyBitmap();
-                            Boolean lRetCode =
-                                imageUtils.ScaleBitmapFromUrl
-                                    (
-                                        imageReturnedIntent.getData(),
-                                        getContentResolver(),
-                                        myBitmap
-                                    );
-                            if (lRetCode == false)
-                                return;
-                            
-                            // assign new bitmap and set scale type
-                            imageViewSmall.setImageBitmap(myBitmap.Value);
-                            
-                            cbPicturePicked.setChecked(true);
-                            
-                            extraFilesItem.pictureChanged = true;
-                            
-                            
-                        }
-                        catch (Exception e)
-                        {
-                            ShowError("onActivityResult-selectphoto", e.getMessage());
-                        }
-                    }
-                    break;
-                case SELECT_PDF:
-                    if (resultCode == RESULT_OK)
-                    {
-                        final Uri imageUri = imageReturnedIntent.getData();
-                        grantUriPermission("com.example.des.hp", imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        mySelectedFileUri = imageUri;
-                        extraFilesItem.fileChanged = true;
-                        MyString myString = new MyString();
-                        if (myFileUtils.BaseFilenameFromUri(imageUri, myString) == false)
-                            return;
-                        fileName.setText(myString.Value);
-                    }
-                    break;
-                
-            }
-        }
-        catch (Exception e)
-        {
-            ShowError("onActivityResult", e.getMessage());
-        }
-    }
-    
-    public void clearImage(View view)
-    {
-        try
-        {
-            cbPicturePicked.setChecked(false);
-            imageViewSmall.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
-        }
-        catch (Exception e)
-        {
-            ShowError("clearImage", e.getMessage());
-        }
-    }
-    
-    public void btnClearImage(View view)
-    {
-        try
-        {
-            clearImage(view);
-            extraFilesItem.pictureChanged = true;
-        }
-        catch (Exception e)
-        {
-            ShowError("btnClearImage", e.getMessage());
-        }
-    }
-    
-    
+    //endregion
+
+    //region Saving
     public void SaveIt()
     {
         try
         {
-            extraFilesItem.pictureAssigned = cbPicturePicked.isChecked();
-            extraFilesItem.fileDescription = fileDescription.getText().toString();
-            if (extraFilesItem.fileChanged)
-                extraFilesItem.fileName = newFilename;
-            extraFilesItem.fileBitmap = null;
-            if (extraFilesItem.pictureAssigned)
-                extraFilesItem.fileBitmap = ((BitmapDrawable) imageViewSmall.getDrawable()).getBitmap();
-            
-            if (extraFilesItem.fileName == null)
+            if( mySelectedFileChanged)
             {
-                myMessages().ShowMessageShort("Need to select a file first... ");
-                return;
+                if(mySelectedFileName.length() == 0)
+                {
+                    myMessages().ShowMessageShort("Need to select a file first... ");
+                    return;
+                }
             }
-            
-            myMessages().ShowMessageShort("Saving " + fileDescription.getText().toString());
-            
+            else
+            {
+                if(extraFilesItem!=null && extraFilesItem.fileName!=null && extraFilesItem.fileName.length()==0)
+                {
+
+                    myMessages().ShowMessageShort("Need to select a file first... ");
+                    return;
+                }
+            }
+
+            myMessages().ShowMessageShort("Saving " + mySelectedFileName);
+
+            extraFilesItem.fileDescription = txtFileDescription.getText().toString();
+            extraFilesItem.fileChanged=mySelectedFileChanged;
+            if (mySelectedFileChanged)
+            {
+                extraFilesItem.fileName=mySelectedFileName;
+            }
+
+            extraFilesItem.fileBitmap = null;
+            extraFilesItem.pictureAssigned=imageSet;
+            extraFilesItem.pictureChanged=imageChanged;
+            extraFilesItem.fileBitmap=null;
+            if (imageSet)
+                extraFilesItem.fileBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+
+            extraFilesItem.fileGroupId = fileGroupId;
+
             if (action.equals("add"))
             {
                 MyInt myInt = new MyInt();
-                
-                extraFilesItem.fileGroupId = fileGroupId;
                 
                 if (!databaseAccess().getNextExtraFilesId(fileGroupId, myInt))
                     return;
@@ -223,7 +163,6 @@ public class ExtraFilesDetailsEdit extends BaseActivity
             
             if (action.equals("modify"))
             {
-                extraFilesItem.fileGroupId = fileGroupId;
                 extraFilesItem.fileId = fileId;
                 if (!databaseAccess().updateExtraFilesItem(extraFilesItem))
                     return;
@@ -237,11 +176,11 @@ public class ExtraFilesDetailsEdit extends BaseActivity
         }
     }
     
-    public void saveExtraFile(View view)
+    public void saveSchedule(View view)
     {
         try
         {
-            if (extraFilesItem.fileChanged == false)
+            if (!mySelectedFileChanged)
             {
                 SaveIt();
                 return;
@@ -252,7 +191,7 @@ public class ExtraFilesDetailsEdit extends BaseActivity
                 grantUriPermission("com.example.des.hp", mySelectedFileUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 try
                 {
-                    InputStream in = getContentResolver().openInputStream(mySelectedFileUri);
+                    getContentResolver().openInputStream(mySelectedFileUri);
                 }
                 catch (Exception e)
                 {
@@ -262,7 +201,7 @@ public class ExtraFilesDetailsEdit extends BaseActivity
                 extraFilesItem.fileUri = mySelectedFileUri;
                 
                 MyString myString = new MyString();
-                if (myFileUtils.BaseFilenameFromUri(mySelectedFileUri, myString) == false)
+                if (!myFileUtils().BaseFilenameFromUri(mySelectedFileUri, myString))
                     return;
                 newFilename = myString.Value;
                 
@@ -294,7 +233,7 @@ public class ExtraFilesDetailsEdit extends BaseActivity
     {
         try
         {
-            fileDescription.setText(dialogWithEditTextFragment.getFinalText());
+            txtFileDescription.setText(dialogWithEditTextFragment.getFinalText());
             
             dialogWithEditTextFragment.dismiss();
         }
@@ -324,7 +263,7 @@ public class ExtraFilesDetailsEdit extends BaseActivity
                         "File",    // form caption
                         "Description",             // form message
                         R.drawable.attachment,
-                        fileDescription.getText().toString(), // initial text
+                        txtFileDescription.getText().toString(), // initial text
                         dwetOnOkClick,
                         this,
                         false
@@ -343,7 +282,8 @@ public class ExtraFilesDetailsEdit extends BaseActivity
         try
         {
             newFilename = dialogWithEditTextFragment.getFinalText();
-            
+            txtFilename.setText(newFilename);
+            mySelectedFileName=newFilename;
             myMessages().ShowMessageShort("Renaming to " + newFilename);
             
             dialogWithEditTextFragment.dismiss();
@@ -411,8 +351,7 @@ public class ExtraFilesDetailsEdit extends BaseActivity
     {
         try
         {
-            String newFilename;
-            
+
             dwynOnYesClick = new View.OnClickListener()
             {
                 public void onClick(View view)
@@ -451,89 +390,4 @@ public class ExtraFilesDetailsEdit extends BaseActivity
         }
     }
     
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        
-        try
-        {
-            setContentView(R.layout.activity_extra_files_details_edit);
-            
-            newFilename = "";
-            
-            actionBar = getSupportActionBar();
-            imageUtils = new ImageUtils(this);
-            myFileUtils = new MyFileUtils(this);
-            
-            dwynDialogTag = getResources().getString(R.string.dwynDialogTag);
-            dwetDialogTag = getResources().getString(R.string.dwetDialogTag);
-            
-            cbPicturePicked = (CheckBox) findViewById(R.id.picturePicked);
-            imageViewSmall = (ImageView) findViewById(R.id.imageViewSmall);
-            fileDescription = (TextView) findViewById(R.id.txtFileDescription);
-            fileName = (TextView) findViewById(R.id.txtFilename);
-            
-            clearImage(null);
-            
-            Bundle extras = getIntent().getExtras();
-            if (extras != null)
-            {
-                String title = extras.getString("TITLE");
-                String subtitle = extras.getString("SUBTITLE");
-                actionBar.setTitle(title);
-                action = extras.getString("ACTION");
-                if (action != null && action.equals("add"))
-                {
-                    extraFilesItem = new ExtraFilesItem();
-                    fileGroupId = extras.getInt("FILEGROUPID");
-                    fileDescription.setText("");
-                    fileName.setText("");
-                    cbPicturePicked.setChecked(false);
-                    actionBar.setSubtitle("Add a File");
-                }
-                if (action != null && action.equals("modify"))
-                {
-                    fileGroupId = extras.getInt("FILEGROUPID");
-                    fileId = extras.getInt("FILEID");
-                    extraFilesItem = new ExtraFilesItem();
-                    if (!databaseAccess().getExtraFilesItem(fileGroupId, fileId, extraFilesItem))
-                        return;
-                    
-                    fileDescription.setText(extraFilesItem.fileDescription);
-                    fileName.setText(extraFilesItem.fileName);
-                    
-                    String originalFileName = extraFilesItem.filePicture;
-                    
-                    if (imageUtils.getPageHeaderImage(this, extraFilesItem.filePicture, imageViewSmall) == false)
-                        return;
-                    
-                    cbPicturePicked.setChecked(extraFilesItem.pictureAssigned);
-                    
-                    actionBar.setSubtitle(subtitle);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            ShowError("onCreate", e.getMessage());
-        }
-        
-    }
-/*
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        try
-        {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.daydetailsformmenu, menu);
-        }
-        catch(Exception e)
-        {
-            ShowError("onCreateOptionsMenu", e.getMessage());
-        }
-        return true;
-    }
-*/
 }

@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.webkit.MimeTypeMap;
 
+import com.example.des.hp.MainActivity;
 import com.example.des.hp.R;
 
 import java.io.File;
@@ -24,6 +25,15 @@ public class MyFileUtils
     private Context _context;
     private Resources res;
     private MyUri myUri;
+    public static MyFileUtils fileUtils=null;
+
+    public static MyFileUtils myFileUtils()
+    {
+        if (fileUtils == null)
+            fileUtils = new MyFileUtils(MainActivity.getInstance());
+
+        return (fileUtils);
+    }
 
     public MyFileUtils(Context context)
     {

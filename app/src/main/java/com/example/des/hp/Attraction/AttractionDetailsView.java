@@ -162,4 +162,5 @@ public class AttractionDetailsView extends BaseActivity
 
     }
     //endregion
+
 }

@@ -71,6 +71,7 @@ import com.example.des.hp.myutils.DialogWithYesNoFragment;
 import com.example.des.hp.myutils.MyBitmap;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyMessages;
+import com.example.des.hp.myutils.MyString;
 import com.example.des.hp.thirdpartyutils.BadgeView;
 
 import java.util.Locale;
@@ -78,6 +79,7 @@ import java.util.Locale;
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.ImageUtils.imageUtils;
 import static com.example.des.hp.myutils.MyColor.myColor;
+import static com.example.des.hp.myutils.MyFileUtils.myFileUtils;
 import static com.example.des.hp.myutils.MyLog.myLog;
 
 public class BaseActivity extends AppCompatActivity
@@ -90,6 +92,7 @@ public class BaseActivity extends AppCompatActivity
     public int attractionAreaId = 0;
     public String action;
     public int fileGroupId = 0;
+    public int fileId = 0;
     public String title;
     public String subTitle;
     public String holidayName = "";
@@ -99,7 +102,14 @@ public class BaseActivity extends AppCompatActivity
     public boolean showInfoEnabled;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
-    
+
+    public TextView txtFilename;
+
+    public Uri mySelectedFileUri;
+    public boolean FileSelected;
+    public String mySelectedFileName;
+    public boolean mySelectedFileChanged=false;
+
     public boolean showNotesEnabled;
     public ImageButton btnShowNotes;
     
@@ -110,6 +120,7 @@ public class BaseActivity extends AppCompatActivity
     public final int SELECT_DEVICE_PHOTO = 1;
     public final int MOVEITEM=2;
     public final int SELECT_INTERNAL_PHOTO = 3;
+    public final int SELECT_PDF = 4;
     public ImageView imageView;
     public boolean imageSet = false;
     public boolean imageChanged = false;
@@ -278,7 +289,23 @@ public class BaseActivity extends AppCompatActivity
                             ShowError("onActivityResult-selectphoto", e.getMessage());
                         }
                     }
-                
+                    break;
+                case SELECT_PDF:
+                    if (resultCode == RESULT_OK)
+                    {
+                        final Uri imageUri = imageReturnedIntent.getData();
+                        grantUriPermission("com.example.des.hp", imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        mySelectedFileUri = imageUri;
+                        MyString myString = new MyString();
+                        if (myFileUtils().BaseFilenameFromUri(imageUri, myString) == false)
+                            return;
+                        mySelectedFileName = myString.Value;
+                        mySelectedFileChanged=true;
+                        reloadOnShow = false;
+                        if(txtFilename!=null)
+                            txtFilename.setText(mySelectedFileName);
+                    }
+                    break;
             }
         }
         catch (Exception e)
@@ -353,7 +380,9 @@ public class BaseActivity extends AppCompatActivity
         imageView = (ImageView) findViewById(R.id.imageViewSmall);
         if (imageView != null)
             imagePresent = true;
-        
+
+        txtFilename=(TextView) findViewById(R.id.txtFilename);
+
     }
     
     public void showInfo(View view)
@@ -470,6 +499,7 @@ public class BaseActivity extends AppCompatActivity
             title = extras.getString("TITLE", "");
             subTitle = extras.getString("SUBTITLE", "");
             holidayName = extras.getString("HOLIDAYNAME", "");
+            fileId = extras.getInt("FILEID");
         }
     }
     
