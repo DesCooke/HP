@@ -2,8 +2,12 @@ package com.example.des.hp.Day;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.Holiday.*;
@@ -16,10 +20,50 @@ import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 public class DayDetailsList extends BaseActivity
 {
+    //region Member Variables
     public ArrayList<DayItem> dayList;
     public HolidayItem holidayItem;
     public DayAdapter dayAdapter;
+    //endregion
+    
+    //region Constructors/Destructors
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
+        try
+        {
+            layoutName = "activity_day_list";
+            setContentView(R.layout.activity_day_list);
+
+            afterCreate();
+            
+            showForm();
+        }
+        catch(Exception e)
+        {
+            ShowError("onCreate", e.getMessage());
+        }
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        try
+        {
+            MenuInflater inflater=getMenuInflater();
+            inflater.inflate(R.menu.day_list_add, menu);
+        }
+        catch(Exception e)
+        {
+            ShowError("onCreateOptionsMenu", e.getMessage());
+        }
+
+        return true;
+    }
+    //endregion
+    
+    //region Form Functions
     public void showDayAdd(View view)
     {
         try
@@ -48,7 +92,7 @@ public class DayDetailsList extends BaseActivity
 
             SetTitles(holidayItem.holidayName, "Itinerary");
 
-            databaseAccess().currentStartDate=holidayItem.startDateDate;
+            DatabaseAccess.currentStartDate=holidayItem.startDateDate;
 
             dayList=new ArrayList<>();
             if(!databaseAccess().getDayList(holidayId, dayList))
@@ -70,6 +114,7 @@ public class DayDetailsList extends BaseActivity
                 }
             });
 
+            afterShow();
         }
         catch(Exception e)
         {
@@ -96,23 +141,31 @@ public class DayDetailsList extends BaseActivity
         dayAdapter.notifyItemMoved(from, to);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+    //endregion
 
+    //region OnClick Events
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         try
         {
-            setContentView(R.layout.activity_day_list);
-
-            showForm();
+            switch(item.getItemId())
+            {
+                case R.id.action_add_day:
+                    showDayAdd(null);
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
         }
         catch(Exception e)
         {
-            ShowError("onCreate", e.getMessage());
+            ShowError("onOptionsItemSelected", e.getMessage());
         }
-
+        return true;
     }
+    //endregion
 
+    
 }
 

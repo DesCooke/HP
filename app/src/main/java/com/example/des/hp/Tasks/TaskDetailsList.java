@@ -2,214 +2,166 @@ package com.example.des.hp.Tasks;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
-import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
-import com.example.des.hp.myutils.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
-/**
- * * Created by Des on 02/11/2016.
- */
-
 public class TaskDetailsList extends BaseActivity
 {
-
+    
+    //region Member Variables
     public ArrayList<TaskItem> taskList;
-    public int holidayId;
     public TaskAdapter taskAdapter;
-    public String title;
-    public String subtitle;
-    public ActionBar actionBar;
-
-    public void showTaskAdd(View view)
-    {
-        try
-        {
-            Intent intent=new Intent(getApplicationContext(), TaskDetailsEdit.class);
-            intent.putExtra("ACTION", "add");
-            intent.putExtra("HOLIDAYID", holidayId);
-            startActivity(intent);
-        }
-        catch(Exception e)
-        {
-            ShowError("showTaskAdd", e.getMessage());
-        }
-
-    }
-
-    public void showForm()
-    {
-        try
-        {
-            actionBar=getSupportActionBar();
-            if(actionBar != null)
-            {
-                if(title.length() > 0)
-                {
-                    actionBar.setTitle(title);
-                    actionBar.setSubtitle(subtitle);
-                } else
-                {
-                    actionBar.setTitle("Task");
-                    actionBar.setSubtitle("Tasks");
-                }
-            }
-
-            taskList=new ArrayList<TaskItem>();
-            if(!databaseAccess().getTaskList(holidayId, taskList))
-                return;
-
-            RecyclerView recyclerView=(RecyclerView) findViewById(R.id.taskListView);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setHasFixedSize(false);
-            taskAdapter=new TaskAdapter(this, taskList);
-            recyclerView.setAdapter(taskAdapter);
-
-            itemTouchHelper.attachToRecyclerView(recyclerView);
-
-            taskAdapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(View view, TaskItem obj, int position)
-                {
-                    Intent intent=new Intent(getApplicationContext(), TaskDetailsView.class);
-                    intent.putExtra("ACTION", "view");
-                    intent.putExtra("HOLIDAYID", taskList.get(position).holidayId);
-                    intent.putExtra("TASKID", taskList.get(position).taskId);
-                    if(actionBar != null)
-                    {
-                        intent.putExtra("TITLE", actionBar.getTitle() + "/" + actionBar.getSubtitle());
-                        intent.putExtra("SUBTITLE", taskList.get(position).taskDescription);
-                    }
-                    startActivity(intent);
-                }
-            });
-        }
-        catch(Exception e)
-        {
-            ShowError("showForm", e.getMessage());
-        }
-
-    }
-
-    // handle swipe to delete, and dragable
-    ItemTouchHelper itemTouchHelper=new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)
-    {
-        int dragFrom=-1;
-        int dragTo=-1;
-
-        @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
-        {
-            int fromPosition=viewHolder.getAdapterPosition();
-            int toPosition=target.getAdapterPosition();
-
-
-            if(dragFrom == -1)
-            {
-                dragFrom=fromPosition;
-            }
-            dragTo=toPosition;
-
-            if(fromPosition < toPosition)
-            {
-                for(int i=fromPosition; i < toPosition; i++)
-                {
-                    Collections.swap(taskAdapter.data, i, i + 1);
-                }
-            } else
-            {
-                for(int i=fromPosition; i > toPosition; i--)
-                {
-                    Collections.swap(taskAdapter.data, i, i - 1);
-                }
-            }
-            taskAdapter.notifyItemMoved(fromPosition, toPosition);
-
-            return true;
-        }
-
-        @Override
-        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
-        {
-            int dragFlags=ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-            int swipeFlags=ItemTouchHelper.START | ItemTouchHelper.END;
-            return makeMovementFlags(dragFlags, swipeFlags);
-        }
-
-        @Override
-        public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction)
-        {
-        }
-
-        @Override
-        public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
-        {
-            super.clearView(recyclerView, viewHolder);
-
-            if(dragFrom != -1 && dragTo != -1 && dragFrom != dragTo)
-            {
-                taskAdapter.onItemMove(dragFrom, dragTo);
-            }
-
-            dragFrom=dragTo=-1;
-        }
-
-    });
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-
-        try
-        {
-            showForm();
-        }
-        catch(Exception e)
-        {
-            ShowError("onResume", e.getMessage());
-        }
-
-    }
-
+    //endregion
+    
+    
+    //region Constructors/Destructors
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         try
         {
+            layoutName = "activity_task_list";
             setContentView(R.layout.activity_task_list);
-
-
-            title="";
-            subtitle="";
-            Bundle extras=getIntent().getExtras();
-            if(extras != null)
-            {
-                holidayId=extras.getInt("HOLIDAYID");
-                title=extras.getString("TITLE");
-                subtitle=extras.getString("SUBTITLE");
-            }
+            
+            afterCreate();
+            
             showForm();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
+        
+    }
+    
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        try
+        {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.task_list_add, menu);
+        }
+        catch (Exception e)
+        {
+            ShowError("onCreateOptionsMenu", e.getMessage());
+        }
+        
+        return true;
+    }
+    //endregion
+    
+    //region Form Functions
+    public void showTaskAdd(View view)
+    {
+        try
+        {
+            Intent intent = new Intent(getApplicationContext(), TaskDetailsEdit.class);
+            intent.putExtra("ACTION", "add");
+            intent.putExtra("HOLIDAYID", holidayId);
+            startActivity(intent);
+        }
+        catch (Exception e)
+        {
+            ShowError("showTaskAdd", e.getMessage());
+        }
+        
+    }
+    
+    public void showForm()
+    {
+        try
+        {
+            allowCellMove=true;
 
+            if (title.length() == 0)
+                SetTitles("Task", "Tasks");
+            
+            taskList = new ArrayList<>();
+            if (!databaseAccess().getTaskList(holidayId, taskList))
+                return;
+            taskAdapter = new TaskAdapter(this, taskList);
+
+            CreateRecyclerView(R.id.taskListView, taskAdapter);
+            
+            taskAdapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener()
+            {
+                @Override
+                public void onItemClick(View view, TaskItem obj, int position)
+                {
+                    Intent intent = new Intent(getApplicationContext(), TaskDetailsView.class);
+                    intent.putExtra("ACTION", "view");
+                    intent.putExtra("HOLIDAYID", taskList.get(position).holidayId);
+                    intent.putExtra("TASKID", taskList.get(position).taskId);
+                    intent.putExtra("TITLE", title + "/" + subTitle);
+                    intent.putExtra("SUBTITLE", taskList.get(position).taskDescription);
+                    startActivity(intent);
+                }
+            });
+
+
+            afterShow();
+        }
+        catch (Exception e)
+        {
+            ShowError("showForm", e.getMessage());
+        }
+        
+    }
+    
+    @Override
+    public void SwapItems(int from, int to)
+    {
+        Collections.swap(taskAdapter.data, from, to);
     }
 
+    @Override
+    public void OnItemMove(int from, int to)
+    {
+        taskAdapter.onItemMove(from, to);
+    }
+
+    @Override
+    public void NotifyItemMoved(int from, int to)
+    {
+        taskAdapter.notifyItemMoved(from, to);
+    }
+
+    //endregion
+    
+    //region OnClick Events
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        try
+        {
+            switch(item.getItemId())
+            {
+                case R.id.action_add_day:
+                    showTaskAdd(null);
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("onOptionsItemSelected", e.getMessage());
+        }
+        return true;
+    }
+    //endregion
+    
+    
 }
 
