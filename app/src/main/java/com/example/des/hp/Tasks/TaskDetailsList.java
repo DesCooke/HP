@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.des.hp.Dialog.BaseActivity;
+import com.example.des.hp.Dialog.MessageDialog;
 import com.example.des.hp.R;
 
 import java.util.ArrayList;
@@ -69,6 +70,8 @@ public class TaskDetailsList extends BaseActivity
             Intent intent = new Intent(getApplicationContext(), TaskDetailsEdit.class);
             intent.putExtra("ACTION", "add");
             intent.putExtra("HOLIDAYID", holidayId);
+            intent.putExtra("TITLE", title);
+            intent.putExtra("SUBTITLE", "Add a Task");
             startActivity(intent);
         }
         catch (Exception e)
@@ -147,7 +150,7 @@ public class TaskDetailsList extends BaseActivity
         {
             switch(item.getItemId())
             {
-                case R.id.action_add_day:
+                case R.id.action_add_task:
                     showTaskAdd(null);
                     return true;
                 default:

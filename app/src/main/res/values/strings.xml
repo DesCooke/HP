@@ -84,6 +84,8 @@
 
     <string name="dates_known">Dates Known</string>
     <string name="dates_not_known">Dates Not Known</string>
+    <string name="date_known">Date Known</string>
+    <string name="date_not_known">Date Not Known</string>
 
     <string name="fmt_day_line">Day %d</string>
     <string name="fmt_date_line">%s</string>
@@ -106,6 +108,9 @@
     <string name="schedule_vbusy">V Busy</string>
 
     <string name="caption_dayname">Day Name</string>
+    <string name="caption_taskname">Task Name</string>
+    <string name="caption_taskdate">Task Date</string>
+    <string name="caption_taskcomplete">Task Complete</string>
 
 
 </resources>

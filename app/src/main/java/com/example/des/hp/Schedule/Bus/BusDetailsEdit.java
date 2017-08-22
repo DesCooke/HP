@@ -153,6 +153,7 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
             scheduleItem.scheduleBitmap=null;
             if(imageSet)
                 scheduleItem.scheduleBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
+
             scheduleItem.startTimeKnown=chkCheckinKnown.isChecked();
             scheduleItem.startHour=getHour(checkIn);
             scheduleItem.startMin=getMinute(checkIn);

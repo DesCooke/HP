@@ -1,27 +1,20 @@
 package com.example.des.hp.Day;
 
-import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.graphics.BitmapFactory;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
-import com.example.des.hp.Schedule.Bus.BusItem;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
-import static com.example.des.hp.myutils.ImageUtils.imageUtils;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
@@ -89,8 +82,6 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
                     holidayName = extras.getString("HOLIDAYNAME");
                     if (!databaseAccess().getDayItem(holidayId, dayId, dayItem))
                         return;
-
-                    String originalFileName = dayItem.dayPicture;
 
                     SetTitles(holidayName,dayItem.dayName);
 

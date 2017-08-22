@@ -93,9 +93,10 @@ public class BaseActivity extends AppCompatActivity
     public String action;
     public int fileGroupId = 0;
     public int fileId = 0;
-    public String title;
-    public String subTitle;
+    public String title="";
+    public String subTitle="";
     public String holidayName = "";
+    public int taskId=0;
     
     public boolean reloadOnShow = true;
     
@@ -501,6 +502,7 @@ public class BaseActivity extends AppCompatActivity
             subTitle = extras.getString("SUBTITLE", "");
             holidayName = extras.getString("HOLIDAYNAME", "");
             fileId = extras.getInt("FILEID");
+            taskId = extras.getInt("TASKID");
         }
     }
     
@@ -527,6 +529,11 @@ public class BaseActivity extends AppCompatActivity
     protected void onPostCreate(Bundle savedInstanceState)
     {
         super.onPostCreate(savedInstanceState);
+    }
+
+    public void ShowMessage(String title, String message)
+    {
+        MessageDialog.Show(title, message);
     }
     
     protected void ShowError(String argFunction, String argMessage)
