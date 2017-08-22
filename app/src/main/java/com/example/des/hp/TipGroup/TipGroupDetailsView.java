@@ -1,154 +1,31 @@
 package com.example.des.hp.TipGroup;
 
-import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.view.View;
+import android.view.Menu;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
-import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
 import com.example.des.hp.R;
-import com.example.des.hp.myutils.*;
-import com.example.des.hp.thirdpartyutils.BadgeView;
-import com.example.des.hp.Notes.NoteItem;
-import com.example.des.hp.Notes.NoteView;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 public class TipGroupDetailsView extends BaseActivity
 {
 
-    private ImageView imageView;
-    public int holidayId;
-    public int tipGroupId;
+    //region Member variables
     public TipGroupItem tipGroupItem;
-    public LinearLayout grpTaskDate;
-    private ImageUtils imageUtils;
     public TextView txtTipGroupDescription;
-    public ActionBar actionBar;
-    public TextView txtTipGroupNotes;
-    public ImageButton btnShowInfo;
-    public BadgeView btnShowInfoBadge;
-    public MyColor myColor;
-    public ImageButton btnShowNotes;
+    public ImageButton btnClear;
+    public Button btnSave;
+    public LinearLayout grpTipGroupDescription;
+    public LinearLayout grpMenuFile;
+    //endregion
 
-    public void clearImage(View view)
-    {
-        try
-        {
-        imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
-        }
-        catch(Exception e)
-        {
-            ShowError("clearImage", e.getMessage());
-        }
-
-    }
-
-    public void showNotes(View view)
-    {
-        try
-        {
-        Intent intent2 = new Intent(getApplicationContext(), NoteView.class);
-        if(tipGroupItem.noteId==0)
-        {
-            MyInt myInt = new MyInt();
-            if(!databaseAccess().getNextNoteId(holidayId, myInt))
-                return;
-            tipGroupItem.noteId = myInt.Value;
-            if(!databaseAccess().updateTipGroupItem(tipGroupItem))
-                return;
-        }
-        intent2.putExtra("ACTION", "view");
-        intent2.putExtra("HOLIDAYID", tipGroupItem.holidayId);
-        intent2.putExtra("NOTEID", tipGroupItem.noteId);
-        intent2.putExtra("TITLE", tipGroupItem.tipGroupDescription);
-        intent2.putExtra("SUBTITLE", "Notes");
-        startActivity(intent2);
-        }
-        catch(Exception e)
-        {
-            ShowError("showNotes", e.getMessage());
-        }
-
-    }
-
-    public void showForm()
-    {
-        try {
-            clearImage(null);
-
-            Bundle extras = getIntent().getExtras();
-            if (extras != null) {
-                String action = extras.getString("ACTION");
-                if (action != null && action.equals("view")) {
-                    holidayId = extras.getInt("HOLIDAYID");
-                    tipGroupId = extras.getInt("TIPGROUPID");
-                    tipGroupItem = new TipGroupItem();
-                    if (!databaseAccess().getTipGroupItem(holidayId, tipGroupId, tipGroupItem))
-                        return;
-
-                    actionBar = getSupportActionBar();
-                    if (actionBar != null) {
-                        String title = extras.getString("TITLE");
-                        String subtitle = extras.getString("SUBTITLE");
-                        if (title.length() > 0) {
-                            actionBar.setTitle(title);
-                            actionBar.setSubtitle(subtitle);
-                        } else {
-                            actionBar.setTitle(tipGroupItem.tipGroupDescription);
-                            actionBar.setSubtitle("");
-                        }
-                    }
-
-                    if (imageUtils.getPageHeaderImage(this, tipGroupItem.tipGroupPicture, imageView) == false)
-                        return;
-                    txtTipGroupDescription.setText(tipGroupItem.tipGroupDescription);
-
-                    txtTipGroupNotes.setText(tipGroupItem.tipGroupNotes);
-                    MyInt lFileCount = new MyInt();
-                    lFileCount.Value = 0;
-                    if (tipGroupItem.infoId > 0) {
-                        if (!databaseAccess().getExtraFilesCount(tipGroupItem.infoId, lFileCount))
-                            return;
-                    }
-                    btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
-
-                    if (lFileCount.Value == 0) {
-                        btnShowInfoBadge.hide();
-                        if (myColor.SetImageButtonTint(btnShowInfo, R.color.colorDisabled) == false)
-                            return;
-                    } else {
-                        btnShowInfoBadge.show();
-                        if (myColor.SetImageButtonTint(btnShowInfo, R.color.colorEnabled) == false)
-                            return;
-                    }
-                    NoteItem noteItem = new NoteItem();
-                    if(!databaseAccess().getNoteItem(tipGroupItem.holidayId, tipGroupItem.noteId, noteItem))
-                        return;
-                    if (noteItem.notes.length() == 0)
-                    {
-                        if (myColor.SetImageButtonTint(btnShowNotes, R.color.colorDisabled) == false)
-                            return;
-                    } else {
-                        if (myColor.SetImageButtonTint(btnShowNotes, R.color.colorEnabled) == false)
-                            return;
-                    }
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            ShowError("showForm", e.getMessage());
-        }
-    }
-
+    //region Constructors/Destructors
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -156,20 +33,17 @@ public class TipGroupDetailsView extends BaseActivity
 
         try
         {
-        setContentView(R.layout.activity_tipgroup_details_view);
+            layoutName="activity_tipgroup_details_view";
+            setContentView(R.layout.activity_tipgroup_details_view);
 
-        imageUtils = new ImageUtils(this);
-        myColor = new MyColor(this);
+            imageView=(ImageView) findViewById(R.id.imageViewSmall);
+            txtTipGroupDescription=(TextView) findViewById(R.id.txtTipGroupDescription);
+            btnClear=(ImageButton) findViewById(R.id.btnClear);
+            btnSave=(Button) findViewById(R.id.btnSave);
+            grpTipGroupDescription=(LinearLayout) findViewById(R.id.grpTipGroupDescription);
+            grpMenuFile=(LinearLayout) findViewById(R.id.grpMenuFile);
 
-        imageView = (ImageView)findViewById(R.id.imageViewSmall);
-        txtTipGroupDescription = (TextView) findViewById(R.id.txtTipGroupDescription);
-        txtTipGroupNotes = (TextView) findViewById(R.id.txtTipGroupNotes);
-        btnShowInfo=(ImageButton) findViewById(R.id.btnShowInfo);
-        btnShowNotes=(ImageButton) findViewById(R.id.btnShowNotes);
-
-        btnShowInfoBadge = new BadgeView(this, btnShowInfo);
-        btnShowInfoBadge.setText(Integer.toString(0));
-        btnShowInfoBadge.show();
+            afterCreate();
 
             showForm();
         }
@@ -179,81 +53,69 @@ public class TipGroupDetailsView extends BaseActivity
         }
     }
 
-    public void showInfo(View view)
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
     {
+        /* disable the menu entirely */
+        return false;
+    }
+    //endregion
+
+    //region showForm
+    public void showForm()
+    {
+        super.showForm();
+
         try
         {
-        Intent intent2 = new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
-        if(tipGroupItem.infoId==0)
-        {
-            MyInt myInt = new MyInt();
-            if(!databaseAccess().getNextFileGroupId(myInt))
+            tipGroupItem=new TipGroupItem();
+            if(!databaseAccess().getTipGroupItem(holidayId, tipGroupId, tipGroupItem))
                 return;
-            tipGroupItem.infoId = myInt.Value;
-            if(!databaseAccess().updateTipGroupItem(tipGroupItem))
-                return;
-        }
-        intent2.putExtra("FILEGROUPID", tipGroupItem.infoId);
-        intent2.putExtra("TITLE", tipGroupItem.tipGroupDescription);
-        intent2.putExtra("SUBTITLE", "Info");
-        startActivity(intent2);
+
+            if(title == null || (title.length() == 0))
+            {
+                SetTitles(tipGroupItem.tipGroupDescription, "");
+            } else
+            {
+                SetTitles(title, subTitle);
+            }
+
+            SetImage(tipGroupItem.tipGroupPicture);
+            txtTipGroupDescription.setText(tipGroupItem.tipGroupDescription);
+
+            afterShow();
         }
         catch(Exception e)
         {
-            ShowError("showInfo", e.getMessage());
+            ShowError("showForm", e.getMessage());
         }
+    }
+    //endregion
 
+    //region form Functions
+    @Override
+    public int getInfoId()
+    {
+        return (tipGroupItem.infoId);
     }
 
-
-
-    public void editTipGroup()
+    public void setNoteId(int pNoteId)
     {
-        try
-        {
-        Intent intent = new Intent(getApplicationContext(), TipGroupDetailsEdit.class);
-        intent.putExtra("ACTION", "modify");
-        intent.putExtra("HOLIDAYID", holidayId);
-        intent.putExtra("TIPGROUPID", tipGroupId);
-        intent.putExtra("TITLE", actionBar.getTitle());
-        intent.putExtra("SUBTITLE", actionBar.getSubtitle());
-        startActivity(intent);
-        }
-        catch(Exception e)
-        {
-            ShowError("editTipGroup", e.getMessage());
-        }
-
-    }
-
-    public void deleteTipGroup()
-    {
-        try
-        {
-        if(!databaseAccess().deleteTipGroupItem(tipGroupItem))
-            return;
-        finish();
-        }
-        catch(Exception e)
-        {
-            ShowError("deleteTipGroup", e.getMessage());
-        }
-
+        tipGroupItem.noteId=pNoteId;
+        databaseAccess().updateTipGroupItem(tipGroupItem);
     }
 
     @Override
-    protected void onResume(){
-        super.onResume();
-        try
-        {
-            showForm();
-        }
-        catch(Exception e)
-        {
-            ShowError("onResume", e.getMessage());
-        }
-
+    public int getNoteId()
+    {
+        return (tipGroupItem.noteId);
     }
 
-
+    @Override
+    public void setInfoId(int pInfoId)
+    {
+        tipGroupItem.infoId=pInfoId;
+        databaseAccess().updateTipGroupItem(tipGroupItem);
+    }
+    //endregion
 }

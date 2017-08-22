@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
-import com.example.des.hp.thirdpartyutils.BadgeView;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
@@ -28,9 +27,6 @@ public class TaskDetailsView extends BaseActivity
     public LinearLayout grpTaskDate;
     public TextView txtTaskDescription;
     public CheckBox chkTaskComplete;
-    public ImageButton btnShowInfo;
-    public BadgeView btnShowInfoBadge;
-    public ImageButton btnShowNotes;
     public ImageButton btnClear;
     public Button btnSave;
     public LinearLayout grpMenuFile;
@@ -128,7 +124,7 @@ public class TaskDetailsView extends BaseActivity
             if (!databaseAccess().getTaskItem(holidayId, taskId, taskItem))
                 return;
             
-            if (title == null || (title != null && title.length() == 0) )
+            if (title == null || (title.length() == 0) )
             {
                 SetTitles(taskItem.taskDescription, "");
             } else

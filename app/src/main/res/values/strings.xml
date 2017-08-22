@@ -112,6 +112,7 @@
     <string name="caption_taskname">Task Name</string>
     <string name="caption_taskdate">Task Date</string>
     <string name="caption_taskcomplete">Task Complete</string>
+    <string name="caption_tipgroupdescription">Description</string>
 
 
 </resources>

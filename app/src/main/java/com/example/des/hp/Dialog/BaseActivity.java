@@ -97,6 +97,7 @@ public class BaseActivity extends AppCompatActivity
     public String subTitle="";
     public String holidayName = "";
     public int taskId=0;
+    public int tipGroupId=0;
     
     public boolean reloadOnShow = true;
     
@@ -503,6 +504,7 @@ public class BaseActivity extends AppCompatActivity
             holidayName = extras.getString("HOLIDAYNAME", "");
             fileId = extras.getInt("FILEID");
             taskId = extras.getInt("TASKID");
+            tipGroupId = extras.getInt("TIPGROUPID");
         }
     }
     
