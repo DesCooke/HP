@@ -24,7 +24,6 @@ public class TaskDetailsList extends BaseActivity
     public TaskAdapter taskAdapter;
     //endregion
     
-    
     //region Constructors/Destructors
     @Override
     protected void onCreate(Bundle savedInstanceState)

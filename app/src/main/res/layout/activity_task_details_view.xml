@@ -28,16 +28,18 @@
 
         <TextView
             android:id="@+id/txtTaskNameCaption"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
+            android:layout_weight="2"
             android:text="@string/caption_taskname"
             android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/txtTaskName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center_vertical"
             android:text=""
             android:textSize="18sp"/>
@@ -53,16 +55,17 @@
 
         <TextView
             android:id="@+id/lblKnownDate"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_weight="2"
             android:text="Date Known"
             android:textSize="18sp"/>
 
         <Switch
             android:id="@+id/swKnownDate"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:onClick="toggleVisibility"/>
 
     </LinearLayout>
@@ -75,16 +78,16 @@
 
         <TextView
             android:id="@+id/lblTaskDate"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:gravity="center_vertical"
             android:text="@string/caption_taskdate"
             android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/txtTaskDate"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text=""
