@@ -2,40 +2,67 @@ package com.example.des.hp.Budget;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
-import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
-import com.example.des.hp.myutils.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
-/**
- * * Created by Des on 02/11/2016.
- */
-
 public class BudgetDetailsList extends BaseActivity
 {
     
+    //region Member Variables
     public ArrayList<BudgetItem> budgetList;
-    public int holidayId;
     public BudgetAdapter budgetAdapter;
-    public String title;
-    public String subtitle;
-    public ActionBar actionBar;
-    public TextView budgetTotal;
-    public TextView budgetPaid;
-    public TextView budgetUnpaid;
+    //endregion
     
+    //region Constructors/Destructors
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        
+        try
+        {
+            
+            layoutName = "activity_budget_list";
+            setContentView(R.layout.activity_budget_list);
+            
+            afterCreate();
+            
+            showForm();
+        }
+        catch (Exception e)
+        {
+            ShowError("onCreate", e.getMessage());
+        }
+        
+    }
+    
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        try
+        {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.budget_list_add, menu);
+        }
+        catch (Exception e)
+        {
+            ShowError("onCreateOptionsMenu", e.getMessage());
+        }
+        
+        return true;
+    }
+    //endregion
+    
+    //region Form Functions
     public void showBudgetAdd(View view)
     {
         try
@@ -53,52 +80,17 @@ public class BudgetDetailsList extends BaseActivity
     
     public void showForm()
     {
+        super.showForm();
         try
         {
-            if (actionBar != null)
-            {
-                if (title.length() > 0)
-                {
-                    actionBar.setTitle(title);
-                    actionBar.setSubtitle(subtitle);
-                } else
-                {
-                    actionBar.setTitle("Budget");
-                    actionBar.setSubtitle("Budget");
-                }
-            }
+            allowCellMove = true;
             
             budgetList = new ArrayList<>();
             if (!databaseAccess().getBudgetList(holidayId, budgetList))
                 return;
-            
-            budgetTotal = (TextView) findViewById(R.id.totBudgetTotal);
-            budgetPaid = (TextView) findViewById(R.id.totBudgetPaid);
-            budgetUnpaid = (TextView) findViewById(R.id.totBudgetUnpaid);
-            
-            MyInt myInt = new MyInt();
-            
-            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.budgetListView);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setHasFixedSize(true);
-            //listView1.setDivider(null);
             budgetAdapter = new BudgetAdapter(this, budgetList);
-            recyclerView.setAdapter(budgetAdapter);
             
-            itemTouchHelper.attachToRecyclerView(recyclerView);
-            
-            if (!databaseAccess().getBudgetTotal(holidayId, myInt))
-                return;
-            budgetTotal.setText(StringUtils.IntToMoneyString(myInt.Value));
-            
-            if (!databaseAccess().getBudgetPaid(holidayId, myInt))
-                return;
-            budgetPaid.setText(StringUtils.IntToMoneyString(myInt.Value));
-            
-            if (!databaseAccess().getBudgetUnpaid(holidayId, myInt))
-                return;
-            budgetUnpaid.setText(StringUtils.IntToMoneyString(myInt.Value));
-            
+            CreateRecyclerView(R.id.budgetListView, budgetAdapter);
             
             budgetAdapter.setOnItemClickListener
                 (
@@ -111,136 +103,67 @@ public class BudgetDetailsList extends BaseActivity
                             intent.putExtra("ACTION", "view");
                             intent.putExtra("HOLIDAYID", budgetList.get(position).holidayId);
                             intent.putExtra("BUDGETID", budgetList.get(position).budgetId);
-                            if (actionBar != null)
-                            {
-                                intent.putExtra("TITLE", actionBar.getTitle() + "/" +
-                                    actionBar.getSubtitle());
-                                intent.putExtra("SUBTITLE", budgetList.get(position).budgetDescription);
-                            }
+                            intent.putExtra("TITLE", title + "/" + subTitle);
+                            intent.putExtra("SUBTITLE", budgetList.get(position).budgetDescription);
+                            
                             startActivity(intent);
                         }
                     }
                 );
+            
+            afterShow();
         }
-        catch (Exception e)
+        catch (
+            Exception e)
+        
         {
             ShowError("showForm", e.getMessage());
         }
         
     }
     
-    // handle swipe to delete, and draggable
-    ItemTouchHelper itemTouchHelper =
-        new ItemTouchHelper
-            (
-                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)
-                {
-                    int dragFrom = -1;
-                    int dragTo = -1;
-                    
-                    @Override
-                    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
-                    {
-                        int fromPosition = viewHolder.getAdapterPosition();
-                        int toPosition = target.getAdapterPosition();
-                        
-                        
-                        if (dragFrom == -1)
-                        {
-                            dragFrom = fromPosition;
-                        }
-                        dragTo = toPosition;
-                        
-                        if (fromPosition < toPosition)
-                        {
-                            for (int i = fromPosition; i < toPosition; i++)
-                            {
-                                Collections.swap(budgetAdapter.data, i, i + 1);
-                            }
-                        } else
-                        {
-                            for (int i = fromPosition; i > toPosition; i--)
-                            {
-                                Collections.swap(budgetAdapter.data, i, i - 1);
-                            }
-                        }
-                        budgetAdapter.notifyItemMoved(fromPosition, toPosition);
-                        
-                        return true;
-                    }
-                    
-                    @Override
-                    public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
-                    {
-                        int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-                        int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-                        return makeMovementFlags(dragFlags, swipeFlags);
-                    }
-                    
-                    @Override
-                    public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction)
-                    {
-                    }
-                    
-                    @Override
-                    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
-                    {
-                        super.clearView(recyclerView, viewHolder);
-                        
-                        if (dragFrom != -1 && dragTo != -1 && dragFrom != dragTo)
-                        {
-                            budgetAdapter.onItemMove();
-                        }
-                        
-                        dragFrom = dragTo = -1;
-                    }
-                    
-                }
-            );
-    
+
     @Override
-    protected void onResume()
+    public void SwapItems(int from, int to)
     {
-        super.onResume();
-        
-        try
-        {
-            showForm();
-        }
-        catch (Exception e)
-        {
-            ShowError("onResume", e.getMessage());
-        }
-        
+        Collections.swap(budgetAdapter.data, from, to);
     }
-    
+
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void OnItemMove(int from, int to)
     {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_budget_list);
-        
+        budgetAdapter.onItemMove(from, to);
+    }
+
+    @Override
+    public void NotifyItemMoved(int from, int to)
+    {
+        budgetAdapter.notifyItemMoved(from, to);
+    }
+    //endregion
+    
+    //region OnClick Events
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         try
         {
-            actionBar = getSupportActionBar();
-            
-            title = "";
-            subtitle = "";
-            Bundle extras = getIntent().getExtras();
-            if (extras != null)
+            switch(item.getItemId())
             {
-                holidayId = extras.getInt("HOLIDAYID");
-                title = extras.getString("TITLE");
-                subtitle = extras.getString("SUBTITLE");
+                case R.id.action_add_budget:
+                    showBudgetAdd(null);
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
             }
-            showForm();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
-            ShowError("onCreate", e.getMessage());
+            ShowError("onOptionsItemSelected", e.getMessage());
         }
-        
+        return true;
     }
-    
+    //endregion
+
 }
 

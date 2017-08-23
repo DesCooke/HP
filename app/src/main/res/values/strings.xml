@@ -14,6 +14,7 @@
     <string name="action_add_hotel">Add Hotel</string>
     <string name="action_add_show">Add Show</string>
     <string name="action_add_restaurant">Add Restaurant</string>
+    <string name="action_add_budget">Add Budget</string>
     <string name="action_add_bus">Add Bus</string>
     <string name="action_add_cinema">Add Cinema</string>
     <string name="action_add_park">Add Park</string>
@@ -114,6 +115,8 @@
     <string name="caption_taskdate">Task Date</string>
     <string name="caption_taskcomplete">Task Complete</string>
     <string name="caption_tipgroupdescription">Description</string>
+    <string name="caption_tipdescription">Description</string>
+    <string name="caption_notes">Notes</string>
 
 
 </resources>

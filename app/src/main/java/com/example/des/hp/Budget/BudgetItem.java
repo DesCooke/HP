@@ -46,6 +46,12 @@ public class BudgetItem
 
     public BudgetItem()
     {
+        budgetDescription="";
+        budgetPicture="";
+        budgetNotes="";
+        origBudgetDescription="";
+        origBudgetPicture="";
+        origBudgetNotes="";
     }
 
 }

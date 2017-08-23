@@ -2,6 +2,8 @@ package com.example.des.hp.Budget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +30,7 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
     public ArrayList<BudgetItem> data = null;
     private OnItemClickListener mOnItemClickListener;
     private ImageUtils imageUtils;
-
+    public static Bitmap imageTotal=null;
 
     interface OnItemClickListener {
         void onItemClick(View view, BudgetItem obj, int position);
@@ -94,7 +96,16 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
         }
         else
         {
-            holder.budgetImage.setVisibility(View.INVISIBLE);
+            if(c.budgetDescription.equals("Total"))
+            {
+                if(imageTotal==null)
+                    imageTotal = BitmapFactory.decodeResource(context.getResources(), R.drawable.sum);
+                holder.budgetImage.setImageBitmap(imageTotal);
+            }
+            else
+            {
+                holder.budgetImage.setVisibility(View.INVISIBLE);
+            }
         }
 
 
@@ -121,7 +132,7 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
         notifyDataSetChanged();
     }
 
-    boolean onItemMove() {
+    boolean onItemMove(int fromPosition, int toPosition) {
         updateGlobalData(data);
         return true;
     }

@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.des.hp.Dialog.BaseActivity;
@@ -23,6 +24,8 @@ public class TipDetailsView extends BaseActivity
     public TextView txtTipNotes;
     public ImageButton btnClear;
     public Button btnSave;
+    public LinearLayout grpTipDescription;
+    public LinearLayout grpMenuFile;
     //endregion
     
     //region Constructors/Destructors
@@ -39,6 +42,8 @@ public class TipDetailsView extends BaseActivity
             txtTipNotes = (TextView) findViewById(R.id.txtTipNotes);
             btnClear = (ImageButton) findViewById(R.id.btnClear);
             btnSave = (Button) findViewById(R.id.btnSave);
+            grpTipDescription = (LinearLayout) findViewById(R.id.grpTipDescription);
+            grpMenuFile = (LinearLayout) findViewById(R.id.grpMenuFile);
             
             afterCreate();
             

@@ -143,7 +143,7 @@ class TableBudget extends TableBase
 
         for(int i=0; i < items.size(); i++)
         {
-            if(items.get(i).sequenceNo != items.get(i).origSequenceNo)
+            if(items.get(i).sequenceNo != 9999 && items.get(i).sequenceNo != items.get(i).origSequenceNo)
             {
                 if(updateBudgetItem(items.get(i)) == false)
                     return (false);
@@ -381,6 +381,23 @@ class TableBudget extends TableBase
 
             al.add(budgetItem);
         }
+        BudgetItem totalBudgetItem=new BudgetItem();
+        totalBudgetItem.sequenceNo = 9999;
+        
+        totalBudgetItem.budgetDescription="Total";
+        MyInt myInt = new MyInt();
+        
+        getBudgetPaid(holidayId, myInt);
+        totalBudgetItem.budgetPaid = myInt.Value;
+
+        getBudgetUnpaid(holidayId, myInt);
+        totalBudgetItem.budgetUnpaid = myInt.Value;
+
+        getBudgetTotal(holidayId, myInt);
+        totalBudgetItem.budgetTotal = myInt.Value;
+        
+        al.add(totalBudgetItem);
+        
         return (true);
     }
 
