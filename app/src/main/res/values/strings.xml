@@ -21,6 +21,7 @@
     <string name="action_add_other">Add Other</string>
     <string name="action_add_ride">Add Ride</string>
     <string name="action_add_task">Add Task</string>
+    <string name="action_add_tip">Add Tip</string>
     <string name="action_add_tipgroup">Add Tip Group</string>
     <string name="action_add_generalattraction">Add Attraction</string>
     <string name="action_add_extra_files">Add</string>

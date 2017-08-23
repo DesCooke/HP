@@ -84,7 +84,6 @@ public class TaskDetailsView extends BaseActivity
         
         return true;
     }
-    
     //endregion
     
     //region OnClick Events
@@ -154,6 +153,7 @@ public class TaskDetailsView extends BaseActivity
             ShowError("showForm", e.getMessage());
         }
     }
+    //endregion
     
     //region form Functions
     @Override

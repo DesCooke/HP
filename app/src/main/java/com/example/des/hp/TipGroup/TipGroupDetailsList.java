@@ -115,7 +115,6 @@ public class TipGroupDetailsList extends BaseActivity
         }
     }
 
-    
     @Override
     public void SwapItems(int from, int to)
     {

@@ -93,25 +93,27 @@ public class BaseActivity extends AppCompatActivity
     public String action;
     public int fileGroupId = 0;
     public int fileId = 0;
-    public String title="";
-    public String subTitle="";
+    public String title = "";
+    public String subTitle = "";
     public String holidayName = "";
-    public int taskId=0;
-    public int tipGroupId=0;
+    public int taskId = 0;
+    public int tipGroupId = 0;
+    public int tipId = 0;
     
     public boolean reloadOnShow = true;
+    public boolean hideImageIfEmpty = false;
     
     public boolean showInfoEnabled;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
-
+    
     public TextView txtFilename;
-
+    
     public Uri mySelectedFileUri;
     public boolean FileSelected;
     public String mySelectedFileName;
-    public boolean mySelectedFileChanged=false;
-
+    public boolean mySelectedFileChanged = false;
+    
     public boolean showNotesEnabled;
     public ImageButton btnShowNotes;
     
@@ -120,7 +122,7 @@ public class BaseActivity extends AppCompatActivity
     
     public boolean imagePresent = false;
     public final int SELECT_DEVICE_PHOTO = 1;
-    public final int MOVEITEM=2;
+    public final int MOVEITEM = 2;
     public final int SELECT_INTERNAL_PHOTO = 3;
     public final int SELECT_PDF = 4;
     public ImageView imageView;
@@ -302,9 +304,9 @@ public class BaseActivity extends AppCompatActivity
                         if (myFileUtils().BaseFilenameFromUri(imageUri, myString) == false)
                             return;
                         mySelectedFileName = myString.Value;
-                        mySelectedFileChanged=true;
+                        mySelectedFileChanged = true;
                         reloadOnShow = false;
-                        if(txtFilename!=null)
+                        if (txtFilename != null)
                             txtFilename.setText(mySelectedFileName);
                     }
                     break;
@@ -382,9 +384,9 @@ public class BaseActivity extends AppCompatActivity
         imageView = (ImageView) findViewById(R.id.imageViewSmall);
         if (imageView != null)
             imagePresent = true;
-
-        txtFilename=(TextView) findViewById(R.id.txtFilename);
-
+        
+        txtFilename = (TextView) findViewById(R.id.txtFilename);
+        
     }
     
     public void showInfo(View view)
@@ -463,6 +465,19 @@ public class BaseActivity extends AppCompatActivity
         displayShowInfo();
         displayShowNotes();
         displayProgramInfo();
+        handleImage();
+    }
+    
+    public void handleImage()
+    {
+        if (imageView == null)
+            return;
+        
+        if (hideImageIfEmpty == false)
+            return;
+        
+        if (imageSet == false)
+            imageView.setVisibility(View.GONE);
     }
     
     public void displayProgramInfo()
@@ -505,6 +520,7 @@ public class BaseActivity extends AppCompatActivity
             fileId = extras.getInt("FILEID");
             taskId = extras.getInt("TASKID");
             tipGroupId = extras.getInt("TIPGROUPID");
+            tipId = extras.getInt("TIPID");
         }
     }
     
@@ -532,7 +548,7 @@ public class BaseActivity extends AppCompatActivity
     {
         super.onPostCreate(savedInstanceState);
     }
-
+    
     public void ShowMessage(String title, String message)
     {
         MessageDialog.Show(title, message);
@@ -732,7 +748,7 @@ public class BaseActivity extends AppCompatActivity
         
         try
         {
-            if(recyclerViewEnabled)
+            if (recyclerViewEnabled)
             {
                 // save RecyclerView state
                 mBundleRecyclerViewState = new Bundle();
