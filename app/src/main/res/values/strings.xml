@@ -117,6 +117,10 @@
     <string name="caption_tipgroupdescription">Description</string>
     <string name="caption_tipdescription">Description</string>
     <string name="caption_notes">Notes</string>
+    <string name="caption_budget_total">Budget Total</string>
+    <string name="caption_budget_paid">Budget Paid</string>
+    <string name="caption_budget_unpaid">Budget Unpaid</string>
+    <string name="caption_zero">0</string>
 
 
 </resources>

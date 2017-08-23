@@ -155,8 +155,7 @@ public class TipDetailsView extends BaseActivity
         tipItem.infoId=pInfoId;
         databaseAccess().updateTipItem(tipItem);
     }
-    //endregion
-    
+
     
     public void editTip()
     {
@@ -192,5 +191,6 @@ public class TipDetailsView extends BaseActivity
         }
         
     }
-    
+    //endregion
+
 }

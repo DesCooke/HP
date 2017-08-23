@@ -1,187 +1,57 @@
 package com.example.des.hp.Budget;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
-import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
-import com.example.des.hp.thirdpartyutils.BadgeView;
-import com.example.des.hp.Notes.NoteItem;
-import com.example.des.hp.Notes.NoteView;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 public class BudgetDetailsView extends BaseActivity
 {
 
-    private ImageView imageView;
-    public int holidayId;
-    public int budgetId;
+    //region Member variables
     public BudgetItem budgetItem;
-    private ImageUtils imageUtils;
     public TextView txtBudgetDescription;
-    public ActionBar actionBar;
     public TextView txtBudgetTotal;
     public TextView txtBudgetPaid;
     public TextView txtBudgetUnpaid;
-    public TextView txtBudgetNotes;
-    public ImageButton btnShowInfo;
-    public BadgeView btnShowInfoBadge;
-    public MyColor myColor;
-    public ImageButton btnShowNotes;
+    public ImageButton btnClear;
+    public Button btnSave;
+    public LinearLayout grpMenuFile;
+    //endregion
 
-    public void clearImage(View view)
-    {
-        try
-        {
-        imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
-        }
-        catch (Exception e)
-        {
-            ShowError("clearImage", e.getMessage());
-        }
-    }
-
-    public void showNotes(View view)
-    {
-        try
-        {
-        Intent intent2 = new Intent(getApplicationContext(), NoteView.class);
-        if(budgetItem.noteId==0)
-        {
-            MyInt myInt = new MyInt();
-            if(!databaseAccess().getNextNoteId(holidayId, myInt))
-                return;
-            budgetItem.noteId = myInt.Value;
-            if(!databaseAccess().updateBudgetItem(budgetItem))
-                return;
-        }
-        intent2.putExtra("ACTION", "view");
-        intent2.putExtra("HOLIDAYID", budgetItem.holidayId);
-        intent2.putExtra("NOTEID", budgetItem.noteId);
-        intent2.putExtra("TITLE", budgetItem.budgetDescription);
-        intent2.putExtra("SUBTITLE", "Notes");
-        startActivity(intent2);
-        }
-        catch (Exception e)
-        {
-            ShowError("showNotes", e.getMessage());
-        }
-    }
-
-    public void showForm()
-    {
-        try {
-            clearImage(null);
-
-            Bundle extras = getIntent().getExtras();
-            if (extras != null) {
-                String action = extras.getString("ACTION");
-                if (action != null && action.equals("view")) {
-                    holidayId = extras.getInt("HOLIDAYID");
-                    budgetId = extras.getInt("BUDGETID");
-                    budgetItem = new BudgetItem();
-                    if (!databaseAccess().getBudgetItem(holidayId, budgetId, budgetItem))
-                        return;
-
-                    actionBar = getSupportActionBar();
-                    if (actionBar != null) {
-                        String title = extras.getString("TITLE");
-                        String subtitle = extras.getString("SUBTITLE");
-                        if (title != null && title.length() > 0) {
-                            actionBar.setTitle(title);
-                            actionBar.setSubtitle(subtitle);
-                        } else {
-                            actionBar.setTitle(budgetItem.budgetDescription);
-                            actionBar.setSubtitle("");
-                        }
-                    }
-
-                    if (!imageUtils.getPageHeaderImage(this, budgetItem.budgetPicture, imageView))
-                        return;
-
-                    txtBudgetDescription.setText(budgetItem.budgetDescription);
-                    txtBudgetTotal.setText(StringUtils.IntToMoneyString(budgetItem.budgetTotal));
-                    txtBudgetUnpaid.setText(StringUtils.IntToMoneyString(budgetItem.budgetUnpaid));
-                    txtBudgetPaid.setText(StringUtils.IntToMoneyString(budgetItem.budgetPaid));
-
-                    txtBudgetNotes.setText(budgetItem.budgetNotes);
-
-                    MyInt lFileCount = new MyInt();
-                    lFileCount.Value = 0;
-                    if (budgetItem.infoId > 0) {
-                        if (!databaseAccess().getExtraFilesCount(budgetItem.infoId, lFileCount))
-                            return;
-                    }
-                    btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
-
-                    if (lFileCount.Value == 0)
-                    {
-                        btnShowInfoBadge.setVisibility(View.INVISIBLE);
-                        if (myColor.SetImageButtonTint(btnShowInfo, R.color.colorDisabled) == false)
-                            return;
-                    } else
-                    {
-                        btnShowInfoBadge.setVisibility(View.VISIBLE);
-                        if (myColor.SetImageButtonTint(btnShowInfo, R.color.colorEnabled) == false)
-                            return;
-                    }
-                    NoteItem noteItem = new NoteItem();
-                    if(!databaseAccess().getNoteItem(budgetItem.holidayId, budgetItem.noteId, noteItem))
-                        return;
-                    if (noteItem.notes.length() == 0)
-                    {
-                        if (myColor.SetImageButtonTint(btnShowNotes, R.color.colorDisabled) == false)
-                            return;
-                    } else {
-                        if (myColor.SetImageButtonTint(btnShowNotes, R.color.colorEnabled) == false)
-                            return;
-                    }
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            ShowError("showForm", e.getMessage());
-        }
-    }
-
+    //region Constructors/Destructors
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_budget_details_view);
-        
         try
         {
-        imageUtils = new ImageUtils(this);
-        myColor = new MyColor(this);
+            layoutName="activity_tip_details_view";
+            setContentView(R.layout.activity_budget_details_view);
 
-        imageView = (ImageView)findViewById(R.id.imageViewSmall);
-        txtBudgetDescription = (TextView) findViewById(R.id.txtBudgetDescription);
-        txtBudgetPaid = (TextView) findViewById(R.id.txtBudgetPaid);
-        txtBudgetUnpaid = (TextView) findViewById(R.id.txtBudgetUnpaid);
-        txtBudgetTotal = (TextView) findViewById(R.id.txtBudgetTotal);
-        txtBudgetNotes = (TextView) findViewById(R.id.txtBudgetNotes);
-        btnShowInfo=(ImageButton) findViewById(R.id.btnShowInfo);
-        btnShowNotes=(ImageButton) findViewById(R.id.btnShowNotes);
+            imageView=(ImageView) findViewById(R.id.imageViewSmall);
+            txtBudgetDescription=(TextView) findViewById(R.id.txtBudgetDescription);
+            txtBudgetPaid=(TextView) findViewById(R.id.txtBudgetPaid);
+            txtBudgetUnpaid=(TextView) findViewById(R.id.txtBudgetUnpaid);
+            txtBudgetTotal=(TextView) findViewById(R.id.txtBudgetTotal);
+            btnClear=(ImageButton) findViewById(R.id.btnClear);
+            btnSave=(Button) findViewById(R.id.btnSave);
+            grpMenuFile=(LinearLayout) findViewById(R.id.grpMenuFile);
 
-        btnShowInfoBadge = new BadgeView(this, btnShowInfo);
-        btnShowInfoBadge.setText(Integer.toString(0));
-        btnShowInfoBadge.show();
+            afterCreate();
 
             showForm();
         }
@@ -191,19 +61,120 @@ public class BudgetDetailsView extends BaseActivity
         }
     }
 
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        try
+        {
+            MenuInflater inflater=getMenuInflater();
+            inflater.inflate(R.menu.budgetdetailsformmenu, menu);
+        }
+        catch(Exception e)
+        {
+            ShowError("onCreateOptionsMenu", e.getMessage());
+        }
+        return true;
+    }
+    //endregion
+
+    //region OnClick Events
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        try
+        {
+            switch(item.getItemId())
+            {
+                case R.id.action_delete_budget:
+                    deleteBudget();
+                    return true;
+                case R.id.action_edit_budget:
+                    editBudget();
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("onOptionsItemSelected", e.getMessage());
+        }
+        return (true);
+    }
+    //endregion
+
+    //region showForm
+    public void showForm()
+    {
+        super.showForm();
+        try
+        {
+            budgetItem=new BudgetItem();
+            if(!databaseAccess().getBudgetItem(holidayId, budgetId, budgetItem))
+                return;
+
+            if(title == null || (title.length() == 0))
+            {
+                SetTitles(budgetItem.budgetDescription, "");
+            } else
+            {
+                SetTitles(title, subTitle);
+            }
+
+            SetImage(budgetItem.budgetPicture);
+
+            txtBudgetDescription.setText(budgetItem.budgetDescription);
+            txtBudgetTotal.setText(StringUtils.IntToMoneyString(budgetItem.budgetTotal));
+            txtBudgetUnpaid.setText(StringUtils.IntToMoneyString(budgetItem.budgetUnpaid));
+            txtBudgetPaid.setText(StringUtils.IntToMoneyString(budgetItem.budgetPaid));
+
+            afterShow();
+        }
+        catch(Exception e)
+        {
+            ShowError("showForm", e.getMessage());
+        }
+    }
+    //endregion
+
+    //region form Functions
+    @Override
+    public int getInfoId()
+    {
+        return (budgetItem.infoId);
+    }
+
+    public void setNoteId(int pNoteId)
+    {
+        budgetItem.noteId=pNoteId;
+        databaseAccess().updateBudgetItem(budgetItem);
+    }
+
+    @Override
+    public int getNoteId()
+    {
+        return (budgetItem.noteId);
+    }
+
+    @Override
+    public void setInfoId(int pInfoId)
+    {
+        budgetItem.infoId=pInfoId;
+        databaseAccess().updateBudgetItem(budgetItem);
+    }
+
     public void editBudget()
     {
         try
         {
-        Intent intent = new Intent(getApplicationContext(), BudgetDetailsEdit.class);
-        intent.putExtra("ACTION", "modify");
-        intent.putExtra("HOLIDAYID", holidayId);
-        intent.putExtra("BUDGETID", budgetId);
-        intent.putExtra("TITLE", actionBar.getTitle());
-        intent.putExtra("SUBTITLE", actionBar.getSubtitle());
-        startActivity(intent);
+            Intent intent=new Intent(getApplicationContext(), BudgetDetailsEdit.class);
+            intent.putExtra("ACTION", "modify");
+            intent.putExtra("HOLIDAYID", holidayId);
+            intent.putExtra("BUDGETID", budgetId);
+            intent.putExtra("TITLE", title);
+            intent.putExtra("SUBTITLE", subTitle);
+            startActivity(intent);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("editBudget", e.getMessage());
         }
@@ -213,91 +184,14 @@ public class BudgetDetailsView extends BaseActivity
     {
         try
         {
-        if(!databaseAccess().deleteBudgetItem(budgetItem))
-            return;
-        finish();
+            if(!databaseAccess().deleteBudgetItem(budgetItem))
+                return;
+            finish();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("deleteBudget", e.getMessage());
         }
     }
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        try
-        {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.budgetdetailsformmenu, menu);
-        }
-        catch (Exception e)
-        {
-            ShowError("onCreateOptionsMenu", e.getMessage());
-        }
-        return true;
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        try
-        {
-            showForm();
-        }
-        catch(Exception e)
-        {
-            ShowError("onResume", e.getMessage());
-        }
-
-    }
-
-    public void showInfo(View view)
-    {
-        try
-        {
-        Intent intent2 = new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
-        if(budgetItem.infoId==0)
-        {
-            MyInt myInt = new MyInt();
-            if(!databaseAccess().getNextFileGroupId(myInt))
-                return;
-            budgetItem.infoId = myInt.Value;
-            if(!databaseAccess().updateBudgetItem(budgetItem))
-                return;
-        }
-        intent2.putExtra("FILEGROUPID", budgetItem.infoId);
-        intent2.putExtra("TITLE", budgetItem.budgetDescription);
-        intent2.putExtra("SUBTITLE", "Info");
-        startActivity(intent2);
-                    }
-        catch (Exception e)
-        {
-            ShowError("showInfo", e.getMessage());
-        }
-
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        try
-        {
-        switch (item.getItemId())
-        {
-            case R.id.action_delete_budget:
-                deleteBudget();
-                return true;
-            case R.id.action_edit_budget:
-                editBudget();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-        }
-        catch (Exception e)
-        {
-            ShowError("onOptionsItemSelected", e.getMessage());
-        }
-        return(true);
-    }
+    //endregion
 }
