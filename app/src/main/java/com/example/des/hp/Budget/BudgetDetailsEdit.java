@@ -1,17 +1,10 @@
 package com.example.des.hp.Budget;
 
-import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.graphics.BitmapFactory;
-import android.widget.TextView;
 
-import com.example.des.hp.Database.DatabaseAccess;
-import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -24,7 +17,6 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
     //region Member variables
     public View.OnClickListener dwetOnOkClick;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
-    public DialogWithMultiEditTextFragment dialogWithMultiEditTextFragment;
     //endregion
 
     //region Constructors/Destructors
@@ -42,7 +34,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             {
                 grpMenuFile.setVisibility(View.GONE);
                 txtBudgetDescription.setText(getString(R.string.schedule_unknown));
-                txtBudgetTotal.setText("");
+                txtBudgetTotal.setText(getString(R.string.caption_zero));
             }
             grpBudgetDescription.setOnClickListener(this);
             grpBudgetTotal.setOnClickListener(this);
@@ -56,146 +48,46 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
         }
     }
 
-
-    public void pickImage(View view)
-    {
-        try
-        {
-            Intent photoPickerIntent=new Intent(Intent.ACTION_PICK);
-            photoPickerIntent.setType("image/*");
-            startActivityForResult(photoPickerIntent, SELECT_PHOTO);
-        }
-        catch(Exception e)
-        {
-            ShowError("pickImage", e.getMessage());
-        }
-    }
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent)
+    public boolean onPrepareOptionsMenu(Menu menu)
     {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        try
+        /* disable the menu entirely */
+        return false;
+    }
+    //endregion
+    
+    //region OnClick Events
+    public void onClick(View view)
+    {
+        switch (view.getId())
         {
-            switch(requestCode)
-            {
-                case SELECT_PHOTO:
-                    if(resultCode == RESULT_OK)
-                    {
-                        try
-                        {
-                            MyBitmap myBitmap=new MyBitmap();
-                            Boolean lRetCode=imageUtils.ScaleBitmapFromUrl(imageReturnedIntent.getData(), getContentResolver(), myBitmap);
-                            if(!lRetCode)
-                                return;
-
-                            // assign new bitmap and set scale type
-                            imageViewSmall.setImageBitmap(myBitmap.Value);
-
-                            cbPicturePicked.setChecked(true);
-
-                            budgetItem.pictureChanged=true;
-
-
-                        }
-                        catch(Exception e)
-                        {
-                            ShowError("onActivityResult-selectphoto", e.getMessage());
-                        }
-                    }
-                    break;
-
-            }
-        }
-        catch(Exception e)
-        {
-            ShowError("onActivityResult", e.getMessage());
+            case R.id.grpBudgetDescription:
+                pickBudgetDescription(view);
+                break;
+            
+            case R.id.grpBudgetTotal:
+                pickBudgetTotal(view);
+                break;
+            
+            case R.id.grpBudgetPaid:
+                pickBudgetPaid(view);
+                break;
+            
+            case R.id.grpBudgetUnpaid:
+                pickBudgetUnpaid(view);
+                break;
+            
+            case R.id.imageViewSmall:
+                pickImage(view);
+                break;
         }
     }
-
-    public void clearImage(View view)
-    {
-        try
-        {
-            cbPicturePicked.setChecked(false);
-            imageViewSmall.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
-        }
-        catch(Exception e)
-        {
-            ShowError("clearImage", e.getMessage());
-        }
-    }
-
-    public void btnClearImage(View view)
-    {
-        try
-        {
-            clearImage(view);
-            budgetItem.pictureChanged=true;
-            budgetItem.pictureAssigned=false;
-        }
-        catch(Exception e)
-        {
-            ShowError("btnClearImage", e.getMessage());
-        }
-    }
-
-    public void saveTask(View view)
-    {
-        try
-        {
-            MyInt myInt=new MyInt();
-
-            myMessages().ShowMessageShort("Saving " + budgetDescription.getText().toString());
-
-            budgetItem.pictureAssigned=cbPicturePicked.isChecked();
-            budgetItem.budgetDescription=budgetDescription.getText().toString();
-            budgetItem.budgetTotal=Integer.parseInt(removePoundSign(budgetTotal.getText().toString()));
-            budgetItem.budgetPaid=Integer.parseInt(removePoundSign(budgetPaid.getText().toString()));
-            budgetItem.budgetUnpaid=Integer.parseInt(removePoundSign(budgetUnpaid.getText().toString()));
-            budgetItem.fileBitmap=null;
-            if(budgetItem.pictureAssigned)
-                budgetItem.fileBitmap=((BitmapDrawable) imageViewSmall.getDrawable()).getBitmap();
-
-            budgetItem.budgetNotes=txtBudgetNotes.getText().toString();
-
-            if(action.equals("add"))
-            {
-                budgetItem.holidayId=holidayId;
-                if(!databaseAccess().getNextBudgetId(holidayId, myInt))
-                    return;
-                budgetItem.budgetId=myInt.Value;
-
-                if(!databaseAccess().getNextBudgetSequenceNo(holidayId, myInt))
-                    return;
-                budgetItem.sequenceNo=myInt.Value;
-
-                if(!databaseAccess().addBudgetItem(budgetItem))
-                    return;
-            }
-
-            if(action.equals("modify"))
-            {
-                budgetItem.holidayId=holidayId;
-                budgetItem.budgetId=budgetId;
-                if(!databaseAccess().updateBudgetItem(budgetItem))
-                    return;
-            }
-
-            finish();
-        }
-        catch(Exception e)
-        {
-            ShowError("saveTask", e.getMessage());
-        }
-    }
-
-
+    
     public void BudgetDescriptionPicked(View view)
     {
         try
         {
-            budgetDescription.setText(dialogWithEditTextFragment.getFinalText());
+            txtBudgetDescription.setText(dialogWithEditTextFragment.getFinalText());
 
             dialogWithEditTextFragment.dismiss();
         }
@@ -223,7 +115,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
                 "hihi",            // unique name for this dialog type
                 "Budget Description",    // form caption
                 "Description",             // form message
-                R.drawable.attachment, budgetDescription.getText().toString(),                // initial text
+                R.drawable.attachment, txtBudgetDescription.getText().toString(),                // initial text
                 dwetOnOkClick, this, false
             );
 
@@ -239,10 +131,25 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
     {
         try
         {
-            int lTotal=Integer.parseInt(removePoundSign(budgetTotal.getText().toString()));
-            int lPaid=Integer.parseInt(removePoundSign(budgetPaid.getText().toString()));
+            int lTotal=Integer.parseInt(removePoundSign(txtBudgetTotal.getText().toString()));
+            int lPaid=Integer.parseInt(removePoundSign(txtBudgetPaid.getText().toString()));
             int lUnpaid=lTotal - lPaid;
-            budgetUnpaid.setText(StringUtils.IntToMoneyString(lUnpaid));
+            txtBudgetUnpaid.setText(StringUtils.IntToMoneyString(lUnpaid));
+        }
+        catch(Exception e)
+        {
+            ShowError("calculateUnpaid", e.getMessage());
+        }
+    }
+
+    public void calculatePaid()
+    {
+        try
+        {
+            int lTotal=Integer.parseInt(removePoundSign(txtBudgetTotal.getText().toString()));
+            int lUnpaid=Integer.parseInt(removePoundSign(txtBudgetUnpaid.getText().toString()));
+            int lPaid=lTotal - lUnpaid;
+            txtBudgetPaid.setText(StringUtils.IntToMoneyString(lPaid));
         }
         catch(Exception e)
         {
@@ -254,7 +161,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
     {
         try
         {
-            budgetTotal.setText(StringUtils.StringToMoneyString(dialogWithEditTextFragment.getFinalText()));
+            txtBudgetTotal.setText(StringUtils.StringToMoneyString(dialogWithEditTextFragment.getFinalText()));
             calculateUnpaid();
             dialogWithEditTextFragment.dismiss();
         }
@@ -287,7 +194,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
                 "hihi",            // unique name for this dialog type
                 "Budget Total",    // form caption
                 "Total",             // form message
-                R.drawable.attachment, removePoundSign(budgetTotal.getText().toString()), dwetOnOkClick, this, true
+                R.drawable.attachment, removePoundSign(txtBudgetTotal.getText().toString()), dwetOnOkClick, this, true
             );
 
             dialogWithEditTextFragment.showIt();
@@ -302,7 +209,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
     {
         try
         {
-            budgetPaid.setText(StringUtils.StringToMoneyString(dialogWithEditTextFragment.getFinalText()));
+            txtBudgetPaid.setText(StringUtils.StringToMoneyString(dialogWithEditTextFragment.getFinalText()));
             calculateUnpaid();
             dialogWithEditTextFragment.dismiss();
         }
@@ -330,7 +237,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
                 "hihi",            // unique name for this dialog type
                 "Budget Paid",    // form caption
                 "Paid",             // form message
-                R.drawable.attachment, removePoundSign(budgetPaid.getText().toString()), dwetOnOkClick, this, true
+                R.drawable.attachment, removePoundSign(txtBudgetPaid.getText().toString()), dwetOnOkClick, this, true
             );
 
             dialogWithEditTextFragment.showIt();
@@ -345,8 +252,10 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
     {
         try
         {
-            budgetUnpaid.setText(StringUtils.StringToMoneyString(dialogWithEditTextFragment.getFinalText()));
+            txtBudgetUnpaid.setText(StringUtils.StringToMoneyString(dialogWithEditTextFragment.getFinalText()));
 
+            calculatePaid();
+            
             dialogWithEditTextFragment.dismiss();
         }
         catch(Exception e)
@@ -373,7 +282,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
                 "hihi",            // unique name for this dialog type
                 "Budget Unpaid",    // form caption
                 "Unpaid",             // form message
-                R.drawable.attachment, removePoundSign(budgetUnpaid.getText().toString()), dwetOnOkClick, this, true
+                R.drawable.attachment, removePoundSign(txtBudgetUnpaid.getText().toString()), dwetOnOkClick, this, true
             );
 
             dialogWithEditTextFragment.showIt();
@@ -383,50 +292,58 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             ShowError("pickBudgetUnpaid", e.getMessage());
         }
     }
-
-    public void BudgetNotesPicked(View view)
+    //endregion
+    
+    //region Saving
+    public void saveSchedule(View view)
     {
         try
         {
-            txtBudgetNotes.setText(dialogWithMultiEditTextFragment.getFinalText());
+            myMessages().ShowMessageShort("Saving " + txtBudgetDescription.getText().toString());
 
-            dialogWithMultiEditTextFragment.dismiss();
-        }
-        catch(Exception e)
-        {
-            ShowError("BudgetNotesPicked", e.getMessage());
-        }
-    }
+            MyInt myInt=new MyInt();
 
-    // Create a YES onclick procedure
-    public void pickBudgetNotes(View view)
-    {
-        try
-        {
-            dwetOnOkClick=new View.OnClickListener()
+            budgetItem.budgetDescription=txtBudgetDescription.getText().toString();
+            budgetItem.budgetTotal=Integer.parseInt(removePoundSign(txtBudgetTotal.getText().toString()));
+            budgetItem.budgetPaid=Integer.parseInt(removePoundSign(txtBudgetPaid.getText().toString()));
+            budgetItem.budgetUnpaid=Integer.parseInt(removePoundSign(txtBudgetUnpaid.getText().toString()));
+            budgetItem.budgetNotes="";
+            
+            budgetItem.pictureAssigned = imageSet;
+            budgetItem.pictureChanged = imageChanged;
+            budgetItem.fileBitmap = null;
+            if (imageSet)
+                budgetItem.fileBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            
+            if(action.equals("add"))
             {
-                public void onClick(View view)
-                {
-                    BudgetNotesPicked(view);
-                }
-            };
+                budgetItem.holidayId=holidayId;
+                if(!databaseAccess().getNextBudgetId(holidayId, myInt))
+                    return;
+                budgetItem.budgetId=myInt.Value;
 
+                if(!databaseAccess().getNextBudgetSequenceNo(holidayId, myInt))
+                    return;
+                budgetItem.sequenceNo=myInt.Value;
 
-            dialogWithMultiEditTextFragment=DialogWithMultiEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
-                "hjhj",            // unique name for this dialog type
-                "Budget Notes",    // form caption
-                "Budget",             // form message
-                R.drawable.attachment, txtBudgetNotes.getText().toString(),                // initial text
-                dwetOnOkClick, this
-            );
+                if(!databaseAccess().addBudgetItem(budgetItem))
+                    return;
+            }
 
+            if(action.equals("modify"))
+            {
+                if(!databaseAccess().updateBudgetItem(budgetItem))
+                    return;
+            }
 
-            dialogWithMultiEditTextFragment.showIt();
+            finish();
         }
         catch(Exception e)
         {
-            ShowError("pickBudgetNotes", e.getMessage());
+            ShowError("saveTask", e.getMessage());
         }
     }
+    //endregion
+
 
 }

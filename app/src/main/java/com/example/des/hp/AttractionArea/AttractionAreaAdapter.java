@@ -113,7 +113,7 @@ class AttractionAreaAdapter extends RecyclerView.Adapter<AttractionAreaAdapter.V
         notifyDataSetChanged();
     }
 
-    boolean onItemMove() {
+    boolean onItemMove(int from, int to) {
         updateGlobalData(data);
         return true;
     }

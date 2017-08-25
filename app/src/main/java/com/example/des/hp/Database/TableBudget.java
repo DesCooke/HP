@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Budget.BudgetItem;
+import com.example.des.hp.R;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyMessages;
 import com.example.des.hp.myutils.MyString;
@@ -384,7 +385,7 @@ class TableBudget extends TableBase
         BudgetItem totalBudgetItem=new BudgetItem();
         totalBudgetItem.sequenceNo = 9999;
         
-        totalBudgetItem.budgetDescription="Total";
+        totalBudgetItem.budgetDescription=_context.getString(R.string.caption_budget_total_marker);
         MyInt myInt = new MyInt();
         
         getBudgetPaid(holidayId, myInt);

@@ -1,166 +1,34 @@
 package com.example.des.hp.Contact;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
-import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
 import com.example.des.hp.R;
-import com.example.des.hp.myutils.*;
-import com.example.des.hp.thirdpartyutils.BadgeView;
-import com.example.des.hp.Notes.NoteItem;
-import com.example.des.hp.Notes.NoteView;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 public class ContactDetailsView extends BaseActivity
 {
     
-    private ImageView imageView;
-    public int holidayId;
-    public int contactId;
+    //region Member variables
     public ContactItem contactItem;
-    private ImageUtils imageUtils;
     public TextView txtContactDescription;
-    public ActionBar actionBar;
-    public TextView txtContactNotes;
-    public ImageButton btnShowInfo;
-    public BadgeView btnShowInfoBadge;
-    public MyColor myColor;
-    public ImageButton btnShowNotes;
+    public ImageButton btnClear;
+    public Button btnSave;
+    public LinearLayout grpMenuFile;
+    public LinearLayout grpContactDescription;
+    //endregion
     
-    public void clearImage(View view)
-    {
-        try
-        {
-            imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing));
-        }
-        catch (Exception e)
-        {
-            ShowError("clearImage", e.getMessage());
-        }
-    }
-    
-    public void showNotes(View view)
-    {
-        try
-        {
-            Intent intent2 = new Intent(getApplicationContext(), NoteView.class);
-            if (contactItem.noteId == 0)
-            {
-                MyInt myInt = new MyInt();
-                if (!databaseAccess().getNextNoteId(holidayId, myInt))
-                    return;
-                contactItem.noteId = myInt.Value;
-                if (!databaseAccess().updateContactItem(contactItem))
-                    return;
-            }
-            intent2.putExtra("ACTION", "view");
-            intent2.putExtra("HOLIDAYID", contactItem.holidayId);
-            intent2.putExtra("NOTEID", contactItem.noteId);
-            intent2.putExtra("TITLE", contactItem.contactDescription);
-            intent2.putExtra("SUBTITLE", "Notes");
-            startActivity(intent2);
-        }
-        catch (Exception e)
-        {
-            ShowError("showNotes", e.getMessage());
-        }
-    }
-    
-    public void showForm()
-    {
-        try
-        {
-            clearImage(null);
-            
-            Bundle extras = getIntent().getExtras();
-            if (extras != null)
-            {
-                String action = extras.getString("ACTION");
-                if (action != null && action.equals("view"))
-                {
-                    holidayId = extras.getInt("HOLIDAYID");
-                    contactId = extras.getInt("CONTACTID");
-                    contactItem = new ContactItem();
-                    if (!databaseAccess().getContactItem(holidayId, contactId, contactItem))
-                        return;
-                    
-                    actionBar = getSupportActionBar();
-                    if (actionBar != null)
-                    {
-                        String title = extras.getString("TITLE");
-                        String subtitle = extras.getString("SUBTITLE");
-                        if (title != null && title.length() > 0)
-                        {
-                            actionBar.setTitle(title);
-                            actionBar.setSubtitle(subtitle);
-                        } else
-                        {
-                            actionBar.setTitle(contactItem.contactDescription);
-                            actionBar.setSubtitle("");
-                        }
-                    }
-                    
-                    if (!imageUtils.getPageHeaderImage(this, contactItem.contactPicture, imageView))
-                        return;
-                    
-                    txtContactDescription.setText(contactItem.contactDescription);
-                    
-                    txtContactNotes.setText(contactItem.contactNotes);
-                    MyInt lFileCount = new MyInt();
-                    lFileCount.Value = 0;
-                    if (contactItem.infoId > 0)
-                    {
-                        if (!databaseAccess().getExtraFilesCount(contactItem.infoId, lFileCount))
-                            return;
-                    }
-                    btnShowInfoBadge.setText(Integer.toString(lFileCount.Value));
-                    
-                    if (lFileCount.Value == 0)
-                    {
-                        btnShowInfoBadge.setVisibility(View.INVISIBLE);
-                        if (myColor.SetImageButtonTint(btnShowInfo, R.color.colorDisabled) == false)
-                            return;
-                    } else
-                    {
-                        btnShowInfoBadge.setVisibility(View.VISIBLE);
-                        if (myColor.SetImageButtonTint(btnShowInfo, R.color.colorEnabled) == false)
-                            return;
-                    }
-                    
-                    NoteItem noteItem = new NoteItem();
-                    if (!databaseAccess().getNoteItem(contactItem.holidayId, contactItem.noteId, noteItem))
-                        return;
-                    if (noteItem.notes.length() == 0)
-                    {
-                        if (myColor.SetImageButtonTint(btnShowNotes, R.color.colorDisabled) == false)
-                            return;
-                    } else
-                    {
-                        if (myColor.SetImageButtonTint(btnShowNotes, R.color.colorEnabled) == false)
-                            return;
-                    }
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            ShowError("showForm", e.getMessage());
-        }
-        
-    }
-    
+    //region Constructors/Destructors
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -168,57 +36,23 @@ public class ContactDetailsView extends BaseActivity
         
         try
         {
+            layoutName = "activity_contact_details_view";
             setContentView(R.layout.activity_contact_details_view);
-            imageUtils = new ImageUtils(this);
-            myColor = new MyColor(this);
             
             imageView = (ImageView) findViewById(R.id.imageViewSmall);
             txtContactDescription = (TextView) findViewById(R.id.txtContactDescription);
-            txtContactNotes = (TextView) findViewById(R.id.txtContactNotes);
-            btnShowInfo = (ImageButton) findViewById(R.id.btnShowInfo);
-            btnShowNotes = (ImageButton) findViewById(R.id.btnShowNotes);
+            btnClear = (ImageButton) findViewById(R.id.btnClear);
+            btnSave = (Button) findViewById(R.id.btnSave);
+            grpMenuFile = (LinearLayout) findViewById(R.id.grpMenuFile);
+            grpContactDescription = (LinearLayout) findViewById(R.id.grpContactDescription);
             
-            btnShowInfoBadge = new BadgeView(this, btnShowInfo);
-            btnShowInfoBadge.setText(Integer.toString(0));
-            btnShowInfoBadge.show();
+            afterCreate();
             
             showForm();
         }
         catch (Exception e)
         {
             ShowError("onCreate", e.getMessage());
-        }
-    }
-    
-    public void editContact()
-    {
-        try
-        {
-            Intent intent = new Intent(getApplicationContext(), ContactDetailsEdit.class);
-            intent.putExtra("ACTION", "modify");
-            intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("CONTACTID", contactId);
-            intent.putExtra("TITLE", actionBar.getTitle());
-            intent.putExtra("SUBTITLE", actionBar.getSubtitle());
-            startActivity(intent);
-        }
-        catch (Exception e)
-        {
-            ShowError("editContact", e.getMessage());
-        }
-    }
-    
-    public void deleteContact()
-    {
-        try
-        {
-            if (!databaseAccess().deleteContactItem(contactItem))
-                return;
-            finish();
-        }
-        catch (Exception e)
-        {
-            ShowError("deleteContact", e.getMessage());
         }
     }
     
@@ -235,47 +69,9 @@ public class ContactDetailsView extends BaseActivity
         }
         return true;
     }
+    //endregion
     
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        try
-        {
-            showForm();
-        }
-        catch (Exception e)
-        {
-            ShowError("onResume", e.getMessage());
-        }
-    }
-    
-    public void showInfo(View view)
-    {
-        try
-        {
-            Intent intent2 = new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
-            if (contactItem.infoId == 0)
-            {
-                MyInt myInt = new MyInt();
-                if (!databaseAccess().getNextFileGroupId(myInt))
-                    return;
-                contactItem.infoId = myInt.Value;
-                if (!databaseAccess().updateContactItem(contactItem))
-                    return;
-            }
-            intent2.putExtra("FILEGROUPID", contactItem.infoId);
-            intent2.putExtra("TITLE", contactItem.contactDescription);
-            intent2.putExtra("SUBTITLE", "Info");
-            startActivity(intent2);
-        }
-        catch (Exception e)
-        {
-            ShowError("showInfo", e.getMessage());
-        }
-    }
-    
-    
+    //region OnClick Events
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -299,4 +95,96 @@ public class ContactDetailsView extends BaseActivity
         }
         return (true);
     }
+    //endregion
+    
+    //region showForm
+    public void showForm()
+    {
+        super.showForm();
+        try
+        {
+            contactItem = new ContactItem();
+            if (!databaseAccess().getContactItem(holidayId, contactId, contactItem))
+                return;
+            
+            if (title == null || (title.length() == 0))
+            {
+                SetTitles(contactItem.contactDescription, "");
+            } else
+            {
+                SetTitles(title, subTitle);
+            }
+            
+            SetImage(contactItem.contactPicture);
+            
+            txtContactDescription.setText(contactItem.contactDescription);
+
+            afterShow();
+        }
+        catch (Exception e)
+        {
+            ShowError("showForm", e.getMessage());
+        }
+        
+    }
+    //endregion
+
+    //region form Functions
+    @Override
+    public int getInfoId()
+    {
+        return (contactItem.infoId);
+    }
+
+    public void setNoteId(int pNoteId)
+    {
+        contactItem.noteId=pNoteId;
+        databaseAccess().updateContactItem(contactItem);
+    }
+
+    @Override
+    public int getNoteId()
+    {
+        return (contactItem.noteId);
+    }
+
+    @Override
+    public void setInfoId(int pInfoId)
+    {
+        contactItem.infoId=pInfoId;
+        databaseAccess().updateContactItem(contactItem);
+    }
+
+    public void editContact()
+    {
+        try
+        {
+            Intent intent = new Intent(getApplicationContext(), ContactDetailsEdit.class);
+            intent.putExtra("ACTION", "modify");
+            intent.putExtra("HOLIDAYID", holidayId);
+            intent.putExtra("CONTACTID", contactId);
+            intent.putExtra("TITLE", title);
+            intent.putExtra("SUBTITLE", subTitle);
+            startActivity(intent);
+        }
+        catch (Exception e)
+        {
+            ShowError("editContact", e.getMessage());
+        }
+    }
+    
+    public void deleteContact()
+    {
+        try
+        {
+            if (!databaseAccess().deleteContactItem(contactItem))
+                return;
+            finish();
+        }
+        catch (Exception e)
+        {
+            ShowError("deleteContact", e.getMessage());
+        }
+    }
+    //endregion
 }

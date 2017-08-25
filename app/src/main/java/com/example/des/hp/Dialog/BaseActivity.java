@@ -100,6 +100,7 @@ public class BaseActivity extends AppCompatActivity
     public int tipGroupId = 0;
     public int tipId = 0;
     public int budgetId = 0;
+    public int contactId = 0;
     
     public boolean reloadOnShow = true;
     public boolean hideImageIfEmpty = false;
@@ -523,6 +524,7 @@ public class BaseActivity extends AppCompatActivity
             tipGroupId = extras.getInt("TIPGROUPID");
             tipId = extras.getInt("TIPID");
             budgetId = extras.getInt("BUDGETID");
+            contactId = extras.getInt("CONTACTID");
         }
     }
     

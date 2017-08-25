@@ -73,6 +73,8 @@ public class AttractionDetailsView extends BaseActivity
     
         try
         {
+            allowCellMove=true;
+
             attractionItem = new AttractionItem();
     
             if (action != null && action.equals("add"))
@@ -95,8 +97,10 @@ public class AttractionDetailsView extends BaseActivity
             {
                 SetTitles(attractionItem.attractionDescription, "");
             }
+
+            afterShow();
+
         }
-    
         catch (Exception e)
         {
             ShowError("showForm", e.getMessage());
@@ -161,6 +165,7 @@ public class AttractionDetailsView extends BaseActivity
         }
 
     }
-    //endregion
+ 
+   //endregion
 
 }

@@ -118,7 +118,7 @@ class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.ViewHolde
         notifyDataSetChanged();
     }
 
-    boolean onItemMove()
+    boolean onItemMove(int from, int to)
     {
         updateGlobalData(data);
         return true;

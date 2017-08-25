@@ -2,36 +2,67 @@ package com.example.des.hp.Contact;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
-import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
-import com.example.des.hp.myutils.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
-/**
- * * Created by Des on 02/11/2016.
- */
-
 public class ContactDetailsList extends BaseActivity
 {
     
+    //region Member Variables
     public ArrayList<ContactItem> contactList;
-    public int holidayId;
     public ContactAdapter contactAdapter;
-    public String title;
-    public String subtitle;
-    public ActionBar actionBar;
+    //endregion
     
+    //region Constructors/Destructors
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        
+        try
+        {
+                
+            layoutName = "activity_contact_list";
+            setContentView(R.layout.activity_contact_list);
+            
+            afterCreate();
+            
+            showForm();
+        }
+        catch (Exception e)
+        {
+            ShowError("onCreate", e.getMessage());
+        }
+        
+    }
+    
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        try
+        {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.contact_list_add, menu);
+        }
+        catch (Exception e)
+        {
+            ShowError("onCreateOptionsMenu", e.getMessage());
+        }
+        
+        return true;
+    }
+    //endregion
+    
+    //region Form Functions
     public void showContactAdd(View view)
     {
         try
@@ -49,34 +80,18 @@ public class ContactDetailsList extends BaseActivity
     
     public void showForm()
     {
+        super.showForm();
         try
         {
-            if (actionBar != null)
-            {
-                if (title.length() > 0)
-                {
-                    actionBar.setTitle(title);
-                    actionBar.setSubtitle(subtitle);
-                } else
-                {
-                    actionBar.setTitle("Contact");
-                    actionBar.setSubtitle("Contact");
-                }
-            }
+            allowCellMove = true;
             
             contactList = new ArrayList<>();
             if (!databaseAccess().getContactList(holidayId, contactList))
                 return;
-            
-            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.contactListView);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setHasFixedSize(true);
-            //listView1.setDivider(null);
             contactAdapter = new ContactAdapter(this, contactList);
-            recyclerView.setAdapter(contactAdapter);
             
-            itemTouchHelper.attachToRecyclerView(recyclerView);
-            
+            CreateRecyclerView(R.id.contactListView, contactAdapter);
+
             contactAdapter.setOnItemClickListener
                 (
                     new ContactAdapter.OnItemClickListener()
@@ -88,16 +103,14 @@ public class ContactDetailsList extends BaseActivity
                             intent.putExtra("ACTION", "view");
                             intent.putExtra("HOLIDAYID", contactList.get(position).holidayId);
                             intent.putExtra("CONTACTID", contactList.get(position).contactId);
-                            if (actionBar != null)
-                            {
-                                intent.putExtra("TITLE", actionBar.getTitle() + "/" +
-                                    actionBar.getSubtitle());
+                                intent.putExtra("TITLE", title + "/" + subTitle);
                                 intent.putExtra("SUBTITLE", contactList.get(position).contactDescription);
-                            }
                             startActivity(intent);
                         }
                     }
                 );
+            
+            afterShow();
         }
         catch (Exception e)
         {
@@ -105,119 +118,48 @@ public class ContactDetailsList extends BaseActivity
         }
         
     }
-    
-    // handle swipe to delete, and draggable
-    ItemTouchHelper itemTouchHelper =
-        new ItemTouchHelper
-            (
-                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)
-                {
-                    int dragFrom = -1;
-                    int dragTo = -1;
-                    
-                    @Override
-                    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
-                    {
-                        int fromPosition = viewHolder.getAdapterPosition();
-                        int toPosition = target.getAdapterPosition();
-                        
-                        
-                        if (dragFrom == -1)
-                        {
-                            dragFrom = fromPosition;
-                        }
-                        dragTo = toPosition;
-                        
-                        if (fromPosition < toPosition)
-                        {
-                            for (int i = fromPosition; i < toPosition; i++)
-                            {
-                                Collections.swap(contactAdapter.data, i, i + 1);
-                            }
-                        } else
-                        {
-                            for (int i = fromPosition; i > toPosition; i--)
-                            {
-                                Collections.swap(contactAdapter.data, i, i - 1);
-                            }
-                        }
-                        contactAdapter.notifyItemMoved(fromPosition, toPosition);
-                        
-                        return true;
-                    }
-                    
-                    @Override
-                    public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
-                    {
-                        int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-                        int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-                        return makeMovementFlags(dragFlags, swipeFlags);
-                    }
-                    
-                    @Override
-                    public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction)
-                    {
-                    }
-                    
-                    @Override
-                    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
-                    {
-                        super.clearView(recyclerView, viewHolder);
-                        
-                        if (dragFrom != -1 && dragTo != -1 && dragFrom != dragTo)
-                        {
-                            contactAdapter.onItemMove();
-                        }
-                        
-                        dragFrom = dragTo = -1;
-                    }
-                    
-                }
-            );
-    
     @Override
-    protected void onResume()
+    public void SwapItems(int from, int to)
     {
-        super.onResume();
-        
-        try
-        {
-            showForm();
-        }
-        catch (Exception e)
-        {
-            ShowError("onResume", e.getMessage());
-        }
-        
+        Collections.swap(contactAdapter.data, from, to);
     }
     
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void OnItemMove(int from, int to)
     {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contact_list);
-        
+        contactAdapter.onItemMove(from, to);
+    }
+    
+    @Override
+    public void NotifyItemMoved(int from, int to)
+    {
+        contactAdapter.notifyItemMoved(from, to);
+    }
+    //endregion
+    
+    
+    //region OnClick Events
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         try
         {
-            actionBar = getSupportActionBar();
-            
-            title = "";
-            subtitle = "";
-            Bundle extras = getIntent().getExtras();
-            if (extras != null)
+            switch (item.getItemId())
             {
-                holidayId = extras.getInt("HOLIDAYID");
-                title = extras.getString("TITLE");
-                subtitle = extras.getString("SUBTITLE");
+                case R.id.action_add_contact:
+                    showContactAdd(null);
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
             }
-            showForm();
         }
         catch (Exception e)
         {
-            ShowError("onCreate", e.getMessage());
+            ShowError("onOptionsItemSelected", e.getMessage());
         }
-        
+        return true;
     }
+    //endregion
     
 }
 

@@ -99,14 +99,18 @@ public class BudgetDetailsList extends BaseActivity
                         @Override
                         public void onItemClick(View view, BudgetItem obj, int position)
                         {
-                            Intent intent = new Intent(getApplicationContext(), BudgetDetailsView.class);
-                            intent.putExtra("ACTION", "view");
-                            intent.putExtra("HOLIDAYID", budgetList.get(position).holidayId);
-                            intent.putExtra("BUDGETID", budgetList.get(position).budgetId);
-                            intent.putExtra("TITLE", title + "/" + subTitle);
-                            intent.putExtra("SUBTITLE", budgetList.get(position).budgetDescription);
-                            
-                            startActivity(intent);
+                            BudgetItem item = budgetList.get(position);
+                            if (!item.budgetDescription.equals(getString(R.string.caption_budget_total_marker)))
+                            {
+                                Intent intent = new Intent(getApplicationContext(), BudgetDetailsView.class);
+                                intent.putExtra("ACTION", "view");
+                                intent.putExtra("HOLIDAYID", item.holidayId);
+                                intent.putExtra("BUDGETID", item.budgetId);
+                                intent.putExtra("TITLE", title + "/" + subTitle);
+                                intent.putExtra("SUBTITLE", item.budgetDescription);
+                                
+                                startActivity(intent);
+                            }
                         }
                     }
                 );
@@ -122,19 +126,18 @@ public class BudgetDetailsList extends BaseActivity
         
     }
     
-
     @Override
     public void SwapItems(int from, int to)
     {
         Collections.swap(budgetAdapter.data, from, to);
     }
-
+    
     @Override
     public void OnItemMove(int from, int to)
     {
         budgetAdapter.onItemMove(from, to);
     }
-
+    
     @Override
     public void NotifyItemMoved(int from, int to)
     {
@@ -148,7 +151,7 @@ public class BudgetDetailsList extends BaseActivity
     {
         try
         {
-            switch(item.getItemId())
+            switch (item.getItemId())
             {
                 case R.id.action_add_budget:
                     showBudgetAdd(null);
@@ -157,13 +160,13 @@ public class BudgetDetailsList extends BaseActivity
                     return super.onOptionsItemSelected(item);
             }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("onOptionsItemSelected", e.getMessage());
         }
         return true;
     }
     //endregion
-
+    
 }
 

@@ -113,7 +113,7 @@ class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder>
         notifyDataSetChanged();
     }
 
-    boolean onItemMove() {
+    boolean onItemMove(int from, int to) {
         updateGlobalData(data);
         return true;
     }

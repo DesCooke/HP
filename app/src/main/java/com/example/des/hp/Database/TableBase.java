@@ -22,7 +22,7 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class TableBase
 {
-    private Context _context;
+    public Context _context;
     private SQLiteOpenHelper _dbHelper;
     public Resources _resources;
     DateUtils _dateUtils;
