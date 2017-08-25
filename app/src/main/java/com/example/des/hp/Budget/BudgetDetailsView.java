@@ -29,6 +29,10 @@ public class BudgetDetailsView extends BaseActivity
     public ImageButton btnClear;
     public Button btnSave;
     public LinearLayout grpMenuFile;
+    public LinearLayout grpBudgetDescription;
+    public LinearLayout grpBudgetTotal;
+    public LinearLayout grpBudgetPaid;
+    public LinearLayout grpBudgetUnpaid;
     //endregion
 
     //region Constructors/Destructors
@@ -50,6 +54,10 @@ public class BudgetDetailsView extends BaseActivity
             btnClear=(ImageButton) findViewById(R.id.btnClear);
             btnSave=(Button) findViewById(R.id.btnSave);
             grpMenuFile=(LinearLayout) findViewById(R.id.grpMenuFile);
+            grpBudgetDescription=(LinearLayout) findViewById(R.id.grpBudgetDescription);
+            grpBudgetTotal=(LinearLayout) findViewById(R.id.grpBudgetTotal);
+            grpBudgetPaid=(LinearLayout) findViewById(R.id.grpBudgetPaid);
+            grpBudgetUnpaid=(LinearLayout) findViewById(R.id.grpBudgetUnpaid);
 
             afterCreate();
 
