@@ -68,11 +68,11 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/attractionAreaListView"
-            android:scrollingCache="false"
-            android:cacheColorHint="#0000"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="#0000"
             android:scrollbars="vertical"
-            android:layout_height="0dp">
+            android:scrollingCache="false">
 
         </android.support.v7.widget.RecyclerView>
     </LinearLayout>

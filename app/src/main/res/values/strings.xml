@@ -125,6 +125,6 @@
     <string name="caption_budget_total_marker">Total</string>
     <string name="caption_zero">0</string>
     <string name="caption_contactdescription">Description</string>
-
+    <string name="caption_attractionareadescription">Description</string>
 
 </resources>

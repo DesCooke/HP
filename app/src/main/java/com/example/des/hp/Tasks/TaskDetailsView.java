@@ -214,5 +214,6 @@ public class TaskDetailsView extends BaseActivity
         }
         
     }
+    //endregion
     
 }

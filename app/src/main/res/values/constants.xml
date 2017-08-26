@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="program_version">4.06.000</string>
-    <string name="program_date">23-08-2017 12:00:00</string>
+    <string name="program_version">5.00.000</string>
+    <string name="program_date">26-08-2017 09:45:00</string>
     <string name="application_file_path">/storage/emulated/0/HP</string>
     <string name="database_filename">/storage/emulated/0/HP/hp.db</string>
     <string name="picture_path">/storage/emulated/0/HP/pictures</string>

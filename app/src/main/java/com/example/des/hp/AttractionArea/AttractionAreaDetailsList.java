@@ -130,7 +130,9 @@ public class AttractionAreaDetailsList extends BaseActivity
                 return;
             
             SetImage(attractionItem.attractionPicture);
-            
+
+            txtAttractionDescription.setText(attractionItem.attractionDescription);
+
             subTitle = attractionItem.attractionDescription;
             if (title.length() > 0)
             {
