@@ -782,6 +782,9 @@ public class DatabaseAccess extends SQLiteOpenHelper
         if(scheduleItem.otherItem != null)
             if(updateOtherItem(scheduleItem.otherItem) == false)
                 return (false);
+        if(scheduleItem.generalAttractionItem != null)
+            if(updateGeneralAttractionItem(scheduleItem.generalAttractionItem) == false)
+                return (false);
         return (true);
     }
 
@@ -978,6 +981,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
             item.paradeItem=null;
             item.parkItem=null;
             item.otherItem=null;
+            item.generalAttractionItem=null;
 
             if(item.schedType == res.getInteger(R.integer.schedule_type_flight))
             {
@@ -1064,6 +1068,14 @@ public class DatabaseAccess extends SQLiteOpenHelper
                 item.otherItem=new OtherItem();
                 if(getOtherItem(holidayId, dayId, attractionId, attractionAreaId, item
                     .scheduleId, item.otherItem) == false)
+                    return (false);
+            }
+
+            if(item.schedType == res.getInteger(R.integer.schedule_type_generalattraction))
+            {
+                item.generalAttractionItem=new GeneralAttractionItem();
+                if(getGeneralAttractionItem(holidayId, dayId, attractionId, attractionAreaId, item
+                    .scheduleId, item.generalAttractionItem) == false)
                     return (false);
             }
         }

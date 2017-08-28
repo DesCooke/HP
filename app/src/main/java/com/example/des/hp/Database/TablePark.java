@@ -87,6 +87,10 @@ class TablePark extends TableBase
         if(IsValid() == false)
             return (false);
 
+        if(ItemExists(parkItem)==false)
+        {
+            return(addParkItem(parkItem));
+        }
         String lSQL;
         lSQL="UPDATE park " +
             "SET parkName = " + MyQuotedString(parkItem.parkName) + ", " +
@@ -126,6 +130,17 @@ class TablePark extends TableBase
     {
         if(IsValid() == false)
             return (false);
+
+        litem.holidayId=holidayId;
+        litem.dayId=dayId;
+        litem.attractionId=attractionId;
+        litem.attractionAreaId=attractionAreaId;
+        litem.scheduleId=scheduleId;
+        litem.origHolidayId=holidayId;
+        litem.origDayId=dayId;
+        litem.origAttractionId=attractionId;
+        litem.origAttractionAreaId=attractionAreaId;
+        litem.origScheduleId=scheduleId;
 
         String lSQL;
         lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
@@ -177,6 +192,37 @@ class TablePark extends TableBase
         catch(Exception e)
         {
             ShowError("GetParkItemFromQuery", e.getMessage());
+        }
+
+        return (true);
+    }
+
+    private boolean ItemExists(ParkItem litem)
+    {
+        if(IsValid() == false)
+            return (false);
+
+        try
+        {
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
+                "  scheduleId " +
+                "FROM Park " +
+                "WHERE HolidayId = " + litem.holidayId + " " +
+                "AND DayId = " + litem.dayId + " " +
+                "AND attractionId = " + litem.attractionId + " " +
+                "AND attractionAreaId = " + litem.attractionAreaId + " " +
+                "AND ScheduleId = " + litem.scheduleId;
+            Cursor cursor=executeSQLOpenCursor("ItemExists(park)", lSQL);
+            if(cursor == null)
+                return(false);
+
+            if(cursor.getCount() == 0)
+                return (false);
+        }
+        catch(Exception e)
+        {
+            ShowError("ItemExists(park)", e.getMessage());
         }
 
         return (true);

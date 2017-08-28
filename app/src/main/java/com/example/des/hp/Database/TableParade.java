@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Schedule.Parade.ParadeItem;
+import com.example.des.hp.Schedule.Show.ShowItem;
 import com.example.des.hp.myutils.MyMessages;
 
 class TableParade extends TableBase
@@ -86,6 +87,10 @@ class TableParade extends TableBase
         if(IsValid() == false)
             return (false);
 
+        if(ItemExists(paradeItem)==false)
+        {
+            return(addParadeItem(paradeItem));
+        }
         String lSQL;
         lSQL="UPDATE parade " +
             "SET paradeName = " + MyQuotedString(paradeItem.paradeName) + ", " +
@@ -125,6 +130,17 @@ class TableParade extends TableBase
     {
         if(IsValid() == false)
             return (false);
+
+        litem.holidayId=holidayId;
+        litem.dayId=dayId;
+        litem.attractionId=attractionId;
+        litem.attractionAreaId=attractionAreaId;
+        litem.scheduleId=scheduleId;
+        litem.origHolidayId=holidayId;
+        litem.origDayId=dayId;
+        litem.origAttractionId=attractionId;
+        litem.origAttractionAreaId=attractionAreaId;
+        litem.origScheduleId=scheduleId;
 
         String lSQL;
         lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
@@ -176,6 +192,37 @@ class TableParade extends TableBase
         catch(Exception e)
         {
             ShowError("GetParadeItemFromQuery", e.getMessage());
+        }
+
+        return (true);
+    }
+
+    private boolean ItemExists(ParadeItem litem)
+    {
+        if(IsValid() == false)
+            return (false);
+
+        try
+        {
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
+                "  scheduleId " +
+                "FROM Parade " +
+                "WHERE HolidayId = " + litem.holidayId + " " +
+                "AND DayId = " + litem.dayId + " " +
+                "AND attractionId = " + litem.attractionId + " " +
+                "AND attractionAreaId = " + litem.attractionAreaId + " " +
+                "AND ScheduleId = " + litem.scheduleId;
+            Cursor cursor=executeSQLOpenCursor("ItemExists(parade)", lSQL);
+            if(cursor == null)
+                return(false);
+
+            if(cursor.getCount() == 0)
+                return (false);
+        }
+        catch(Exception e)
+        {
+            ShowError("ItemExists(parade)", e.getMessage());
         }
 
         return (true);

@@ -86,6 +86,10 @@ class TableOther extends TableBase
         if(IsValid() == false)
             return (false);
 
+        if(ItemExists(otherItem)==false)
+        {
+            return(addOtherItem(otherItem));
+        }
         String lSQL;
         lSQL="UPDATE other " +
             "SET otherName = " + MyQuotedString(otherItem.otherName) + ", " +
@@ -125,6 +129,17 @@ class TableOther extends TableBase
     {
         if(IsValid() == false)
             return (false);
+
+        litem.holidayId=holidayId;
+        litem.dayId=dayId;
+        litem.attractionId=attractionId;
+        litem.attractionAreaId=attractionAreaId;
+        litem.scheduleId=scheduleId;
+        litem.origHolidayId=holidayId;
+        litem.origDayId=dayId;
+        litem.origAttractionId=attractionId;
+        litem.origAttractionAreaId=attractionAreaId;
+        litem.origScheduleId=scheduleId;
 
         String lSQL;
         lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
@@ -176,6 +191,37 @@ class TableOther extends TableBase
         catch(Exception e)
         {
             ShowError("GetOtherItemFromQuery", e.getMessage());
+        }
+
+        return (true);
+    }
+
+    private boolean ItemExists(OtherItem litem)
+    {
+        if(IsValid() == false)
+            return (false);
+
+        try
+        {
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
+                "  scheduleId " +
+                "FROM Other " +
+                "WHERE HolidayId = " + litem.holidayId + " " +
+                "AND DayId = " + litem.dayId + " " +
+                "AND attractionId = " + litem.attractionId + " " +
+                "AND attractionAreaId = " + litem.attractionAreaId + " " +
+                "AND ScheduleId = " + litem.scheduleId;
+            Cursor cursor=executeSQLOpenCursor("ItemExists(other)", lSQL);
+            if(cursor == null)
+                return(false);
+
+            if(cursor.getCount() == 0)
+                return (false);
+        }
+        catch(Exception e)
+        {
+            ShowError("ItemExists(other)", e.getMessage());
         }
 
         return (true);

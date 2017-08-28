@@ -84,6 +84,11 @@ class TableBus extends TableBase
         if(IsValid() == false)
             return (false);
 
+        if(ItemExists(busItem)==false)
+        {
+            return(addBusItem(busItem));
+        }
+
         String lSQL;
         lSQL="UPDATE bus " +
             "SET bookingReference = " + MyQuotedString(busItem.bookingReference) + ", " +
@@ -171,6 +176,37 @@ class TableBus extends TableBase
         catch(Exception e)
         {
             ShowError("GetBusItemFromQuery", e.getMessage());
+        }
+
+        return (true);
+    }
+
+    private boolean ItemExists(BusItem litem)
+    {
+        if(IsValid() == false)
+            return (false);
+
+        try
+        {
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
+                "  scheduleId " +
+                "FROM Show " +
+                "WHERE HolidayId = " + litem.holidayId + " " +
+                "AND DayId = " + litem.dayId + " " +
+                "AND attractionId = " + litem.attractionId + " " +
+                "AND attractionAreaId = " + litem.attractionAreaId + " " +
+                "AND ScheduleId = " + litem.scheduleId;
+            Cursor cursor=executeSQLOpenCursor("ItemExists(bus)", lSQL);
+            if(cursor == null)
+                return(false);
+
+            if(cursor.getCount() == 0)
+                return (false);
+        }
+        catch(Exception e)
+        {
+            ShowError("ItemExists(bus)", e.getMessage());
         }
 
         return (true);

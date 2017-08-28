@@ -95,6 +95,10 @@ class TableRestaurant extends TableBase
         if(IsValid() == false)
             return (false);
 
+        if(ItemExists(restaurantItem)==false)
+        {
+            return(addRestaurantItem(restaurantItem));
+        }
         String lSQL;
         lSQL="UPDATE restaurant " +
             "SET restaurantName = " + MyQuotedString(restaurantItem.restaurantName) + ", " +
@@ -136,6 +140,17 @@ class TableRestaurant extends TableBase
     {
         if(IsValid() == false)
             return (false);
+
+        litem.holidayId=holidayId;
+        litem.dayId=dayId;
+        litem.attractionId=attractionId;
+        litem.attractionAreaId=attractionAreaId;
+        litem.scheduleId=scheduleId;
+        litem.origHolidayId=holidayId;
+        litem.origDayId=dayId;
+        litem.origAttractionId=attractionId;
+        litem.origAttractionAreaId=attractionAreaId;
+        litem.origScheduleId=scheduleId;
 
         String lSQL;
         lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
@@ -192,6 +207,37 @@ class TableRestaurant extends TableBase
         catch(Exception e)
         {
             ShowError("GetRestaurantItemFromQuery", e.getMessage());
+        }
+
+        return (true);
+    }
+
+    private boolean ItemExists(RestaurantItem litem)
+    {
+        if(IsValid() == false)
+            return (false);
+
+        try
+        {
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
+                "  scheduleId " +
+                "FROM Restaurant " +
+                "WHERE HolidayId = " + litem.holidayId + " " +
+                "AND DayId = " + litem.dayId + " " +
+                "AND attractionId = " + litem.attractionId + " " +
+                "AND attractionAreaId = " + litem.attractionAreaId + " " +
+                "AND ScheduleId = " + litem.scheduleId;
+            Cursor cursor=executeSQLOpenCursor("ItemExists(restaurant)", lSQL);
+            if(cursor == null)
+                return(false);
+
+            if(cursor.getCount() == 0)
+                return (false);
+        }
+        catch(Exception e)
+        {
+            ShowError("ItemExists(restaurant)", e.getMessage());
         }
 
         return (true);

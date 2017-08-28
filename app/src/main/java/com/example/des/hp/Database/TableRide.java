@@ -104,6 +104,10 @@ class TableRide extends TableBase
         if(IsValid() == false)
             return (false);
 
+        if(ItemExists(rideItem)==false)
+        {
+            return(addRideItem(rideItem));
+        }
         String lSQL;
         lSQL="UPDATE ride " +
             "SET heartRating = " + rideItem.heartRating + ", " +
@@ -145,6 +149,17 @@ class TableRide extends TableBase
         if(IsValid() == false)
             return (false);
 
+        litem.holidayId=holidayId;
+        litem.dayId=dayId;
+        litem.attractionId=attractionId;
+        litem.attractionAreaId=attractionAreaId;
+        litem.scheduleId=scheduleId;
+        litem.origHolidayId=holidayId;
+        litem.origDayId=dayId;
+        litem.origAttractionId=attractionId;
+        litem.origAttractionAreaId=attractionAreaId;
+        litem.origScheduleId=scheduleId;
+
         String lSQL;
         lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
             "  scheduleId, rideName, heartRating, scenicRating, thrillRating " +
@@ -166,7 +181,7 @@ class TableRide extends TableBase
         return (true);
     }
 
-    private boolean GetRideItemFromQuery(Cursor cursor, RideItem rideItem)
+    private boolean GetRideItemFromQuery(Cursor cursor, RideItem litem)
     {
         if(IsValid() == false)
             return (false);
@@ -176,29 +191,60 @@ class TableRide extends TableBase
             if(cursor.getCount() == 0)
                 return (true);
 
-            rideItem.holidayId=Integer.parseInt(cursor.getString(0));
-            rideItem.dayId=Integer.parseInt(cursor.getString(1));
-            rideItem.attractionId=Integer.parseInt(cursor.getString(2));
-            rideItem.attractionAreaId=Integer.parseInt(cursor.getString(3));
-            rideItem.scheduleId=Integer.parseInt(cursor.getString(4));
-            rideItem.rideName=cursor.getString(5);
-            rideItem.heartRating=cursor.getFloat(6);
-            rideItem.scenicRating=cursor.getFloat(7);
-            rideItem.thrillRating=cursor.getFloat(8);
+            litem.holidayId=Integer.parseInt(cursor.getString(0));
+            litem.dayId=Integer.parseInt(cursor.getString(1));
+            litem.attractionId=Integer.parseInt(cursor.getString(2));
+            litem.attractionAreaId=Integer.parseInt(cursor.getString(3));
+            litem.scheduleId=Integer.parseInt(cursor.getString(4));
+            litem.rideName=cursor.getString(5);
+            litem.heartRating=cursor.getFloat(6);
+            litem.scenicRating=cursor.getFloat(7);
+            litem.thrillRating=cursor.getFloat(8);
 
-            rideItem.origHolidayId=rideItem.holidayId;
-            rideItem.origDayId=rideItem.dayId;
-            rideItem.origAttractionId=rideItem.attractionId;
-            rideItem.origAttractionAreaId=rideItem.attractionAreaId;
-            rideItem.origScheduleId=rideItem.scheduleId;
-            rideItem.origRideName=rideItem.rideName;
-            rideItem.origHeartRating=rideItem.heartRating;
-            rideItem.origScenicRating=rideItem.scenicRating;
-            rideItem.origThrillRating=rideItem.scenicRating;
+            litem.origHolidayId=litem.holidayId;
+            litem.origDayId=litem.dayId;
+            litem.origAttractionId=litem.attractionId;
+            litem.origAttractionAreaId=litem.attractionAreaId;
+            litem.origScheduleId=litem.scheduleId;
+            litem.origRideName=litem.rideName;
+            litem.origHeartRating=litem.heartRating;
+            litem.origScenicRating=litem.scenicRating;
+            litem.origThrillRating=litem.scenicRating;
         }
         catch(Exception e)
         {
             ShowError("GetRideItemFromQuery", e.getMessage());
+        }
+
+        return (true);
+    }
+
+    private boolean ItemExists(RideItem litem)
+    {
+        if(IsValid() == false)
+            return (false);
+
+        try
+        {
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
+                "  scheduleId " +
+                "FROM Ride " +
+                "WHERE HolidayId = " + litem.holidayId + " " +
+                "AND DayId = " + litem.dayId + " " +
+                "AND attractionId = " + litem.attractionId + " " +
+                "AND attractionAreaId = " + litem.attractionAreaId + " " +
+                "AND ScheduleId = " + litem.scheduleId;
+            Cursor cursor=executeSQLOpenCursor("ItemExists(ride)", lSQL);
+            if(cursor == null)
+                return(false);
+
+            if(cursor.getCount() == 0)
+                return (false);
+        }
+        catch(Exception e)
+        {
+            ShowError("ItemExists(ride)", e.getMessage());
         }
 
         return (true);

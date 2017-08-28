@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Schedule.Cinema.CinemaItem;
+import com.example.des.hp.Schedule.Show.ShowItem;
 import com.example.des.hp.myutils.MyMessages;
 
 class TableCinema extends TableBase
@@ -86,6 +87,11 @@ class TableCinema extends TableBase
         if(IsValid() == false)
             return (false);
 
+        if(ItemExists(cinemaItem)==false)
+        {
+            return(addCinemaItem(cinemaItem));
+        }
+
         String lSQL="UPDATE cinema " +
             "SET cinemaName = " + MyQuotedString(cinemaItem.cinemaName) + ", " +
             "    bookingReference = " + MyQuotedString(cinemaItem.bookingReference) + ", " +
@@ -125,6 +131,17 @@ class TableCinema extends TableBase
     {
         if(IsValid() == false)
             return (false);
+
+        litem.holidayId=holidayId;
+        litem.dayId=dayId;
+        litem.attractionId=attractionId;
+        litem.attractionAreaId=attractionAreaId;
+        litem.scheduleId=scheduleId;
+        litem.origHolidayId=holidayId;
+        litem.origDayId=dayId;
+        litem.origAttractionId=attractionId;
+        litem.origAttractionAreaId=attractionAreaId;
+        litem.origScheduleId=scheduleId;
 
         String lSQL;
         lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
@@ -180,6 +197,37 @@ class TableCinema extends TableBase
         }
 
         return (false);
+    }
+
+    private boolean ItemExists(CinemaItem litem)
+    {
+        if(IsValid() == false)
+            return (false);
+
+        try
+        {
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
+                "  scheduleId " +
+                "FROM Show " +
+                "WHERE HolidayId = " + litem.holidayId + " " +
+                "AND DayId = " + litem.dayId + " " +
+                "AND attractionId = " + litem.attractionId + " " +
+                "AND attractionAreaId = " + litem.attractionAreaId + " " +
+                "AND ScheduleId = " + litem.scheduleId;
+            Cursor cursor=executeSQLOpenCursor("ItemExists(cinema)", lSQL);
+            if(cursor == null)
+                return(false);
+
+            if(cursor.getCount() == 0)
+                return (false);
+        }
+        catch(Exception e)
+        {
+            ShowError("ItemExists(cinema)", e.getMessage());
+        }
+
+        return (true);
     }
 
 }

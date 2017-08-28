@@ -92,6 +92,11 @@ class TableGeneralAttraction extends TableBase
         if(!IsValid())
             return (false);
 
+        if(ItemExists(item)==false)
+        {
+            return(addGeneralAttractionItem(item));
+        }
+
         String lSQL;
         lSQL="UPDATE generalattraction " +
             "SET heartRating = " + item.heartRating + ", " +
@@ -131,6 +136,17 @@ class TableGeneralAttraction extends TableBase
     {
         if(!IsValid())
             return (false);
+
+        litem.holidayId=holidayId;
+        litem.dayId=dayId;
+        litem.attractionId=attractionId;
+        litem.attractionAreaId=attractionAreaId;
+        litem.scheduleId=scheduleId;
+        litem.origHolidayId=holidayId;
+        litem.origDayId=dayId;
+        litem.origAttractionId=attractionId;
+        litem.origAttractionAreaId=attractionAreaId;
+        litem.origScheduleId=scheduleId;
 
         String lSQL;
         lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
@@ -190,5 +206,37 @@ class TableGeneralAttraction extends TableBase
 
         return (true);
     }
+
+    private boolean ItemExists(GeneralAttractionItem litem)
+    {
+        if(IsValid() == false)
+            return (false);
+
+        try
+        {
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
+                "  scheduleId " +
+                "FROM GeneralAttraction " +
+                "WHERE HolidayId = " + litem.holidayId + " " +
+                "AND DayId = " + litem.dayId + " " +
+                "AND attractionId = " + litem.attractionId + " " +
+                "AND attractionAreaId = " + litem.attractionAreaId + " " +
+                "AND ScheduleId = " + litem.scheduleId;
+            Cursor cursor=executeSQLOpenCursor("ItemExists(generalAttraction)", lSQL);
+            if(cursor == null)
+                return(false);
+
+            if(cursor.getCount() == 0)
+                return (false);
+        }
+        catch(Exception e)
+        {
+            ShowError("ItemExists(generalAttraction)", e.getMessage());
+        }
+
+        return (true);
+    }
+
 
 }

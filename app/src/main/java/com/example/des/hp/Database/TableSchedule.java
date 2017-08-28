@@ -263,28 +263,82 @@ class TableSchedule extends TableBase
             scheduleItem.scheduleId=myInt.Value;
 
             if(scheduleItem.flightItem != null)
+            {
+                scheduleItem.flightItem.dayId=scheduleItem.dayId;
+                scheduleItem.flightItem.attractionId=scheduleItem.attractionId;
+                scheduleItem.flightItem.attractionAreaId=scheduleItem.attractionAreaId;
                 scheduleItem.flightItem.scheduleId=scheduleItem.scheduleId;
+            }
             if(scheduleItem.hotelItem != null)
+            {
+                scheduleItem.hotelItem.dayId=scheduleItem.dayId;
+                scheduleItem.hotelItem.attractionId=scheduleItem.attractionId;
+                scheduleItem.hotelItem.attractionAreaId=scheduleItem.attractionAreaId;
                 scheduleItem.hotelItem.scheduleId=scheduleItem.scheduleId;
+            }
             if(scheduleItem.restaurantItem != null)
+            {
+                scheduleItem.restaurantItem.dayId=scheduleItem.dayId;
+                scheduleItem.restaurantItem.attractionId=scheduleItem.attractionId;
+                scheduleItem.restaurantItem.attractionAreaId=scheduleItem.attractionAreaId;
                 scheduleItem.restaurantItem.scheduleId=scheduleItem.scheduleId;
+            }
             if(scheduleItem.rideItem != null)
+            {
+                scheduleItem.rideItem.dayId=scheduleItem.dayId;
+                scheduleItem.rideItem.attractionId=scheduleItem.attractionId;
+                scheduleItem.rideItem.attractionAreaId=scheduleItem.attractionAreaId;
                 scheduleItem.rideItem.scheduleId=scheduleItem.scheduleId;
+            }
             if(scheduleItem.showItem != null)
+            {
+                scheduleItem.showItem.dayId=scheduleItem.dayId;
+                scheduleItem.showItem.attractionId=scheduleItem.attractionId;
+                scheduleItem.showItem.attractionAreaId=scheduleItem.attractionAreaId;
                 scheduleItem.showItem.scheduleId=scheduleItem.scheduleId;
+            }
             if(scheduleItem.hotelItem != null)
+            {
+                scheduleItem.hotelItem.dayId=scheduleItem.dayId;
+                scheduleItem.hotelItem.attractionId=scheduleItem.attractionId;
+                scheduleItem.hotelItem.attractionAreaId=scheduleItem.attractionAreaId;
                 scheduleItem.hotelItem.scheduleId=scheduleItem.scheduleId;
+            }
             if(scheduleItem.busItem != null)
+            {
+                scheduleItem.busItem.dayId=scheduleItem.dayId;
+                scheduleItem.busItem.attractionId=scheduleItem.attractionId;
+                scheduleItem.busItem.attractionAreaId=scheduleItem.attractionAreaId;
                 scheduleItem.busItem.scheduleId=scheduleItem.scheduleId;
+            }
             if(scheduleItem.cinemaItem != null)
+            {
+                scheduleItem.cinemaItem.dayId=scheduleItem.dayId;
+                scheduleItem.cinemaItem.attractionId=scheduleItem.attractionId;
+                scheduleItem.cinemaItem.attractionAreaId=scheduleItem.attractionAreaId;
                 scheduleItem.cinemaItem.scheduleId=scheduleItem.scheduleId;
+            }
             if(scheduleItem.paradeItem != null)
+            {
+                scheduleItem.paradeItem.dayId=scheduleItem.dayId;
+                scheduleItem.paradeItem.attractionId=scheduleItem.attractionId;
+                scheduleItem.paradeItem.attractionAreaId=scheduleItem.attractionAreaId;
                 scheduleItem.paradeItem.scheduleId=scheduleItem.scheduleId;
+            }
             if(scheduleItem.parkItem != null)
+            {
+                scheduleItem.parkItem.dayId=scheduleItem.dayId;
+                scheduleItem.parkItem.attractionId=scheduleItem.attractionId;
+                scheduleItem.parkItem.attractionAreaId=scheduleItem.attractionAreaId;
                 scheduleItem.parkItem.scheduleId=scheduleItem.scheduleId;
+            }
             if(scheduleItem.otherItem != null)
+            {
+                scheduleItem.otherItem.dayId=scheduleItem.dayId;
+                scheduleItem.otherItem.attractionId=scheduleItem.attractionId;
+                scheduleItem.otherItem.attractionAreaId=scheduleItem.attractionAreaId;
                 scheduleItem.otherItem.scheduleId=scheduleItem.scheduleId;
-
+            }
         }
         String lSQL;
         lSQL="UPDATE schedule " +

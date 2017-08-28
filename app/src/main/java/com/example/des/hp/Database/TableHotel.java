@@ -86,6 +86,10 @@ class TableHotel extends TableBase
         if(IsValid() == false)
             return (false);
 
+        if(ItemExists(hotelItem)==false)
+        {
+            return(addHotelItem(hotelItem));
+        }
         String lSQL;
         lSQL="UPDATE hotel " +
             "SET hotelName = " + MyQuotedString(hotelItem.hotelName) + ", " +
@@ -125,6 +129,17 @@ class TableHotel extends TableBase
     {
         if(IsValid() == false)
             return (false);
+
+        litem.holidayId=holidayId;
+        litem.dayId=dayId;
+        litem.attractionId=attractionId;
+        litem.attractionAreaId=attractionAreaId;
+        litem.scheduleId=scheduleId;
+        litem.origHolidayId=holidayId;
+        litem.origDayId=dayId;
+        litem.origAttractionId=attractionId;
+        litem.origAttractionAreaId=attractionAreaId;
+        litem.origScheduleId=scheduleId;
 
         String lSQL;
         lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
@@ -181,4 +196,34 @@ class TableHotel extends TableBase
         return (true);
     }
 
+    private boolean ItemExists(HotelItem litem)
+    {
+        if(IsValid() == false)
+            return (false);
+
+        try
+        {
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
+                "  scheduleId " +
+                "FROM Hotel " +
+                "WHERE HolidayId = " + litem.holidayId + " " +
+                "AND DayId = " + litem.dayId + " " +
+                "AND attractionId = " + litem.attractionId + " " +
+                "AND attractionAreaId = " + litem.attractionAreaId + " " +
+                "AND ScheduleId = " + litem.scheduleId;
+            Cursor cursor=executeSQLOpenCursor("ItemExists(hotel)", lSQL);
+            if(cursor == null)
+                return(false);
+
+            if(cursor.getCount() == 0)
+                return (false);
+        }
+        catch(Exception e)
+        {
+            ShowError("ItemExists(hotel)", e.getMessage());
+        }
+
+        return (true);
+    }
 }
