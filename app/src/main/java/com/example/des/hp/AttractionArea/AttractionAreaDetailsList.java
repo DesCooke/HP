@@ -268,22 +268,6 @@ public class AttractionAreaDetailsList extends BaseActivity
         }
     }
     
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        
-        try
-        {
-            showForm();
-        }
-        catch (Exception e)
-        {
-            ShowError("onResume", e.getMessage());
-        }
-        
-    }
-    
     public void editAttraction()
     {
         try
