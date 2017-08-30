@@ -11,6 +11,8 @@ import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 class TableExtraFiles extends TableBase
 {
     TableExtraFiles(Context context, SQLiteOpenHelper dbHelper)
@@ -66,14 +68,37 @@ class TableExtraFiles extends TableBase
         if(IsValid() == false)
             return (false);
 
-        extraFilesItem.filePicture="";
-        if(extraFilesItem.pictureAssigned)
+        if (extraFilesItem.pictureAssigned)
         {
-            MyString myString=new MyString();
-            if(savePicture(extraFilesItem.fileBitmap, myString) == false)
-                return (false);
-            extraFilesItem.filePicture=myString.Value;
+            /* if picture name has something in it - it means it came from internal folder */
+            if (extraFilesItem.filePicture.length() == 0)
+            {
+                myMessages().LogMessage("  - New Image was not from internal folder...");
+                if (extraFilesItem.pictureAssigned)
+                {
+                    myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (savePicture(extraFilesItem.fileBitmap, myString) == false)
+                        return (false);
+                    extraFilesItem.filePicture = myString.Value;
+                    myMessages().LogMessage("  - New filename " + extraFilesItem.filePicture);
+                } else
+                {
+                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                    + extraFilesItem.filePicture + ")");
+            }
         }
+        else
+        {
+                myMessages().LogMessage("  - New Image not assigned - do nothing");
+        }
+
+
+
         if(extraFilesItem.fileName.length() > 0)
         {
             String lNewString=extraFilesItem.fileName.replace("'", "");
@@ -121,22 +146,42 @@ class TableExtraFiles extends TableBase
         if(IsValid() == false)
             return (false);
 
-        // something has happened to the picture either selected a new one or cleared an
-        // existing one
-        if(extraFilesItem.pictureChanged)
+        myMessages().LogMessage("updateExtraFilesItem:Handling Image");
+        if (extraFilesItem.pictureChanged)
         {
-            if(extraFilesItem.origPictureAssigned)
-                if(removePicture(extraFilesItem.origFilePicture) == false)
-                    return (false);
-            extraFilesItem.filePicture="";
-            if(extraFilesItem.pictureAssigned)
+            if (extraFilesItem.origPictureAssigned)
             {
-                MyString myString=new MyString();
-                if(savePicture(extraFilesItem.fileBitmap, myString) == false)
+                myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                if (removePicture(extraFilesItem.origFilePicture) == false)
                     return (false);
-                extraFilesItem.filePicture=myString.Value;
             }
+            
+            /* if picture name has something in it - it means it came from internal folder */
+            if (extraFilesItem.filePicture.length() == 0)
+            {
+                myMessages().LogMessage("  - New Image was not from internal folder...");
+                if (extraFilesItem.pictureAssigned)
+                {
+                    myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (savePicture(extraFilesItem.fileBitmap, myString) == false)
+                        return (false);
+                    extraFilesItem.filePicture = myString.Value;
+                    myMessages().LogMessage("  - New filename " + extraFilesItem.filePicture);
+                } else
+                {
+                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                    + extraFilesItem.filePicture + ")");
+            }
+        } else
+        {
+            myMessages().LogMessage("  - Image not changed - do nothing");
         }
+
         if(extraFilesItem.fileChanged)
         {
             if(extraFilesItem.origFileName.length() > 0)
@@ -172,9 +217,6 @@ class TableExtraFiles extends TableBase
             "WHERE fileGroupId = " + extraFilesItem.fileGroupId + " " +
             "AND fileId = " + extraFilesItem.fileId;
 
-        if(executeSQL("deleteExtraFilesItem", lSQL) == false)
-            return (false);
-
         if(extraFilesItem.filePicture.length() > 0)
             if(removePicture(extraFilesItem.filePicture) == false)
                 return (false);
@@ -182,6 +224,9 @@ class TableExtraFiles extends TableBase
         if(extraFilesItem.fileName.length() > 0)
             if(removeExtraFile(extraFilesItem.fileName) == false)
                 return (false);
+
+        if(executeSQL("deleteExtraFilesItem", lSQL) == false)
+            return (false);
 
         return (true);
     }

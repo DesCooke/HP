@@ -137,6 +137,9 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
             }
 
             extraFilesItem.fileBitmap = null;
+            extraFilesItem.filePicture="";
+            if(internalImageFilename.length()>0)
+                extraFilesItem.filePicture=internalImageFilename;
             extraFilesItem.pictureAssigned=imageSet;
             extraFilesItem.pictureChanged=imageChanged;
             extraFilesItem.fileBitmap=null;

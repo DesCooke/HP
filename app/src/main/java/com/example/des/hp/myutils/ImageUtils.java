@@ -18,8 +18,13 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyLog.myLog;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
@@ -133,11 +138,37 @@ public class ImageUtils
         
         File directory = new File(res.getString(R.string.picture_path));
         File[] files = directory.listFiles();
+
+        Arrays.sort(
+            files,
+            new Comparator()
+            {
+                @Override
+                public int compare(Object o1, Object o2)
+                {
+                    File f1 = (File) o1;
+                    File f2 = (File) o2;
+                    
+                    String s1=f1.getName();
+                    String s1a=s1.replace(".png", "");
+                    String[] sa1=s1a.split("_");
+                    String n1=sa1[1];
+                    int num1=Integer.parseInt(n1);
+                    
+                    String s2=f2.getName();
+                    String s2a=s2.replace(".png", "");
+                    String[] sa2=s2a.split("_");
+                    String n2=sa2[1];
+                    int num2=Integer.parseInt(n2);
+                    
+                    return num1-num2;
+                }
+            }
+        );
+        
         for (int i = 0; i < files.length; i++)
         {
-            myLog().WriteLogMessage("Collecting file: " + files[i].getName());
-            
-            l_array.add(new InternalImageItem(files[i].getName()));
+            l_array.add(new InternalImageItem(files[i].getName(), 0));
         }
         return (l_array);
     }

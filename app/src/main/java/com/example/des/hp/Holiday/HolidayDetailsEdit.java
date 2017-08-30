@@ -242,6 +242,9 @@ public class HolidayDetailsEdit extends BaseActivity  implements View.OnClickLis
         {
             myMessages().ShowMessageShort("Saving Holiday");
             
+            holidayItem.holidayPicture="";
+            if(internalImageFilename.length()>0)
+                holidayItem.holidayPicture=internalImageFilename;
             holidayItem.pictureAssigned = imageSet;
             holidayItem.pictureChanged = imageChanged;
             holidayItem.holidayName = holidayName.getText().toString();

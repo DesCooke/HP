@@ -127,6 +127,9 @@ public class TipGroupDetailsEdit extends TipGroupDetailsView implements View.OnC
 
             tipGroupItem.tipGroupDescription=txtTipGroupDescription.getText().toString();
 
+            tipGroupItem.tipGroupPicture="";
+            if(internalImageFilename.length()>0)
+                tipGroupItem.tipGroupPicture=internalImageFilename;
             tipGroupItem.pictureAssigned = imageSet;
             tipGroupItem.pictureChanged = imageChanged;
             tipGroupItem.fileBitmap = null;

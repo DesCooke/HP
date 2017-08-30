@@ -14,6 +14,7 @@ import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
 import static java.lang.Math.abs;
 
 class TableDay extends TableBase
@@ -98,13 +99,33 @@ class TableDay extends TableBase
         if(IsValid() == false)
             return (false);
 
-        dayItem.dayPicture="";
-        if(dayItem.pictureAssigned)
+        if (dayItem.pictureAssigned)
         {
-            MyString myString=new MyString();
-            if(savePicture(dayItem.dayBitmap, myString) == false)
-                return (false);
-            dayItem.dayPicture=myString.Value;
+            /* if picture name has something in it - it means it came from internal folder */
+            if (dayItem.dayPicture.length() == 0)
+            {
+                myMessages().LogMessage("  - New Image was not from internal folder...");
+                if (dayItem.pictureAssigned)
+                {
+                    myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (savePicture(dayItem.dayBitmap, myString) == false)
+                        return (false);
+                    dayItem.dayPicture = myString.Value;
+                    myMessages().LogMessage("  - New filename " + dayItem.dayPicture);
+                } else
+                {
+                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                    + dayItem.dayPicture + ")");
+            }
+        }
+        else
+        {
+                myMessages().LogMessage("  - New Image not assigned - do nothing");
         }
 
         String lSql="INSERT INTO day " +
@@ -151,21 +172,40 @@ class TableDay extends TableBase
         if(IsValid() == false)
             return (false);
 
-        // something has happened to the picture either selected a new one or cleared an
-        // existing one
-        if(dayItem.pictureChanged)
+        myMessages().LogMessage("updateDayItem:Handling Image");
+        if (dayItem.pictureChanged)
         {
-            if(dayItem.origPictureAssigned)
-                if(removePicture(dayItem.origDayPicture) == false)
-                    return (false);
-            dayItem.dayPicture="";
-            if(dayItem.pictureAssigned)
+            if (dayItem.origPictureAssigned)
             {
-                MyString myString=new MyString();
-                if(savePicture(dayItem.dayBitmap, myString) == false)
+                myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                if (removePicture(dayItem.origDayPicture) == false)
                     return (false);
-                dayItem.dayPicture=myString.Value;
             }
+            
+            /* if picture name has something in it - it means it came from internal folder */
+            if (dayItem.dayPicture.length() == 0)
+            {
+                myMessages().LogMessage("  - New Image was not from internal folder...");
+                if (dayItem.pictureAssigned)
+                {
+                    myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (savePicture(dayItem.dayBitmap, myString) == false)
+                        return (false);
+                    dayItem.dayPicture = myString.Value;
+                    myMessages().LogMessage("  - New filename " + dayItem.dayPicture);
+                } else
+                {
+                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                    + dayItem.dayPicture + ")");
+            }
+        } else
+        {
+            myMessages().LogMessage("  - Image not changed - do nothing");
         }
 
         String lSQL;
@@ -208,12 +248,12 @@ class TableDay extends TableBase
             "WHERE holidayId = " + dayItem.holidayId + " " +
             "AND dayId = " + dayItem.dayId;
 
-        if(executeSQL("deleteDayItem", lSQL) == false)
-            return (false);
-
         if(dayItem.dayPicture.length() > 0)
             if(removePicture(dayItem.dayPicture) == false)
                 return (false);
+
+        if(executeSQL("deleteDayItem", lSQL) == false)
+            return (false);
 
         return (true);
     }

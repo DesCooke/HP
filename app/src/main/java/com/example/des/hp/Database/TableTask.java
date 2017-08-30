@@ -13,6 +13,8 @@ import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 class TableTask extends TableBase
 {
     private DateUtils dateUtils;
@@ -100,13 +102,33 @@ class TableTask extends TableBase
         if(IsValid() == false)
             return (false);
 
-        taskItem.taskPicture="";
-        if(taskItem.pictureAssigned)
+        if (taskItem.pictureAssigned)
         {
-            MyString myString=new MyString();
-            if(savePicture(taskItem.fileBitmap, myString) == false)
-                return (false);
-            taskItem.taskPicture=myString.Value;
+            /* if picture name has something in it - it means it came from internal folder */
+            if (taskItem.taskPicture.length() == 0)
+            {
+                myMessages().LogMessage("  - New Image was not from internal folder...");
+                if (taskItem.pictureAssigned)
+                {
+                    myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (savePicture(taskItem.fileBitmap, myString) == false)
+                        return (false);
+                    taskItem.taskPicture = myString.Value;
+                    myMessages().LogMessage("  - New filename " + taskItem.taskPicture);
+                } else
+                {
+                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                    + taskItem.taskPicture + ")");
+            }
+        }
+        else
+        {
+                myMessages().LogMessage("  - New Image not assigned - do nothing");
         }
 
         int lTaskDateKnown=0;
@@ -165,22 +187,42 @@ class TableTask extends TableBase
         if(IsValid() == false)
             return (false);
 
-        // something has happened to the picture either selected a new one or cleared an
-        // existing one
-        if(taskItem.pictureChanged)
+        myMessages().LogMessage("updateTaskItem:Handling Image");
+        if (taskItem.pictureChanged)
         {
-            if(taskItem.origPictureAssigned)
-                if(removePicture(taskItem.origTaskPicture) == false)
-                    return (false);
-            taskItem.taskPicture="";
-            if(taskItem.pictureAssigned)
+            if (taskItem.origPictureAssigned)
             {
-                MyString myString=new MyString();
-                if(savePicture(taskItem.fileBitmap, myString) == false)
+                myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                if (removePicture(taskItem.origTaskPicture) == false)
                     return (false);
-                taskItem.taskPicture=myString.Value;
             }
+            
+            /* if picture name has something in it - it means it came from internal folder */
+            if (taskItem.taskPicture.length() == 0)
+            {
+                myMessages().LogMessage("  - New Image was not from internal folder...");
+                if (taskItem.pictureAssigned)
+                {
+                    myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (savePicture(taskItem.fileBitmap, myString) == false)
+                        return (false);
+                    taskItem.taskPicture = myString.Value;
+                    myMessages().LogMessage("  - New filename " + taskItem.taskPicture);
+                } else
+                {
+                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                    + taskItem.taskPicture + ")");
+            }
+        } else
+        {
+            myMessages().LogMessage("  - Image not changed - do nothing");
         }
+
 
         int lDateKnown=0;
         if(taskItem.taskDateKnown)
@@ -232,12 +274,12 @@ class TableTask extends TableBase
             "WHERE holidayId = " + taskItem.holidayId + " " +
             "AND taskId = " + taskItem.taskId;
 
-        if(executeSQL("deleteTaskItem", lSQL) == false)
-            return (false);
-
         if(taskItem.taskPicture.length() > 0)
             if(removePicture(taskItem.taskPicture) == false)
                 return (false);
+
+        if(executeSQL("deleteTaskItem", lSQL) == false)
+            return (false);
 
         return (true);
     }

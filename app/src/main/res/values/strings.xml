@@ -74,6 +74,7 @@
     <string name="action_edit_other">Edit Other</string>
     <string name="action_edit_parade">Edit Parade</string>
     <string name="action_edit_park">Edit Park</string>
+    <string name="action_orphaned_images">Orphaned Images</string>
     <string name="action_view_tipgroup">View Tip Group</string>
     <string name="action_view_attraction">View Attraction</string>
     <string name="action_view_attractionarea">View Attraction Area</string>

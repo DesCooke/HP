@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
 import static java.lang.Math.abs;
 
 class TableHoliday extends TableBase
@@ -89,13 +90,33 @@ class TableHoliday extends TableBase
         if(IsValid()==false)
             return(false);
 
-        holidayItem.holidayPicture="";
-        if(holidayItem.pictureAssigned)
+        if (holidayItem.pictureAssigned)
         {
-            MyString myString = new MyString();
-            if(savePicture(holidayItem.holidayBitmap, myString)==false)
-                return(false);
-            holidayItem.holidayPicture = myString.Value;
+            /* if picture name has something in it - it means it came from internal folder */
+            if (holidayItem.holidayPicture.length() == 0)
+            {
+                myMessages().LogMessage("  - New Image was not from internal folder...");
+                if (holidayItem.pictureAssigned)
+                {
+                    myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (savePicture(holidayItem.holidayBitmap, myString) == false)
+                        return (false);
+                    holidayItem.holidayPicture = myString.Value;
+                    myMessages().LogMessage("  - New filename " + holidayItem.holidayPicture);
+                } else
+                {
+                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                    + holidayItem.holidayPicture + ")");
+            }
+        }
+        else
+        {
+                myMessages().LogMessage("  - New Image not assigned - do nothing");
         }
 
         String lSql =
@@ -122,22 +143,42 @@ class TableHoliday extends TableBase
         if(IsValid()==false)
             return(false);
 
-        // something has happened to the picture either selected a new one or cleared an
-        // existing one
-        if(holidayItem.pictureChanged)
+        myMessages().LogMessage("updateHolidayItem:Handling Image");
+        if (holidayItem.pictureChanged)
         {
-            if(holidayItem.origPictureAssigned)
-                if(removePicture(holidayItem.origHolidayPicture)==false)
-                    return(false);
-            holidayItem.holidayPicture = "";
-            if(holidayItem.pictureAssigned)
+            if (holidayItem.origPictureAssigned)
             {
-                MyString myString = new MyString();
-                if(savePicture(holidayItem.holidayBitmap, myString)==false)
-                    return(false);
-                holidayItem.holidayPicture = myString.Value;
+                myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                if (removePicture(holidayItem.origHolidayPicture) == false)
+                    return (false);
             }
+            
+            /* if picture name has something in it - it means it came from internal folder */
+            if (holidayItem.holidayPicture.length() == 0)
+            {
+                myMessages().LogMessage("  - New Image was not from internal folder...");
+                if (holidayItem.pictureAssigned)
+                {
+                    myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (savePicture(holidayItem.holidayBitmap, myString) == false)
+                        return (false);
+                    holidayItem.holidayPicture = myString.Value;
+                    myMessages().LogMessage("  - New filename " + holidayItem.holidayPicture);
+                } else
+                {
+                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                    + holidayItem.holidayPicture + ")");
+            }
+        } else
+        {
+            myMessages().LogMessage("  - Image not changed - do nothing");
         }
+
 
         String l_SQL =
                 "UPDATE holiday " +
@@ -161,12 +202,12 @@ class TableHoliday extends TableBase
         String l_SQL =
                 "DELETE FROM holiday WHERE holidayId = " + holidayItem.holidayId;
 
-        if(executeSQL("deleteHolidayItem", l_SQL)==false)
-            return(false);
-
         if(holidayItem.holidayPicture.length()>0)
             if(removePicture(holidayItem.holidayPicture)==false)
                 return(false);
+
+        if(executeSQL("deleteHolidayItem", l_SQL)==false)
+            return(false);
 
         return(true);
     }

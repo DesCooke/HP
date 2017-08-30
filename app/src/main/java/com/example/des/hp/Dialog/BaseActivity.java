@@ -81,6 +81,7 @@ import static com.example.des.hp.myutils.ImageUtils.imageUtils;
 import static com.example.des.hp.myutils.MyColor.myColor;
 import static com.example.des.hp.myutils.MyFileUtils.myFileUtils;
 import static com.example.des.hp.myutils.MyLog.myLog;
+import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class BaseActivity extends AppCompatActivity
 {
@@ -132,6 +133,7 @@ public class BaseActivity extends AppCompatActivity
     public boolean imageChanged = false;
     public Bitmap imageDefault;
     public DialogWithYesNoFragment dialogWithYesNoFragment;
+    public String internalImageFilename="";
     
     public boolean recyclerViewEnabled = false;
     public boolean allowCellMove = false;
@@ -263,6 +265,7 @@ public class BaseActivity extends AppCompatActivity
                             imageSet = true;
                             reloadOnShow = false;
                             imageChanged = true;
+                            internalImageFilename = "";
                             
                         }
                         catch (Exception e)
@@ -288,7 +291,7 @@ public class BaseActivity extends AppCompatActivity
                             imageSet = true;
                             reloadOnShow = false;
                             imageChanged = true;
-                            
+                            internalImageFilename = lfile;
                         }
                         catch (Exception e)
                         {

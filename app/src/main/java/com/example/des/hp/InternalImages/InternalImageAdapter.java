@@ -47,12 +47,14 @@ class InternalImageAdapter extends RecyclerView.Adapter<InternalImageAdapter.Vie
     {
         // each data item is just a string in this case
         ImageView internalImage;
+        TextView txtFilename;
 
         ViewHolder(View v)
         {
             super(v);
 
             internalImage = (ImageView) v.findViewById(R.id.internalImage);
+            txtFilename = (TextView) v.findViewById(R.id.txtFilename);
         }
 
     }
@@ -79,8 +81,11 @@ class InternalImageAdapter extends RecyclerView.Adapter<InternalImageAdapter.Vie
         final InternalImageItem c = data.get(position);
 
         if(c.internalImageFilename.length()>0)
-            if(imageUtils.getGridIcon(context, c.internalImageFilename, holder.internalImage)==false)
+        {
+            if (imageUtils.getGridIcon(context, c.internalImageFilename, holder.internalImage) == false)
                 return;
+            holder.txtFilename.setText(c.internalImageFilename);
+        }
 
         holder.internalImage.setOnClickListener(new View.OnClickListener()
         {

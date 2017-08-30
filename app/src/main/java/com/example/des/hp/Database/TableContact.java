@@ -12,6 +12,8 @@ import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 class TableContact extends TableBase
 {
     TableContact(Context context, SQLiteOpenHelper dbHelper)
@@ -146,21 +148,40 @@ class TableContact extends TableBase
         if(IsValid() == false)
             return (false);
 
-        // something has happened to the picture either selected a new one or cleared an
-        // existing one
-        if(contactItem.pictureChanged)
+        myMessages().LogMessage("updateContactItem:Handling Image");
+        if (contactItem.pictureChanged)
         {
-            if(contactItem.origPictureAssigned)
-                if(removePicture(contactItem.origContactPicture) == false)
-                    return (false);
-            contactItem.contactPicture="";
-            if(contactItem.pictureAssigned)
+            if (contactItem.origPictureAssigned)
             {
-                MyString myString=new MyString();
-                if(savePicture(contactItem.fileBitmap, myString) == false)
+                myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                if (removePicture(contactItem.origContactPicture) == false)
                     return (false);
-                contactItem.contactPicture=myString.Value;
             }
+            
+            /* if picture name has something in it - it means it came from internal folder */
+            if (contactItem.contactPicture.length() == 0)
+            {
+                myMessages().LogMessage("  - New Image was not from internal folder...");
+                if (contactItem.pictureAssigned)
+                {
+                    myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (savePicture(contactItem.fileBitmap, myString) == false)
+                        return (false);
+                    contactItem.contactPicture = myString.Value;
+                    myMessages().LogMessage("  - New filename " + contactItem.contactPicture);
+                } else
+                {
+                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                    + contactItem.contactPicture + ")");
+            }
+        } else
+        {
+            myMessages().LogMessage("  - Image not changed - do nothing");
         }
 
         String lSQL;
@@ -189,12 +210,12 @@ class TableContact extends TableBase
             "WHERE holidayId = " + contactItem.holidayId + " " +
             "AND contactId = " + contactItem.contactId;
 
-        if(executeSQL("deleteContactItem", lSQL) == false)
-            return (false);
-
         if(contactItem.contactPicture.length() > 0)
             if(removePicture(contactItem.contactPicture) == false)
                 return (false);
+
+        if(executeSQL("deleteContactItem", lSQL) == false)
+            return (false);
 
         return (true);
     }

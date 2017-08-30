@@ -309,6 +309,9 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             budgetItem.budgetUnpaid=Integer.parseInt(removePoundSign(txtBudgetUnpaid.getText().toString()));
             budgetItem.budgetNotes="";
             
+            budgetItem.budgetPicture="";
+            if(internalImageFilename.length()>0)
+                budgetItem.budgetPicture=internalImageFilename;
             budgetItem.pictureAssigned = imageSet;
             budgetItem.pictureChanged = imageChanged;
             budgetItem.fileBitmap = null;

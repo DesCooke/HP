@@ -135,6 +135,9 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
             attractionAreaItem.attractionAreaDescription = txtAttractionAreaDescription.getText().toString();
 
 
+            attractionAreaItem.attractionAreaPicture="";
+            if(internalImageFilename.length()>0)
+                attractionAreaItem.attractionAreaPicture=internalImageFilename;
             attractionAreaItem.pictureAssigned = imageSet;
             attractionAreaItem.pictureChanged = imageChanged;
             attractionAreaItem.fileBitmap = null;

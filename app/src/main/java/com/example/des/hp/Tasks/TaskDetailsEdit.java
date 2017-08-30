@@ -222,6 +222,9 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
             
             taskItem.taskDescription = txtTaskDescription.getText().toString();
             
+            taskItem.taskPicture="";
+            if(internalImageFilename.length()>0)
+                taskItem.taskPicture=internalImageFilename;
             taskItem.pictureAssigned = imageSet;
             taskItem.pictureChanged = imageChanged;
             taskItem.fileBitmap = null;

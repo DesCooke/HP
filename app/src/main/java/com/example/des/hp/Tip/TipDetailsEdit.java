@@ -179,6 +179,9 @@ public class TipDetailsEdit extends TipDetailsView implements View.OnClickListen
             tipItem.tipDescription = txtTipDescription.getText().toString();
             tipItem.tipNotes = txtTipNotes.getText().toString();
 
+            tipItem.tipPicture="";
+            if(internalImageFilename.length()>0)
+                tipItem.tipPicture=internalImageFilename;
             tipItem.pictureAssigned = imageSet;
             tipItem.pictureChanged = imageChanged;
             tipItem.fileBitmap = null;

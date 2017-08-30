@@ -12,6 +12,8 @@ import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 class TableAttractionArea extends TableBase
 {
     TableAttractionArea(Context context, SQLiteOpenHelper dbHelper)
@@ -83,13 +85,34 @@ class TableAttractionArea extends TableBase
         if(IsValid() == false)
             return (false);
 
-        attractionAreaItem.attractionAreaPicture="";
-        if(attractionAreaItem.pictureAssigned)
+        myMessages().LogMessage("addAttractionAreaItem:Handling Image");
+        if (attractionAreaItem.pictureAssigned)
         {
-            MyString myString=new MyString();
-            if(savePicture(attractionAreaItem.fileBitmap, myString) == false)
-                return (false);
-            attractionAreaItem.attractionAreaPicture=myString.Value;
+            /* if picture name has something in it - it means it came from internal folder */
+            if (attractionAreaItem.attractionAreaPicture.length() == 0)
+            {
+                myMessages().LogMessage("  - New Image was not from internal folder...");
+                if (attractionAreaItem.pictureAssigned)
+                {
+                    myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (savePicture(attractionAreaItem.fileBitmap, myString) == false)
+                        return (false);
+                    attractionAreaItem.attractionAreaPicture = myString.Value;
+                    myMessages().LogMessage("  - New filename " + attractionAreaItem.attractionAreaPicture);
+                } else
+                {
+                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                    + attractionAreaItem.attractionAreaPicture + ")");
+            }
+        }
+        else
+        {
+                myMessages().LogMessage("  - New Image not assigned - do nothing");
         }
 
         String lSql="INSERT INTO AttractionArea " +
@@ -138,22 +161,42 @@ class TableAttractionArea extends TableBase
         if(IsValid() == false)
             return (false);
 
-        // something has happened to the picture either selected a new one or cleared an
-        // existing one
-        if(item.pictureChanged)
+        myMessages().LogMessage("updateAttractionAreaItem:Handling Image");
+        if (item.pictureChanged)
         {
-            if(item.origPictureAssigned)
-                if(removePicture(item.origAttractionAreaPicture) == false)
-                    return (false);
-            item.attractionAreaPicture="";
-            if(item.pictureAssigned)
+            if (item.origPictureAssigned)
             {
-                MyString myString=new MyString();
-                if(savePicture(item.fileBitmap, myString) == false)
+                myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                if (removePicture(item.origAttractionAreaPicture) == false)
                     return (false);
-                item.attractionAreaPicture=myString.Value;
             }
+            
+            /* if picture name has something in it - it means it came from internal folder */
+            if (item.attractionAreaPicture.length() == 0)
+            {
+                myMessages().LogMessage("  - New Image was not from internal folder...");
+                if (item.pictureAssigned)
+                {
+                    myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (savePicture(item.fileBitmap, myString) == false)
+                        return (false);
+                    item.attractionAreaPicture = myString.Value;
+                    myMessages().LogMessage("  - New filename " + item.attractionAreaPicture);
+                } else
+                {
+                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                    + item.attractionAreaPicture + ")");
+            }
+        } else
+        {
+            myMessages().LogMessage("  - Image not changed - do nothing");
         }
+        
 
         String lSQL;
         lSQL="UPDATE AttractionArea " +
@@ -182,12 +225,12 @@ class TableAttractionArea extends TableBase
             "AND attractionId = " + attractionAreaItem.attractionId + " " +
             "AND attractionAreaId = " + attractionAreaItem.attractionAreaId;
 
-        if(executeSQL("deleteAttractionAreaItem", lSQL) == false)
-            return (false);
-
         if(attractionAreaItem.attractionAreaPicture.length() > 0)
             if(removePicture(attractionAreaItem.attractionAreaPicture) == false)
                 return (false);
+
+        if(executeSQL("deleteAttractionAreaItem", lSQL) == false)
+            return (false);
 
         return (true);
     }

@@ -13,6 +13,8 @@ import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 class TableBudget extends TableBase
 {
 
@@ -101,13 +103,33 @@ class TableBudget extends TableBase
         if(IsValid() == false)
             return (false);
 
-        budgetItem.budgetPicture="";
-        if(budgetItem.pictureAssigned)
+        if (budgetItem.pictureAssigned)
         {
-            MyString myString=new MyString();
-            if(savePicture(budgetItem.fileBitmap, myString) == false)
-                return (false);
-            budgetItem.budgetPicture=myString.Value;
+            /* if picture name has something in it - it means it came from internal folder */
+            if (budgetItem.budgetPicture.length() == 0)
+            {
+                myMessages().LogMessage("  - New Image was not from internal folder...");
+                if (budgetItem.pictureAssigned)
+                {
+                    myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (savePicture(budgetItem.fileBitmap, myString) == false)
+                        return (false);
+                    budgetItem.budgetPicture = myString.Value;
+                    myMessages().LogMessage("  - New filename " + budgetItem.budgetPicture);
+                } else
+                {
+                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                    + budgetItem.budgetPicture + ")");
+            }
+        }
+        else
+        {
+                myMessages().LogMessage("  - New Image not assigned - do nothing");
         }
 
         String lSql="INSERT INTO Budget " +
@@ -158,21 +180,40 @@ class TableBudget extends TableBase
         if(IsValid() == false)
             return (false);
 
-        // something has happened to the picture either selected a new one or cleared an
-        // existing one
-        if(budgetItem.pictureChanged)
+        myMessages().LogMessage("updateBudgetItem:Handling Image");
+        if (budgetItem.pictureChanged)
         {
-            if(budgetItem.origPictureAssigned)
-                if(removePicture(budgetItem.origBudgetPicture) == false)
-                    return (false);
-            budgetItem.budgetPicture="";
-            if(budgetItem.pictureAssigned)
+            if (budgetItem.origPictureAssigned)
             {
-                MyString myString=new MyString();
-                if(savePicture(budgetItem.fileBitmap, myString) == false)
+                myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                if (removePicture(budgetItem.origBudgetPicture) == false)
                     return (false);
-                budgetItem.budgetPicture=myString.Value;
             }
+            
+            /* if picture name has something in it - it means it came from internal folder */
+            if (budgetItem.budgetPicture.length() == 0)
+            {
+                myMessages().LogMessage("  - New Image was not from internal folder...");
+                if (budgetItem.pictureAssigned)
+                {
+                    myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (savePicture(budgetItem.fileBitmap, myString) == false)
+                        return (false);
+                    budgetItem.budgetPicture = myString.Value;
+                    myMessages().LogMessage("  - New filename " + budgetItem.budgetPicture);
+                } else
+                {
+                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                    + budgetItem.budgetPicture + ")");
+            }
+        } else
+        {
+            myMessages().LogMessage("  - Image not changed - do nothing");
         }
 
         String lSQL;
@@ -204,12 +245,12 @@ class TableBudget extends TableBase
             "WHERE holidayId = " + budgetItem.holidayId + " " +
             "AND budgetId = " + budgetItem.budgetId;
 
-        if(executeSQL("deleteBudgetItem", lSQL) == false)
-            return (false);
-
         if(budgetItem.budgetPicture.length() > 0)
             if(removePicture(budgetItem.budgetPicture) == false)
                 return (false);
+
+        if(executeSQL("deleteBudgetItem", lSQL) == false)
+            return (false);
 
         return (true);
     }

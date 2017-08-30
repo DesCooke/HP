@@ -13,6 +13,8 @@ import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 class TableTip extends TableBase
 {
 
@@ -85,13 +87,33 @@ class TableTip extends TableBase
         if(IsValid() == false)
             return (false);
 
-        tipItem.tipPicture="";
-        if(tipItem.pictureAssigned)
+        if (tipItem.pictureAssigned)
         {
-            MyString myString=new MyString();
-            if(savePicture(tipItem.fileBitmap, myString) == false)
-                return (false);
-            tipItem.tipPicture=myString.Value;
+            /* if picture name has something in it - it means it came from internal folder */
+            if (tipItem.tipPicture.length() == 0)
+            {
+                myMessages().LogMessage("  - New Image was not from internal folder...");
+                if (tipItem.pictureAssigned)
+                {
+                    myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (savePicture(tipItem.fileBitmap, myString) == false)
+                        return (false);
+                    tipItem.tipPicture = myString.Value;
+                    myMessages().LogMessage("  - New filename " + tipItem.tipPicture);
+                } else
+                {
+                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                    + tipItem.tipPicture + ")");
+            }
+        }
+        else
+        {
+                myMessages().LogMessage("  - New Image not assigned - do nothing");
         }
 
         String lSql="INSERT INTO Tip " +
@@ -139,22 +161,42 @@ class TableTip extends TableBase
         if(IsValid() == false)
             return (false);
 
-        // something has happened to the picture either selected a new one or cleared an
-        // existing one
-        if(tipItem.pictureChanged)
+        myMessages().LogMessage("updateTipItem:Handling Image");
+        if (tipItem.pictureChanged)
         {
-            if(tipItem.origPictureAssigned)
-                if(removePicture(tipItem.origTipPicture) == false)
-                    return (false);
-            tipItem.tipPicture="";
-            if(tipItem.pictureAssigned)
+            if (tipItem.origPictureAssigned)
             {
-                MyString myString=new MyString();
-                if(savePicture(tipItem.fileBitmap, myString) == false)
+                myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                if (removePicture(tipItem.origTipPicture) == false)
                     return (false);
-                tipItem.tipPicture=myString.Value;
             }
+            
+            /* if picture name has something in it - it means it came from internal folder */
+            if (tipItem.tipPicture.length() == 0)
+            {
+                myMessages().LogMessage("  - New Image was not from internal folder...");
+                if (tipItem.pictureAssigned)
+                {
+                    myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (savePicture(tipItem.fileBitmap, myString) == false)
+                        return (false);
+                    tipItem.tipPicture = myString.Value;
+                    myMessages().LogMessage("  - New filename " + tipItem.tipPicture);
+                } else
+                {
+                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                    + tipItem.tipPicture + ")");
+            }
+        } else
+        {
+            myMessages().LogMessage("  - Image not changed - do nothing");
         }
+
 
         String lSQL;
         lSQL="UPDATE Tip " +
@@ -184,12 +226,12 @@ class TableTip extends TableBase
             "AND tipGroupId = " + tipItem.tipGroupId + " " +
             "AND tipId = " + tipItem.tipId;
 
-        if(executeSQL("deleteTipItem", lSQL) == false)
-            return (false);
-
         if(tipItem.tipPicture.length() > 0)
             if(removePicture(tipItem.tipPicture) == false)
                 return (false);
+
+        if(executeSQL("deleteTipItem", lSQL) == false)
+            return (false);
 
         return (true);
     }

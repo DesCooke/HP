@@ -134,6 +134,9 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
             
             attractionItem.pictureAssigned=imageSet;
             attractionItem.pictureChanged=imageChanged;
+            attractionItem.attractionPicture="";
+            if(internalImageFilename.length()>0)
+                attractionItem.attractionPicture=internalImageFilename;
             attractionItem.fileBitmap=null;
             if(imageSet)
                 attractionItem.fileBitmap =((BitmapDrawable) imageView.getDrawable()).getBitmap();

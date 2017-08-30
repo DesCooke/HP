@@ -13,6 +13,7 @@ import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
 import static java.lang.Math.abs;
 
 class TableSchedule extends TableBase
@@ -93,13 +94,33 @@ class TableSchedule extends TableBase
         if(IsValid() == false)
             return (false);
 
-        scheduleItem.schedPicture="";
-        if(scheduleItem.pictureAssigned)
+        if (scheduleItem.pictureAssigned)
         {
-            MyString myString=new MyString();
-            if(savePicture(scheduleItem.scheduleBitmap, myString) == false)
-                return (false);
-            scheduleItem.schedPicture=myString.Value;
+            /* if picture name has something in it - it means it came from internal folder */
+            if (scheduleItem.schedPicture.length() == 0)
+            {
+                myMessages().LogMessage("  - New Image was not from internal folder...");
+                if (scheduleItem.pictureAssigned)
+                {
+                    myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (savePicture(scheduleItem.scheduleBitmap, myString) == false)
+                        return (false);
+                    scheduleItem.schedPicture = myString.Value;
+                    myMessages().LogMessage("  - New filename " + scheduleItem.schedPicture);
+                } else
+                {
+                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                    + scheduleItem.schedPicture + ")");
+            }
+        }
+        else
+        {
+                myMessages().LogMessage("  - New Image not assigned - do nothing");
         }
 
         int lStartTimeKnown=scheduleItem.startTimeKnown ? 1 : 0;
@@ -230,22 +251,42 @@ class TableSchedule extends TableBase
         if(IsValid() == false)
             return (false);
 
-        // something has happened to the picture either selected a new one or cleared an
-        // existing one
-        if(scheduleItem.pictureChanged)
+        myMessages().LogMessage("updateScheduleItem:Handling Image");
+        if (scheduleItem.pictureChanged)
         {
-            if(scheduleItem.origPictureAssigned)
-                if(removePicture(scheduleItem.origSchedPicture) == false)
-                    return (false);
-            scheduleItem.schedPicture="";
-            if(scheduleItem.pictureAssigned)
+            if (scheduleItem.origPictureAssigned)
             {
-                MyString myString=new MyString();
-                if(savePicture(scheduleItem.scheduleBitmap, myString) == false)
+                myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                if (removePicture(scheduleItem.origSchedPicture) == false)
                     return (false);
-                scheduleItem.schedPicture=myString.Value;
             }
+            
+            /* if picture name has something in it - it means it came from internal folder */
+            if (scheduleItem.schedPicture.length() == 0)
+            {
+                myMessages().LogMessage("  - New Image was not from internal folder...");
+                if (scheduleItem.pictureAssigned)
+                {
+                    myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (savePicture(scheduleItem.scheduleBitmap, myString) == false)
+                        return (false);
+                    scheduleItem.schedPicture = myString.Value;
+                    myMessages().LogMessage("  - New filename " + scheduleItem.schedPicture);
+                } else
+                {
+                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                    + scheduleItem.schedPicture + ")");
+            }
+        } else
+        {
+            myMessages().LogMessage("  - Image not changed - do nothing");
         }
+
 
         int lStartTimeKnown=scheduleItem.startTimeKnown ? 1 : 0;
         int lEndTimeKnown=scheduleItem.endTimeKnown ? 1 : 0;
@@ -394,12 +435,12 @@ class TableSchedule extends TableBase
             "AND attractionAreaId = " + scheduleItem.attractionAreaId + " " +
             "AND scheduleId = " + scheduleItem.scheduleId;
 
-        if(executeSQL("deleteScheduleItem", lSQL) == false)
-            return (false);
-
         if(scheduleItem.schedPicture.length() > 0)
             if(removePicture(scheduleItem.schedPicture) == false)
                 return (false);
+
+        if(executeSQL("deleteScheduleItem", lSQL) == false)
+            return (false);
 
         return (true);
     }

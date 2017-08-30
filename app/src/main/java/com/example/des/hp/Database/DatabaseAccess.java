@@ -291,6 +291,11 @@ public class DatabaseAccess extends SQLiteOpenHelper
         return (true);
     }
 
+    public boolean removePicture(String picture)
+    {
+        return(tableNotes.removePicture(picture));
+    }
+    
     private boolean removeNote(int holidayId, int noteId)
     {
         if(holidayId==0)
@@ -303,6 +308,12 @@ public class DatabaseAccess extends SQLiteOpenHelper
         if(tableNotes.deleteNoteItem(item)==false)
             return(false);
         return(true);
+    }
+    
+    public int pictureUsageCount(String argFilename)
+    {
+        // can use any of the tables actually - they all do the same thing
+        return(tableAttraction.totalUsageCount(argFilename));
     }
     //endregion
 

@@ -132,6 +132,9 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
             contactItem.contactDescription = txtContactDescription.getText().toString();
             contactItem.contactNotes = "";
 
+            contactItem.contactPicture="";
+            if(internalImageFilename.length()>0)
+                contactItem.contactPicture=internalImageFilename;
             contactItem.pictureAssigned = imageSet;
             contactItem.pictureChanged = imageChanged;
             contactItem.fileBitmap = null;

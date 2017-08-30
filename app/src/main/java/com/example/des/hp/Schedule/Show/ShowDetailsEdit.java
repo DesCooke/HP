@@ -159,6 +159,9 @@ public class ShowDetailsEdit extends ShowDetailsView implements View.OnClickList
 
             scheduleItem.schedName=txtSchedName.getText().toString();
 
+            scheduleItem.schedPicture="";
+            if(internalImageFilename.length()>0)
+                scheduleItem.schedPicture=internalImageFilename;
             scheduleItem.pictureAssigned=imageSet;
             scheduleItem.pictureChanged=imageChanged;
             scheduleItem.scheduleBitmap=null;

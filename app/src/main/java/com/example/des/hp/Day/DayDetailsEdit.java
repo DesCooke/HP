@@ -245,6 +245,9 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
 
             dayItem.dayName = dayName.getText().toString();
 
+            dayItem.dayPicture="";
+            if(internalImageFilename.length()>0)
+                dayItem.dayPicture=internalImageFilename;
             dayItem.pictureAssigned=imageSet;
             dayItem.pictureChanged=imageChanged;
             dayItem.dayBitmap = null;

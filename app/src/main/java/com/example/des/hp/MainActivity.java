@@ -2,6 +2,7 @@ package com.example.des.hp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -10,12 +11,15 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.des.hp.Dialog.BaseActivity;
+import com.example.des.hp.InternalImages.InternalImageItem;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.Holiday.*;
 
 import java.util.ArrayList;
 
+import static com.example.des.hp.Database.DatabaseAccess.database;
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.ImageUtils.imageUtils;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class MainActivity extends BaseActivity
@@ -102,6 +106,11 @@ public class MainActivity extends BaseActivity
                     // consume click here
                     lv_result = true;
                     break;
+                case R.id.action_orphaned_images:
+                    handleOrphanedImages();
+                    // consume click here
+                    lv_result = true;
+                    break;
                 default:
                     lv_result = super.onOptionsItemSelected(item);
             }
@@ -111,6 +120,25 @@ public class MainActivity extends BaseActivity
             ShowError("onOptionsItemSelected", e.getMessage());
         }
         return (lv_result);
+    }
+    
+    public void handleOrphanedImages()
+    {
+        int lCount=0;
+        myMessages().LogMessage("Identifying orphaned images....");
+        
+        ArrayList<InternalImageItem>internalImageList=imageUtils().listInternalImages();
+        for(InternalImageItem item: internalImageList)
+        {
+            if(databaseAccess().pictureUsageCount(item.internalImageFilename)==0)
+            {
+                myMessages().LogMessage("Picture " + item.internalImageFilename + ", is not linked to anything - removing");
+                databaseAccess().removePicture(item.internalImageFilename);
+                lCount++;
+            }
+        }
+        myMessages().LogMessage("There are a total of " + String.valueOf(internalImageList.size()) +
+            " and " + String.valueOf(lCount) + " were orphaned");
     }
     //endregion
     
