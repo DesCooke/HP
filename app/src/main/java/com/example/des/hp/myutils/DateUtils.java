@@ -304,7 +304,7 @@ public class DateUtils extends BaseActivity
             if (myDateDiff.day < 0)
             {
                 Calendar c = Calendar.getInstance();
-                c.set(lyear1.Value, lyear2.Value, 1);
+                c.set(lyear1.Value, lmonth1.Value-1, 1);
                 int lDaysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH);
                 myMessages().LogMessage("days in earlier month " + lyear1.Value + "/" + lmonth1.Value +
                     " = " + lDaysInMonth);

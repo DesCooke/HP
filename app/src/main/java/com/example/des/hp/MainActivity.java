@@ -139,6 +139,8 @@ public class MainActivity extends BaseActivity
         }
         myMessages().LogMessage("There are a total of " + String.valueOf(internalImageList.size()) +
             " and " + String.valueOf(lCount) + " were orphaned");
+        myMessages().ShowMessageShort("Orphaned Images Removed " + String.valueOf(lCount) +
+            ", Images Left " + String.valueOf(internalImageList.size()));
     }
     //endregion
     
