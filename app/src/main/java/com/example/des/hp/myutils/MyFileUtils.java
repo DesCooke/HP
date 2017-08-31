@@ -63,7 +63,12 @@ public class MyFileUtils
         try
         {
             String fPath = uri.getPath();
-            int lPos = fPath.lastIndexOf(':') + 1;
+            int lColonPos = fPath.lastIndexOf(':') + 1;
+            int lSlashPos = fPath.lastIndexOf('/') + 1;
+            int lPos;
+            lPos=lColonPos;
+            if(lSlashPos>lPos)
+                lPos=lSlashPos;
             int lLength = fPath.length();
             String fPathRight = fPath.substring(lPos, lLength);
             retString.Value = fPathRight;
@@ -78,12 +83,7 @@ public class MyFileUtils
 
     public Uri StringToUri(String path)
     {
-        // create a File object from it
-        File originalFile = new File(path);
-
-        Uri toUri = FileProvider.getUriForFile(_context,
-            _context.getApplicationContext().getPackageName() + ".provider",
-            originalFile);
+        Uri toUri=Uri.fromFile(new File(path));
         
         return toUri;
     }

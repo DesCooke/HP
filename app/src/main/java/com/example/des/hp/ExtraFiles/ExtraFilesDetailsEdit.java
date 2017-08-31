@@ -111,7 +111,7 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
         {
             if( mySelectedFileChanged)
             {
-                if(mySelectedFileName.length() == 0)
+                if(mySelectedFileNameOnly.length() == 0)
                 {
                     myMessages().ShowMessageShort("Need to select a file first... ");
                     return;
@@ -127,14 +127,12 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
                 }
             }
 
-            myMessages().ShowMessageShort("Saving " + mySelectedFileName);
+            myMessages().ShowMessageShort("Saving " + mySelectedFileNameOnly);
 
             extraFilesItem.fileDescription = txtFileDescription.getText().toString();
             extraFilesItem.fileChanged=mySelectedFileChanged;
             if (mySelectedFileChanged)
-            {
-                extraFilesItem.fileName=mySelectedFileName;
-            }
+                extraFilesItem.fileName=mySelectedFileNameOnly;
 
             extraFilesItem.fileBitmap = null;
             extraFilesItem.filePicture="";
@@ -290,7 +288,7 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
         {
             newFilename = dialogWithEditTextFragment.getFinalText();
             txtFilename.setText(newFilename);
-            mySelectedFileName=newFilename;
+            mySelectedFileNameOnly=newFilename;
             myMessages().ShowMessageShort("Renaming to " + newFilename);
             
             dialogWithEditTextFragment.dismiss();

@@ -117,7 +117,8 @@ public class BaseActivity extends AppCompatActivity
     
     public Uri mySelectedFileUri;
     public boolean FileSelected;
-    public String mySelectedFileName;
+    public String mySelectedFileNameOnly;
+    public String mySelectedFullFilePath;
     public boolean mySelectedFileChanged = false;
     
     public boolean showNotesEnabled;
@@ -310,25 +311,25 @@ public class BaseActivity extends AppCompatActivity
                 case SELECT_PDF:
                     if (resultCode == RESULT_OK)
                     {
-                        final Uri imageUri = imageReturnedIntent.getData();
-                        grantUriPermission("com.example.des.hp", imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        
-                        //mySelectedFileUri = imageUri;
-                        //MyString myString = new MyString();
-                        //if (myFileUtils().BaseFilenameFromUri(imageUri, myString) == false)
-                        //    return;
-                        myMessages().LogMessage("Getting fully qualified path...");
-                        mySelectedFileName = myFileUtils().getMyFilePath(imageUri);
-                        myMessages().LogMessage("mySelectedFileName = " + mySelectedFileName);
+                        mySelectedFileUri = imageReturnedIntent.getData();
+                        grantUriPermission("com.example.des.hp", mySelectedFileUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-                        mySelectedFileUri = myFileUtils().StringToUri(mySelectedFileName);
-                        myMessages().LogMessage("mySelectedFileUri = " + mySelectedFileUri.getPath());
-                        
+                        myMessages().LogMessage("Getting just the filename.");
+                        MyString myString = new MyString();
+                        if (myFileUtils().BaseFilenameFromUri(mySelectedFileUri, myString) == false)
+                            return;
+                        mySelectedFileNameOnly=myString.Value;
+                        myMessages().LogMessage("mySelectedFileNameOnly = " + mySelectedFileNameOnly);
+
+                        myMessages().LogMessage("Getting fully qualified path...");
+                        mySelectedFullFilePath = myFileUtils().getMyFilePath(mySelectedFileUri);
+                        myMessages().LogMessage("mySelectedFullFilePath = " + mySelectedFullFilePath);
+
                         myMessages().LogMessage("done");
                         mySelectedFileChanged = true;
                         reloadOnShow = false;
                         if (txtFilename != null)
-                            txtFilename.setText(mySelectedFileName);
+                            txtFilename.setText(mySelectedFileNameOnly);
                     }
                     break;
             }
