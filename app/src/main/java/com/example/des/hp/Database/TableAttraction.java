@@ -122,10 +122,9 @@ class TableAttraction extends TableBase
                 myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
                     + attractionItem.attractionPicture + ")");
             }
-        }
-        else
+        } else
         {
-                myMessages().LogMessage("  - New Image not assigned - do nothing");
+            myMessages().LogMessage("  - New Image not assigned - do nothing");
         }
         
         String lSql = "INSERT INTO Attraction " +
@@ -171,37 +170,45 @@ class TableAttraction extends TableBase
     {
         if (IsValid() == false)
             return (false);
-
+        
         myMessages().LogMessage("updateAttractionItem:Handling Image");
         if (attractionItem.pictureChanged)
         {
-            if (attractionItem.origPictureAssigned)
+            if (attractionItem.origPictureAssigned && attractionItem.attractionPicture.length() > 0 &&
+                attractionItem.attractionPicture.compareTo(attractionItem.origAttractionPicture) == 0)
             {
-                myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                if (removePicture(attractionItem.origAttractionPicture) == false)
-                    return (false);
-            }
-            
-            /* if picture name has something in it - it means it came from internal folder */
-            if (attractionItem.attractionPicture.length() == 0)
-            {
-                myMessages().LogMessage("  - New Image was not from internal folder...");
-                if (attractionItem.pictureAssigned)
-                {
-                    myMessages().LogMessage("  - Save new image and get a filename...");
-                    MyString myString = new MyString();
-                    if (savePicture(attractionItem.fileBitmap, myString) == false)
-                        return (false);
-                    attractionItem.attractionPicture = myString.Value;
-                    myMessages().LogMessage("  - New filename " + attractionItem.attractionPicture);
-                } else
-                {
-                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
-                }
+                myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
             } else
             {
-                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
-                    + attractionItem.attractionPicture + ")");
+                
+                if (attractionItem.origPictureAssigned)
+                {
+                    myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                    if (removePicture(attractionItem.origAttractionPicture) == false)
+                        return (false);
+                }
+            
+                /* if picture name has something in it - it means it came from internal folder */
+                if (attractionItem.attractionPicture.length() == 0)
+                {
+                    myMessages().LogMessage("  - New Image was not from internal folder...");
+                    if (attractionItem.pictureAssigned)
+                    {
+                        myMessages().LogMessage("  - Save new image and get a filename...");
+                        MyString myString = new MyString();
+                        if (savePicture(attractionItem.fileBitmap, myString) == false)
+                            return (false);
+                        attractionItem.attractionPicture = myString.Value;
+                        myMessages().LogMessage("  - New filename " + attractionItem.attractionPicture);
+                    } else
+                    {
+                        myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                    }
+                } else
+                {
+                    myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
+                        + attractionItem.attractionPicture + ")");
+                }
             }
         } else
         {

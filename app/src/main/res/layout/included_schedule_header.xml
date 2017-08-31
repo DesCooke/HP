@@ -26,4 +26,13 @@
         app:srcCompat="@android:drawable/ic_menu_delete"
         tools:ignore="ContentDescription"/>
 
+    <TextView
+        android:id="@+id/txtPicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageViewSmall"
+        android:layout_toEndOf="@+id/btnClear"
+        android:background="@android:color/background_light"
+        android:text="TextView"/>
+
 </RelativeLayout>

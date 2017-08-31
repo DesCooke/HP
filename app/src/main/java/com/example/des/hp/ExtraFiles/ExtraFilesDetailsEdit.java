@@ -88,10 +88,10 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
     {
         try
         {
+
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("*/*");
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            
             startActivityForResult(
                 Intent.createChooser(intent, "Select a File to Upload"),
                 SELECT_PDF);
@@ -198,15 +198,19 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
                 }
                 catch (Exception e)
                 {
-                    ShowError("saveExtraFile", e.getMessage());
+                    ShowError("saveExtraFile ", e.getMessage() + ", " + mySelectedFileUri.getPath());
                     return;
                 }
                 extraFilesItem.fileUri = mySelectedFileUri;
+                
+                myMessages().LogMessage("URI is " + mySelectedFileUri.getPath());
                 
                 MyString myString = new MyString();
                 if (!myFileUtils().BaseFilenameFromUri(mySelectedFileUri, myString))
                     return;
                 newFilename = myString.Value;
+
+                myMessages().LogMessage("New Filename is " + newFilename);
                 
                 File tof = new File(getResources().getString(R.string.files_path) + "/" + newFilename);
                 if (tof.exists())

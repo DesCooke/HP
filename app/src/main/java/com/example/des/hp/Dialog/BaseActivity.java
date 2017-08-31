@@ -63,6 +63,7 @@ import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
+import com.example.des.hp.InternalImages.InternalImageItem;
 import com.example.des.hp.InternalImages.InternalImageList;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.Notes.NoteView;
@@ -74,6 +75,8 @@ import com.example.des.hp.myutils.MyMessages;
 import com.example.des.hp.myutils.MyString;
 import com.example.des.hp.thirdpartyutils.BadgeView;
 
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
@@ -122,6 +125,8 @@ public class BaseActivity extends AppCompatActivity
     
     public TextView txtProgramInfo;
     public String layoutName = "";
+    
+    public TextView txtPicture;
     
     public boolean imagePresent = false;
     public final int SELECT_DEVICE_PHOTO = 1;
@@ -266,7 +271,8 @@ public class BaseActivity extends AppCompatActivity
                             reloadOnShow = false;
                             imageChanged = true;
                             internalImageFilename = "";
-                            
+                            if(txtPicture!=null)
+                               txtPicture.setText("");
                         }
                         catch (Exception e)
                         {
@@ -292,6 +298,8 @@ public class BaseActivity extends AppCompatActivity
                             reloadOnShow = false;
                             imageChanged = true;
                             internalImageFilename = lfile;
+                            if(txtPicture!=null)
+                               txtPicture.setText(lfile);
                         }
                         catch (Exception e)
                         {
@@ -304,11 +312,19 @@ public class BaseActivity extends AppCompatActivity
                     {
                         final Uri imageUri = imageReturnedIntent.getData();
                         grantUriPermission("com.example.des.hp", imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        mySelectedFileUri = imageUri;
-                        MyString myString = new MyString();
-                        if (myFileUtils().BaseFilenameFromUri(imageUri, myString) == false)
-                            return;
-                        mySelectedFileName = myString.Value;
+                        
+                        //mySelectedFileUri = imageUri;
+                        //MyString myString = new MyString();
+                        //if (myFileUtils().BaseFilenameFromUri(imageUri, myString) == false)
+                        //    return;
+                        myMessages().LogMessage("Getting fully qualified path...");
+                        mySelectedFileName = myFileUtils().getMyFilePath(imageUri);
+                        myMessages().LogMessage("mySelectedFileName = " + mySelectedFileName);
+
+                        mySelectedFileUri = myFileUtils().StringToUri(mySelectedFileName);
+                        myMessages().LogMessage("mySelectedFileUri = " + mySelectedFileUri.getPath());
+                        
+                        myMessages().LogMessage("done");
                         mySelectedFileChanged = true;
                         reloadOnShow = false;
                         if (txtFilename != null)
@@ -326,6 +342,9 @@ public class BaseActivity extends AppCompatActivity
     
     public void SetImage(String picture)
     {
+        if(txtPicture!=null)
+            txtPicture.setText("");
+        
         if (!imagePresent)
             return;
         
@@ -335,6 +354,8 @@ public class BaseActivity extends AppCompatActivity
             
             if (picture != null && picture.length() > 0)
             {
+                if(txtPicture!=null)
+                    txtPicture.setText(picture);
                 if (!imageUtils().getPageHeaderImage(this, picture, imageView))
                     return;
                 imageSet = true;
@@ -349,6 +370,9 @@ public class BaseActivity extends AppCompatActivity
     
     public void btnClearImage(View view)
     {
+        if(txtPicture!=null)
+           txtPicture.setText("");
+        
         if (!imagePresent)
             return;
         try
@@ -383,6 +407,7 @@ public class BaseActivity extends AppCompatActivity
         }
         
         txtProgramInfo = (TextView) findViewById(R.id.txtProgramInfo);
+        txtPicture = (TextView) findViewById(R.id.txtPicture);
         
         imageDefault = BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing);
         imagePresent = false;
@@ -489,13 +514,16 @@ public class BaseActivity extends AppCompatActivity
     {
         if (txtProgramInfo != null)
         {
+            ArrayList<InternalImageItem> internalImageList=imageUtils().listInternalImages();
+
             txtProgramInfo.setText
                 (
                     "Class: " + getClass().getSimpleName() + ", " +
                         "View: " + layoutName + ", " +
                         "Program Version: " + getString(R.string.program_version) + ", " +
                         "Date: " + getString(R.string.program_date) + ", " +
-                        "Database Version: " + String.valueOf(DatabaseAccess.DATABASE_VERSION)
+                        "Database Version: " + String.valueOf(DatabaseAccess.DATABASE_VERSION) + ", " +
+                        "Image Count: " + String.valueOf(internalImageList.size())
                 );
         }
     }
