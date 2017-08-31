@@ -254,33 +254,41 @@ class TableSchedule extends TableBase
         myMessages().LogMessage("updateScheduleItem:Handling Image");
         if (scheduleItem.pictureChanged)
         {
-            if (scheduleItem.origPictureAssigned)
+            if (scheduleItem.origPictureAssigned && scheduleItem.schedPicture.length() > 0 &&
+                scheduleItem.schedPicture.compareTo(scheduleItem.origSchedPicture)==0)
             {
-                myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                if (removePicture(scheduleItem.origSchedPicture) == false)
-                    return (false);
+                myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
             }
-            
-            /* if picture name has something in it - it means it came from internal folder */
-            if (scheduleItem.schedPicture.length() == 0)
+            else
             {
-                myMessages().LogMessage("  - New Image was not from internal folder...");
-                if (scheduleItem.pictureAssigned)
+
+                if(scheduleItem.origPictureAssigned)
                 {
-                    myMessages().LogMessage("  - Save new image and get a filename...");
-                    MyString myString = new MyString();
-                    if (savePicture(scheduleItem.scheduleBitmap, myString) == false)
+                    myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                    if(removePicture(scheduleItem.origSchedPicture) == false)
                         return (false);
-                    scheduleItem.schedPicture = myString.Value;
-                    myMessages().LogMessage("  - New filename " + scheduleItem.schedPicture);
+                }
+            
+                /* if picture name has something in it - it means it came from internal folder */
+                if(scheduleItem.schedPicture.length() == 0)
+                {
+                    myMessages().LogMessage("  - New Image was not from internal folder...");
+                    if(scheduleItem.pictureAssigned)
+                    {
+                        myMessages().LogMessage("  - Save new image and get a filename...");
+                        MyString myString=new MyString();
+                        if(savePicture(scheduleItem.scheduleBitmap, myString) == false)
+                            return (false);
+                        scheduleItem.schedPicture=myString.Value;
+                        myMessages().LogMessage("  - New filename " + scheduleItem.schedPicture);
+                    } else
+                    {
+                        myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                    }
                 } else
                 {
-                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                    myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + scheduleItem.schedPicture + ")");
                 }
-            } else
-            {
-                myMessages().LogMessage("  - New Image was from internal folder - so just use it ("
-                    + scheduleItem.schedPicture + ")");
             }
         } else
         {
