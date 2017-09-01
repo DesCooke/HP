@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.des.hp.Dialog.BaseActivity;
+import com.example.des.hp.InternalFiles.InternalFileItem;
 import com.example.des.hp.InternalImages.InternalImageItem;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.Holiday.*;
@@ -139,8 +140,31 @@ public class MainActivity extends BaseActivity
         }
         myMessages().LogMessage("There are a total of " + String.valueOf(internalImageList.size()) +
             " and " + String.valueOf(lCount) + " were orphaned");
-        myMessages().ShowMessageShort("Orphaned Images Removed " + String.valueOf(lCount) +
-            ", Images Left " + String.valueOf(internalImageList.size()));
+
+        myMessages().LogMessage("Identifying orphaned files....");
+
+        int lCount2=0;
+        ArrayList<InternalFileItem>internalFileList=imageUtils().listInternalFiles();
+        for(InternalFileItem item: internalFileList)
+        {
+            if(databaseAccess().fileUsageCount(item.filename)==0)
+            {
+                myMessages().LogMessage("File " + item.filename + ", is not linked to anything - removing");
+                databaseAccess().removeExtraFile(item.filename);
+                lCount2++;
+            }
+        }
+        myMessages().LogMessage("There are a total of " + String.valueOf(internalFileList.size()) +
+            " and " + String.valueOf(lCount2) + " were orphaned");
+
+
+        myMessages().ShowMessageLong
+            (
+                "Images: Orphaned " + String.valueOf(lCount) + ", " +
+                    "Total " + String.valueOf(internalImageList.size()) + ", " +
+                    "Files: Orphaned " + String.valueOf(lCount2) + ", " +
+                    "Total " + String.valueOf(internalFileList.size()) + " "
+            );
     }
     //endregion
     

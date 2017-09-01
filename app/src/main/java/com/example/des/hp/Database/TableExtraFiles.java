@@ -101,8 +101,9 @@ class TableExtraFiles extends TableBase
         {
             String lNewString = extraFilesItem.fileName.replace("'", "");
             extraFilesItem.fileName = lNewString;
-            if (saveExtraFile(extraFilesItem.fileUri, extraFilesItem.fileName) == false)
-                return (false);
+            if(extraFilesItem.internalFilename.length()==0)
+                if (saveExtraFile(extraFilesItem.fileUri, extraFilesItem.fileName) == false)
+                    return (false);
         }
         
         String lSql = "INSERT INTO ExtraFiles " +
@@ -189,10 +190,11 @@ class TableExtraFiles extends TableBase
         
         if (extraFilesItem.fileChanged)
         {
-            if (extraFilesItem.origFileName.length() > 0)
+            if (extraFilesItem.origFileName.length() > 0 &&
+                extraFilesItem.origFileName.compareTo(extraFilesItem.internalFilename)!=0)
                 if (removeExtraFile(extraFilesItem.origFileName) == false)
                     return (false);
-            if (extraFilesItem.fileName.length() > 0)
+            if (extraFilesItem.internalFilename.length()==0 && extraFilesItem.fileName.length() > 0)
             {
                 String lNewString = extraFilesItem.fileName.replace("'", "");
                 extraFilesItem.fileName = lNewString;

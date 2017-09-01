@@ -10,6 +10,7 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.widget.ImageView;
 
+import com.example.des.hp.InternalFiles.InternalFileItem;
 import com.example.des.hp.InternalImages.InternalImageItem;
 import com.example.des.hp.MainActivity;
 import com.example.des.hp.R;
@@ -172,7 +173,23 @@ public class ImageUtils
         }
         return (l_array);
     }
-    
+
+    public ArrayList<InternalFileItem> listInternalFiles()
+    {
+        ArrayList<InternalFileItem> l_array = new ArrayList<InternalFileItem>();
+
+        File directory = new File(res.getString(R.string.files_path));
+        File[] files = directory.listFiles();
+
+        Arrays.sort(files);
+
+        for (int i = 0; i < files.length; i++)
+        {
+            l_array.add(new InternalFileItem(files[i].getName()));
+        }
+        return (l_array);
+    }
+
     //
     // Checks to make sure a filename exists
     // Returns: true(worked)/false(failed)

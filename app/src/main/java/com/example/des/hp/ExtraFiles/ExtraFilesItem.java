@@ -33,6 +33,8 @@ public class ExtraFilesItem
 
     public Bitmap fileBitmap;
 
+    public String internalFilename;
+
     public ExtraFilesItem()
     {
     }

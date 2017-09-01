@@ -28,6 +28,7 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
     public ImageButton btnClear;
     public Button btnSave;
     public ImageButton btnFile;
+    public TextView txtPDFFilename;
     //endregion
 
     //region Constructors/Destructors

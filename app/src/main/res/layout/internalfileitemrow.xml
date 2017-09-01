@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/grpFilename"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txtFilename"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.2"
+        android:background="@android:drawable/dialog_holo_light_frame"
+        android:elevation="1dp"
+        android:paddingBottom="15dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="15dp"
+        android:text="TextView"
+        android:textAlignment="textStart"/>
+
+</LinearLayout>

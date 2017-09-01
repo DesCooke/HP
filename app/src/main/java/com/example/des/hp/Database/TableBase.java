@@ -162,9 +162,32 @@ public class TableBase
         lCount += pictureUsageCount(argFilename, "TipGroup", "tipGroupPicture");
         return (lCount);
     }
-    
-   
-    
+
+    public int fileUsageCount(String argFilename)
+    {
+        int lCount = 0;
+        String lSQL;
+
+
+        lSQL = "SELECT COUNT(*) " +
+            "FROM extraFiles " +
+            "WHERE fileName = " + MyQuotedString(argFilename) + " ";
+
+        Cursor cursor = executeSQLOpenCursor("fileUsageCount", lSQL);
+        if (cursor != null)
+        {
+            cursor.moveToFirst();
+            lCount = Integer.parseInt(cursor.getString(0));
+        }
+
+        myMessages().LogMessage("  Count of " + argFilename + " in extraFiles: " + String.valueOf(lCount));
+
+        executeSQLCloseCursor("fileUsageCount");
+        return (lCount);
+    }
+
+
+
     // returns true/false
     boolean removeExtraFile(String argFilename)
     {
@@ -172,11 +195,14 @@ public class TableBase
         {
             if (argFilename.length() == 0)
                 return (true);
-            
-            File file = new File(_resources.getString(R.string.files_path) + "/" + argFilename);
-            if (file.exists())
-                if (!file.delete())
-                    throw new Exception("unable to delete " + file.getAbsolutePath());
+
+            if(fileUsageCount(argFilename)<2)
+            {
+                File file=new File(_resources.getString(R.string.files_path) + "/" + argFilename);
+                if(file.exists())
+                    if(!file.delete())
+                        throw new Exception("unable to delete " + file.getAbsolutePath());
+            }
             return (true);
         }
         catch (Exception e)
