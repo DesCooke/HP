@@ -4,9 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.des.hp.myutils.MyMessages;
-
-class TableHighlightGroup  extends TableBase
+class TableHighlightGroup extends TableBase
 {
     TableHighlightGroup(Context context, SQLiteOpenHelper dbHelper)
     {
@@ -15,26 +13,14 @@ class TableHighlightGroup  extends TableBase
 
     public void ShowError(String argFunction, String argMessage)
     {
-        super.ShowError("TableHighlightGroup:"+argFunction, argMessage);
+        super.ShowError("TableHighlightGroup:" + argFunction, argMessage);
     }
 
     public boolean onCreate(SQLiteDatabase db)
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS highlightGroup " +
-                "( " +
-                "  holidayId             INT(5),  " +
-                "  dayId                 INT(5),  " +
-                "  highlightGroupId      INT(5),  " +
-                "  sequenceNo            INT(5),  " +
-                "  highlightGroupName    VARCHAR, " +
-                "  highlightGroupPicture VARCHAR, " +
-                "  infoId                INT(5),  " +
-                "  noteId                INT(5),  " +
-                "  galleryId             INT(5),  " +
-                "  sygicId               INT(5)   " +
-                ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS highlightGroup " + "( " + "  holidayId             INT(5),  " + "  dayId                 INT(5),  " + "  highlightGroupId      INT(5),  " + "  sequenceNo            INT(5),  " + "  highlightGroupName    VARCHAR, " + "  highlightGroupPicture VARCHAR, " + "  infoId                INT(5),  " + "  noteId                INT(5),  " + "  galleryId             INT(5),  " + "  sygicId               INT(5)   " + ") ";
 
             db.execSQL(lSQL);
 
@@ -46,6 +32,7 @@ class TableHighlightGroup  extends TableBase
             return (false);
         }
     }
+
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
         try
@@ -60,12 +47,12 @@ class TableHighlightGroup  extends TableBase
                 db.execSQL("UPDATE highlightgroup SET galleryId = 0");
                 db.execSQL("UPDATE highlightgroup SET sygicId = 0");
             }
-            return(true);
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return(false);
+            return (false);
         }
     }
 

@@ -2,7 +2,6 @@ package com.example.des.hp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,7 +17,6 @@ import com.example.des.hp.Holiday.*;
 
 import java.util.ArrayList;
 
-import static com.example.des.hp.Database.DatabaseAccess.database;
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.ImageUtils.imageUtils;
 import static com.example.des.hp.myutils.MyMessages.myMessages;

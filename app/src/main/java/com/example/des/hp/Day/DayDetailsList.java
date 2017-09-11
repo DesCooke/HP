@@ -25,7 +25,7 @@ public class DayDetailsList extends BaseActivity
     public HolidayItem holidayItem;
     public DayAdapter dayAdapter;
     //endregion
-    
+
     //region Constructors/Destructors
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -34,11 +34,11 @@ public class DayDetailsList extends BaseActivity
 
         try
         {
-            layoutName = "activity_day_list";
+            layoutName="activity_day_list";
             setContentView(R.layout.activity_day_list);
 
             afterCreate();
-            
+
             showForm();
         }
         catch(Exception e)
@@ -62,7 +62,7 @@ public class DayDetailsList extends BaseActivity
         return true;
     }
     //endregion
-    
+
     //region Form Functions
     public void showDayAdd(View view)
     {
@@ -104,12 +104,12 @@ public class DayDetailsList extends BaseActivity
             dayAdapter.setOnItemClickListener(new DayAdapter.OnItemClickListener()
             {
                 @Override
-                public void onItemClick(View view, DayItem obj, int position)
+                public void onItemClick(View view, DayItem obj)
                 {
                     Intent intent=new Intent(getApplicationContext(), DayDetailsView.class);
                     intent.putExtra("ACTION", "view");
-                    intent.putExtra("HOLIDAYID", dayList.get(position).holidayId);
-                    intent.putExtra("DAYID", dayList.get(position).dayId);
+                    intent.putExtra("HOLIDAYID", obj.holidayId);
+                    intent.putExtra("DAYID", obj.dayId);
                     startActivity(intent);
                 }
             });
@@ -166,6 +166,6 @@ public class DayDetailsList extends BaseActivity
     }
     //endregion
 
-    
+
 }
 

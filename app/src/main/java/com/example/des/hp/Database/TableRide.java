@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Schedule.Ride.RideItem;
-import com.example.des.hp.myutils.MyMessages;
 
 class TableRide extends TableBase
 {
@@ -24,18 +23,7 @@ class TableRide extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS ride " +
-                "( " +
-                "  holidayId         INT(5),  " +
-                "  dayId             INT(5),  " +
-                "  attractionId      INT(5),  " +
-                "  attractionAreaId  INT(5),  " +
-                "  scheduleId        INT(5),  " +
-                "  rideName          VARCHAR, " +
-                "  heartRating       FLOAT,   " +
-                "  scenicRating      FLOAT,   " +
-                "  thrillRating      FLOAT   " +
-                ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS ride " + "( " + "  holidayId         INT(5),  " + "  dayId             INT(5),  " + "  attractionId      INT(5),  " + "  attractionAreaId  INT(5),  " + "  scheduleId        INT(5),  " + "  rideName          VARCHAR, " + "  heartRating       FLOAT,   " + "  scenicRating      FLOAT,   " + "  thrillRating      FLOAT   " + ") ";
 
             db.execSQL(lSQL);
 
@@ -54,18 +42,7 @@ class TableRide extends TableBase
         {
             if(oldVersion == 25 && newVersion == 26)
             {
-                db.execSQL("CREATE TABLE IF NOT EXISTS ride " +
-                    "( " +
-                    "  holidayId         INT(5),  " +
-                    "  dayId             INT(5),  " +
-                    "  attractionId      INT(5),  " +
-                    "  attractionAreaId  INT(5),  " +
-                    "  scheduleId        INT(5),  " +
-                    "  rideName          VARCHAR, " +
-                    "  heartRating       FLOAT,   " +
-                    "  scenicRating      FLOAT,   " +
-                    "  thrillRating      FLOAT    " +
-                    ") ");
+                db.execSQL("CREATE TABLE IF NOT EXISTS ride " + "( " + "  holidayId         INT(5),  " + "  dayId             INT(5),  " + "  attractionId      INT(5),  " + "  attractionAreaId  INT(5),  " + "  scheduleId        INT(5),  " + "  rideName          VARCHAR, " + "  heartRating       FLOAT,   " + "  scenicRating      FLOAT,   " + "  thrillRating      FLOAT    " + ") ");
             }
             return (true);
         }
@@ -81,20 +58,7 @@ class TableRide extends TableBase
         if(IsValid() == false)
             return (false);
 
-        String lSql="INSERT INTO ride " +
-            "  (holidayId, dayId, attractionId, attractionAreaId, " +
-            "   scheduleId, heartRating, scenicRating, thrillRating) " +
-            "VALUES " +
-            "(" +
-            rideItem.holidayId + "," +
-            rideItem.dayId + "," +
-            rideItem.attractionId + "," +
-            rideItem.attractionAreaId + "," +
-            rideItem.scheduleId + "," +
-            rideItem.heartRating + "," +
-            rideItem.scenicRating + "," +
-            rideItem.thrillRating + " " +
-            ")";
+        String lSql="INSERT INTO ride " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, heartRating, scenicRating, thrillRating) " + "VALUES " + "(" + rideItem.holidayId + "," + rideItem.dayId + "," + rideItem.attractionId + "," + rideItem.attractionAreaId + "," + rideItem.scheduleId + "," + rideItem.heartRating + "," + rideItem.scenicRating + "," + rideItem.thrillRating + " " + ")";
 
         return (executeSQL("addRideItem", lSql));
     }
@@ -104,24 +68,12 @@ class TableRide extends TableBase
         if(IsValid() == false)
             return (false);
 
-        if(ItemExists(rideItem)==false)
+        if(ItemExists(rideItem) == false)
         {
-            return(addRideItem(rideItem));
+            return (addRideItem(rideItem));
         }
         String lSQL;
-        lSQL="UPDATE ride " +
-            "SET heartRating = " + rideItem.heartRating + ", " +
-            "    scenicRating = " + rideItem.scenicRating + ", " +
-            "    thrillRating = " + rideItem.thrillRating + ", " +
-            "    dayId = " + rideItem.dayId + ", " +
-            "    attractionId = " + rideItem.attractionId + ", " +
-            "    attractionAreaId = " + rideItem.attractionAreaId + ", " +
-            "    scheduleId = " + rideItem.scheduleId + " " +
-            "WHERE holidayId = " + rideItem.holidayId + " " +
-            "AND dayId = " + rideItem.origDayId + " " +
-            "AND attractionId = " + rideItem.origAttractionId + " " +
-            "AND attractionAreaId = " + rideItem.origAttractionAreaId + " " +
-            "AND scheduleId = " + rideItem.origScheduleId;
+        lSQL="UPDATE ride " + "SET heartRating = " + rideItem.heartRating + ", " + "    scenicRating = " + rideItem.scenicRating + ", " + "    thrillRating = " + rideItem.thrillRating + ", " + "    dayId = " + rideItem.dayId + ", " + "    attractionId = " + rideItem.attractionId + ", " + "    attractionAreaId = " + rideItem.attractionAreaId + ", " + "    scheduleId = " + rideItem.scheduleId + " " + "WHERE holidayId = " + rideItem.holidayId + " " + "AND dayId = " + rideItem.origDayId + " " + "AND attractionId = " + rideItem.origAttractionId + " " + "AND attractionAreaId = " + rideItem.origAttractionAreaId + " " + "AND scheduleId = " + rideItem.origScheduleId;
 
         return (executeSQL("updateRideItem", lSQL));
     }
@@ -131,12 +83,7 @@ class TableRide extends TableBase
         if(IsValid() == false)
             return (false);
 
-        String lSQL="DELETE FROM ride " +
-            "WHERE holidayId = " + rideItem.holidayId + " " +
-            "AND dayId = " + rideItem.dayId + " " +
-            "AND attractionId = " + rideItem.attractionId + " " +
-            "AND attractionAreaId = " + rideItem.attractionAreaId + " " +
-            "AND scheduleId = " + rideItem.scheduleId;
+        String lSQL="DELETE FROM ride " + "WHERE holidayId = " + rideItem.holidayId + " " + "AND dayId = " + rideItem.dayId + " " + "AND attractionId = " + rideItem.attractionId + " " + "AND attractionAreaId = " + rideItem.attractionAreaId + " " + "AND scheduleId = " + rideItem.scheduleId;
 
         if(executeSQL("deleteRideItem", lSQL) == false)
             return (false);
@@ -161,14 +108,7 @@ class TableRide extends TableBase
         litem.origScheduleId=scheduleId;
 
         String lSQL;
-        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
-            "  scheduleId, rideName, heartRating, scenicRating, thrillRating " +
-            "FROM ride " +
-            "WHERE HolidayId = " + holidayId + " " +
-            "AND DayId = " + dayId + " " +
-            "AND attractionId = " + attractionId + " " +
-            "AND attractionAreaId = " + attractionAreaId + " " +
-            "AND ScheduleId = " + scheduleId;
+        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, rideName, heartRating, scenicRating, thrillRating " + "FROM ride " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
 
         Cursor cursor=executeSQLOpenCursor("getRestaurantItem", lSQL);
         if(cursor != null)
@@ -227,17 +167,10 @@ class TableRide extends TableBase
         try
         {
             String lSQL;
-            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
-                "  scheduleId " +
-                "FROM Ride " +
-                "WHERE HolidayId = " + litem.holidayId + " " +
-                "AND DayId = " + litem.dayId + " " +
-                "AND attractionId = " + litem.attractionId + " " +
-                "AND attractionAreaId = " + litem.attractionAreaId + " " +
-                "AND ScheduleId = " + litem.scheduleId;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId " + "FROM Ride " + "WHERE HolidayId = " + litem.holidayId + " " + "AND DayId = " + litem.dayId + " " + "AND attractionId = " + litem.attractionId + " " + "AND attractionAreaId = " + litem.attractionAreaId + " " + "AND ScheduleId = " + litem.scheduleId;
             Cursor cursor=executeSQLOpenCursor("ItemExists(ride)", lSQL);
             if(cursor == null)
-                return(false);
+                return (false);
 
             if(cursor.getCount() == 0)
                 return (false);

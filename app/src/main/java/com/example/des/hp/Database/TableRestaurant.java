@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Schedule.Restaurant.RestaurantItem;
-import com.example.des.hp.myutils.MyMessages;
 
 class TableRestaurant extends TableBase
 {
@@ -24,18 +23,7 @@ class TableRestaurant extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS restaurant " +
-                "( " +
-                "  holidayId         INT(5),  " +
-                "  dayId             INT(5),  " +
-                "  attractionId      INT(5),  " +
-                "  attractionAreaId  INT(5),  " +
-                "  scheduleId        INT(5),  " +
-                "  restaurantName    VARCHAR, " +
-                "  bookingReference  VARCHAR, " +
-                "  restaurantFullId  INT(5),  " +
-                "  reservationType   INT(5)   " +
-                ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS restaurant " + "( " + "  holidayId         INT(5),  " + "  dayId             INT(5),  " + "  attractionId      INT(5),  " + "  attractionAreaId  INT(5),  " + "  scheduleId        INT(5),  " + "  restaurantName    VARCHAR, " + "  bookingReference  VARCHAR, " + "  restaurantFullId  INT(5),  " + "  reservationType   INT(5)   " + ") ";
 
             db.execSQL(lSQL);
 
@@ -70,22 +58,7 @@ class TableRestaurant extends TableBase
         if(IsValid() == false)
             return (false);
 
-        String lSql="INSERT INTO restaurant " +
-            "  (holidayId, dayId, attractionId, attractionAreaId, " +
-            "   scheduleId, restaurantName, bookingReference, " +
-            "   restaurantFullId, reservationType) " +
-            "VALUES " +
-            "(" +
-            restaurantItem.holidayId + "," +
-            restaurantItem.dayId + "," +
-            restaurantItem.attractionId + "," +
-            restaurantItem.attractionAreaId + "," +
-            restaurantItem.scheduleId + "," +
-            MyQuotedString(restaurantItem.restaurantName) + "," +
-            MyQuotedString(restaurantItem.bookingReference) + ", " +
-            restaurantItem.restaurantFullId + ", " +
-            restaurantItem.reservationType + " " +
-            ")";
+        String lSql="INSERT INTO restaurant " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, restaurantName, bookingReference, " + "   restaurantFullId, reservationType) " + "VALUES " + "(" + restaurantItem.holidayId + "," + restaurantItem.dayId + "," + restaurantItem.attractionId + "," + restaurantItem.attractionAreaId + "," + restaurantItem.scheduleId + "," + MyQuotedString(restaurantItem.restaurantName) + "," + MyQuotedString(restaurantItem.bookingReference) + ", " + restaurantItem.restaurantFullId + ", " + restaurantItem.reservationType + " " + ")";
 
         return (executeSQL("addRestaurantItem", lSql));
     }
@@ -95,25 +68,12 @@ class TableRestaurant extends TableBase
         if(IsValid() == false)
             return (false);
 
-        if(ItemExists(restaurantItem)==false)
+        if(ItemExists(restaurantItem) == false)
         {
-            return(addRestaurantItem(restaurantItem));
+            return (addRestaurantItem(restaurantItem));
         }
         String lSQL;
-        lSQL="UPDATE restaurant " +
-            "SET restaurantName = " + MyQuotedString(restaurantItem.restaurantName) + ", " +
-            "    bookingReference = " + MyQuotedString(restaurantItem.bookingReference) + ", " +
-            "    restaurantFullId = " + restaurantItem.restaurantFullId + ", " +
-            "    reservationType = " + restaurantItem.reservationType + ", " +
-            "    dayId = " + restaurantItem.dayId + ", " +
-            "    attractionId = " + restaurantItem.attractionId + ", " +
-            "    attractionAreaId = " + restaurantItem.attractionAreaId + ", " +
-            "    scheduleId = " + restaurantItem.scheduleId + " " +
-            "WHERE holidayId = " + restaurantItem.holidayId + " " +
-            "AND dayId = " + restaurantItem.origDayId + " " +
-            "AND attractionId = " + restaurantItem.origAttractionId + " " +
-            "AND attractionAreaId = " + restaurantItem.origAttractionAreaId + " " +
-            "AND scheduleId = " + restaurantItem.origScheduleId;
+        lSQL="UPDATE restaurant " + "SET restaurantName = " + MyQuotedString(restaurantItem.restaurantName) + ", " + "    bookingReference = " + MyQuotedString(restaurantItem.bookingReference) + ", " + "    restaurantFullId = " + restaurantItem.restaurantFullId + ", " + "    reservationType = " + restaurantItem.reservationType + ", " + "    dayId = " + restaurantItem.dayId + ", " + "    attractionId = " + restaurantItem.attractionId + ", " + "    attractionAreaId = " + restaurantItem.attractionAreaId + ", " + "    scheduleId = " + restaurantItem.scheduleId + " " + "WHERE holidayId = " + restaurantItem.holidayId + " " + "AND dayId = " + restaurantItem.origDayId + " " + "AND attractionId = " + restaurantItem.origAttractionId + " " + "AND attractionAreaId = " + restaurantItem.origAttractionAreaId + " " + "AND scheduleId = " + restaurantItem.origScheduleId;
 
         return (executeSQL("updateRestaurantItem", lSQL));
     }
@@ -123,12 +83,7 @@ class TableRestaurant extends TableBase
         if(IsValid() == false)
             return (false);
 
-        String lSQL="DELETE FROM restaurant " +
-            "WHERE holidayId = " + restaurantItem.holidayId + " " +
-            "AND dayId = " + restaurantItem.dayId + " " +
-            "AND attractionId = " + restaurantItem.attractionId + " " +
-            "AND attractionAreaId = " + restaurantItem.attractionAreaId + " " +
-            "AND scheduleId = " + restaurantItem.scheduleId;
+        String lSQL="DELETE FROM restaurant " + "WHERE holidayId = " + restaurantItem.holidayId + " " + "AND dayId = " + restaurantItem.dayId + " " + "AND attractionId = " + restaurantItem.attractionId + " " + "AND attractionAreaId = " + restaurantItem.attractionAreaId + " " + "AND scheduleId = " + restaurantItem.scheduleId;
 
         if(executeSQL("deleteRestaurantItem", lSQL) == false)
             return (false);
@@ -153,15 +108,7 @@ class TableRestaurant extends TableBase
         litem.origScheduleId=scheduleId;
 
         String lSQL;
-        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
-            "  scheduleId, restaurantName, bookingReference, " +
-            "  restaurantFullId, reservationType " +
-            "FROM Restaurant " +
-            "WHERE HolidayId = " + holidayId + " " +
-            "AND DayId = " + dayId + " " +
-            "AND attractionId = " + attractionId + " " +
-            "AND attractionAreaId = " + attractionAreaId + " " +
-            "AND ScheduleId = " + scheduleId;
+        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, restaurantName, bookingReference, " + "  restaurantFullId, reservationType " + "FROM Restaurant " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
 
         Cursor cursor=executeSQLOpenCursor("getRestaurantItem", lSQL);
         if(cursor != null)
@@ -220,17 +167,10 @@ class TableRestaurant extends TableBase
         try
         {
             String lSQL;
-            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
-                "  scheduleId " +
-                "FROM Restaurant " +
-                "WHERE HolidayId = " + litem.holidayId + " " +
-                "AND DayId = " + litem.dayId + " " +
-                "AND attractionId = " + litem.attractionId + " " +
-                "AND attractionAreaId = " + litem.attractionAreaId + " " +
-                "AND ScheduleId = " + litem.scheduleId;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId " + "FROM Restaurant " + "WHERE HolidayId = " + litem.holidayId + " " + "AND DayId = " + litem.dayId + " " + "AND attractionId = " + litem.attractionId + " " + "AND attractionAreaId = " + litem.attractionAreaId + " " + "AND ScheduleId = " + litem.scheduleId;
             Cursor cursor=executeSQLOpenCursor("ItemExists(restaurant)", lSQL);
             if(cursor == null)
-                return(false);
+                return (false);
 
             if(cursor.getCount() == 0)
                 return (false);

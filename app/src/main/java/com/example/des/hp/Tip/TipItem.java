@@ -2,8 +2,6 @@ package com.example.des.hp.Tip;
 
 import android.graphics.Bitmap;
 
-import java.util.Date;
-
 /**
  ** Created by Des on 16/10/2016.
  */

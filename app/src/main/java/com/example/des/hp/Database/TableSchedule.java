@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.des.hp.Day.DayItem;
 import com.example.des.hp.Schedule.ScheduleItem;
 import com.example.des.hp.myutils.MyInt;
-import com.example.des.hp.myutils.MyMessages;
 import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
@@ -419,7 +418,7 @@ class TableSchedule extends TableBase
 
     public boolean deleteSchedule(int holidayId, int dayId, int attractionId, int attractionAreaId)
     {
-        ArrayList<ScheduleItem> scheduleList=new ArrayList<ScheduleItem>();
+        ArrayList<ScheduleItem> scheduleList=new ArrayList<>();
         if(getScheduleList(holidayId, dayId, attractionId, attractionAreaId, scheduleList) == false)
             return (false);
 
@@ -430,7 +429,7 @@ class TableSchedule extends TableBase
         return (true);
     }
 
-    public boolean deleteScheduleItem(ScheduleItem scheduleItem)
+    boolean deleteScheduleItem(ScheduleItem scheduleItem)
 
     {
         if(IsValid() == false)
@@ -453,7 +452,7 @@ class TableSchedule extends TableBase
         return (true);
     }
 
-    public boolean getScheduleItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, ScheduleItem litem)
+    boolean getScheduleItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, ScheduleItem litem)
     {
         if(IsValid() == false)
             return (false);

@@ -18,7 +18,7 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 
 /**
- ** Created by Des on 27/10/2016.
+ * * Created by Des on 27/10/2016.
  */
 
 public class DialogDatePicker extends Dialog implements android.view.View.OnClickListener
@@ -32,16 +32,12 @@ public class DialogDatePicker extends Dialog implements android.view.View.OnClic
     public DialogDatePicker(Activity a)
     {
         super(a);
-        setInitialDate = false;
+        setInitialDate=false;
     }
 
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages().ShowError
-                (
-                        "Error in DialogDatePicker::" + argFunction,
-                        argMessage
-                );
+        myMessages().ShowError("Error in DialogDatePicker::" + argFunction, argMessage);
     }
 
     @Override
@@ -54,18 +50,19 @@ public class DialogDatePicker extends Dialog implements android.view.View.OnClic
             requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.dialog_date_picker);
 
-            Button ok = (Button) findViewById(R.id.btnOk);
-            datePicker = (DatePicker) findViewById(R.id.datePicker);
+            Button ok=(Button) findViewById(R.id.btnOk);
+            datePicker=(DatePicker) findViewById(R.id.datePicker);
 
             ok.setOnClickListener(this);
-            dateUtils = new DateUtils(this.getContext());
-            if (setInitialDate) {
-                Calendar calendar = Calendar.getInstance();
+            dateUtils=new DateUtils(this.getContext());
+            if(setInitialDate)
+            {
+                Calendar calendar=Calendar.getInstance();
                 calendar.setTime(initialDate);
                 datePicker.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
             }
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
@@ -73,8 +70,8 @@ public class DialogDatePicker extends Dialog implements android.view.View.OnClic
 
     public void setInitialDate(Date date)
     {
-        initialDate = date;
-        setInitialDate = true;
+        initialDate=date;
+        setInitialDate=true;
     }
 
     @Override
@@ -82,11 +79,11 @@ public class DialogDatePicker extends Dialog implements android.view.View.OnClic
     {
         try
         {
-            switch (v.getId())
+            switch(v.getId())
             {
                 case R.id.btnOk:
-                    MyString ms = new MyString();
-                    if (dateUtils.DatePickerToStr(datePicker, ms) == false)
+                    MyString ms=new MyString();
+                    if(dateUtils.DatePickerToStr(datePicker, ms) == false)
                         return;
                     txtStartDate.setText(ms.Value);
                     break;
@@ -95,7 +92,7 @@ public class DialogDatePicker extends Dialog implements android.view.View.OnClic
             }
             dismiss();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onClick", e.getMessage());
             return;

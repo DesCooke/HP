@@ -22,7 +22,7 @@ import com.example.des.hp.R;
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 /**
- ** Created by Des on 06/10/2016.
+ * * Created by Des on 06/10/2016.
  */
 
 class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
@@ -30,7 +30,7 @@ class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
     private Context context;
     private Resources res;
     private int layoutResourceId;
-    public ArrayList<DayItem> data = null;
+    public ArrayList<DayItem> data=null;
     private DateUtils dateUtils;
     private OnItemClickListener mOnItemClickListener;
     private ImageUtils imageUtils;
@@ -38,13 +38,14 @@ class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
     private TextView txtHours;
     private LinearLayout dayFullCell;
 
-    interface OnItemClickListener {
-        void onItemClick(View view, DayItem obj, int position);
+    interface OnItemClickListener
+    {
+        void onItemClick(View view, DayItem obj);
     }
 
     void setOnItemClickListener(final OnItemClickListener mItemClickListener)
     {
-        this.mOnItemClickListener = mItemClickListener;
+        this.mOnItemClickListener=mItemClickListener;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder
@@ -65,79 +66,80 @@ class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
         {
             super(v);
 
-            dayImage = (ImageView) v.findViewById(R.id.imgIcon);
-            txtStartAt = (TextView) v.findViewById(R.id.txtStartAt);
-            txtHours = (TextView) v.findViewById(R.id.txtHours);
-            txtTitle = (TextView) v.findViewById(R.id.txtTitle);
-            txtEndAt = (TextView) v.findViewById(R.id.txtEndAt);
-            txtStartDate = (TextView) v.findViewById(R.id.txtStartDate);
-            dayItemCell = (LinearLayout) v.findViewById(R.id.dayItemCell);
-            txtRange = (TextView) v.findViewById(R.id.txtRange);
-            txtHours = (TextView) v.findViewById(R.id.txtHours);
-            dayFullCell = (LinearLayout) v.findViewById(R.id.dayFullCell2);
-            timesSection = (LinearLayout) v.findViewById(R.id.timesSection);
+            dayImage=(ImageView) v.findViewById(R.id.imgIcon);
+            txtStartAt=(TextView) v.findViewById(R.id.txtStartAt);
+            txtHours=(TextView) v.findViewById(R.id.txtHours);
+            txtTitle=(TextView) v.findViewById(R.id.txtTitle);
+            txtEndAt=(TextView) v.findViewById(R.id.txtEndAt);
+            txtStartDate=(TextView) v.findViewById(R.id.txtStartDate);
+            dayItemCell=(LinearLayout) v.findViewById(R.id.dayItemCell);
+            txtRange=(TextView) v.findViewById(R.id.txtRange);
+            txtHours=(TextView) v.findViewById(R.id.txtHours);
+            dayFullCell=(LinearLayout) v.findViewById(R.id.dayFullCell2);
+            timesSection=(LinearLayout) v.findViewById(R.id.timesSection);
         }
 
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    DayAdapter(Activity activity, ArrayList<DayItem> items) {
-        this.context = activity;
-        res = this.context.getResources();
-        imageUtils = new ImageUtils(activity);
-        dateUtils = new DateUtils(activity);
-        data = items;
+    DayAdapter(Activity activity, ArrayList<DayItem> items)
+    {
+        this.context=activity;
+        res=this.context.getResources();
+        imageUtils=new ImageUtils(activity);
+        dateUtils=new DateUtils(activity);
+        data=items;
     }
 
     @Override
-    public DayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
         // create a new view
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.daylistitemrow, parent, false);
+        View v=LayoutInflater.from(parent.getContext()).inflate(R.layout.daylistitemrow, parent, false);
 
         // set the view's size, margins, padding and layout parameters
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
-        final DayItem c = data.get(position);
+    public void onBindViewHolder(ViewHolder holder, int position)
+    {
+        final DayItem c=data.get(position);
         holder.txtTitle.setText(c.dayName);
         holder.txtStartAt.setText(c.start_at);
         holder.txtEndAt.setText(c.end_at);
 
-        MyBoolean isUnknown = new MyBoolean();
-        if (!dateUtils.IsUnknown(databaseAccess().currentStartDate, isUnknown))
+        MyBoolean isUnknown=new MyBoolean();
+        if(!dateUtils.IsUnknown(DatabaseAccess.currentStartDate, isUnknown))
             return;
 
         String lStartDate;
 
         if(isUnknown.Value)
         {
-            lStartDate = String.format(Locale.ENGLISH, res.getString(R.string.fmt_day_line), c.sequenceNo);
-        }
-        else
+            lStartDate=String.format(Locale.ENGLISH, res.getString(R.string.fmt_day_line), c.sequenceNo);
+        } else
         {
-            Date lcurrdate = new Date();
+            Date lcurrdate=new Date();
 
             // we subtract 1 because sequenceno starts at 1 - but we want to add 0 days for the
             // first element
-            if(dateUtils.AddDays(databaseAccess().currentStartDate, (c.sequenceNo-1), lcurrdate)==false)
+            if(dateUtils.AddDays(DatabaseAccess.currentStartDate, (c.sequenceNo - 1), lcurrdate) == false)
                 return;
 
-            MyString myString = new MyString();
-            if(dateUtils.DateToStr(lcurrdate, myString)==false)
+            MyString myString=new MyString();
+            if(dateUtils.DateToStr(lcurrdate, myString) == false)
                 return;
-            lStartDate = String.format(Locale.ENGLISH, res.getString(R.string.fmt_date_line), myString.Value);
+            lStartDate=String.format(Locale.ENGLISH, res.getString(R.string.fmt_date_line), myString.Value);
         }
         holder.txtStartDate.setText(lStartDate);
 
 
-        if(c.totalHours == 0 && c.totalMins==0)
+        if(c.totalHours == 0 && c.totalMins == 0)
         {
             holder.txtRange.setText("");
             holder.txtHours.setText("");
-        }
-        else
+        } else
         {
             String lFrom=DateUtils.FormatTime(c.startOfDayHours, c.startOfDayMins);
             String lTo=DateUtils.FormatTime(c.endOfDayHours, c.endOfDayMins);
@@ -145,21 +147,19 @@ class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
 
             holder.txtRange.setText(lFrom + "-" + lTo);
             String ltxtHours;
-            if(c.totalHours==1)
+            if(c.totalHours == 1)
             {
-                ltxtHours = String.format(Locale.ENGLISH, res.getString(R.string.fmt_hr_line), c.totalHours);
-            }
-            else
+                ltxtHours=String.format(Locale.ENGLISH, res.getString(R.string.fmt_hr_line), c.totalHours);
+            } else
             {
-                ltxtHours = String.format(Locale.ENGLISH, res.getString(R.string.fmt_hrs_line), c.totalHours);
+                ltxtHours=String.format(Locale.ENGLISH, res.getString(R.string.fmt_hrs_line), c.totalHours);
             }
             holder.txtHours.setText(ltxtHours);
 
             if(c.totalHours > 12)
             {
                 holder.txtHours.setTextColor(context.getColor(R.color.colorWarning));
-            }
-            else
+            } else
             {
                 holder.txtHours.setTextColor(context.getColor(R.color.colorOk));
             }
@@ -167,21 +167,21 @@ class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
         }
 
         int lColor=-1;
-        if(c.dayCat==res.getInteger(R.integer.day_cat_easy))
+        if(c.dayCat == res.getInteger(R.integer.day_cat_easy))
             lColor=context.getColor(R.color.colorEasy);
-        if(c.dayCat==res.getInteger(R.integer.day_cat_moderate))
+        if(c.dayCat == res.getInteger(R.integer.day_cat_moderate))
             lColor=context.getColor(R.color.colorModerate);
-        if(c.dayCat==res.getInteger(R.integer.day_cat_busy))
+        if(c.dayCat == res.getInteger(R.integer.day_cat_busy))
             lColor=context.getColor(R.color.colorBusy);
 
-        if(lColor!=-1)
+        if(lColor != -1)
         {
             holder.dayFullCell.setBackgroundColor(lColor);
             holder.timesSection.setBackgroundColor(lColor);
         }
 
-        if(c.dayPicture.length()>0)
-            if(imageUtils.getListIcon(context, c.dayPicture, holder.dayImage)==false)
+        if(c.dayPicture.length() > 0)
+            if(imageUtils.getListIcon(context, c.dayPicture, holder.dayImage) == false)
                 return;
 
         holder.dayItemCell.setOnClickListener(new View.OnClickListener()
@@ -189,45 +189,49 @@ class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
             @Override
             public void onClick(View view)
             {
-                if (mOnItemClickListener != null)
+                if(mOnItemClickListener != null)
                 {
-                    mOnItemClickListener.onItemClick(view, c, position);
+                    mOnItemClickListener.onItemClick(view, c);
                 }
             }
         });
     }
 
 
-    public DayItem getItem(int position){
+    public DayItem getItem(int position)
+    {
         return data.get(position);
     }
 
-    public void add(int position, DayItem mail){
+    public void add(int position, DayItem mail)
+    {
         data.add(position, mail);
         notifyDataSetChanged();
     }
 
-    boolean onItemMove(int fromPosition, int toPosition) {
+    boolean onItemMove(int fromPosition, int toPosition)
+    {
         updateGlobalData(data);
         return true;
     }
 
     private void updateGlobalData(ArrayList<com.example.des.hp.Day.DayItem> items)
     {
-        for (int i=0;i<items.size();i++)
+        for(int i=0; i < items.size(); i++)
         {
-            items.get(i).sequenceNo=i+1;
+            items.get(i).sequenceNo=i + 1;
         }
         if(!databaseAccess().updateDayItems(items))
             return;
         notifyDataSetChanged();
     }
 
-    private int lastPosition = -1;
+    private int lastPosition=-1;
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
-    public int getItemCount() {
+    public int getItemCount()
+    {
         return data.size();
     }
 

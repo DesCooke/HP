@@ -15,7 +15,7 @@ import com.example.des.hp.R;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 /**
- ** Created by Des on 27/10/2016.
+ * * Created by Des on 27/10/2016.
  */
 
 public class DialogTimePicker extends Dialog implements android.view.View.OnClickListener
@@ -32,20 +32,17 @@ public class DialogTimePicker extends Dialog implements android.view.View.OnClic
     public DialogTimePicker(Activity a)
     {
         super(a);
-        Activity activity = a;
+        Activity activity=a;
     }
 
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages().ShowError
-                (
-                        "Error in DialogTimePicker::" + argFunction,
-                        argMessage
-                );
+        myMessages().ShowError("Error in DialogTimePicker::" + argFunction, argMessage);
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         try
@@ -53,12 +50,12 @@ public class DialogTimePicker extends Dialog implements android.view.View.OnClic
             requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.dialog_time_picker);
 
-            DateUtils dateUtils = new DateUtils(this.getContext());
+            DateUtils dateUtils=new DateUtils(this.getContext());
 
-            Button ok = (Button) findViewById(R.id.btnOk);
-            frmTimePicker = (TimePicker) findViewById(R.id.timePicker);
-            frmCheckBox = (CheckBox) findViewById(R.id.chkTimeKnown);
-            TextView txtTitle = (TextView) findViewById(R.id.txtTitle);
+            Button ok=(Button) findViewById(R.id.btnOk);
+            frmTimePicker=(TimePicker) findViewById(R.id.timePicker);
+            frmCheckBox=(CheckBox) findViewById(R.id.chkTimeKnown);
+            TextView txtTitle=(TextView) findViewById(R.id.txtTitle);
 
             setTime(hour, minute);
             frmCheckBox.setChecked(timeKnown);
@@ -68,17 +65,20 @@ public class DialogTimePicker extends Dialog implements android.view.View.OnClic
             frmTimePicker.setIs24HourView(true);
 
             //Set a TimeChangedListener for TimePicker widget
-            frmTimePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            frmTimePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener()
+            {
                 @Override
-                public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                public void onTimeChanged(TimePicker view, int hourOfDay, int minute)
+                {
                     //Display the new time to app interface
-                    if (frmTimePicker.getHour() > 0 || frmTimePicker.getMinute() > 0) {
+                    if(frmTimePicker.getHour() > 0 || frmTimePicker.getMinute() > 0)
+                    {
                         frmCheckBox.setChecked(true);
                     }
                 }
             });
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
@@ -88,12 +88,12 @@ public class DialogTimePicker extends Dialog implements android.view.View.OnClic
     {
         try
         {
-            if (frmCheckBox.isChecked() == false)
+            if(frmCheckBox.isChecked() == false)
             {
                 setTime(0, 0);
             }
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("timeKnownOnClick", e.getMessage());
         }
@@ -105,7 +105,7 @@ public class DialogTimePicker extends Dialog implements android.view.View.OnClic
         {
             txtStartTime.setText(DateUtils.FormatTime(hour, minute));
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("setTimeText", e.getMessage());
         }
@@ -120,7 +120,7 @@ public class DialogTimePicker extends Dialog implements android.view.View.OnClic
             frmTimePicker.setMinute(minute);
             frmTimePicker.refreshDrawableState();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("setTime", e.getMessage());
         }
@@ -131,10 +131,10 @@ public class DialogTimePicker extends Dialog implements android.view.View.OnClic
     {
         try
         {
-            switch (v.getId())
+            switch(v.getId())
             {
                 case R.id.btnOk:
-                    if (frmCheckBox.isChecked() == false)
+                    if(frmCheckBox.isChecked() == false)
                     {
                         setTimeText(0, 0);
                     } else
@@ -151,7 +151,7 @@ public class DialogTimePicker extends Dialog implements android.view.View.OnClic
                     break;
             }
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onClick", e.getMessage());
         }

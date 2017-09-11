@@ -23,7 +23,7 @@ public class TipGroupDetailsList extends BaseActivity
     public ArrayList<TipGroupItem> tipGroupList;
     public TipGroupAdapter tipGroupAdapter;
     //endregion
-    
+
     //region Constructors/Destructors
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -31,11 +31,11 @@ public class TipGroupDetailsList extends BaseActivity
         super.onCreate(savedInstanceState);
         try
         {
-            layoutName = "activity_tipgroup_list";
+            layoutName="activity_tipgroup_list";
             setContentView(R.layout.activity_tipgroup_list);
-            
+
             afterCreate();
-            
+
             showForm();
         }
         catch(Exception e)
@@ -49,18 +49,18 @@ public class TipGroupDetailsList extends BaseActivity
     {
         try
         {
-            MenuInflater inflater = getMenuInflater();
+            MenuInflater inflater=getMenuInflater();
             inflater.inflate(R.menu.tipgroup_list_add, menu);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreateOptionsMenu", e.getMessage());
         }
-        
+
         return true;
     }
     //endregion
-    
+
     //region Form Functions
     public void showTipGroupAdd(View view)
     {
@@ -91,22 +91,22 @@ public class TipGroupDetailsList extends BaseActivity
             tipGroupAdapter=new TipGroupAdapter(this, tipGroupList);
 
             CreateRecyclerView(R.id.tipGroupListView, tipGroupAdapter);
-            
+
             tipGroupAdapter.setOnItemClickListener(new TipGroupAdapter.OnItemClickListener()
             {
                 @Override
-                public void onItemClick(View view, TipGroupItem obj, int position)
+                public void onItemClick(View view, TipGroupItem obj)
                 {
                     Intent intent=new Intent(getApplicationContext(), TipDetailsList.class);
                     intent.putExtra("ACTION", "view");
-                    intent.putExtra("HOLIDAYID", tipGroupList.get(position).holidayId);
-                    intent.putExtra("TIPGROUPID", tipGroupList.get(position).tipGroupId);
+                    intent.putExtra("HOLIDAYID", obj.holidayId);
+                    intent.putExtra("TIPGROUPID", obj.tipGroupId);
                     intent.putExtra("TITLE", title + "/" + subTitle);
-                    intent.putExtra("SUBTITLE", tipGroupList.get(position).tipGroupDescription);
+                    intent.putExtra("SUBTITLE", obj.tipGroupDescription);
                     startActivity(intent);
                 }
             });
-            
+
             afterShow();
         }
         catch(Exception e)
@@ -133,7 +133,7 @@ public class TipGroupDetailsList extends BaseActivity
         tipGroupAdapter.notifyItemMoved(from, to);
     }
     //endregion
-    
+
     //region OnClick Events
     @Override
     public boolean onOptionsItemSelected(MenuItem item)

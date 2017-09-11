@@ -6,8 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Schedule.Parade.ParadeItem;
-import com.example.des.hp.Schedule.Show.ShowItem;
-import com.example.des.hp.myutils.MyMessages;
 
 class TableParade extends TableBase
 {
@@ -25,16 +23,7 @@ class TableParade extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS parade " +
-                "( " +
-                "  holidayId         INT(5),  " +
-                "  dayId             INT(5),  " +
-                "  attractionId      INT(5),  " +
-                "  attractionAreaId  INT(5),  " +
-                "  scheduleId        INT(5),  " +
-                "  paradeName        VARCHAR, " +
-                "  bookingReference  VARCHAR  " +
-                ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS parade " + "( " + "  holidayId         INT(5),  " + "  dayId             INT(5),  " + "  attractionId      INT(5),  " + "  attractionAreaId  INT(5),  " + "  scheduleId        INT(5),  " + "  paradeName        VARCHAR, " + "  bookingReference  VARCHAR  " + ") ";
 
             db.execSQL(lSQL);
 
@@ -65,19 +54,7 @@ class TableParade extends TableBase
         if(IsValid() == false)
             return (false);
 
-        String lSql="INSERT INTO parade " +
-            "  (holidayId, dayId, attractionId, attractionAreaId, " +
-            "   scheduleId, paradeName, bookingReference) " +
-            "VALUES " +
-            "(" +
-            paradeItem.holidayId + "," +
-            paradeItem.dayId + "," +
-            paradeItem.attractionId + "," +
-            paradeItem.attractionAreaId + "," +
-            paradeItem.scheduleId + "," +
-            MyQuotedString(paradeItem.paradeName) + "," +
-            MyQuotedString(paradeItem.bookingReference) + " " +
-            ")";
+        String lSql="INSERT INTO parade " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, paradeName, bookingReference) " + "VALUES " + "(" + paradeItem.holidayId + "," + paradeItem.dayId + "," + paradeItem.attractionId + "," + paradeItem.attractionAreaId + "," + paradeItem.scheduleId + "," + MyQuotedString(paradeItem.paradeName) + "," + MyQuotedString(paradeItem.bookingReference) + " " + ")";
 
         return (executeSQL("addParadeItem", lSql));
     }
@@ -87,23 +64,12 @@ class TableParade extends TableBase
         if(IsValid() == false)
             return (false);
 
-        if(ItemExists(paradeItem)==false)
+        if(ItemExists(paradeItem) == false)
         {
-            return(addParadeItem(paradeItem));
+            return (addParadeItem(paradeItem));
         }
         String lSQL;
-        lSQL="UPDATE parade " +
-            "SET paradeName = " + MyQuotedString(paradeItem.paradeName) + ", " +
-            "    bookingReference = " + MyQuotedString(paradeItem.bookingReference) + ", " +
-            "    dayId = " + paradeItem.dayId + ", " +
-            "    attractionId = " + paradeItem.attractionId + ", " +
-            "    attractionAreaId = " + paradeItem.attractionAreaId + ", " +
-            "    scheduleId = " + paradeItem.scheduleId + " " +
-            "WHERE holidayId = " + paradeItem.holidayId + " " +
-            "AND dayId = " + paradeItem.origDayId + " " +
-            "AND attractionId = " + paradeItem.origAttractionId + " " +
-            "AND attractionAreaId = " + paradeItem.origAttractionAreaId + " " +
-            "AND scheduleId = " + paradeItem.origScheduleId;
+        lSQL="UPDATE parade " + "SET paradeName = " + MyQuotedString(paradeItem.paradeName) + ", " + "    bookingReference = " + MyQuotedString(paradeItem.bookingReference) + ", " + "    dayId = " + paradeItem.dayId + ", " + "    attractionId = " + paradeItem.attractionId + ", " + "    attractionAreaId = " + paradeItem.attractionAreaId + ", " + "    scheduleId = " + paradeItem.scheduleId + " " + "WHERE holidayId = " + paradeItem.holidayId + " " + "AND dayId = " + paradeItem.origDayId + " " + "AND attractionId = " + paradeItem.origAttractionId + " " + "AND attractionAreaId = " + paradeItem.origAttractionAreaId + " " + "AND scheduleId = " + paradeItem.origScheduleId;
 
         return (executeSQL("updateParadeItem", lSQL));
     }
@@ -113,12 +79,7 @@ class TableParade extends TableBase
         if(IsValid() == false)
             return (false);
 
-        String lSQL="DELETE FROM parade " +
-            "WHERE holidayId = " + paradeItem.holidayId + " " +
-            "AND dayId = " + paradeItem.dayId + " " +
-            "AND attractionId = " + paradeItem.attractionId + " " +
-            "AND attractionAreaId = " + paradeItem.attractionAreaId + " " +
-            "AND scheduleId = " + paradeItem.scheduleId;
+        String lSQL="DELETE FROM parade " + "WHERE holidayId = " + paradeItem.holidayId + " " + "AND dayId = " + paradeItem.dayId + " " + "AND attractionId = " + paradeItem.attractionId + " " + "AND attractionAreaId = " + paradeItem.attractionAreaId + " " + "AND scheduleId = " + paradeItem.scheduleId;
 
         if(executeSQL("deleteParadeItem", lSQL) == false)
             return (false);
@@ -143,14 +104,7 @@ class TableParade extends TableBase
         litem.origScheduleId=scheduleId;
 
         String lSQL;
-        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
-            "  scheduleId, paradeName, bookingReference " +
-            "FROM Parade " +
-            "WHERE HolidayId = " + holidayId + " " +
-            "AND DayId = " + dayId + " " +
-            "AND attractionId = " + attractionId + " " +
-            "AND attractionAreaId = " + attractionAreaId + " " +
-            "AND ScheduleId = " + scheduleId;
+        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, paradeName, bookingReference " + "FROM Parade " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
 
         Cursor cursor=executeSQLOpenCursor("getParadeItem", lSQL);
         if(cursor != null)
@@ -205,17 +159,10 @@ class TableParade extends TableBase
         try
         {
             String lSQL;
-            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
-                "  scheduleId " +
-                "FROM Parade " +
-                "WHERE HolidayId = " + litem.holidayId + " " +
-                "AND DayId = " + litem.dayId + " " +
-                "AND attractionId = " + litem.attractionId + " " +
-                "AND attractionAreaId = " + litem.attractionAreaId + " " +
-                "AND ScheduleId = " + litem.scheduleId;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId " + "FROM Parade " + "WHERE HolidayId = " + litem.holidayId + " " + "AND DayId = " + litem.dayId + " " + "AND attractionId = " + litem.attractionId + " " + "AND attractionAreaId = " + litem.attractionAreaId + " " + "AND ScheduleId = " + litem.scheduleId;
             Cursor cursor=executeSQLOpenCursor("ItemExists(parade)", lSQL);
             if(cursor == null)
-                return(false);
+                return (false);
 
             if(cursor.getCount() == 0)
                 return (false);

@@ -4,7 +4,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- ** Created by Des on 30/10/2016.
+ * * Created by Des on 30/10/2016.
  */
 
 class HolidayHolder

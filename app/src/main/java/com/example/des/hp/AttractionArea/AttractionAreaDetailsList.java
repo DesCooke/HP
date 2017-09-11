@@ -27,7 +27,7 @@ import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 public class AttractionAreaDetailsList extends BaseActivity
 {
-    
+
     //region Member variables
     public ArrayList<AttractionAreaItem> attractionAreaList;
     public AttractionAreaAdapter attractionAreaAdapter;
@@ -35,106 +35,106 @@ public class AttractionAreaDetailsList extends BaseActivity
     public LinearLayout grpMenuFile;
     public TextView txtAttractionDescription;
     //endregion
-    
+
     //region Constructors/Destructors
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        
+
         try
         {
-            layoutName = "activity_attractionarea_list";
+            layoutName="activity_attractionarea_list";
             setContentView(R.layout.activity_attractionarea_list);
-            
-            txtAttractionDescription = (TextView) findViewById(R.id.txtAttractionDescription);
-            grpMenuFile = (LinearLayout) findViewById(R.id.grpMenuFile);
-            
+
+            txtAttractionDescription=(TextView) findViewById(R.id.txtAttractionDescription);
+            grpMenuFile=(LinearLayout) findViewById(R.id.grpMenuFile);
+
             afterCreate();
-            
+
             showForm();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
-        
+
     }
-    
+
     public boolean onCreateOptionsMenu(Menu menu)
     {
         try
         {
-            MenuInflater inflater = getMenuInflater();
+            MenuInflater inflater=getMenuInflater();
             inflater.inflate(R.menu.attractiondetailsformmenu, menu);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreateOptionsMenu", e.getMessage());
         }
         return true;
     }
     //endregion
-    
+
     //region OnClick Events
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        boolean lv_return = false;
+        boolean lv_return=false;
         try
         {
-            switch (item.getItemId())
+            switch(item.getItemId())
             {
                 case R.id.action_add_attractionarea:
                     showAttractionAreaAdd();
-                    lv_return = true;
+                    lv_return=true;
                     break;
-                
+
                 case R.id.action_delete_attraction:
                     deleteAttraction();
-                    lv_return = true;
+                    lv_return=true;
                     break;
-                
+
                 case R.id.action_edit_attraction:
                     editAttraction();
-                    lv_return = true;
+                    lv_return=true;
                     break;
-                
+
                 default:
-                    lv_return = super.onOptionsItemSelected(item);
+                    lv_return=super.onOptionsItemSelected(item);
                     break;
             }
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onOptionsItemSelected", e.getMessage());
         }
         return (lv_return);
     }
     //endregion
-    
+
     //region showForm
     public void showForm()
     {
         super.showForm();
         try
         {
-            allowCellMove = true;
-            
-            attractionItem = new AttractionItem();
-            if (!databaseAccess().getAttractionItem(holidayId, attractionId, attractionItem))
+            allowCellMove=true;
+
+            attractionItem=new AttractionItem();
+            if(!databaseAccess().getAttractionItem(holidayId, attractionId, attractionItem))
                 return;
-            
-            attractionAreaList = new ArrayList<>();
-            if (!databaseAccess().getAttractionAreaList(holidayId, attractionId, attractionAreaList))
+
+            attractionAreaList=new ArrayList<>();
+            if(!databaseAccess().getAttractionAreaList(holidayId, attractionId, attractionAreaList))
                 return;
-            
+
             SetImage(attractionItem.attractionPicture);
 
             txtAttractionDescription.setText(attractionItem.attractionDescription);
 
-            subTitle = attractionItem.attractionDescription;
-            if (title.length() > 0)
+            subTitle=attractionItem.attractionDescription;
+            if(title.length() > 0)
             {
                 SetTitles(title, subTitle);
             } else
@@ -142,32 +142,28 @@ public class AttractionAreaDetailsList extends BaseActivity
                 SetTitles("ATTRACTIONS", "");
             }
 
-            attractionAreaAdapter = new AttractionAreaAdapter(this, attractionAreaList);
+            attractionAreaAdapter=new AttractionAreaAdapter(this, attractionAreaList);
 
             CreateRecyclerView(R.id.attractionAreaListView, attractionAreaAdapter);
-            
-            attractionAreaAdapter.setOnItemClickListener
-                (
-                    new AttractionAreaAdapter.OnItemClickListener()
-                    {
-                        @Override
-                        public void onItemClick(View view, AttractionAreaItem obj, int position)
-                        {
-                            Intent intent = new Intent(getApplicationContext(), AttractionAreaDetailsView.class);
-                            intent.putExtra("ACTION", "view");
-                            intent.putExtra("HOLIDAYID", attractionAreaList.get(position).holidayId);
-                            intent.putExtra("ATTRACTIONID", attractionAreaList.get(position).attractionId);
-                            intent.putExtra("ATTRACTIONAREAID", attractionAreaList.get(position).attractionAreaId);
-                                intent.putExtra("TITLE", title + "/" +
-                                    subTitle);
-                                intent.putExtra("SUBTITLE", attractionAreaList.get(position).attractionAreaDescription);
-                            startActivity(intent);
-                        }
-                    }
-                );
+
+            attractionAreaAdapter.setOnItemClickListener(new AttractionAreaAdapter.OnItemClickListener()
+            {
+                @Override
+                public void onItemClick(View view, AttractionAreaItem obj)
+                {
+                    Intent intent=new Intent(getApplicationContext(), AttractionAreaDetailsView.class);
+                    intent.putExtra("ACTION", "view");
+                    intent.putExtra("HOLIDAYID", obj.holidayId);
+                    intent.putExtra("ATTRACTIONID", obj.attractionId);
+                    intent.putExtra("ATTRACTIONAREAID", obj.attractionAreaId);
+                    intent.putExtra("TITLE", title + "/" + subTitle);
+                    intent.putExtra("SUBTITLE", obj.attractionAreaDescription);
+                    startActivity(intent);
+                }
+            });
             afterShow();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("showForm", e.getMessage());
         }
@@ -199,35 +195,35 @@ public class AttractionAreaDetailsList extends BaseActivity
         attractionItem.infoId=pInfoId;
         databaseAccess().updateAttractionItem(attractionItem);
     }
-    
+
     public void showAttractionAreaAdd()
     {
         try
         {
-            Intent intent = new Intent(getApplicationContext(), AttractionAreaDetailsEdit.class);
+            Intent intent=new Intent(getApplicationContext(), AttractionAreaDetailsEdit.class);
             intent.putExtra("ACTION", "add");
             intent.putExtra("HOLIDAYID", holidayId);
             intent.putExtra("ATTRACTIONID", attractionId);
             startActivity(intent);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("showAttractionAreaAdd", e.getMessage());
         }
     }
-    
+
     public void showInfo(View view)
     {
         try
         {
-            Intent intent2 = new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
-            if (attractionItem.infoId == 0)
+            Intent intent2=new Intent(getApplicationContext(), ExtraFilesDetailsList.class);
+            if(attractionItem.infoId == 0)
             {
-                MyInt myInt = new MyInt();
-                if (!databaseAccess().getNextFileGroupId(myInt))
+                MyInt myInt=new MyInt();
+                if(!databaseAccess().getNextFileGroupId(myInt))
                     return;
-                attractionItem.infoId = myInt.Value;
-                if (!databaseAccess().updateAttractionItem(attractionItem))
+                attractionItem.infoId=myInt.Value;
+                if(!databaseAccess().updateAttractionItem(attractionItem))
                     return;
             }
             intent2.putExtra("FILEGROUPID", attractionItem.infoId);
@@ -235,24 +231,24 @@ public class AttractionAreaDetailsList extends BaseActivity
             intent2.putExtra("SUBTITLE", "Info");
             startActivity(intent2);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("showInfo", e.getMessage());
         }
     }
-    
+
     public void showNotes(View view)
     {
         try
         {
-            Intent intent2 = new Intent(getApplicationContext(), NoteView.class);
-            if (attractionItem.noteId == 0)
+            Intent intent2=new Intent(getApplicationContext(), NoteView.class);
+            if(attractionItem.noteId == 0)
             {
-                MyInt myInt = new MyInt();
-                if (!databaseAccess().getNextNoteId(holidayId, myInt))
+                MyInt myInt=new MyInt();
+                if(!databaseAccess().getNextNoteId(holidayId, myInt))
                     return;
-                attractionItem.noteId = myInt.Value;
-                if (!databaseAccess().updateAttractionItem(attractionItem))
+                attractionItem.noteId=myInt.Value;
+                if(!databaseAccess().updateAttractionItem(attractionItem))
                     return;
             }
             intent2.putExtra("ACTION", "view");
@@ -262,17 +258,17 @@ public class AttractionAreaDetailsList extends BaseActivity
             intent2.putExtra("SUBTITLE", "Notes");
             startActivity(intent2);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("showNotes", e.getMessage());
         }
     }
-    
+
     public void editAttraction()
     {
         try
         {
-            Intent intent = new Intent(getApplicationContext(), AttractionDetailsEdit.class);
+            Intent intent=new Intent(getApplicationContext(), AttractionDetailsEdit.class);
             intent.putExtra("ACTION", "modify");
             intent.putExtra("HOLIDAYID", holidayId);
             intent.putExtra("ATTRACTIONID", attractionId);
@@ -280,26 +276,26 @@ public class AttractionAreaDetailsList extends BaseActivity
             intent.putExtra("SUBTITLE", subTitle);
             startActivity(intent);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("editAttraction", e.getMessage());
         }
     }
-    
+
     public void deleteAttraction()
     {
         try
         {
-            if (!databaseAccess().deleteAttractionItem(attractionItem))
+            if(!databaseAccess().deleteAttractionItem(attractionItem))
                 return;
             finish();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("deleteAttraction", e.getMessage());
         }
     }
-    
+
 
     @Override
     public void SwapItems(int from, int to)
@@ -310,7 +306,7 @@ public class AttractionAreaDetailsList extends BaseActivity
     @Override
     public void OnItemMove(int from, int to)
     {
-        attractionAreaAdapter.onItemMove(from, to);
+        attractionAreaAdapter.onItemMove();
     }
 
     @Override
@@ -320,6 +316,6 @@ public class AttractionAreaDetailsList extends BaseActivity
     }
 
     //endregion
-    
+
 }
 

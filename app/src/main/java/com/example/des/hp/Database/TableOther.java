@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Schedule.Other.OtherItem;
-import com.example.des.hp.myutils.MyMessages;
 
 class TableOther extends TableBase
 {
@@ -24,16 +23,7 @@ class TableOther extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS other " +
-                "( " +
-                "  holidayId         INT(5),  " +
-                "  dayId             INT(5),  " +
-                "  attractionId      INT(5),  " +
-                "  attractionAreaId  INT(5),  " +
-                "  scheduleId        INT(5),  " +
-                "  otherName         VARCHAR, " +
-                "  bookingReference  VARCHAR  " +
-                ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS other " + "( " + "  holidayId         INT(5),  " + "  dayId             INT(5),  " + "  attractionId      INT(5),  " + "  attractionAreaId  INT(5),  " + "  scheduleId        INT(5),  " + "  otherName         VARCHAR, " + "  bookingReference  VARCHAR  " + ") ";
 
             db.execSQL(lSQL);
 
@@ -64,19 +54,7 @@ class TableOther extends TableBase
         if(IsValid() == false)
             return (false);
 
-        String lSql="INSERT INTO other " +
-            "  (holidayId, dayId, attractionId, attractionAreaId, " +
-            "   scheduleId, otherName, bookingReference) " +
-            "VALUES " +
-            "(" +
-            otherItem.holidayId + "," +
-            otherItem.dayId + "," +
-            otherItem.attractionId + "," +
-            otherItem.attractionAreaId + "," +
-            otherItem.scheduleId + "," +
-            MyQuotedString(otherItem.otherName) + "," +
-            MyQuotedString(otherItem.bookingReference) + " " +
-            ")";
+        String lSql="INSERT INTO other " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, otherName, bookingReference) " + "VALUES " + "(" + otherItem.holidayId + "," + otherItem.dayId + "," + otherItem.attractionId + "," + otherItem.attractionAreaId + "," + otherItem.scheduleId + "," + MyQuotedString(otherItem.otherName) + "," + MyQuotedString(otherItem.bookingReference) + " " + ")";
 
         return (executeSQL("addOtherItem", lSql));
     }
@@ -86,23 +64,12 @@ class TableOther extends TableBase
         if(IsValid() == false)
             return (false);
 
-        if(ItemExists(otherItem)==false)
+        if(ItemExists(otherItem) == false)
         {
-            return(addOtherItem(otherItem));
+            return (addOtherItem(otherItem));
         }
         String lSQL;
-        lSQL="UPDATE other " +
-            "SET otherName = " + MyQuotedString(otherItem.otherName) + ", " +
-            "    bookingReference = " + MyQuotedString(otherItem.bookingReference) + ", " +
-            "    dayId = " + otherItem.dayId + ", " +
-            "    attractionId = " + otherItem.attractionId + ", " +
-            "    attractionAreaId = " + otherItem.attractionAreaId + ", " +
-            "    scheduleId = " + otherItem.scheduleId + " " +
-            "WHERE holidayId = " + otherItem.holidayId + " " +
-            "AND dayId = " + otherItem.origDayId + " " +
-            "AND attractionId = " + otherItem.origAttractionId + " " +
-            "AND attractionAreaId = " + otherItem.origAttractionAreaId + " " +
-            "AND scheduleId = " + otherItem.origScheduleId;
+        lSQL="UPDATE other " + "SET otherName = " + MyQuotedString(otherItem.otherName) + ", " + "    bookingReference = " + MyQuotedString(otherItem.bookingReference) + ", " + "    dayId = " + otherItem.dayId + ", " + "    attractionId = " + otherItem.attractionId + ", " + "    attractionAreaId = " + otherItem.attractionAreaId + ", " + "    scheduleId = " + otherItem.scheduleId + " " + "WHERE holidayId = " + otherItem.holidayId + " " + "AND dayId = " + otherItem.origDayId + " " + "AND attractionId = " + otherItem.origAttractionId + " " + "AND attractionAreaId = " + otherItem.origAttractionAreaId + " " + "AND scheduleId = " + otherItem.origScheduleId;
 
         return (executeSQL("updateOtherItem", lSQL));
     }
@@ -112,12 +79,7 @@ class TableOther extends TableBase
         if(IsValid() == false)
             return (false);
 
-        String lSQL="DELETE FROM other " +
-            "WHERE holidayId = " + otherItem.holidayId + " " +
-            "AND dayId = " + otherItem.dayId + " " +
-            "AND attractionId = " + otherItem.attractionId + " " +
-            "AND attractionAreaId = " + otherItem.attractionAreaId + " " +
-            "AND scheduleId = " + otherItem.scheduleId;
+        String lSQL="DELETE FROM other " + "WHERE holidayId = " + otherItem.holidayId + " " + "AND dayId = " + otherItem.dayId + " " + "AND attractionId = " + otherItem.attractionId + " " + "AND attractionAreaId = " + otherItem.attractionAreaId + " " + "AND scheduleId = " + otherItem.scheduleId;
 
         if(executeSQL("deleteOtherItem", lSQL) == false)
             return (false);
@@ -142,14 +104,7 @@ class TableOther extends TableBase
         litem.origScheduleId=scheduleId;
 
         String lSQL;
-        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
-            "  scheduleId, otherName, bookingReference " +
-            "FROM Other " +
-            "WHERE HolidayId = " + holidayId + " " +
-            "AND DayId = " + dayId + " " +
-            "AND attractionId = " + attractionId + " " +
-            "AND attractionAreaId = " + attractionAreaId + " " +
-            "AND ScheduleId = " + scheduleId;
+        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, otherName, bookingReference " + "FROM Other " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
 
         Cursor cursor=executeSQLOpenCursor("getOtherItem", lSQL);
         if(cursor != null)
@@ -204,17 +159,10 @@ class TableOther extends TableBase
         try
         {
             String lSQL;
-            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
-                "  scheduleId " +
-                "FROM Other " +
-                "WHERE HolidayId = " + litem.holidayId + " " +
-                "AND DayId = " + litem.dayId + " " +
-                "AND attractionId = " + litem.attractionId + " " +
-                "AND attractionAreaId = " + litem.attractionAreaId + " " +
-                "AND ScheduleId = " + litem.scheduleId;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId " + "FROM Other " + "WHERE HolidayId = " + litem.holidayId + " " + "AND DayId = " + litem.dayId + " " + "AND attractionId = " + litem.attractionId + " " + "AND attractionAreaId = " + litem.attractionAreaId + " " + "AND ScheduleId = " + litem.scheduleId;
             Cursor cursor=executeSQLOpenCursor("ItemExists(other)", lSQL);
             if(cursor == null)
-                return(false);
+                return (false);
 
             if(cursor.getCount() == 0)
                 return (false);

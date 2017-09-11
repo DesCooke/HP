@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
 import com.example.des.hp.R;
 import com.example.des.hp.Schedule.*;
 
@@ -29,41 +30,41 @@ public class RideDetailsView extends BaseScheduleView
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        scheduleTypeDescription = getString(R.string.schedule_desc_ride);
+        scheduleTypeDescription=getString(R.string.schedule_desc_ride);
 
         super.onCreate(savedInstanceState);
-        
+
         try
         {
             layoutName="activity_ride_details_view";
             setContentView(R.layout.activity_ride_details_view);
-            
-            txtSchedName = (TextView) findViewById(R.id.txtSchedName);
-            heartRating = (RatingBar) findViewById(R.id.rbHeartRatingView);
-            scenicRating = (RatingBar) findViewById(R.id.rbScenicRatingView);
-            thrillRating = (RatingBar) findViewById(R.id.rbThrillRatingView);
+
+            txtSchedName=(TextView) findViewById(R.id.txtSchedName);
+            heartRating=(RatingBar) findViewById(R.id.rbHeartRatingView);
+            scenicRating=(RatingBar) findViewById(R.id.rbScenicRatingView);
+            thrillRating=(RatingBar) findViewById(R.id.rbThrillRatingView);
             btnClear=(ImageButton) findViewById(R.id.btnClear);
             btnSave=(Button) findViewById(R.id.btnSave);
 
             afterCreate();
-            
+
             showForm();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
-        
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu)
     {
         try
         {
-            MenuInflater inflater = getMenuInflater();
+            MenuInflater inflater=getMenuInflater();
             inflater.inflate(R.menu.ridedetailsformmenu, menu);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreateOptionsMenu", e.getMessage());
         }
@@ -79,23 +80,25 @@ public class RideDetailsView extends BaseScheduleView
         try
         {
             if(action != null)
+            {
                 if(action.equals("add"))
+                {
                     if(scheduleItem.rideItem == null)
                         scheduleItem.rideItem=new RideItem();
-
-            if(!action.equals("add"))
-            {
-                heartRating.setRating(scheduleItem.rideItem.heartRating);
-                thrillRating.setRating(scheduleItem.rideItem.thrillRating);
-                scenicRating.setRating(scheduleItem.rideItem.scenicRating);
+                } else
+                {
+                    heartRating.setRating(scheduleItem.rideItem.heartRating);
+                    thrillRating.setRating(scheduleItem.rideItem.thrillRating);
+                    scenicRating.setRating(scheduleItem.rideItem.scenicRating);
+                }
             }
-            
+
             txtSchedName.setText(scheduleItem.schedName);
 
             afterShow();
 
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("showForm", e.getMessage());
         }
@@ -108,7 +111,7 @@ public class RideDetailsView extends BaseScheduleView
     {
         try
         {
-            switch (item.getItemId())
+            switch(item.getItemId())
             {
                 case R.id.action_delete_ride:
                     deleteSchedule();
@@ -123,7 +126,7 @@ public class RideDetailsView extends BaseScheduleView
                     return super.onOptionsItemSelected(item);
             }
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onOptionsItemSelected", e.getMessage());
         }

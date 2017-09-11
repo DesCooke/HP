@@ -1,11 +1,5 @@
 package com.example.des.hp.ScheduleArea;
 
-import android.graphics.Bitmap;
-
-/**
- ** Created by Des on 16/10/2016.
- */
-
 public class ScheduleAreaItem
 {
     // Fields

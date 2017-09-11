@@ -9,8 +9,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -220,51 +218,51 @@ public class AttractionAreaDetailsView extends BaseActivity
                     new ScheduleAdapter.OnItemClickListener()
                     {
                         @Override
-                        public void onItemClick(View view, ScheduleItem obj, int position)
+                        public void onItemClick(View view, ScheduleItem obj)
                         {
-                            if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_flight))
+                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_flight))
                             {
-                                StartNewEditIntent(FlightDetailsView.class, position);
+                                StartNewEditIntent(FlightDetailsView.class, obj);
                             }
-                            if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_hotel))
+                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_hotel))
                             {
-                                StartNewEditIntent(HotelDetailsView.class, position);
+                                StartNewEditIntent(HotelDetailsView.class, obj);
                             }
-                            if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_bus))
+                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_bus))
                             {
-                                StartNewEditIntent(BusDetailsView.class, position);
+                                StartNewEditIntent(BusDetailsView.class, obj);
                             }
-                            if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_show))
+                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_show))
                             {
-                                StartNewEditIntent(ShowDetailsView.class, position);
+                                StartNewEditIntent(ShowDetailsView.class, obj);
                             }
-                            if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_restaurant))
+                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_restaurant))
                             {
-                                StartNewEditIntent(RestaurantDetailsView.class, position);
+                                StartNewEditIntent(RestaurantDetailsView.class, obj);
                             }
-                            if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_ride))
+                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_ride))
                             {
-                                StartNewEditIntent(RideDetailsView.class, position);
+                                StartNewEditIntent(RideDetailsView.class, obj);
                             }
-                            if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_cinema))
+                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_cinema))
                             {
-                                StartNewEditIntent(CinemaDetailsView.class, position);
+                                StartNewEditIntent(CinemaDetailsView.class, obj);
                             }
-                            if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_park))
+                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_park))
                             {
-                                StartNewEditIntent(ParkDetailsView.class, position);
+                                StartNewEditIntent(ParkDetailsView.class, obj);
                             }
-                            if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_parade))
+                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_parade))
                             {
-                                StartNewEditIntent(ParadeDetailsView.class, position);
+                                StartNewEditIntent(ParadeDetailsView.class, obj);
                             }
-                            if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_other))
+                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_other))
                             {
-                                StartNewEditIntent(OtherDetailsView.class, position);
+                                StartNewEditIntent(OtherDetailsView.class, obj);
                             }
-                            if(scheduleList.get(position).schedType == getResources().getInteger(R.integer.schedule_type_generalattraction))
+                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_generalattraction))
                             {
-                                StartNewEditIntent(GeneralAttractionDetailsView.class, position);
+                                StartNewEditIntent(GeneralAttractionDetailsView.class, obj);
                             }
                         }
                     }
@@ -277,15 +275,15 @@ public class AttractionAreaDetailsView extends BaseActivity
         }
     }
 
-    public void StartNewEditIntent(Class neededClass, int position)
+    public void StartNewEditIntent(Class neededClass, ScheduleItem obj)
     {
         Intent intent=new Intent(getApplicationContext(), neededClass);
         intent.putExtra("ACTION", "view");
-        intent.putExtra("HOLIDAYID", scheduleList.get(position).holidayId);
-        intent.putExtra("DAYID", scheduleList.get(position).dayId);
-        intent.putExtra("ATTRACTIONID", scheduleList.get(position).attractionId);
-        intent.putExtra("ATTRACTIONAREAID", scheduleList.get(position).attractionAreaId);
-        intent.putExtra("SCHEDULEID", scheduleList.get(position).scheduleId);
+        intent.putExtra("HOLIDAYID", obj.holidayId);
+        intent.putExtra("DAYID", obj.dayId);
+        intent.putExtra("ATTRACTIONID", obj.attractionId);
+        intent.putExtra("ATTRACTIONAREAID", obj.attractionAreaId);
+        intent.putExtra("SCHEDULEID", obj.scheduleId);
         intent.putExtra("TITLE", title);
         intent.putExtra("SUBTITLE", subTitle);
 

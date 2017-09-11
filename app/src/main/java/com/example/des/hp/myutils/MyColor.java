@@ -16,29 +16,25 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 public class MyColor
 {
     private Context _context;
-    public static MyColor myInternalColor=null;
+    private static MyColor myInternalColor=null;
 
     public static MyColor myColor()
     {
-        if (myInternalColor == null)
-            myInternalColor = new MyColor(MainActivity.getInstance());
+        if(myInternalColor == null)
+            myInternalColor=new MyColor(MainActivity.getInstance());
 
         return (myInternalColor);
     }
 
-    public MyColor(Context context)
+    private MyColor(Context context)
     {
-        _context = context;
-        Resources res = context.getResources();
+        _context=context;
+        Resources res=context.getResources();
     }
 
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages().ShowError
-                (
-                        "Error in MyColor::" + argFunction,
-                        argMessage
-                );
+        myMessages().ShowError("Error in MyColor::" + argFunction, argMessage);
     }
 
     // Returns: true(worked)/false(failed)
@@ -47,12 +43,12 @@ public class MyColor
         try
         {
             object.setColorFilter(ContextCompat.getColor(_context, resourceId));
-            return(true);
+            return (true);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("SetImageButtonTint", e.getMessage());
-            return(false);
+            return (false);
         }
     }
 

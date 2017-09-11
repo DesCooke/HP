@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
 import com.example.des.hp.R;
 import com.example.des.hp.Schedule.*;
 
@@ -38,22 +39,22 @@ public class ShowDetailsView extends BaseScheduleView
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        
+
         try
         {
-            scheduleTypeDescription = getString(R.string.schedule_desc_show);
+            scheduleTypeDescription=getString(R.string.schedule_desc_show);
 
             layoutName="activity_show_details_view";
             setContentView(R.layout.activity_show_details_view);
-            
-            checkIn = (TextView) findViewById(R.id.txtCheckin);
-            departs = (TextView) findViewById(R.id.txtDeparture);
-            txtBookingRef = (TextView) findViewById(R.id.txtBookingRef);
-            chkCheckinKnown = (CheckBox) findViewById(R.id.chkCheckinKnown);
-            chkDepartureKnown = (CheckBox) findViewById(R.id.chkDepartureKnown);
-            heartRating = (RatingBar) findViewById(R.id.rbHeartRatingView);
-            scenicRating = (RatingBar) findViewById(R.id.rbScenicRatingView);
-            thrillRating = (RatingBar) findViewById(R.id.rbThrillRatingView);
+
+            checkIn=(TextView) findViewById(R.id.txtCheckin);
+            departs=(TextView) findViewById(R.id.txtDeparture);
+            txtBookingRef=(TextView) findViewById(R.id.txtBookingRef);
+            chkCheckinKnown=(CheckBox) findViewById(R.id.chkCheckinKnown);
+            chkDepartureKnown=(CheckBox) findViewById(R.id.chkDepartureKnown);
+            heartRating=(RatingBar) findViewById(R.id.rbHeartRatingView);
+            scenicRating=(RatingBar) findViewById(R.id.rbScenicRatingView);
+            thrillRating=(RatingBar) findViewById(R.id.rbThrillRatingView);
             btnClear=(ImageButton) findViewById(R.id.btnClear);
             btnSave=(Button) findViewById(R.id.btnSave);
             grpStartTime=(LinearLayout) findViewById(R.id.grpStartTime);
@@ -61,10 +62,10 @@ public class ShowDetailsView extends BaseScheduleView
             grpBookingRef=(LinearLayout) findViewById(R.id.grpBookingRef);
 
             afterCreate();
-            
+
             showForm();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
@@ -74,10 +75,10 @@ public class ShowDetailsView extends BaseScheduleView
     {
         try
         {
-            MenuInflater inflater = getMenuInflater();
+            MenuInflater inflater=getMenuInflater();
             inflater.inflate(R.menu.showdetailsformmenu, menu);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreateOptionsMenu", e.getMessage());
         }
@@ -93,15 +94,17 @@ public class ShowDetailsView extends BaseScheduleView
         try
         {
             if(action != null)
+            {
                 if(action.equals("add"))
+                {
                     if(scheduleItem.showItem == null)
                         scheduleItem.showItem=new ShowItem();
-
-            if(!action.equals("add"))
-            {
-                heartRating.setRating(scheduleItem.showItem.heartRating);
-                thrillRating.setRating(scheduleItem.showItem.thrillRating);
-                scenicRating.setRating(scheduleItem.showItem.scenicRating);
+                } else
+                {
+                    heartRating.setRating(scheduleItem.showItem.heartRating);
+                    thrillRating.setRating(scheduleItem.showItem.thrillRating);
+                    scenicRating.setRating(scheduleItem.showItem.scenicRating);
+                }
             }
 
 
@@ -119,7 +122,7 @@ public class ShowDetailsView extends BaseScheduleView
             afterShow();
 
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("showForm", e.getMessage());
         }
@@ -132,7 +135,7 @@ public class ShowDetailsView extends BaseScheduleView
     {
         try
         {
-            switch (item.getItemId())
+            switch(item.getItemId())
             {
                 case R.id.action_delete_show:
                     deleteSchedule();
@@ -147,7 +150,7 @@ public class ShowDetailsView extends BaseScheduleView
                     return super.onOptionsItemSelected(item);
             }
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onOptionsItemSelected", e.getMessage());
         }

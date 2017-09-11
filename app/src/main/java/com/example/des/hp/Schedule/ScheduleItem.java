@@ -1,7 +1,7 @@
 package com.example.des.hp.Schedule;
 
 import android.graphics.Bitmap;
-import java.util.Date;
+
 import com.example.des.hp.Schedule.Flight.*;
 import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionItem;
 import com.example.des.hp.Schedule.Hotel.*;
@@ -15,7 +15,7 @@ import com.example.des.hp.Schedule.Parade.*;
 import com.example.des.hp.Schedule.Other.*;
 
 /**
- ** Created by Des on 16/10/2016.
+ * * Created by Des on 16/10/2016.
  */
 
 public class ScheduleItem

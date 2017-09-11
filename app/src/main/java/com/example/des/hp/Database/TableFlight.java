@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Schedule.Flight.FlightItem;
-import com.example.des.hp.myutils.MyMessages;
 
 class TableFlight extends TableBase
 {
@@ -24,19 +23,7 @@ class TableFlight extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS flight " +
-                "( " +
-                "  holidayId         INT(5),  " +
-                "  dayId             INT(5),  " +
-                "  attractionId      INT(5),  " +
-                "  attractionAreaId  INT(5),  " +
-                "  scheduleId        INT(5),  " +
-                "  flightNo          VARCHAR, " +
-                "  departsHour       INT(2),  " +
-                "  departsMin        INT(2),  " +
-                "  terminal          VARCHAR, " +
-                "  bookingReference  VARCHAR  " +
-                ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS flight " + "( " + "  holidayId         INT(5),  " + "  dayId             INT(5),  " + "  attractionId      INT(5),  " + "  attractionAreaId  INT(5),  " + "  scheduleId        INT(5),  " + "  flightNo          VARCHAR, " + "  departsHour       INT(2),  " + "  departsMin        INT(2),  " + "  terminal          VARCHAR, " + "  bookingReference  VARCHAR  " + ") ";
 
             db.execSQL(lSQL);
 
@@ -67,23 +54,7 @@ class TableFlight extends TableBase
         if(IsValid() == false)
             return (false);
 
-        String lSql="INSERT INTO flight " +
-            "  (holidayId, dayId, attractionId, attractionAreaId, " +
-            "   scheduleId, flightNo, departsHour, departsMin, terminal, " +
-            "   bookingReference) " +
-            "VALUES " +
-            "(" +
-            flightItem.holidayId + "," +
-            flightItem.dayId + "," +
-            flightItem.attractionId + "," +
-            flightItem.attractionAreaId + "," +
-            flightItem.scheduleId + "," +
-            MyQuotedString(flightItem.flightNo) + "," +
-            flightItem.departsHour + "," +
-            flightItem.departsMin + "," +
-            MyQuotedString(flightItem.terminal) + "," +
-            MyQuotedString(flightItem.bookingReference) + " " +
-            ")";
+        String lSql="INSERT INTO flight " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, flightNo, departsHour, departsMin, terminal, " + "   bookingReference) " + "VALUES " + "(" + flightItem.holidayId + "," + flightItem.dayId + "," + flightItem.attractionId + "," + flightItem.attractionAreaId + "," + flightItem.scheduleId + "," + MyQuotedString(flightItem.flightNo) + "," + flightItem.departsHour + "," + flightItem.departsMin + "," + MyQuotedString(flightItem.terminal) + "," + MyQuotedString(flightItem.bookingReference) + " " + ")";
 
         return (executeSQL("addFlightItem", lSql));
     }
@@ -93,27 +64,13 @@ class TableFlight extends TableBase
         if(IsValid() == false)
             return (false);
 
-        if(ItemExists(flightItem)==false)
+        if(ItemExists(flightItem) == false)
         {
-            return(addFlightItem(flightItem));
+            return (addFlightItem(flightItem));
         }
 
         String lSQL;
-        lSQL="UPDATE flight " +
-            "SET flightNo = " + MyQuotedString(flightItem.flightNo) + ", " +
-            "    departsHour = " + flightItem.departsHour + ", " +
-            "    departsMin = " + flightItem.departsMin + ", " +
-            "    terminal = " + MyQuotedString(flightItem.terminal) + ", " +
-            "    bookingReference = " + MyQuotedString(flightItem.bookingReference) + ", " +
-            "    dayId = " + flightItem.dayId + ", " +
-            "    attractionId = " + flightItem.attractionId + ", " +
-            "    attractionAreaId = " + flightItem.attractionAreaId + ", " +
-            "    scheduleId = " + flightItem.scheduleId + " " +
-            "WHERE holidayId = " + flightItem.holidayId + " " +
-            "AND dayId = " + flightItem.origDayId + " " +
-            "AND attractionId = " + flightItem.origAttractionId + " " +
-            "AND attractionAreaId = " + flightItem.origAttractionAreaId + " " +
-            "AND scheduleId = " + flightItem.origScheduleId;
+        lSQL="UPDATE flight " + "SET flightNo = " + MyQuotedString(flightItem.flightNo) + ", " + "    departsHour = " + flightItem.departsHour + ", " + "    departsMin = " + flightItem.departsMin + ", " + "    terminal = " + MyQuotedString(flightItem.terminal) + ", " + "    bookingReference = " + MyQuotedString(flightItem.bookingReference) + ", " + "    dayId = " + flightItem.dayId + ", " + "    attractionId = " + flightItem.attractionId + ", " + "    attractionAreaId = " + flightItem.attractionAreaId + ", " + "    scheduleId = " + flightItem.scheduleId + " " + "WHERE holidayId = " + flightItem.holidayId + " " + "AND dayId = " + flightItem.origDayId + " " + "AND attractionId = " + flightItem.origAttractionId + " " + "AND attractionAreaId = " + flightItem.origAttractionAreaId + " " + "AND scheduleId = " + flightItem.origScheduleId;
 
         return (executeSQL("updateFlightItem", lSQL));
     }
@@ -123,12 +80,7 @@ class TableFlight extends TableBase
         if(IsValid() == false)
             return (false);
 
-        String lSQL="DELETE FROM flight " +
-            "WHERE holidayId = " + flightItem.holidayId + " " +
-            "AND dayId = " + flightItem.dayId + " " +
-            "AND attractionId = " + flightItem.attractionId + " " +
-            "AND attractionAreaId = " + flightItem.attractionAreaId + " " +
-            "AND scheduleId = " + flightItem.scheduleId;
+        String lSQL="DELETE FROM flight " + "WHERE holidayId = " + flightItem.holidayId + " " + "AND dayId = " + flightItem.dayId + " " + "AND attractionId = " + flightItem.attractionId + " " + "AND attractionAreaId = " + flightItem.attractionAreaId + " " + "AND scheduleId = " + flightItem.scheduleId;
 
 
         if(executeSQL("deleteFlightItem", lSQL) == false)
@@ -154,15 +106,7 @@ class TableFlight extends TableBase
         litem.origScheduleId=scheduleId;
 
         String lSQL;
-        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
-            "  scheduleId, flightNo, departsHour, departsMin, terminal, " +
-            "  bookingReference " +
-            "FROM Flight " +
-            "WHERE HolidayId = " + holidayId + " " +
-            "AND DayId = " + dayId + " " +
-            "AND attractionId = " + attractionId + " " +
-            "AND attractionAreaId = " + attractionAreaId + " " +
-            "AND ScheduleId = " + scheduleId;
+        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, flightNo, departsHour, departsMin, terminal, " + "  bookingReference " + "FROM Flight " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
 
         Cursor cursor=executeSQLOpenCursor("getFlightItem", lSQL);
         if(cursor != null)
@@ -223,17 +167,10 @@ class TableFlight extends TableBase
         try
         {
             String lSQL;
-            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
-                "  scheduleId " +
-                "FROM Flight " +
-                "WHERE HolidayId = " + litem.holidayId + " " +
-                "AND DayId = " + litem.dayId + " " +
-                "AND attractionId = " + litem.attractionId + " " +
-                "AND attractionAreaId = " + litem.attractionAreaId + " " +
-                "AND ScheduleId = " + litem.scheduleId;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId " + "FROM Flight " + "WHERE HolidayId = " + litem.holidayId + " " + "AND DayId = " + litem.dayId + " " + "AND attractionId = " + litem.attractionId + " " + "AND attractionAreaId = " + litem.attractionAreaId + " " + "AND ScheduleId = " + litem.scheduleId;
             Cursor cursor=executeSQLOpenCursor("ItemExists(flight)", lSQL);
             if(cursor == null)
-                return(false);
+                return (false);
 
             if(cursor.getCount() == 0)
                 return (false);

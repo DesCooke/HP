@@ -4,9 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.des.hp.myutils.MyInt;
-import com.example.des.hp.myutils.MyMessages;
-
 class TableFileIds extends TableBase
 {
     TableFileIds(Context context, SQLiteOpenHelper dbHelper)
@@ -23,21 +20,13 @@ class TableFileIds extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS fileIds " +
-                "( " +
-                "  fileType VARCHAR, " +
-                "  nextId   INT(5)   " +
-                ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS fileIds " + "( " + "  fileType VARCHAR, " + "  nextId   INT(5)   " + ") ";
             db.execSQL(lSQL);
 
-            lSQL="INSERT INTO fileIds " +
-                " (fileType, nextId) " +
-                "VALUES ('picture',1) ";
+            lSQL="INSERT INTO fileIds " + " (fileType, nextId) " + "VALUES ('picture',1) ";
             db.execSQL(lSQL);
 
-            lSQL="INSERT INTO fileIds " +
-                " (fileType, nextId) " +
-                "VALUES ('fgi',1) ";
+            lSQL="INSERT INTO fileIds " + " (fileType, nextId) " + "VALUES ('fgi',1) ";
             db.execSQL(lSQL);
 
             return (true);

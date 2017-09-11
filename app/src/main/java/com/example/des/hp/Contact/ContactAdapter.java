@@ -12,31 +12,31 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 /**
- ** Created by Des on 06/10/2016.
+ * * Created by Des on 06/10/2016.
  */
 
 class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder>
 {
     private Context context;
-    public ArrayList<ContactItem> data = null;
+    public ArrayList<ContactItem> data=null;
     private OnItemClickListener mOnItemClickListener;
     private ImageUtils imageUtils;
 
 
-    interface OnItemClickListener {
-        void onItemClick(View view, ContactItem obj, int position);
+    interface OnItemClickListener
+    {
+        void onItemClick(View view, ContactItem obj);
     }
 
     void setOnItemClickListener(final OnItemClickListener mItemClickListener)
     {
-        this.mOnItemClickListener = mItemClickListener;
+        this.mOnItemClickListener=mItemClickListener;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder
@@ -45,37 +45,40 @@ class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder>
         ImageView contactImage;
         TextView txtContactDescription;
         LinearLayout contactItemCell;
-        
+
 
         ViewHolder(View v)
         {
             super(v);
 
-            contactImage = (ImageView) v.findViewById(R.id.imgIcon);
-            txtContactDescription = (TextView) v.findViewById(R.id.contactDescription);
-            contactItemCell = (LinearLayout) v.findViewById(R.id.contactItemCell);
+            contactImage=(ImageView) v.findViewById(R.id.imgIcon);
+            txtContactDescription=(TextView) v.findViewById(R.id.contactDescription);
+            contactItemCell=(LinearLayout) v.findViewById(R.id.contactItemCell);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    ContactAdapter(Activity activity, ArrayList<ContactItem> items) {
-        this.context = activity;
-        imageUtils = new ImageUtils(activity);
-        data = items;
+    ContactAdapter(Activity activity, ArrayList<ContactItem> items)
+    {
+        this.context=activity;
+        imageUtils=new ImageUtils(activity);
+        data=items;
     }
 
     @Override
-    public ContactAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ContactAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
         // create a new view
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.contactlistitemrow, parent, false);
+        View v=LayoutInflater.from(parent.getContext()).inflate(R.layout.contactlistitemrow, parent, false);
 
         // set the view's size, margins, padding and layout parameters
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
-        final ContactItem c = data.get(position);
+    public void onBindViewHolder(ViewHolder holder, int position)
+    {
+        final ContactItem c=data.get(position);
         holder.txtContactDescription.setText(c.contactDescription);
 
         if(c.pictureAssigned)
@@ -83,8 +86,7 @@ class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder>
             holder.contactImage.setVisibility(View.VISIBLE);
             if(!imageUtils.getListIcon(context, c.contactPicture, holder.contactImage))
                 return;
-        }
-        else
+        } else
         {
             holder.contactImage.setVisibility(View.INVISIBLE);
         }
@@ -95,34 +97,37 @@ class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder>
             @Override
             public void onClick(View view)
             {
-                if (mOnItemClickListener != null)
+                if(mOnItemClickListener != null)
                 {
-                    mOnItemClickListener.onItemClick(view, c, position);
+                    mOnItemClickListener.onItemClick(view, c);
                 }
             }
         });
     }
 
 
-    public ContactItem getItem(int position){
+    public ContactItem getItem(int position)
+    {
         return data.get(position);
     }
 
-    public void add(int position, ContactItem mail){
+    public void add(int position, ContactItem mail)
+    {
         data.add(position, mail);
         notifyDataSetChanged();
     }
 
-    boolean onItemMove(int from, int to) {
+    boolean onItemMove()
+    {
         updateGlobalData(data);
         return true;
     }
 
     private void updateGlobalData(ArrayList<ContactItem> items)
     {
-        for (int i=0;i<items.size();i++)
+        for(int i=0; i < items.size(); i++)
         {
-            items.get(i).sequenceNo=i+1;
+            items.get(i).sequenceNo=i + 1;
         }
         if(!databaseAccess().updateContactItems(items))
             return;
@@ -131,7 +136,8 @@ class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder>
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
-    public int getItemCount() {
+    public int getItemCount()
+    {
         return data.size();
     }
 

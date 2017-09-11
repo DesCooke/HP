@@ -101,15 +101,15 @@ public class AttractionDetailsList extends BaseActivity
                     new AttractionAdapter.OnItemClickListener()
                     {
                         @Override
-                        public void onItemClick(View view, AttractionItem obj, int position)
+                        public void onItemClick(View view, AttractionItem obj)
                         {
                             Intent intent = new Intent(getApplicationContext(), AttractionAreaDetailsList.class);
                             intent.putExtra("ACTION", "view");
-                            intent.putExtra("HOLIDAYID", attractionList.get(position).holidayId);
-                            intent.putExtra("ATTRACTIONID", attractionList.get(position).attractionId);
+                            intent.putExtra("HOLIDAYID", obj.holidayId);
+                            intent.putExtra("ATTRACTIONID", obj.attractionId);
                             intent.putExtra("TITLE", title + "/" +
                                 subTitle);
-                            intent.putExtra("SUBTITLE", attractionList.get(position).attractionDescription);
+                            intent.putExtra("SUBTITLE", obj.attractionDescription);
                             startActivity(intent);
                         }
                     }
@@ -132,7 +132,7 @@ public class AttractionDetailsList extends BaseActivity
     @Override
     public void OnItemMove(int from, int to)
     {
-        attractionAdapter.onItemMove(from, to);
+        attractionAdapter.onItemMove();
     }
     
     @Override

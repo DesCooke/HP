@@ -1,35 +1,17 @@
 package com.example.des.hp.Schedule.Park;
 
-import android.content.Intent;
-import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v7.app.ActionBar;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.widget.TextView;
 
-import com.example.des.hp.Database.DatabaseAccess;
-import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
-import com.example.des.hp.Schedule.*;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
-public class ParkDetailsEdit  extends ParkDetailsView implements View.OnClickListener
+public class ParkDetailsEdit extends ParkDetailsView implements View.OnClickListener
 {
 
     //region Member variables
@@ -172,7 +154,7 @@ public class ParkDetailsEdit  extends ParkDetailsView implements View.OnClickLis
             scheduleItem.schedName=txtSchedName.getText().toString();
 
             scheduleItem.schedPicture="";
-            if(internalImageFilename.length()>0)
+            if(internalImageFilename.length() > 0)
                 scheduleItem.schedPicture=internalImageFilename;
             scheduleItem.pictureAssigned=imageSet;
             scheduleItem.pictureChanged=imageChanged;

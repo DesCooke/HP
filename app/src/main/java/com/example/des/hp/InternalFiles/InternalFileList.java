@@ -34,10 +34,10 @@ public class InternalFileList extends BaseActivity
             internalFileAdapter.setOnItemClickListener(new InternalFileAdapter.OnItemClickListener()
             {
                 @Override
-                public void onItemClick(View view, InternalFileItem obj, int position)
+                public void onItemClick(View view, InternalFileItem obj)
                 {
                     Intent resultIntent = new Intent();
-                    resultIntent.putExtra("selectedfile", internalFileList.get(position).filename);
+                    resultIntent.putExtra("selectedfile", obj.filename);
                     setResult(Activity.RESULT_OK, resultIntent);
                     finish();                }
             });

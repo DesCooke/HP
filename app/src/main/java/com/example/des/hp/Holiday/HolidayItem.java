@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import java.util.Date;
 
 /**
- ** Created by Des on 16/10/2016.
+ * * Created by Des on 16/10/2016.
  */
 
 public class HolidayItem
@@ -47,8 +47,8 @@ public class HolidayItem
 
     public HolidayItem()
     {
-        startDateDate = new Date();
-        origStartDateDate = new Date();
-        ToGo = "";
+        startDateDate=new Date();
+        origStartDateDate=new Date();
+        ToGo="";
     }
 }

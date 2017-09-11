@@ -38,66 +38,52 @@ public class DialogWithMultiEditTextFragment extends DialogFragment
     public String getFinalText()
     {
         if(editText == null)
-            return("");
+            return ("");
 
-        return(editText.getText().toString());
+        return (editText.getText().toString());
     }
 
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages().ShowError
-                (
-                        "Error in DialogWithMultiEditTextFragment::" + argFunction,
-                        argMessage
-                );
+        myMessages().ShowError("Error in DialogWithMultiEditTextFragment::" + argFunction, argMessage);
     }
 
-    public static DialogWithMultiEditTextFragment newInstance
-            (
-                    FragmentManager fm,
-                    String tag,
-                    String argTitle,
-                    String argMessage,
-                    int argImageIcon,
-                    String argInitialText,
-                    View.OnClickListener argOnOkClick,
-                    Context context
-            )
+    public static DialogWithMultiEditTextFragment newInstance(FragmentManager fm, String tag, String argTitle, String argMessage, int argImageIcon, String argInitialText, View.OnClickListener argOnOkClick, Context context
+    )
     {
         // Look for an existing dialog with same tag
         // and close it
-        dialogTag = tag;
-        fragmentTransaction = fm.beginTransaction();
-        Fragment prev = fm.findFragmentByTag(tag);
-        if (prev != null)
+        dialogTag=tag;
+        fragmentTransaction=fm.beginTransaction();
+        Fragment prev=fm.findFragmentByTag(tag);
+        if(prev != null)
             fragmentTransaction.remove(prev);
         fragmentTransaction.addToBackStack(null);
 
 
         // let's create a new one - giving all the defaults
-        dialogWithMultiEditTextFragment = new DialogWithMultiEditTextFragment();
-        dialogWithMultiEditTextFragment.context = context;
-        dialogWithMultiEditTextFragment.myKeyboard = new MyKeyboard(context);
+        dialogWithMultiEditTextFragment=new DialogWithMultiEditTextFragment();
+        dialogWithMultiEditTextFragment.context=context;
+        dialogWithMultiEditTextFragment.myKeyboard=new MyKeyboard(context);
 
 
-        if(argOnOkClick==null)
+        if(argOnOkClick == null)
         {
             // default the yes click
-            dialogWithMultiEditTextFragment.okClick = new View.OnClickListener()
+            dialogWithMultiEditTextFragment.okClick=new View.OnClickListener()
             {
                 public void onClick(View view)
                 {
                     dialogWithMultiEditTextFragment.dismiss();
                 }
             };
-        }
-        else
+        } else
         {
-            dialogWithMultiEditTextFragment.okClick = argOnOkClick;
+            dialogWithMultiEditTextFragment.okClick=argOnOkClick;
         }
 
-        dialogWithMultiEditTextFragment.title = argTitle;
-        dialogWithMultiEditTextFragment.initialText = argInitialText;
+        dialogWithMultiEditTextFragment.title=argTitle;
+        dialogWithMultiEditTextFragment.initialText=argInitialText;
 
         return dialogWithMultiEditTextFragment;
     }
@@ -114,31 +100,30 @@ public class DialogWithMultiEditTextFragment extends DialogFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View v = inflater.inflate(R.layout.dialog_with_multiedittext, container, false);
+        View v=inflater.inflate(R.layout.dialog_with_multiedittext, container, false);
 
         try
         {
-            View tv = v.findViewById(R.id.txtTitle);
+            View tv=v.findViewById(R.id.txtTitle);
             ((TextView) tv).setText(title);
 
-            View tm = v.findViewById(R.id.txtMessage);
+            View tm=v.findViewById(R.id.txtMessage);
 
-            editText = (EditText) v.findViewById(R.id.editText);
+            editText=(EditText) v.findViewById(R.id.editText);
             editText.setText(initialText);
             editText.requestFocus();
 
-            if(myKeyboard.show(getDialog())==false)
+            if(myKeyboard.show(getDialog()) == false)
                 return v;
 
 
             // Watch for button clicks.
-            Button btnOk = (Button) v.findViewById(R.id.btnOk);
+            Button btnOk=(Button) v.findViewById(R.id.btnOk);
             btnOk.setOnClickListener(okClick);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreateView", e.getMessage());
         }

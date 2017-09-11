@@ -1,13 +1,5 @@
 package com.example.des.hp.Schedule.Other;
 
-import android.graphics.Bitmap;
-
-import java.util.Date;
-
-/**
- ** Created by Des on 16/10/2016.
- */
-
 public class OtherItem
 {
     // Fields

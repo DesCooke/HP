@@ -6,8 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Schedule.Cinema.CinemaItem;
-import com.example.des.hp.Schedule.Show.ShowItem;
-import com.example.des.hp.myutils.MyMessages;
 
 class TableCinema extends TableBase
 {
@@ -25,16 +23,7 @@ class TableCinema extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS cinema " +
-                "( " +
-                "  holidayId         INT(5),  " +
-                "  dayId             INT(5),  " +
-                "  attractionId      INT(5),  " +
-                "  attractionAreaId  INT(5),  " +
-                "  scheduleId        INT(5),  " +
-                "  cinemaName        VARCHAR, " +
-                "  bookingReference  VARCHAR  " +
-                ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS cinema " + "( " + "  holidayId         INT(5),  " + "  dayId             INT(5),  " + "  attractionId      INT(5),  " + "  attractionAreaId  INT(5),  " + "  scheduleId        INT(5),  " + "  cinemaName        VARCHAR, " + "  bookingReference  VARCHAR  " + ") ";
 
             db.execSQL(lSQL);
 
@@ -65,19 +54,7 @@ class TableCinema extends TableBase
         if(IsValid() == false)
             return (false);
 
-        String lSql="INSERT INTO cinema " +
-            "  (holidayId, dayId, attractionId, attractionAreaId, " +
-            "   scheduleId, cinemaName, bookingReference) " +
-            "VALUES " +
-            "(" +
-            cinemaItem.holidayId + "," +
-            cinemaItem.dayId + "," +
-            cinemaItem.attractionId + "," +
-            cinemaItem.attractionAreaId + "," +
-            cinemaItem.scheduleId + "," +
-            MyQuotedString(cinemaItem.cinemaName) + "," +
-            MyQuotedString(cinemaItem.bookingReference) + " " +
-            ")";
+        String lSql="INSERT INTO cinema " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, cinemaName, bookingReference) " + "VALUES " + "(" + cinemaItem.holidayId + "," + cinemaItem.dayId + "," + cinemaItem.attractionId + "," + cinemaItem.attractionAreaId + "," + cinemaItem.scheduleId + "," + MyQuotedString(cinemaItem.cinemaName) + "," + MyQuotedString(cinemaItem.bookingReference) + " " + ")";
 
         return (executeSQL("addCinemaItem", lSql));
     }
@@ -87,23 +64,12 @@ class TableCinema extends TableBase
         if(IsValid() == false)
             return (false);
 
-        if(ItemExists(cinemaItem)==false)
+        if(ItemExists(cinemaItem) == false)
         {
-            return(addCinemaItem(cinemaItem));
+            return (addCinemaItem(cinemaItem));
         }
 
-        String lSQL="UPDATE cinema " +
-            "SET cinemaName = " + MyQuotedString(cinemaItem.cinemaName) + ", " +
-            "    bookingReference = " + MyQuotedString(cinemaItem.bookingReference) + ", " +
-            "    dayId = " + cinemaItem.dayId + ", " +
-            "    attractionId = " + cinemaItem.attractionId + ", " +
-            "    attractionAreaId = " + cinemaItem.attractionAreaId + ", " +
-            "    scheduleId = " + cinemaItem.scheduleId + " " +
-            "WHERE holidayId = " + cinemaItem.holidayId + " " +
-            "AND dayId = " + cinemaItem.origDayId + " " +
-            "AND attractionId = " + cinemaItem.origAttractionId + " " +
-            "AND attractionAreaId = " + cinemaItem.origAttractionAreaId + " " +
-            "AND scheduleId = " + cinemaItem.origScheduleId;
+        String lSQL="UPDATE cinema " + "SET cinemaName = " + MyQuotedString(cinemaItem.cinemaName) + ", " + "    bookingReference = " + MyQuotedString(cinemaItem.bookingReference) + ", " + "    dayId = " + cinemaItem.dayId + ", " + "    attractionId = " + cinemaItem.attractionId + ", " + "    attractionAreaId = " + cinemaItem.attractionAreaId + ", " + "    scheduleId = " + cinemaItem.scheduleId + " " + "WHERE holidayId = " + cinemaItem.holidayId + " " + "AND dayId = " + cinemaItem.origDayId + " " + "AND attractionId = " + cinemaItem.origAttractionId + " " + "AND attractionAreaId = " + cinemaItem.origAttractionAreaId + " " + "AND scheduleId = " + cinemaItem.origScheduleId;
 
         return (executeSQL("updateCinemaItem", lSQL));
     }
@@ -113,12 +79,7 @@ class TableCinema extends TableBase
         if(IsValid() == false)
             return (false);
 
-        String lSQL="DELETE FROM cinema " +
-            "WHERE holidayId = " + cinemaItem.holidayId + " " +
-            "AND dayId = " + cinemaItem.dayId + " " +
-            "AND attractionId = " + cinemaItem.attractionId + " " +
-            "AND attractionAreaId = " + cinemaItem.attractionAreaId + " " +
-            "AND scheduleId = " + cinemaItem.scheduleId;
+        String lSQL="DELETE FROM cinema " + "WHERE holidayId = " + cinemaItem.holidayId + " " + "AND dayId = " + cinemaItem.dayId + " " + "AND attractionId = " + cinemaItem.attractionId + " " + "AND attractionAreaId = " + cinemaItem.attractionAreaId + " " + "AND scheduleId = " + cinemaItem.scheduleId;
 
 
         if(executeSQL("deleteCinemaItem", lSQL) == false)
@@ -144,14 +105,7 @@ class TableCinema extends TableBase
         litem.origScheduleId=scheduleId;
 
         String lSQL;
-        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
-            "  scheduleId, cinemaName, bookingReference " +
-            "FROM Cinema " +
-            "WHERE HolidayId = " + holidayId + " " +
-            "AND DayId = " + dayId + " " +
-            "AND attractionId = " + attractionId + " " +
-            "AND attractionAreaId = " + attractionAreaId + " " +
-            "AND ScheduleId = " + scheduleId;
+        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, cinemaName, bookingReference " + "FROM Cinema " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
 
         Cursor cursor=executeSQLOpenCursor("getCinemaItem", lSQL);
         if(cursor != null)
@@ -207,17 +161,10 @@ class TableCinema extends TableBase
         try
         {
             String lSQL;
-            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
-                "  scheduleId " +
-                "FROM Show " +
-                "WHERE HolidayId = " + litem.holidayId + " " +
-                "AND DayId = " + litem.dayId + " " +
-                "AND attractionId = " + litem.attractionId + " " +
-                "AND attractionAreaId = " + litem.attractionAreaId + " " +
-                "AND ScheduleId = " + litem.scheduleId;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId " + "FROM Show " + "WHERE HolidayId = " + litem.holidayId + " " + "AND DayId = " + litem.dayId + " " + "AND attractionId = " + litem.attractionId + " " + "AND attractionAreaId = " + litem.attractionAreaId + " " + "AND ScheduleId = " + litem.scheduleId;
             Cursor cursor=executeSQLOpenCursor("ItemExists(cinema)", lSQL);
             if(cursor == null)
-                return(false);
+                return (false);
 
             if(cursor.getCount() == 0)
                 return (false);

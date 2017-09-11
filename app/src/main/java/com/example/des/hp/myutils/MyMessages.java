@@ -2,6 +2,7 @@ package com.example.des.hp.myutils;
 
 import com.example.des.hp.MainActivity;
 import com.example.des.hp.R;
+
 import android.content.Intent;
 import android.content.res.Resources;
 import android.view.View;
@@ -30,23 +31,24 @@ public class MyMessages extends Activity
 
     public static MyMessages myMessages()
     {
-        if (messages == null)
-            messages = new MyMessages(MainActivity.getInstance());
-        
+        if(messages == null)
+            messages=new MyMessages(MainActivity.getInstance());
+
         return (messages);
     }
-    
+
     public static void SetContext(Context context)
     {
-        lcontext = context;
-        lres = lcontext.getResources();
+        lcontext=context;
+        lres=lcontext.getResources();
     }
+
     public MyMessages(Context context)
     {
-        lcontext = context;
-        lres = lcontext.getResources();
+        lcontext=context;
+        lres=lcontext.getResources();
 
-        dwtvDialogTag = lres.getString(R.string.dwtvDialogTag);
+        dwtvDialogTag=lres.getString(R.string.dwtvDialogTag);
         onError=null;
     }
 
@@ -67,43 +69,37 @@ public class MyMessages extends Activity
 
     public void ClearLog()
     {
-        myLog().RemoveLog();;
+        myLog().RemoveLog();
     }
+
     public void ShowError(String argTitle, String argMessage)
     {
-        String stackTrace = Arrays.toString(new Throwable().getStackTrace());
-        String message = argMessage + "::" + stackTrace;
+        String stackTrace=Arrays.toString(new Throwable().getStackTrace());
+        String message=argMessage + "::" + stackTrace;
 
         myLog().WriteLogMessage(message);
 
-        new AlertDialog.Builder(lcontext)
-                .setTitle(argTitle)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int which)
-                        {
-                            //
-                        }
-                    })
-                .setMessage(message)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+        new AlertDialog.Builder(lcontext).setTitle(argTitle).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int which)
+            {
+                //
+            }
+        }).setMessage(message).setIcon(android.R.drawable.ic_dialog_alert).show();
     }
-    
+
     public void ShowMessageWithOk(String argTitle, String argString, View.OnClickListener onClick)
     {
 
-        dialogWithTextViewFragment =
-                DialogWithTextViewFragment.newInstance
-                        (
-                                getFragmentManager(),     // for the transaction bit
-                                dwtvDialogTag,            // unique name for this dialog type
-                                argTitle,                 // form caption
-                                argString,                // form message
-                                R.drawable.airplane,      // form icon -1 for default
-                                onClick,                  // onclick listener or null for default
-                                lcontext
-                        );
+        dialogWithTextViewFragment=DialogWithTextViewFragment.newInstance(
+            getFragmentManager(),     // for the transaction bit
+            dwtvDialogTag,            // unique name for this dialog type
+            argTitle,                 // form caption
+            argString,                // form message
+            R.drawable.airplane,      // form icon -1 for default
+            onClick,                  // onclick listener or null for default
+            lcontext
+        );
 
         dialogWithTextViewFragment.showIt();
     }
@@ -111,11 +107,11 @@ public class MyMessages extends Activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (resultCode == RESULT_OK)
+        if(resultCode == RESULT_OK)
         {
             answerYes=true;
         }
-        if (resultCode == RESULT_OK)
+        if(resultCode == RESULT_OK)
         {
             answerYes=false;
         }

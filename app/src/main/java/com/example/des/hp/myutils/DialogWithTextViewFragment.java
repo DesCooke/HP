@@ -92,58 +92,45 @@ public class DialogWithTextViewFragment extends DialogFragment
 
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages().ShowError
-                (
-                        "Error in DialogWithTextViewFragment::" + argFunction,
-                        argMessage
-                );
+        myMessages().ShowError("Error in DialogWithTextViewFragment::" + argFunction, argMessage);
     }
 
-    public static DialogWithTextViewFragment newInstance
-            (
-                    FragmentManager fm,
-                    String tag,
-                    String argTitle,
-                    String argMessage,
-                    int argImageIcon,
-                    View.OnClickListener argOnOkClick,
-                    Context context
-            )
+    public static DialogWithTextViewFragment newInstance(FragmentManager fm, String tag, String argTitle, String argMessage, int argImageIcon, View.OnClickListener argOnOkClick, Context context
+    )
     {
         // Look for an existing dialog with same tag
         // and close it
-        dialogTag = tag;
-        fragmentTransaction = fm.beginTransaction();
-        Fragment prev = fm.findFragmentByTag(tag);
-        if (prev != null)
+        dialogTag=tag;
+        fragmentTransaction=fm.beginTransaction();
+        Fragment prev=fm.findFragmentByTag(tag);
+        if(prev != null)
             fragmentTransaction.remove(prev);
         fragmentTransaction.addToBackStack(null);
 
 
         // let's create a new one - giving all the defaults
-        dialogWithTextViewFragment = new DialogWithTextViewFragment();
-        dialogWithTextViewFragment.context = context;
+        dialogWithTextViewFragment=new DialogWithTextViewFragment();
+        dialogWithTextViewFragment.context=context;
 
-        if(argOnOkClick==null)
+        if(argOnOkClick == null)
         {
             // default the yes click
-            dialogWithTextViewFragment.okClick = new View.OnClickListener()
+            dialogWithTextViewFragment.okClick=new View.OnClickListener()
             {
                 public void onClick(View view)
                 {
                     dialogWithTextViewFragment.dismiss();
                 }
             };
-        }
-        else
+        } else
         {
-            dialogWithTextViewFragment.okClick = argOnOkClick;
+            dialogWithTextViewFragment.okClick=argOnOkClick;
         }
 
-        dialogWithTextViewFragment.imageIcon = -1;
-        dialogWithTextViewFragment.title = argTitle;
-        dialogWithTextViewFragment.message = argMessage;
-        dialogWithTextViewFragment.imageIcon = argImageIcon;
+        dialogWithTextViewFragment.imageIcon=-1;
+        dialogWithTextViewFragment.title=argTitle;
+        dialogWithTextViewFragment.message=argMessage;
+        dialogWithTextViewFragment.imageIcon=argImageIcon;
 
         return dialogWithTextViewFragment;
     }
@@ -160,29 +147,29 @@ public class DialogWithTextViewFragment extends DialogFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View v = inflater.inflate(R.layout.dialog_with_textview, container, false);
+        View v=inflater.inflate(R.layout.dialog_with_textview, container, false);
         try
         {
 
-            View tv = v.findViewById(R.id.txtTitle);
+            View tv=v.findViewById(R.id.txtTitle);
             ((TextView) tv).setText(title);
 
-            View tm = v.findViewById(R.id.txtMessage);
+            View tm=v.findViewById(R.id.txtMessage);
             ((TextView) tm).setText(message);
 
-            if (imageIcon != -1) {
-                View iv = v.findViewById(R.id.imageIcon);
+            if(imageIcon != -1)
+            {
+                View iv=v.findViewById(R.id.imageIcon);
                 ((ImageView) iv).setImageResource(imageIcon);
             }
 
             // Watch for button clicks.
-            Button btnOk = (Button) v.findViewById(R.id.btnOk);
+            Button btnOk=(Button) v.findViewById(R.id.btnOk);
             btnOk.setOnClickListener(okClick);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreateView", e.getMessage());
         }

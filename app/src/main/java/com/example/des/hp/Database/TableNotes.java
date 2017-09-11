@@ -24,12 +24,7 @@ class TableNotes extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS notes " +
-                "( " +
-                "  holidayId       INT(5),  " +
-                "  noteId          INT(5),  " +
-                "  notes           VARCHAR  " +
-                ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS notes " + "( " + "  holidayId       INT(5),  " + "  noteId          INT(5),  " + "  notes           VARCHAR  " + ") ";
 
             db.execSQL(lSQL);
 
@@ -48,12 +43,7 @@ class TableNotes extends TableBase
         {
             if(oldVersion == 38 && newVersion == 39)
             {
-                String lSQL="CREATE TABLE IF NOT EXISTS notes " +
-                    "( " +
-                    "  holidayId       INT(5),  " +
-                    "  noteId          INT(5),  " +
-                    "  notes           VARCHAR  " +
-                    ") ";
+                String lSQL="CREATE TABLE IF NOT EXISTS notes " + "( " + "  holidayId       INT(5),  " + "  noteId          INT(5),  " + "  notes           VARCHAR  " + ") ";
 
                 db.execSQL(lSQL);
             }
@@ -71,14 +61,7 @@ class TableNotes extends TableBase
         if(IsValid() == false)
             return (false);
 
-        String lSql="INSERT INTO notes " +
-            "  (holidayId, noteId, notes) " +
-            "VALUES " +
-            "(" +
-            noteItem.holidayId + ", " +
-            noteItem.noteId + "," +
-            MyQuotedString(noteItem.notes) + " " +
-            ")";
+        String lSql="INSERT INTO notes " + "  (holidayId, noteId, notes) " + "VALUES " + "(" + noteItem.holidayId + ", " + noteItem.noteId + "," + MyQuotedString(noteItem.notes) + " " + ")";
 
         return (executeSQL("addNoteItem", lSql));
     }
@@ -88,9 +71,7 @@ class TableNotes extends TableBase
         if(IsValid() == false)
             return (false);
 
-        String lSQL="UPDATE notes SET notes=" + MyQuotedString(noteItem.notes) + " " +
-            "WHERE holidayId = " + noteItem.holidayId + " " +
-            "AND noteId = " + noteItem.noteId;
+        String lSQL="UPDATE notes SET notes=" + MyQuotedString(noteItem.notes) + " " + "WHERE holidayId = " + noteItem.holidayId + " " + "AND noteId = " + noteItem.noteId;
 
         if(executeSQL("updateNoteItem", lSQL) == false)
             return (false);
@@ -104,9 +85,7 @@ class TableNotes extends TableBase
             return (false);
 
         noteItem.notes="";
-        String lSQL="UPDATE notes SET notes=" + MyQuotedString(noteItem.notes) + " " +
-            "WHERE holidayId = " + noteItem.holidayId + " " +
-            "AND noteId = " + noteItem.noteId;
+        String lSQL="UPDATE notes SET notes=" + MyQuotedString(noteItem.notes) + " " + "WHERE holidayId = " + noteItem.holidayId + " " + "AND noteId = " + noteItem.noteId;
 
         if(executeSQL("deleteNoteItem", lSQL) == false)
             return (false);
@@ -120,10 +99,7 @@ class TableNotes extends TableBase
             return (false);
 
         String lSQL;
-        lSQL="SELECT holidayId, noteId, notes " +
-            "FROM notes " +
-            "WHERE holidayId = " + holidayId + " " +
-            "AND NoteId = " + noteId;
+        lSQL="SELECT holidayId, noteId, notes " + "FROM notes " + "WHERE holidayId = " + holidayId + " " + "AND NoteId = " + noteId;
 
         Cursor cursor=executeSQLOpenCursor("getNoteItem", lSQL);
         if(cursor != null)
@@ -141,20 +117,17 @@ class TableNotes extends TableBase
         if(IsValid() == false)
             return (false);
 
-        myBoolean.Value = false;
+        myBoolean.Value=false;
 
         String lSQL;
-        lSQL="SELECT holidayId, noteId, notes " +
-            "FROM notes " +
-            "WHERE holidayId = " + holidayId + " " +
-            "AND NoteId = " + noteId;
+        lSQL="SELECT holidayId, noteId, notes " + "FROM notes " + "WHERE holidayId = " + holidayId + " " + "AND NoteId = " + noteId;
 
         Cursor cursor=executeSQLOpenCursor("noteExists", lSQL);
         if(cursor != null)
         {
             cursor.moveToFirst();
-            if(cursor.getCount()>0)
-                myBoolean.Value = true;
+            if(cursor.getCount() > 0)
+                myBoolean.Value=true;
         }
         executeSQLCloseCursor("noteExists");
         return (true);
@@ -189,9 +162,7 @@ class TableNotes extends TableBase
 
     boolean getNextNoteId(int holidayId, MyInt retInt)
     {
-        String lSQL="SELECT IFNULL(MAX(noteId),0) " +
-            "FROM notes " +
-            "WHERE holidayId = " + holidayId;
+        String lSQL="SELECT IFNULL(MAX(noteId),0) " + "FROM notes " + "WHERE holidayId = " + holidayId;
 
         if(executeSQLGetInt("getNextNoteId", lSQL, retInt) == false)
             return (false);

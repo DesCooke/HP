@@ -12,15 +12,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
-
-/**
- ** Created by Des on 06/10/2016.
- */
 
 class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.ViewHolder>
 {
@@ -32,7 +27,7 @@ class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.ViewHolde
 
     interface OnItemClickListener
     {
-        void onItemClick(View view, AttractionItem obj, int position);
+        void onItemClick(View view, AttractionItem obj);
     }
 
     void setOnItemClickListener(final OnItemClickListener mItemClickListener)
@@ -102,7 +97,7 @@ class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.ViewHolde
             {
                 if (mOnItemClickListener != null)
                 {
-                    mOnItemClickListener.onItemClick(view, c, position);
+                    mOnItemClickListener.onItemClick(view, c);
                 }
             }
         });
@@ -118,7 +113,7 @@ class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.ViewHolde
         notifyDataSetChanged();
     }
 
-    boolean onItemMove(int from, int to)
+    boolean onItemMove()
     {
         updateGlobalData(data);
         return true;

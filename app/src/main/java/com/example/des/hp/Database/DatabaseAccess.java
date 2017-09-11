@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.des.hp.Dialog.BaseItem;
 import com.example.des.hp.MainActivity;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.R;
@@ -35,7 +34,6 @@ import com.example.des.hp.Contact.*;
 import com.example.des.hp.myutils.DateUtils;
 import com.example.des.hp.myutils.MyBoolean;
 import com.example.des.hp.myutils.MyInt;
-import com.example.des.hp.myutils.MyMessages;
 import com.example.des.hp.myutils.MyString;
 
 import java.io.File;
@@ -219,6 +217,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
             return;
         if(!tableNotes.onCreate(db))
             return;
+        myMessages().LogMessage("Finished onCreate");
     }
 
     @Override
@@ -278,15 +277,16 @@ public class DatabaseAccess extends SQLiteOpenHelper
             return;
         if(!tableNotes.onUpgrade(db, oldVersion, newVersion))
             return;
+        myMessages().LogMessage("Finished onUpgrade");
     }
 
     private boolean removeExtraFiles(int fileId)
     {
-        ArrayList<ExtraFilesItem> fileList=new ArrayList<ExtraFilesItem>();
-        if(getExtraFilesList(fileId, fileList) == false)
+        ArrayList<ExtraFilesItem> fileList=new ArrayList<>();
+        if(!getExtraFilesList(fileId, fileList))
             return (false);
         for(ExtraFilesItem extraFilesItem : fileList)
-            if(deleteExtraFilesItem(extraFilesItem) == false)
+            if(!deleteExtraFilesItem(extraFilesItem))
                 return (false);
         return (true);
     }
@@ -310,8 +310,8 @@ public class DatabaseAccess extends SQLiteOpenHelper
         NoteItem item = new NoteItem();
         item.holidayId = holidayId;
         item.noteId = noteId;
-        if(tableNotes.deleteNoteItem(item)==false)
-            return(false);
+        if(!tableNotes.deleteNoteItem(item))
+            return (false);
         return(true);
     }
     
@@ -375,14 +375,14 @@ public class DatabaseAccess extends SQLiteOpenHelper
             return (false);
 
         // ContactItem
-        ArrayList<ContactItem> contactList=new ArrayList<ContactItem>();
+        ArrayList<ContactItem> contactList=new ArrayList<>();
         if(getContactList(holidayItem.holidayId, contactList) == false)
             return (false);
         for(ContactItem contactItem : contactList)
             deleteContactItem(contactItem);
 
         // TaskItem
-        ArrayList<TaskItem> taskList=new ArrayList<TaskItem>();
+        ArrayList<TaskItem> taskList=new ArrayList<>();
         if(getTaskList(holidayItem.holidayId, taskList) == false)
             return (false);
         for(TaskItem taskItem : taskList)
@@ -390,7 +390,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
                 return (false);
 
         // TipGroupItem
-        ArrayList<TipGroupItem> tipGroupList=new ArrayList<TipGroupItem>();
+        ArrayList<TipGroupItem> tipGroupList=new ArrayList<>();
         if(getTipGroupList(holidayItem.holidayId, tipGroupList) == false)
             return (false);
         for(TipGroupItem tipGroupItem : tipGroupList)
@@ -1254,21 +1254,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
         return (tableBudget.getNextBudgetId(holidayId, retInt));
     }
 
-    public boolean getBudgetTotal(int holidayId, MyInt retInt)
-    {
-        return (tableBudget.getBudgetTotal(holidayId, retInt));
-    }
-
-    public boolean getBudgetUnpaid(int holidayId, MyInt retInt)
-    {
-        return (tableBudget.getBudgetUnpaid(holidayId, retInt));
-    }
-
-    public boolean getBudgetPaid(int holidayId, MyInt retInt)
-    {
-        return (tableBudget.getBudgetPaid(holidayId, retInt));
-    }
-
     public boolean getNextBudgetSequenceNo(int holidayId, MyInt retInt)
     {
         return (tableBudget.getNextBudgetSequenceNo(holidayId, retInt));
@@ -1656,14 +1641,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
     public boolean updateNoteItem(NoteItem noteItem)
     {
         return (tableNotes.updateNoteItem(noteItem));
-    }
-
-    public boolean deleteNoteItem(NoteItem noteItem)
-    {
-        if(removeNote(noteItem.holidayId, noteItem.noteId) == false)
-            return (false);
-
-        return (true);
     }
 
     public boolean getNoteItem(int holidayId, int noteId, NoteItem item)

@@ -1,26 +1,21 @@
 package com.example.des.hp.Notes;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
-import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.thirdpartyutils.BadgeView;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
-import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class NoteView extends BaseActivity
 {

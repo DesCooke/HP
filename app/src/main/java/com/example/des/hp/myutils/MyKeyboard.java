@@ -14,45 +14,40 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class MyKeyboard
 {
-    
-    public MyKeyboard(Context context)
+
+    MyKeyboard(Context context)
     {
-        Context _context = context;
+        Context _context=context;
     }
 
     private void ShowError(String argFunction, String argMessage)
     {
-        myMessages().ShowError
-                (
-                        "Error in MyKeyboard::" + argFunction,
-                        argMessage
-                );
+        myMessages().ShowError("Error in MyKeyboard::" + argFunction, argMessage);
     }
+
     public boolean show(Dialog dialog)
     {
         try
         {
-            if(dialog!=null)
+            if(dialog != null)
             {
-                if (dialog.getWindow() != null)
+                if(dialog.getWindow() != null)
                 {
                     dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-                }
-                else
+                } else
                 {
                     throw new Exception("dialog.getWindow() is null");
                 }
-            }
-            else
+            } else
             {
                 throw new Exception("dialog is null");
             }
-            return(true);
+            return (true);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("show", e.getMessage());
-            return(false);
+            return (false);
         }
     }
 
@@ -60,27 +55,25 @@ public class MyKeyboard
     {
         try
         {
-            if(dialog!=null)
+            if(dialog != null)
             {
-                if(dialog.getWindow()!=null)
+                if(dialog.getWindow() != null)
                 {
                     dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-                }
-                else
+                } else
                 {
                     throw new Exception("dialog.getWindow() is null");
                 }
-            }
-            else
+            } else
             {
                 throw new Exception("dialog is null");
             }
-            return(true);
+            return (true);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("hide", e.getMessage());
-            return(false);
+            return (false);
         }
     }
 
@@ -90,15 +83,15 @@ public class MyKeyboard
         {
             editText.setInputType(InputType.TYPE_CLASS_PHONE);
 
-            KeyListener keyListener = DigitsKeyListener.getInstance("1234567890");
+            KeyListener keyListener=DigitsKeyListener.getInstance("1234567890");
             editText.setKeyListener(keyListener);
 
-            return(show(dialog));
+            return (show(dialog));
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("showNumeric", e.getMessage());
-            return(false);
+            return (false);
         }
     }
 
@@ -106,26 +99,25 @@ public class MyKeyboard
     {
         try
         {
-            Activity a = dialog.getOwnerActivity();
-            if(a==null)
+            Activity a=dialog.getOwnerActivity();
+            if(a == null)
                 throw new Exception("getOwnerActivity returned null");
 
-            InputMethodManager imm = (InputMethodManager) a.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            InputMethodManager imm=(InputMethodManager) a.getSystemService(Activity.INPUT_METHOD_SERVICE);
 
-            if (imm.isActive())
+            if(imm.isActive())
             {
                 hide(dialog);
-            }
-            else
+            } else
             {
                 show(dialog);
             }
-            return(true);
+            return (true);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("toggle", e.getMessage());
-            return(false);
+            return (false);
         }
     }
 }

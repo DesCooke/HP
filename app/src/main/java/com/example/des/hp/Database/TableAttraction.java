@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Attraction.AttractionItem;
 import com.example.des.hp.myutils.MyInt;
-import com.example.des.hp.myutils.MyMessages;
 import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
@@ -378,22 +377,6 @@ class TableAttraction extends TableBase
             
             al.add(attractionItem);
         }
-        return (true);
-    }
-    
-    boolean clearNote(int holidayId, int noteId)
-    {
-        if (IsValid() == false)
-            return (false);
-        
-        String l_SQL =
-            "UPDATE attraction SET noteId = 0 " +
-                "WHERE holidayId = " + holidayId + " " +
-                "AND noteId = " + noteId;
-        
-        if (executeSQL("clearNote", l_SQL) == false)
-            return (false);
-        
         return (true);
     }
     

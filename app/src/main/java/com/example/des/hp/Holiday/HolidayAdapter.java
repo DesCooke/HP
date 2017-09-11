@@ -11,58 +11,53 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
-import static java.lang.Math.abs;
-
-/**
- ** Created by Des on 06/10/2016.
- */
-
-public class HolidayAdapter extends ArrayAdapter<HolidayItem> {
+public class HolidayAdapter extends ArrayAdapter<HolidayItem>
+{
     private Context context;
     private int layoutResourceId;
-    private ArrayList<HolidayItem> data = null;
+    private ArrayList<HolidayItem> data=null;
     private ImageUtils imageUtils;
 
-    public HolidayAdapter(Context context, int layoutResourceId, ArrayList<HolidayItem> data) {
+    public HolidayAdapter(Context context, int layoutResourceId, ArrayList<HolidayItem> data)
+    {
         super(context, layoutResourceId, data);
-        this.layoutResourceId = layoutResourceId;
-        this.context = context;
-        this.data = data;
-        imageUtils = new ImageUtils(context);
+        this.layoutResourceId=layoutResourceId;
+        this.context=context;
+        this.data=data;
+        imageUtils=new ImageUtils(context);
     }
 
     @Override
-    public @NonNull View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View row = convertView;
+    public
+    @NonNull
+    View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent)
+    {
+        View row=convertView;
         HolidayHolder holder;
 
-        if (row == null)
+        if(row == null)
         {
-            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            row = inflater.inflate(layoutResourceId, parent, false);
+            LayoutInflater inflater=((Activity) context).getLayoutInflater();
+            row=inflater.inflate(layoutResourceId, parent, false);
 
-            holder = new HolidayHolder();
-            holder.holidayImage = (ImageView) row.findViewById(R.id.imgIcon);
-            holder.txtTitle = (TextView) row.findViewById(R.id.txtTitle);
-            holder.txtStartDate = (TextView) row.findViewById(R.id.txtStartDate);
-            holder.txtToGo = (TextView) row.findViewById(R.id.txtToGo);
+            holder=new HolidayHolder();
+            holder.holidayImage=(ImageView) row.findViewById(R.id.imgIcon);
+            holder.txtTitle=(TextView) row.findViewById(R.id.txtTitle);
+            holder.txtStartDate=(TextView) row.findViewById(R.id.txtStartDate);
+            holder.txtToGo=(TextView) row.findViewById(R.id.txtToGo);
 
             row.setTag(holder);
-        }
-        else
+        } else
         {
-            holder = (HolidayHolder) row.getTag();
+            holder=(HolidayHolder) row.getTag();
         }
 
-        HolidayItem holidayItem = data.get(position);
+        HolidayItem holidayItem=data.get(position);
         holder.txtTitle.setText(holidayItem.holidayName);
 
         if(!holidayItem.dateKnown)
@@ -70,8 +65,7 @@ public class HolidayAdapter extends ArrayAdapter<HolidayItem> {
             holder.txtStartDate.setVisibility(View.INVISIBLE);
             holder.txtToGo.setVisibility(View.INVISIBLE);
             holder.txtToGo.setText("");
-        }
-        else
+        } else
         {
             holder.txtStartDate.setVisibility(View.VISIBLE);
             holder.txtStartDate.setText(holidayItem.startDateStr);
@@ -80,9 +74,9 @@ public class HolidayAdapter extends ArrayAdapter<HolidayItem> {
         }
 
 
-        if(holidayItem.holidayPicture.length()>0)
-            if(imageUtils.getLargeListIcon(context, holidayItem.holidayPicture, holder.holidayImage)==false)
-                return(row);
+        if(holidayItem.holidayPicture.length() > 0)
+            if(imageUtils.getLargeListIcon(context, holidayItem.holidayPicture, holder.holidayImage) == false)
+                return (row);
 
         return row;
     }
