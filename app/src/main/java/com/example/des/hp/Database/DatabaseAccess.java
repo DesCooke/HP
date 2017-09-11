@@ -77,7 +77,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
     private TableRide tableRide;
     private TableGeneralAttraction tableGeneralAttraction;
     private TableNotes tableNotes;
-    private DateUtils dateUtils;
+    public DateUtils dateUtils;
     //endregion
 
     //region CONSTRUCTOR/DESTRUCTORS
