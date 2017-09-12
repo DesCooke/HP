@@ -187,6 +187,7 @@ public class MainActivity extends BaseActivity
                 holidayList = new ArrayList<>();
                 if (!databaseAccess().getHolidayList(holidayList))
                     return;
+
                 HolidayAdapter adapter = new HolidayAdapter(this, R.layout.holidaylistitemrow, holidayList);
                 ListView listView1 = (ListView) findViewById(R.id.holidayListView);
                 listView1.setOnItemClickListener

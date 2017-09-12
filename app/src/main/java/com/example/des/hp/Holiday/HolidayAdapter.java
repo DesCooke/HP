@@ -16,6 +16,8 @@ import com.example.des.hp.R;
 
 import java.util.ArrayList;
 
+import static com.example.des.hp.myutils.MyMessages.myMessages;
+
 public class HolidayAdapter extends ArrayAdapter<HolidayItem>
 {
     private Context context;

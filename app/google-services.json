@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "41305252227",
-    "firebase_url": "https://hplanner-dae8e.firebaseio.com",
-    "project_id": "hplanner-dae8e",
-    "storage_bucket": "hplanner-dae8e.appspot.com"
+    "project_number": "397622409038",
+    "firebase_url": "https://hplanner-254aa.firebaseio.com",
+    "project_id": "hplanner-254aa",
+    "storage_bucket": "hplanner-254aa.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:41305252227:android:9022817ed2ed1be8",
+        "mobilesdk_app_id": "1:397622409038:android:9022817ed2ed1be8",
         "android_client_info": {
           "package_name": "com.example.des.hp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "41305252227-sp8jmegfhp3a5ducisgvke29fvku22sf.apps.googleusercontent.com",
+          "client_id": "397622409038-uhisn50uqo78g4vuonqclt7jl2irap8f.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAJVrPM5Z5sW9Nr2YZwH6QVEBVy_PjobdU"
+          "current_key": "AIzaSyDDtIYew34hEwR_5PPXG2TK8HD_HHaNXuc"
         }
       ],
       "services": {
