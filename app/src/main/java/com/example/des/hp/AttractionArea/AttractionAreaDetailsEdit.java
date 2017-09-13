@@ -30,7 +30,7 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
 
-            if (action != null && action.equals("add"))
+            if(action != null && action.equals("add"))
             {
                 grpMenuFile.setVisibility(View.GONE);
                 txtAttractionAreaDescription.setText("");
@@ -40,7 +40,7 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
             imageView.setOnClickListener(this);
 
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
@@ -58,17 +58,25 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
     //region OnClick Events
     public void onClick(View view)
     {
-        switch (view.getId())
+        try
         {
+            switch(view.getId())
+            {
 
-            case R.id.grpAttractionAreaDescription:
-                pickAttractionAreaDescription(view);
-                break;
+                case R.id.grpAttractionAreaDescription:
+                    pickAttractionAreaDescription(view);
+                    break;
 
-            case R.id.imageViewSmall:
-                pickImage(view);
-                break;
+                case R.id.imageViewSmall:
+                    pickImage(view);
+                    break;
+            }
         }
+        catch(Exception e)
+        {
+            ShowError("onClick", e.getMessage());
+        }
+
     }
 
     public void AttractionAreaDescriptionPicked(View view)
@@ -79,7 +87,7 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
 
             dialogWithEditTextFragment.dismiss();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("AttractionAreaDescriptionPicked", e.getMessage());
         }
@@ -91,7 +99,7 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
     {
         try
         {
-            dwetOnOkClick = new View.OnClickListener()
+            dwetOnOkClick=new View.OnClickListener()
             {
                 public void onClick(View view)
                 {
@@ -100,23 +108,17 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
             };
 
 
-            dialogWithEditTextFragment =
-                DialogWithEditTextFragment.newInstance
-                    (
-                        getFragmentManager(),     // for the transaction bit
-                        "hihi",            // unique name for this dialog type
-                        "Attraction Area",    // form caption
-                        "Description",             // form message
-                        R.drawable.attachment,
-                        txtAttractionAreaDescription.getText().toString(),                // initial text
-                        dwetOnOkClick,
-                        this,
-                        false
-                    );
+            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+                "hihi",            // unique name for this dialog type
+                "Attraction Area",    // form caption
+                "Description",             // form message
+                R.drawable.attachment, txtAttractionAreaDescription.getText().toString(),                // initial text
+                dwetOnOkClick, this, false
+            );
 
             dialogWithEditTextFragment.showIt();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("pickAttractionAreaDescription", e.getMessage());
         }
@@ -127,53 +129,53 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
     //region Saving
     public void saveSchedule(View view)
     {
-        MyInt retInt = new MyInt();
+        MyInt retInt=new MyInt();
         try
         {
             myMessages().ShowMessageShort("Saving " + txtAttractionAreaDescription.getText().toString());
 
-            attractionAreaItem.attractionAreaDescription = txtAttractionAreaDescription.getText().toString();
+            attractionAreaItem.attractionAreaDescription=txtAttractionAreaDescription.getText().toString();
 
 
             attractionAreaItem.attractionAreaPicture="";
-            if(internalImageFilename.length()>0)
+            if(internalImageFilename.length() > 0)
                 attractionAreaItem.attractionAreaPicture=internalImageFilename;
-            attractionAreaItem.pictureAssigned = imageSet;
-            attractionAreaItem.pictureChanged = imageChanged;
-            attractionAreaItem.fileBitmap = null;
-            if (imageSet)
-                attractionAreaItem.fileBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            attractionAreaItem.pictureAssigned=imageSet;
+            attractionAreaItem.pictureChanged=imageChanged;
+            attractionAreaItem.fileBitmap=null;
+            if(imageSet)
+                attractionAreaItem.fileBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
-            attractionAreaItem.attractionAreaNotes = "";
-            
-            if (action.equals("add"))
+            attractionAreaItem.attractionAreaNotes="";
+
+            if(action.equals("add"))
             {
-                attractionAreaItem.holidayId = holidayId;
-                attractionAreaItem.attractionId = attractionId;
-                if (!databaseAccess().getNextAttractionAreaId(holidayId, attractionId, retInt))
+                attractionAreaItem.holidayId=holidayId;
+                attractionAreaItem.attractionId=attractionId;
+                if(!databaseAccess().getNextAttractionAreaId(holidayId, attractionId, retInt))
                     return;
-                attractionAreaItem.attractionAreaId = retInt.Value;
-                if (!databaseAccess().getNextAttractionAreaSequenceNo(holidayId, attractionId, retInt))
+                attractionAreaItem.attractionAreaId=retInt.Value;
+                if(!databaseAccess().getNextAttractionAreaSequenceNo(holidayId, attractionId, retInt))
                     return;
-                attractionAreaItem.sequenceNo = retInt.Value;
-                if (!databaseAccess().addAttractionAreaItem(attractionAreaItem))
+                attractionAreaItem.sequenceNo=retInt.Value;
+                if(!databaseAccess().addAttractionAreaItem(attractionAreaItem))
                     return;
             }
-            
-            if (action.equals("modify"))
+
+            if(action.equals("modify"))
             {
-                if (!databaseAccess().updateAttractionAreaItem(attractionAreaItem))
+                if(!databaseAccess().updateAttractionAreaItem(attractionAreaItem))
                     return;
             }
-            
+
             finish();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
-            ShowError("saveAttractionArea", e.getMessage());
+            ShowError("saveSchedule", e.getMessage());
         }
     }
     //endregion
-    
+
 
 }

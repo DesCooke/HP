@@ -121,7 +121,10 @@ public class ImageUtils
             
             File directory = new File(res.getString(R.string.picture_path));
             File[] files = directory.listFiles();
-            
+
+            if(files==null)
+                return(null);
+
             if (files.length == 0)
                 return (null);
             
@@ -170,7 +173,10 @@ public class ImageUtils
             
             File directory = new File(res.getString(R.string.files_path));
             File[] files = directory.listFiles();
-            
+
+            if(files==null)
+                return(null);
+
             if (files.length == 0)
                 return (null);
             

@@ -63,17 +63,17 @@ public class AttractionAreaDetailsView extends BaseActivity
 
         try
         {
-            layoutName = "activity_attractionarea_details_view";
+            layoutName="activity_attractionarea_details_view";
             setContentView(R.layout.activity_attractionarea_details_view);
 
-            txtAttractionAreaDescription = (TextView) findViewById(R.id.txtAttractionAreaDescription);
-            grpMenuFile = (LinearLayout) findViewById(R.id.grpMenuFile);
+            txtAttractionAreaDescription=(TextView) findViewById(R.id.txtAttractionAreaDescription);
+            grpMenuFile=(LinearLayout) findViewById(R.id.grpMenuFile);
 
             afterCreate();
 
             showForm();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
@@ -84,10 +84,10 @@ public class AttractionAreaDetailsView extends BaseActivity
     {
         try
         {
-            MenuInflater inflater = getMenuInflater();
+            MenuInflater inflater=getMenuInflater();
             inflater.inflate(R.menu.attractionareadetailsformmenu, menu);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreateOptionsMenu", e.getMessage());
         }
@@ -99,58 +99,58 @@ public class AttractionAreaDetailsView extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        boolean lv_return = false;
+        boolean lv_return=false;
         try
         {
             switch(item.getItemId())
             {
                 case R.id.action_edit_attractionarea:
                     showAttractionAreaEdit();
-                    return(true);
+                    return (true);
                 case R.id.action_delete_attractionarea:
                     deleteAttractionArea();
-                    return(true);
+                    return (true);
                 case R.id.action_view_attractionarea:
                     showAttractionAreaView();
-                    return(true);
+                    return (true);
                 case R.id.action_add_flight:
                     StartNewAddIntent(FlightDetailsEdit.class);
-                    return(true);
+                    return (true);
                 case R.id.action_add_hotel:
                     StartNewAddIntent(HotelDetailsEdit.class);
-                    return(true);
+                    return (true);
                 case R.id.action_add_show:
                     StartNewAddIntent(ShowDetailsEdit.class);
-                    return(true);
+                    return (true);
                 case R.id.action_add_bus:
                     StartNewAddIntent(BusDetailsEdit.class);
-                    return(true);
+                    return (true);
                 case R.id.action_add_restaurant:
                     StartNewAddIntent(RestaurantDetailsEdit.class);
-                    return(true);
+                    return (true);
                 case R.id.action_add_cinema:
                     StartNewAddIntent(CinemaDetailsEdit.class);
-                    return(true);
+                    return (true);
                 case R.id.action_add_park:
                     StartNewAddIntent(ParkDetailsEdit.class);
-                    return(true);
+                    return (true);
                 case R.id.action_add_parade:
                     StartNewAddIntent(ParadeDetailsEdit.class);
-                    return(true);
+                    return (true);
                 case R.id.action_add_ride:
                     StartNewAddIntent(RideDetailsEdit.class);
-                    return(true);
+                    return (true);
                 case R.id.action_add_other:
                     StartNewAddIntent(OtherDetailsEdit.class);
-                    return(true);
+                    return (true);
                 case R.id.action_add_generalattraction:
                     StartNewAddIntent(GeneralAttractionDetailsEdit.class);
-                    return(true);
+                    return (true);
                 default:
-                    lv_return = super.onOptionsItemSelected(item);
+                    lv_return=super.onOptionsItemSelected(item);
             }
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onOptionsItemSelected", e.getMessage());
         }
@@ -186,22 +186,22 @@ public class AttractionAreaDetailsView extends BaseActivity
         super.showForm();
         try
         {
-            allowCellMove = true;
+            allowCellMove=true;
 
-            attractionAreaItem = new AttractionAreaItem();
-            if (!databaseAccess().getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
+            attractionAreaItem=new AttractionAreaItem();
+            if(!databaseAccess().getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
                 return;
 
-            scheduleList = new ArrayList<>();
-            if (!databaseAccess().getScheduleList(holidayId, 0, attractionId, attractionAreaId, scheduleList))
+            scheduleList=new ArrayList<>();
+            if(!databaseAccess().getScheduleList(holidayId, 0, attractionId, attractionAreaId, scheduleList))
                 return;
 
             SetImage(attractionAreaItem.attractionAreaPicture);
 
             txtAttractionAreaDescription.setText(attractionAreaItem.attractionAreaDescription);
 
-            subTitle = attractionAreaItem.attractionAreaDescription;
-            if (title.length() > 0)
+            subTitle=attractionAreaItem.attractionAreaDescription;
+            if(title.length() > 0)
             {
                 SetTitles(title, subTitle);
             } else
@@ -209,67 +209,64 @@ public class AttractionAreaDetailsView extends BaseActivity
                 SetTitles("ATTRACTIONS", "");
             }
 
-            scheduleAdapter = new ScheduleAdapter(this, scheduleList);
+            scheduleAdapter=new ScheduleAdapter(this, scheduleList);
 
             CreateRecyclerView(R.id.attractionAreaListView, scheduleAdapter);
 
-            scheduleAdapter.setOnItemClickListener
-                (
-                    new ScheduleAdapter.OnItemClickListener()
+            scheduleAdapter.setOnItemClickListener(new ScheduleAdapter.OnItemClickListener()
+            {
+                @Override
+                public void onItemClick(View view, ScheduleItem obj)
+                {
+                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_flight))
                     {
-                        @Override
-                        public void onItemClick(View view, ScheduleItem obj)
-                        {
-                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_flight))
-                            {
-                                StartNewEditIntent(FlightDetailsView.class, obj);
-                            }
-                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_hotel))
-                            {
-                                StartNewEditIntent(HotelDetailsView.class, obj);
-                            }
-                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_bus))
-                            {
-                                StartNewEditIntent(BusDetailsView.class, obj);
-                            }
-                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_show))
-                            {
-                                StartNewEditIntent(ShowDetailsView.class, obj);
-                            }
-                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_restaurant))
-                            {
-                                StartNewEditIntent(RestaurantDetailsView.class, obj);
-                            }
-                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_ride))
-                            {
-                                StartNewEditIntent(RideDetailsView.class, obj);
-                            }
-                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_cinema))
-                            {
-                                StartNewEditIntent(CinemaDetailsView.class, obj);
-                            }
-                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_park))
-                            {
-                                StartNewEditIntent(ParkDetailsView.class, obj);
-                            }
-                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_parade))
-                            {
-                                StartNewEditIntent(ParadeDetailsView.class, obj);
-                            }
-                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_other))
-                            {
-                                StartNewEditIntent(OtherDetailsView.class, obj);
-                            }
-                            if(obj.schedType == getResources().getInteger(R.integer.schedule_type_generalattraction))
-                            {
-                                StartNewEditIntent(GeneralAttractionDetailsView.class, obj);
-                            }
-                        }
+                        StartNewEditIntent(FlightDetailsView.class, obj);
                     }
-                );
+                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_hotel))
+                    {
+                        StartNewEditIntent(HotelDetailsView.class, obj);
+                    }
+                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_bus))
+                    {
+                        StartNewEditIntent(BusDetailsView.class, obj);
+                    }
+                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_show))
+                    {
+                        StartNewEditIntent(ShowDetailsView.class, obj);
+                    }
+                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_restaurant))
+                    {
+                        StartNewEditIntent(RestaurantDetailsView.class, obj);
+                    }
+                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_ride))
+                    {
+                        StartNewEditIntent(RideDetailsView.class, obj);
+                    }
+                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_cinema))
+                    {
+                        StartNewEditIntent(CinemaDetailsView.class, obj);
+                    }
+                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_park))
+                    {
+                        StartNewEditIntent(ParkDetailsView.class, obj);
+                    }
+                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_parade))
+                    {
+                        StartNewEditIntent(ParadeDetailsView.class, obj);
+                    }
+                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_other))
+                    {
+                        StartNewEditIntent(OtherDetailsView.class, obj);
+                    }
+                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_generalattraction))
+                    {
+                        StartNewEditIntent(GeneralAttractionDetailsView.class, obj);
+                    }
+                }
+            });
             afterShow();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("showForm", e.getMessage());
         }
@@ -277,17 +274,24 @@ public class AttractionAreaDetailsView extends BaseActivity
 
     public void StartNewEditIntent(Class neededClass, ScheduleItem obj)
     {
-        Intent intent=new Intent(getApplicationContext(), neededClass);
-        intent.putExtra("ACTION", "view");
-        intent.putExtra("HOLIDAYID", obj.holidayId);
-        intent.putExtra("DAYID", obj.dayId);
-        intent.putExtra("ATTRACTIONID", obj.attractionId);
-        intent.putExtra("ATTRACTIONAREAID", obj.attractionAreaId);
-        intent.putExtra("SCHEDULEID", obj.scheduleId);
-        intent.putExtra("TITLE", title);
-        intent.putExtra("SUBTITLE", subTitle);
+        try
+        {
+            Intent intent=new Intent(getApplicationContext(), neededClass);
+            intent.putExtra("ACTION", "view");
+            intent.putExtra("HOLIDAYID", obj.holidayId);
+            intent.putExtra("DAYID", obj.dayId);
+            intent.putExtra("ATTRACTIONID", obj.attractionId);
+            intent.putExtra("ATTRACTIONAREAID", obj.attractionAreaId);
+            intent.putExtra("SCHEDULEID", obj.scheduleId);
+            intent.putExtra("TITLE", title);
+            intent.putExtra("SUBTITLE", subTitle);
 
-        startActivity(intent);
+            startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            ShowError("StartNewEditIntent", e.getMessage());
+        }
     }
     //endregion
 
@@ -295,40 +299,71 @@ public class AttractionAreaDetailsView extends BaseActivity
     @Override
     public int getInfoId()
     {
-        return (attractionAreaItem.infoId);
+        try
+        {
+            return (attractionAreaItem.infoId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getInfoId", e.getMessage());
+        }
+        return(0);
     }
 
     public void setNoteId(int pNoteId)
     {
-        attractionAreaItem.noteId=pNoteId;
-        databaseAccess().updateAttractionAreaItem(attractionAreaItem);
+        try
+        {
+            attractionAreaItem.noteId=pNoteId;
+            databaseAccess().updateAttractionAreaItem(attractionAreaItem);
+        }
+        catch(Exception e)
+        {
+            ShowError("setNoteId", e.getMessage());
+        }
     }
 
     @Override
     public int getNoteId()
     {
-        return (attractionAreaItem.noteId);
+        try
+        {
+            return (attractionAreaItem.noteId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNoteId", e.getMessage());
+        }
+        return (0);
     }
 
     @Override
     public void setInfoId(int pInfoId)
     {
-        attractionAreaItem.infoId=pInfoId;
-        databaseAccess().updateAttractionAreaItem(attractionAreaItem);
+        try
+        {
+            attractionAreaItem.infoId=pInfoId;
+            databaseAccess().updateAttractionAreaItem(attractionAreaItem);
+        }
+        catch(Exception e)
+        {
+            ShowError("setInfoId", e.getMessage());
+        }
+
     }
 
     public void showAttractionAreaView()
     {
         try
         {
-            Intent intent = new Intent(getApplicationContext(), AttractionAreaView.class);
+            Intent intent=new Intent(getApplicationContext(), AttractionAreaView.class);
             intent.putExtra("ACTION", "view");
             intent.putExtra("HOLIDAYID", holidayId);
             intent.putExtra("ATTRACTIONID", attractionId);
             intent.putExtra("ATTRACTIONAREAID", attractionAreaId);
             startActivity(intent);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("showAttractionAreaAdd", e.getMessage());
         }
@@ -338,14 +373,14 @@ public class AttractionAreaDetailsView extends BaseActivity
     {
         try
         {
-            Intent intent = new Intent(getApplicationContext(), AttractionAreaDetailsEdit.class);
+            Intent intent=new Intent(getApplicationContext(), AttractionAreaDetailsEdit.class);
             intent.putExtra("ACTION", "modify");
             intent.putExtra("HOLIDAYID", holidayId);
             intent.putExtra("ATTRACTIONID", attractionId);
             intent.putExtra("ATTRACTIONAREAID", attractionAreaId);
             startActivity(intent);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("showAttractionAreaAdd", e.getMessage());
         }
@@ -361,28 +396,49 @@ public class AttractionAreaDetailsView extends BaseActivity
         }
         catch(Exception e)
         {
-            ShowError("deleteDay", e.getMessage());
+            ShowError("deleteAttractionArea", e.getMessage());
         }
     }
-
 
 
     @Override
     public void SwapItems(int from, int to)
     {
-        Collections.swap(scheduleAdapter.data, from, to);
+        try
+        {
+            Collections.swap(scheduleAdapter.data, from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("SwapItems", e.getMessage());
+        }
+
     }
 
     @Override
     public void OnItemMove(int from, int to)
     {
-        scheduleAdapter.onItemMove(from, to);
+        try
+        {
+            scheduleAdapter.onItemMove(from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("OnItemMove", e.getMessage());
+        }
     }
 
     @Override
     public void NotifyItemMoved(int from, int to)
     {
-        scheduleAdapter.notifyItemMoved(from, to);
+        try
+        {
+            scheduleAdapter.notifyItemMoved(from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("NotifyItemMove", e.getMessage());
+        }
     }
 
     //endregion

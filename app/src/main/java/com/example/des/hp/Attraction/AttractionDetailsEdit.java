@@ -58,6 +58,8 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
     //region OnClick Events
     public void onClick(View view)
     {
+        try
+        {
         switch(view.getId())
         {
 
@@ -68,6 +70,11 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
             case R.id.imageViewSmall:
                 pickImage(view);
                 break;
+        }
+        }
+        catch (Exception e)
+        {
+            ShowError("onClick", e.getMessage());
         }
     }
 
@@ -167,7 +174,7 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
         }
         catch (Exception e)
         {
-            ShowError("saveAttraction", e.getMessage());
+            ShowError("saveSchedule", e.getMessage());
         }
     }
     //endregion

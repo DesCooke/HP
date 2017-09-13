@@ -31,11 +31,11 @@ public class AttractionAreaView extends BaseActivity
 
         try
         {
-            layoutName = "activity_attractionarea_view";
+            layoutName="activity_attractionarea_view";
             setContentView(R.layout.activity_attractionarea_view);
 
-            txtAttractionAreaDescription = (TextView) findViewById(R.id.txtAttractionAreaDescription);
-            grpAttractionAreaDescription = (LinearLayout) findViewById(R.id.grpAttractionAreaDescription);
+            txtAttractionAreaDescription=(TextView) findViewById(R.id.txtAttractionAreaDescription);
+            grpAttractionAreaDescription=(LinearLayout) findViewById(R.id.grpAttractionAreaDescription);
             btnClear=(ImageButton) findViewById(R.id.btnClear);
             btnSave=(Button) findViewById(R.id.btnSave);
             grpMenuFile=(LinearLayout) findViewById(R.id.grpMenuFile);
@@ -45,7 +45,7 @@ public class AttractionAreaView extends BaseActivity
 
             showForm();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
@@ -59,17 +59,17 @@ public class AttractionAreaView extends BaseActivity
         super.showForm();
         try
         {
-                attractionAreaItem = new AttractionAreaItem();
-                if (!databaseAccess().getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
-                    return;
-                
-                txtAttractionAreaDescription.setText(attractionAreaItem.attractionAreaDescription);
+            attractionAreaItem=new AttractionAreaItem();
+            if(!databaseAccess().getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
+                return;
+
+            txtAttractionAreaDescription.setText(attractionAreaItem.attractionAreaDescription);
 
             SetImage(attractionAreaItem.attractionAreaPicture);
 
             afterShow();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("showForm", e.getMessage());
         }
@@ -80,26 +80,57 @@ public class AttractionAreaView extends BaseActivity
     @Override
     public int getInfoId()
     {
-        return (attractionAreaItem.infoId);
+        try
+        {
+            return (attractionAreaItem.infoId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getInfoId", e.getMessage());
+        }
+        return (0);
     }
 
     public void setNoteId(int pNoteId)
     {
-        attractionAreaItem.noteId=pNoteId;
-        databaseAccess().updateAttractionAreaItem(attractionAreaItem);
+        try
+        {
+            attractionAreaItem.noteId=pNoteId;
+            databaseAccess().updateAttractionAreaItem(attractionAreaItem);
+        }
+        catch(Exception e)
+        {
+            ShowError("setNoteId", e.getMessage());
+        }
     }
 
     @Override
     public int getNoteId()
     {
-        return (attractionAreaItem.noteId);
+        try
+        {
+            return (attractionAreaItem.noteId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNoteId", e.getMessage());
+        }
+        return (0);
     }
 
     @Override
     public void setInfoId(int pInfoId)
     {
-        attractionAreaItem.infoId=pInfoId;
-        databaseAccess().updateAttractionAreaItem(attractionAreaItem);
+        try
+        {
+            attractionAreaItem.infoId=pInfoId;
+            databaseAccess().updateAttractionAreaItem(attractionAreaItem);
+        }
+        catch(Exception e)
+        {
+            ShowError("setInfoId", e.getMessage());
+        }
+
     }
     //endregion
 

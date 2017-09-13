@@ -214,6 +214,13 @@ public class BaseActivity extends AppCompatActivity
         
         try
         {
+            ArrayList<InternalImageItem>internalImageList=imageUtils().listInternalImages();
+            if(internalImageList==null)
+            {
+                selectFromDevice(view);
+                return;
+            }
+
             dialogWithYesNoFragment = DialogWithYesNoFragment.newInstance(getFragmentManager(),     // for the transaction bit
                 "SELECTPICTURELOCATION2",        // unique name for this dialog type
                 "Select Picture Location",            // unique name for this dialog type

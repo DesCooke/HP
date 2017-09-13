@@ -127,42 +127,40 @@ public class MainActivity extends BaseActivity
         myMessages().LogMessage("Identifying orphaned images....");
         
         ArrayList<InternalImageItem>internalImageList=imageUtils().listInternalImages();
-        for(InternalImageItem item: internalImageList)
+        if(internalImageList!=null)
         {
-            if(databaseAccess().pictureUsageCount(item.internalImageFilename)==0)
+            for(InternalImageItem item : internalImageList)
             {
-                myMessages().LogMessage("Picture " + item.internalImageFilename + ", is not linked to anything - removing");
-                databaseAccess().removePicture(item.internalImageFilename);
-                lCount++;
+                if(databaseAccess().pictureUsageCount(item.internalImageFilename) == 0)
+                {
+                    myMessages().LogMessage("Picture " + item.internalImageFilename + ", is not linked to anything - removing");
+                    databaseAccess().removePicture(item.internalImageFilename);
+                    lCount++;
+                }
             }
+            myMessages().LogMessage("There are a total of " + String.valueOf(internalImageList.size()) + " and " + String.valueOf(lCount) + " were orphaned");
         }
-        myMessages().LogMessage("There are a total of " + String.valueOf(internalImageList.size()) +
-            " and " + String.valueOf(lCount) + " were orphaned");
 
         myMessages().LogMessage("Identifying orphaned files....");
 
         int lCount2=0;
         ArrayList<InternalFileItem>internalFileList=imageUtils().listInternalFiles();
-        for(InternalFileItem item: internalFileList)
+        if(internalFileList!=null)
         {
-            if(databaseAccess().fileUsageCount(item.filename)==0)
+            for(InternalFileItem item : internalFileList)
             {
-                myMessages().LogMessage("File " + item.filename + ", is not linked to anything - removing");
-                databaseAccess().removeExtraFile(item.filename);
-                lCount2++;
+                if(databaseAccess().fileUsageCount(item.filename) == 0)
+                {
+                    myMessages().LogMessage("File " + item.filename + ", is not linked to anything - removing");
+                    databaseAccess().removeExtraFile(item.filename);
+                    lCount2++;
+                }
             }
+            myMessages().LogMessage("There are a total of " + String.valueOf(internalFileList.size()) + " and " + String.valueOf(lCount2) + " were orphaned");
+
+
+            myMessages().ShowMessageLong("Images: Orphaned " + String.valueOf(lCount) + ", " + "Total " + String.valueOf(internalImageList.size()) + ", " + "Files: Orphaned " + String.valueOf(lCount2) + ", " + "Total " + String.valueOf(internalFileList.size()) + " ");
         }
-        myMessages().LogMessage("There are a total of " + String.valueOf(internalFileList.size()) +
-            " and " + String.valueOf(lCount2) + " were orphaned");
-
-
-        myMessages().ShowMessageLong
-            (
-                "Images: Orphaned " + String.valueOf(lCount) + ", " +
-                    "Total " + String.valueOf(internalImageList.size()) + ", " +
-                    "Files: Orphaned " + String.valueOf(lCount2) + ", " +
-                    "Total " + String.valueOf(internalFileList.size()) + " "
-            );
     }
     //endregion
     

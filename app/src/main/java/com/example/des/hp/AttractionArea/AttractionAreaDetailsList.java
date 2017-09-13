@@ -174,26 +174,56 @@ public class AttractionAreaDetailsList extends BaseActivity
     @Override
     public int getInfoId()
     {
-        return (attractionItem.infoId);
+        try
+        {
+            return (attractionItem.infoId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getInfoId", e.getMessage());
+        }
+        return (0);
     }
 
     public void setNoteId(int pNoteId)
     {
-        attractionItem.noteId=pNoteId;
-        databaseAccess().updateAttractionItem(attractionItem);
+        try
+        {
+            attractionItem.noteId=pNoteId;
+            databaseAccess().updateAttractionItem(attractionItem);
+        }
+        catch(Exception e)
+        {
+            ShowError("setNoteId", e.getMessage());
+        }
     }
 
     @Override
     public int getNoteId()
     {
-        return (attractionItem.noteId);
+        try
+        {
+            return (attractionItem.noteId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNoteId", e.getMessage());
+        }
+        return (0);
     }
 
     @Override
     public void setInfoId(int pInfoId)
     {
-        attractionItem.infoId=pInfoId;
-        databaseAccess().updateAttractionItem(attractionItem);
+        try
+        {
+            attractionItem.infoId=pInfoId;
+            databaseAccess().updateAttractionItem(attractionItem);
+        }
+        catch(Exception e)
+        {
+            ShowError("setInfoId", e.getMessage());
+        }
     }
 
     public void showAttractionAreaAdd()
@@ -300,19 +330,40 @@ public class AttractionAreaDetailsList extends BaseActivity
     @Override
     public void SwapItems(int from, int to)
     {
-        Collections.swap(attractionAreaAdapter.data, from, to);
+        try
+        {
+            Collections.swap(attractionAreaAdapter.data, from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("SwapItems", e.getMessage());
+        }
     }
 
     @Override
     public void OnItemMove(int from, int to)
     {
-        attractionAreaAdapter.onItemMove();
+        try
+        {
+            attractionAreaAdapter.onItemMove();
+        }
+        catch(Exception e)
+        {
+            ShowError("OnItemMove", e.getMessage());
+        }
     }
 
     @Override
     public void NotifyItemMoved(int from, int to)
     {
-        attractionAreaAdapter.notifyItemMoved(from, to);
+        try
+        {
+            attractionAreaAdapter.notifyItemMoved(from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("NotifyItemMoved", e.getMessage());
+        }
     }
 
     //endregion
