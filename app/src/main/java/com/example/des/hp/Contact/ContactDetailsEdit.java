@@ -13,12 +13,12 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class ContactDetailsEdit extends ContactDetailsView implements View.OnClickListener
 {
-
+    
     //region Member variables
     public View.OnClickListener dwetOnOkClick;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     //endregion
-
+    
     //region Constructors/Destructors
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -29,7 +29,7 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
         {
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
-
+            
             if (action != null && action.equals("add"))
             {
                 grpMenuFile.setVisibility(View.GONE);
@@ -44,7 +44,7 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
         }
         
     }
-
+    
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
@@ -56,16 +56,24 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
     //region OnClick Events
     public void onClick(View view)
     {
-        switch (view.getId())
+        try
         {
-            case R.id.grpContactDescription:
-                pickContactDescription(view);
-                break;
-            
-            case R.id.imageViewSmall:
-                pickImage(view);
-                break;
+            switch (view.getId())
+            {
+                case R.id.grpContactDescription:
+                    pickContactDescription(view);
+                    break;
+                
+                case R.id.imageViewSmall:
+                    pickImage(view);
+                    break;
+            }
         }
+        catch (Exception e)
+        {
+            ShowError("onClick", e.getMessage());
+        }
+        
     }
     
     public void ContactDescriptionPicked(View view)
@@ -128,13 +136,13 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
             myMessages().ShowMessageShort("Saving " + txtContactDescription.getText().toString());
             
             MyInt myInt = new MyInt();
-
+            
             contactItem.contactDescription = txtContactDescription.getText().toString();
             contactItem.contactNotes = "";
-
-            contactItem.contactPicture="";
-            if(internalImageFilename.length()>0)
-                contactItem.contactPicture=internalImageFilename;
+            
+            contactItem.contactPicture = "";
+            if (internalImageFilename.length() > 0)
+                contactItem.contactPicture = internalImageFilename;
             contactItem.pictureAssigned = imageSet;
             contactItem.pictureChanged = imageChanged;
             contactItem.fileBitmap = null;
@@ -169,7 +177,7 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
         }
         catch (Exception e)
         {
-            ShowError("saveContact", e.getMessage());
+            ShowError("saveSchedule", e.getMessage());
         }
     }
     
