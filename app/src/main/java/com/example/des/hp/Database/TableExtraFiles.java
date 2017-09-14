@@ -12,6 +12,7 @@ import com.example.des.hp.myutils.MyString;
 import java.util.ArrayList;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.ImageUtils.imageUtils;
 import static com.example.des.hp.myutils.MyFileUtils.myFileUtils;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
@@ -100,8 +101,12 @@ class TableExtraFiles extends TableBase
             
             myMessages().LogMessage("next file id " + String.valueOf(item.fileId));
             myMessages().LogMessage("hey001");
-            item.internalFilename = "sample_" + String.valueOf(fileIdMyInt.Value) + ".txt";
-            item.fileName = "sample_" + String.valueOf(fileIdMyInt.Value) + ".txt";
+
+            int lFileCount = imageUtils().countInternalFiles();
+            lFileCount++;
+
+            item.internalFilename = "sample_" + String.valueOf(lFileCount) + ".txt";
+            item.fileName = "sample_" + String.valueOf(lFileCount) + ".txt";
             myMessages().LogMessage("hey002");
             item.fileDescription = "Sample file " + item.internalFilename;
             myMessages().LogMessage("hey003");
