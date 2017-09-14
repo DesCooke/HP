@@ -11,6 +11,8 @@ import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyFileUtils.myFileUtils;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 class TableExtraFiles extends TableBase
@@ -19,138 +21,236 @@ class TableExtraFiles extends TableBase
     {
         super(context, dbHelper);
     }
-
+    
     public void ShowError(String argFunction, String argMessage)
     {
         super.ShowError("TableExtraFiles:" + argFunction, argMessage);
     }
-
+    
     public boolean onCreate(SQLiteDatabase db)
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS extraFiles " + "( " + "  fileGroupId     INT(5),  " + "  fileId          INT(5),  " + "  sequenceNo      INT(5),  " + "  fileDescription VARCHAR, " + "  fileName        VARCHAR, " + "  filePicture     VARCHAR  " + ") ";
-
+            String lSQL = "CREATE TABLE IF NOT EXISTS extraFiles " + "( " + "  fileGroupId     INT(5),  " + "  fileId          INT(5),  " + "  sequenceNo      INT(5),  " + "  fileDescription VARCHAR, " + "  fileName        VARCHAR, " + "  filePicture     VARCHAR  " + ") ";
+            
             db.execSQL(lSQL);
-
+            
             return (true);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("onCreate", e.getMessage());
             return (false);
         }
     }
-
+    
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
         try
         {
             return (true);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
             return (false);
         }
     }
-
+    
+    public boolean createSampleExtraFileGroup(MyInt myInt)
+    {
+        try
+        {
+            int fileGroupId = 0;
+            if (!getNextFileGroupId(myInt))
+                return (false);
+            
+            fileGroupId = myInt.Value;
+            myMessages().LogMessage("Using file group id " + String.valueOf(fileGroupId));
+            if (!createSampleExtraFile(fileGroupId, false))
+                return (false);
+            if (!createSampleExtraFile(fileGroupId, true))
+                return (false);
+        }
+        catch (Exception e)
+        {
+            ShowError("createSampleExtraFileGroup", e.getMessage());
+            return (false);
+        }
+        
+        return (true);
+    }
+    
+    public boolean createSampleExtraFile(int fileGroupId, boolean picture)
+    {
+        try
+        {
+            ExtraFilesItem item = new ExtraFilesItem();
+            MyInt fileIdMyInt = new MyInt();
+            MyInt sequenceNoMyInt = new MyInt();
+            
+            item.fileGroupId = fileGroupId;
+            if (!getNextExtraFilesId(fileGroupId, fileIdMyInt))
+                return (false);
+            item.fileId = fileIdMyInt.Value;
+            
+            if(!getNextExtraFilesSequenceNo(fileGroupId, fileIdMyInt))
+                    return(false);
+            item.sequenceNo=fileIdMyInt.Value;
+            
+            myMessages().LogMessage("next file id " + String.valueOf(item.fileId));
+            myMessages().LogMessage("hey001");
+            item.internalFilename = "sample_" + String.valueOf(fileIdMyInt.Value) + ".txt";
+            item.fileName = "sample_" + String.valueOf(fileIdMyInt.Value) + ".txt";
+            myMessages().LogMessage("hey002");
+            item.fileDescription = "Sample file " + item.internalFilename;
+            myMessages().LogMessage("hey003");
+            item.pictureAssigned = false;
+            item.pictureChanged = false;
+            item.fileBitmap = null;
+            myMessages().LogMessage("hey004");
+            item.filePicture="";
+            if (picture)
+            {
+                item.fileBitmap = randomPicture();
+                item.pictureAssigned = true;
+            }
+            myMessages().LogMessage("hey005");
+            if (!myFileUtils().createSample(item.internalFilename))
+                return (false);
+            myMessages().LogMessage("hey006");
+            if (!addExtraFilesItem(item))
+                return (false);
+            myMessages().LogMessage("hey007");
+        }
+        catch (Exception e)
+        {
+            ShowError("createSampleExtraFile", e.getMessage());
+            return (false);
+        }
+        
+        return (true);
+    }
+    
+    public boolean createSample(String newName)
+    {
+        try
+        {
+            if (!createExtraFileSample(newName))
+                return (false);
+        }
+        catch (Exception e)
+        {
+            ShowError("createSample", e.getMessage());
+            return (false);
+        }
+        return (true);
+    }
+    
     boolean addExtraFilesItem(ExtraFilesItem extraFilesItem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        if(extraFilesItem.pictureAssigned)
+        try
         {
-            /* if picture name has something in it - it means it came from internal folder */
-            if(extraFilesItem.filePicture.length() == 0)
+            if (IsValid() == false)
+                return (false);
+            
+            if (extraFilesItem.pictureAssigned)
             {
-                myMessages().LogMessage("  - New Image was not from internal folder...");
-                if(extraFilesItem.pictureAssigned)
+            /* if picture name has something in it - it means it came from internal folder */
+                if (extraFilesItem.filePicture.length() == 0)
                 {
-                    myMessages().LogMessage("  - Save new image and get a filename...");
-                    MyString myString=new MyString();
-                    if(savePicture(extraFilesItem.fileBitmap, myString) == false)
-                        return (false);
-                    extraFilesItem.filePicture=myString.Value;
-                    myMessages().LogMessage("  - New filename " + extraFilesItem.filePicture);
+                    myMessages().LogMessage("  - New Image was not from internal folder...");
+                    if (extraFilesItem.pictureAssigned)
+                    {
+                        myMessages().LogMessage("  - Save new image and get a filename...");
+                        MyString myString = new MyString();
+                        if (savePicture(extraFilesItem.fileBitmap, myString) == false)
+                            return (false);
+                        extraFilesItem.filePicture = myString.Value;
+                        myMessages().LogMessage("  - New filename " + extraFilesItem.filePicture);
+                    } else
+                    {
+                        myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                    }
                 } else
                 {
-                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                    myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + extraFilesItem.filePicture + ")");
                 }
             } else
             {
-                myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + extraFilesItem.filePicture + ")");
+                myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
-        } else
-        {
-            myMessages().LogMessage("  - New Image not assigned - do nothing");
+            
+            
+            if (extraFilesItem.fileName.length() > 0)
+            {
+                extraFilesItem.fileName = extraFilesItem.fileName.replace("'", "");
+                if (extraFilesItem.internalFilename.length() == 0)
+                    if (saveExtraFile(extraFilesItem.fileUri, extraFilesItem.fileName) == false)
+                        return (false);
+            }
+            
+            String lSql = "INSERT INTO ExtraFiles " + "  (fileGroupId, fileId, fileDescription, fileName, filePicture, sequenceNo) " + "VALUES " + "(" + extraFilesItem.fileGroupId + "," + extraFilesItem.fileId + "," + MyQuotedString(extraFilesItem.fileDescription) + ", " + MyQuotedString(extraFilesItem.fileName) + "," + MyQuotedString(extraFilesItem.filePicture) + "," + extraFilesItem.sequenceNo + " " + ")";
+            
+            return (executeSQL("addExtraFilesItem", lSql));
         }
-
-
-        if(extraFilesItem.fileName.length() > 0)
+        catch (Exception e)
         {
-            extraFilesItem.fileName=extraFilesItem.fileName.replace("'", "");
-            if(extraFilesItem.internalFilename.length() == 0)
-                if(saveExtraFile(extraFilesItem.fileUri, extraFilesItem.fileName) == false)
-                    return (false);
+            ShowError("addExtraFilesItem", e.getMessage());
+            return (false);
         }
-
-        String lSql="INSERT INTO ExtraFiles " + "  (fileGroupId, fileId, fileDescription, fileName, filePicture, sequenceNo) " + "VALUES " + "(" + extraFilesItem.fileGroupId + "," + extraFilesItem.fileId + "," + MyQuotedString(extraFilesItem.fileDescription) + ", " + MyQuotedString(extraFilesItem.fileName) + "," + MyQuotedString(extraFilesItem.filePicture) + "," + extraFilesItem.sequenceNo + " " + ")";
-
-        return (executeSQL("addExtraFilesItem", lSql));
     }
-
+    
     boolean updateExtraFilesItems(ArrayList<ExtraFilesItem> items)
     {
-        if(IsValid() == false)
+        if (IsValid() == false)
             return (false);
-
-        if(items == null)
+        
+        if (items == null)
             return (false);
-
-        for(int i=0; i < items.size(); i++)
+        
+        for (int i = 0; i < items.size(); i++)
         {
-            if(items.get(i).sequenceNo != items.get(i).origSequenceNo)
+            if (items.get(i).sequenceNo != items.get(i).origSequenceNo)
             {
-                if(updateExtraFilesItem(items.get(i)) == false)
+                if (updateExtraFilesItem(items.get(i)) == false)
                     return (false);
             }
         }
         return (true);
     }
-
+    
     boolean updateExtraFilesItem(ExtraFilesItem extraFilesItem)
     {
-        if(IsValid() == false)
+        if (IsValid() == false)
             return (false);
-
+        
         myMessages().LogMessage("updateExtraFilesItem:Handling Image");
-        if(extraFilesItem.pictureChanged)
+        if (extraFilesItem.pictureChanged)
         {
-            if(extraFilesItem.origPictureAssigned && extraFilesItem.filePicture.length() > 0 && extraFilesItem.filePicture.compareTo(extraFilesItem.origFilePicture) == 0)
+            if (extraFilesItem.origPictureAssigned && extraFilesItem.filePicture.length() > 0 && extraFilesItem.filePicture.compareTo(extraFilesItem.origFilePicture) == 0)
             {
                 myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
             } else
             {
-                if(extraFilesItem.origPictureAssigned)
+                if (extraFilesItem.origPictureAssigned)
                 {
                     myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                    if(removePicture(extraFilesItem.origFilePicture) == false)
+                    if (removePicture(extraFilesItem.origFilePicture) == false)
                         return (false);
                 }
             
                 /* if picture name has something in it - it means it came from internal folder */
-                if(extraFilesItem.filePicture.length() == 0)
+                if (extraFilesItem.filePicture.length() == 0)
                 {
                     myMessages().LogMessage("  - New Image was not from internal folder...");
-                    if(extraFilesItem.pictureAssigned)
+                    if (extraFilesItem.pictureAssigned)
                     {
                         myMessages().LogMessage("  - Save new image and get a filename...");
-                        MyString myString=new MyString();
-                        if(savePicture(extraFilesItem.fileBitmap, myString) == false)
+                        MyString myString = new MyString();
+                        if (savePicture(extraFilesItem.fileBitmap, myString) == false)
                             return (false);
-                        extraFilesItem.filePicture=myString.Value;
+                        extraFilesItem.filePicture = myString.Value;
                         myMessages().LogMessage("  - New filename " + extraFilesItem.filePicture);
                     } else
                     {
@@ -165,188 +265,188 @@ class TableExtraFiles extends TableBase
         {
             myMessages().LogMessage("  - Image not changed - do nothing");
         }
-
-        if(extraFilesItem.fileChanged)
+        
+        if (extraFilesItem.fileChanged)
         {
-            if(extraFilesItem.origFileName.length() > 0 && extraFilesItem.origFileName.compareTo(extraFilesItem.internalFilename) != 0)
-                if(removeExtraFile(extraFilesItem.origFileName) == false)
+            if (extraFilesItem.origFileName.length() > 0 && extraFilesItem.origFileName.compareTo(extraFilesItem.internalFilename) != 0)
+                if (removeExtraFile(extraFilesItem.origFileName) == false)
                     return (false);
-            if(extraFilesItem.internalFilename.length() == 0 && extraFilesItem.fileName.length() > 0)
+            if (extraFilesItem.internalFilename.length() == 0 && extraFilesItem.fileName.length() > 0)
             {
-                extraFilesItem.fileName=extraFilesItem.fileName.replace("'", "");
-                if(saveExtraFile(extraFilesItem.fileUri, extraFilesItem.fileName) == false)
+                extraFilesItem.fileName = extraFilesItem.fileName.replace("'", "");
+                if (saveExtraFile(extraFilesItem.fileUri, extraFilesItem.fileName) == false)
                     return (false);
             }
         }
-
+        
         String lSQL;
-        lSQL="UPDATE ExtraFiles " + "SET fileDescription = " + MyQuotedString(extraFilesItem.fileDescription) + ", " + "    fileName = " + MyQuotedString(extraFilesItem.fileName) + ", " + "    filePicture = " + MyQuotedString(extraFilesItem.filePicture) + ", " + "    sequenceNo = " + extraFilesItem.sequenceNo + " " + "WHERE fileGroupId = " + extraFilesItem.fileGroupId + " " + "AND fileId = " + extraFilesItem.origFileId;
-
+        lSQL = "UPDATE ExtraFiles " + "SET fileDescription = " + MyQuotedString(extraFilesItem.fileDescription) + ", " + "    fileName = " + MyQuotedString(extraFilesItem.fileName) + ", " + "    filePicture = " + MyQuotedString(extraFilesItem.filePicture) + ", " + "    sequenceNo = " + extraFilesItem.sequenceNo + " " + "WHERE fileGroupId = " + extraFilesItem.fileGroupId + " " + "AND fileId = " + extraFilesItem.origFileId;
+        
         return (executeSQL("updateOtherItem", lSQL));
     }
-
+    
     boolean deleteExtraFilesItem(ExtraFilesItem extraFilesItem)
     {
-        if(IsValid() == false)
+        if (IsValid() == false)
             return (false);
-
-        String lSQL="DELETE FROM ExtraFiles " + "WHERE fileGroupId = " + extraFilesItem.fileGroupId + " " + "AND fileId = " + extraFilesItem.fileId;
-
-        if(extraFilesItem.filePicture.length() > 0)
-            if(removePicture(extraFilesItem.filePicture) == false)
+        
+        String lSQL = "DELETE FROM ExtraFiles " + "WHERE fileGroupId = " + extraFilesItem.fileGroupId + " " + "AND fileId = " + extraFilesItem.fileId;
+        
+        if (extraFilesItem.filePicture.length() > 0)
+            if (removePicture(extraFilesItem.filePicture) == false)
                 return (false);
-
-        if(extraFilesItem.fileName.length() > 0)
-            if(removeExtraFile(extraFilesItem.fileName) == false)
+        
+        if (extraFilesItem.fileName.length() > 0)
+            if (removeExtraFile(extraFilesItem.fileName) == false)
                 return (false);
-
-        if(executeSQL("deleteExtraFilesItem", lSQL) == false)
+        
+        if (executeSQL("deleteExtraFilesItem", lSQL) == false)
             return (false);
-
+        
         return (true);
     }
-
+    
     boolean getExtraFilesItem(int fileGroupId, int fileId, ExtraFilesItem litem)
     {
-        if(IsValid() == false)
+        if (IsValid() == false)
             return (false);
-
+        
         String lSQL;
-        lSQL="SELECT fileGroupId, fileId, fileDescription, fileName, filePicture, sequenceNo " + "FROM ExtraFiles " + "WHERE FileGroupId = " + fileGroupId + " " + "AND FileId = " + fileId;
-
-        Cursor cursor=executeSQLOpenCursor("getExtraFilesItem", lSQL);
-        if(cursor != null)
+        lSQL = "SELECT fileGroupId, fileId, fileDescription, fileName, filePicture, sequenceNo " + "FROM ExtraFiles " + "WHERE FileGroupId = " + fileGroupId + " " + "AND FileId = " + fileId;
+        
+        Cursor cursor = executeSQLOpenCursor("getExtraFilesItem", lSQL);
+        if (cursor != null)
         {
             cursor.moveToFirst();
-            if(GetExtraFilesItemFromQuery(cursor, litem) == false)
+            if (GetExtraFilesItemFromQuery(cursor, litem) == false)
                 return (false);
         }
         executeSQLCloseCursor("getExtraFilesItem");
         return (true);
     }
-
+    
     private boolean GetExtraFilesItemFromQuery(Cursor cursor, ExtraFilesItem extraFilesItem)
     {
-        if(IsValid() == false)
+        if (IsValid() == false)
             return (false);
-
+        
         try
         {
-            if(cursor.getCount() == 0)
+            if (cursor.getCount() == 0)
                 return (true);
-
-            extraFilesItem.fileGroupId=Integer.parseInt(cursor.getString(0));
-            extraFilesItem.fileId=Integer.parseInt(cursor.getString(1));
-            extraFilesItem.fileDescription=cursor.getString(2);
-            extraFilesItem.fileName=cursor.getString(3);
-            extraFilesItem.filePicture=cursor.getString(4);
-            extraFilesItem.sequenceNo=Integer.parseInt(cursor.getString(5));
-
-            extraFilesItem.origFileGroupId=extraFilesItem.fileGroupId;
-            extraFilesItem.origFileId=extraFilesItem.fileId;
-            extraFilesItem.origFileDescription=extraFilesItem.fileDescription;
-            extraFilesItem.origFileName=extraFilesItem.fileName;
-            extraFilesItem.origFilePicture=extraFilesItem.filePicture;
-            extraFilesItem.origSequenceNo=extraFilesItem.sequenceNo;
-
-            extraFilesItem.pictureChanged=false;
-
-            if(extraFilesItem.filePicture.length() > 0)
+            
+            extraFilesItem.fileGroupId = Integer.parseInt(cursor.getString(0));
+            extraFilesItem.fileId = Integer.parseInt(cursor.getString(1));
+            extraFilesItem.fileDescription = cursor.getString(2);
+            extraFilesItem.fileName = cursor.getString(3);
+            extraFilesItem.filePicture = cursor.getString(4);
+            extraFilesItem.sequenceNo = Integer.parseInt(cursor.getString(5));
+            
+            extraFilesItem.origFileGroupId = extraFilesItem.fileGroupId;
+            extraFilesItem.origFileId = extraFilesItem.fileId;
+            extraFilesItem.origFileDescription = extraFilesItem.fileDescription;
+            extraFilesItem.origFileName = extraFilesItem.fileName;
+            extraFilesItem.origFilePicture = extraFilesItem.filePicture;
+            extraFilesItem.origSequenceNo = extraFilesItem.sequenceNo;
+            
+            extraFilesItem.pictureChanged = false;
+            
+            if (extraFilesItem.filePicture.length() > 0)
             {
-                extraFilesItem.pictureAssigned=true;
-                extraFilesItem.origPictureAssigned=true;
+                extraFilesItem.pictureAssigned = true;
+                extraFilesItem.origPictureAssigned = true;
             } else
             {
-                extraFilesItem.pictureAssigned=false;
-                extraFilesItem.origPictureAssigned=false;
+                extraFilesItem.pictureAssigned = false;
+                extraFilesItem.origPictureAssigned = false;
             }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("GetExtraFilesItemFromQuery", e.getMessage());
         }
-
+        
         return (true);
     }
-
+    
     boolean getNextExtraFilesId(int fileGroupId, MyInt retInt)
     {
-        String lSQL="SELECT IFNULL(MAX(fileId),0) FROM ExtraFiles WHERE fileGroupId = " + fileGroupId;
-
-        if(executeSQLGetInt("getNextSequenceNo", lSQL, retInt) == false)
+        String lSQL = "SELECT IFNULL(MAX(fileId),0) FROM ExtraFiles WHERE fileGroupId = " + fileGroupId;
+        
+        if (executeSQLGetInt("getNextSequenceNo", lSQL, retInt) == false)
             return (false);
-
-        retInt.Value=retInt.Value + 1;
-
+        
+        retInt.Value = retInt.Value + 1;
+        
         return (true);
     }
-
+    
     boolean getNextFileGroupId(MyInt retInt)
     {
-        if(getNextFileId("fgi", retInt) == false)
+        if (getNextFileId("fgi", retInt) == false)
             return (false);
-
-        if(setNextFileId("fgi", retInt.Value + 1) == false)
+        
+        if (setNextFileId("fgi", retInt.Value + 1) == false)
             return (false);
-
+        
         return (true);
     }
-
+    
     boolean getExtraFilesCount(int fileGroupId, MyInt retInt)
     {
-        String lSQL="SELECT IFNULL(COUNT(*),0) FROM ExtraFiles WHERE fileGroupId = " + fileGroupId;
-
-        if(executeSQLGetInt("getNextSequenceNo", lSQL, retInt) == false)
+        String lSQL = "SELECT IFNULL(COUNT(*),0) FROM ExtraFiles WHERE fileGroupId = " + fileGroupId;
+        
+        if (executeSQLGetInt("getNextSequenceNo", lSQL, retInt) == false)
             return (false);
-
+        
         return (true);
     }
-
+    
     boolean getNextExtraFilesSequenceNo(int fileGroupId, MyInt retInt)
     {
-        String lSQL="SELECT IFNULL(MAX(SequenceNo),0) FROM ExtraFiles WHERE fileGroupId = " + fileGroupId;
-
-        if(executeSQLGetInt("getNextSequenceNo", lSQL, retInt) == false)
+        String lSQL = "SELECT IFNULL(MAX(SequenceNo),0) FROM ExtraFiles WHERE fileGroupId = " + fileGroupId;
+        
+        if (executeSQLGetInt("getNextSequenceNo", lSQL, retInt) == false)
             return (false);
-
-        retInt.Value=retInt.Value + 1;
-
+        
+        retInt.Value = retInt.Value + 1;
+        
         return (true);
     }
-
+    
     public boolean deleteExtraFilesList(int fileGroupId)
     {
-        ArrayList<ExtraFilesItem> al=new ArrayList<>();
-        if(getExtraFilesList(fileGroupId, al) == false)
+        ArrayList<ExtraFilesItem> al = new ArrayList<>();
+        if (getExtraFilesList(fileGroupId, al) == false)
             return (false);
-
-        for(int i=0; i < al.size(); i++)
+        
+        for (int i = 0; i < al.size(); i++)
         {
-            if(deleteExtraFilesItem(al.get(i)) == false)
+            if (deleteExtraFilesItem(al.get(i)) == false)
                 return (false);
         }
-
+        
         return (true);
     }
-
+    
     boolean getExtraFilesList(int fileGroupId, ArrayList<ExtraFilesItem> al)
     {
-        String lSql="SELECT fileGroupId, fileId, fileDescription, fileName, filePicture, sequenceNo " + "FROM ExtraFiles " + "WHERE fileGroupId = " + fileGroupId + " " + "ORDER BY SequenceNo ";
-
-        Cursor cursor=executeSQLOpenCursor("getExtraFilesList", lSql);
-        if(cursor == null)
+        String lSql = "SELECT fileGroupId, fileId, fileDescription, fileName, filePicture, sequenceNo " + "FROM ExtraFiles " + "WHERE fileGroupId = " + fileGroupId + " " + "ORDER BY SequenceNo ";
+        
+        Cursor cursor = executeSQLOpenCursor("getExtraFilesList", lSql);
+        if (cursor == null)
             return (false);
-
-        while(cursor.moveToNext())
+        
+        while (cursor.moveToNext())
         {
-            ExtraFilesItem extraFilesItem=new ExtraFilesItem();
-            if(GetExtraFilesItemFromQuery(cursor, extraFilesItem) == false)
+            ExtraFilesItem extraFilesItem = new ExtraFilesItem();
+            if (GetExtraFilesItemFromQuery(cursor, extraFilesItem) == false)
                 return (false);
-
+            
             al.add(extraFilesItem);
         }
         return (true);
     }
-
-
+    
+    
 }

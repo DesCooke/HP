@@ -194,6 +194,25 @@ public class ImageUtils
         }
         return(null);
     }
+
+    public int countInternalFiles()
+    {
+        try
+        {
+            File directory = new File(res.getString(R.string.files_path));
+            File[] files = directory.listFiles();
+
+            if(files==null)
+                return(0);
+
+            return(files.length);
+        }
+        catch (Exception e)
+        {
+            ShowError("listInternalFiles", e.getMessage());
+        }
+        return(0);
+    }
     
     //
     // Checks to make sure a filename exists

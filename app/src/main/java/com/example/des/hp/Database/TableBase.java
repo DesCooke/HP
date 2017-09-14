@@ -6,17 +6,22 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.DateUtils;
 import com.example.des.hp.myutils.MyFileUtils;
 import com.example.des.hp.myutils.MyInt;
+import com.example.des.hp.myutils.MyLong;
 import com.example.des.hp.myutils.MyString;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Date;
+import java.util.Random;
 
+import static com.example.des.hp.myutils.DateUtils.dateUtils;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class TableBase
@@ -77,6 +82,40 @@ public class TableBase
         myMessages().ShowError("Error in DatabaseAccess::" + argFunction, argMessage);
     }
 
+    public long randomDateInt()
+    {
+        Date today = new Date();
+        MyLong myLong = new MyLong();
+        Random random = new Random();
+        int i = random.nextInt(100);
+        int addDays = random.nextInt(100) + 5;
+        if (!dateUtils().GetToday(today))
+            return (DateUtils.unknownDate);
+        
+        if (!dateUtils().DateToInt(today, myLong))
+            return (DateUtils.unknownDate);
+        return (myLong.Value + (addDays * DateUtils.milliSecondsInADay));
+    }
+    
+    Bitmap randomPicture()
+    {
+        int pictureId;
+        Random random=new Random();
+        int sample=random.nextInt(5);
+        pictureId=R.drawable.sample1;
+        switch(sample)
+        {
+            case 0: pictureId=R.drawable.sample2; break;
+            case 1: pictureId=R.drawable.sample3; break;
+            case 2: pictureId=R.drawable.sample4; break;
+            case 3: pictureId=R.drawable.sample5; break;
+        }
+        
+        return(BitmapFactory.decodeResource(_resources, pictureId));
+    
+    }
+    
+    
     // returns true/false
     public boolean removePicture(String argFilename)
     {
@@ -234,6 +273,12 @@ public class TableBase
         return (_myFileUtils.CopyFileToLocalDir(uri, newName));
     }
 
+    boolean createExtraFileSample(String newName)
+    {
+
+        return (_myFileUtils.createSample(newName));
+    }
+    
     // returns true/false
     public boolean savePicture(Bitmap bm, MyString retString)
     {

@@ -8,6 +8,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.Notes.*;
 
+import java.util.Random;
+
+import static com.example.des.hp.myutils.MyLoremIpsum.myLoremIpsum;
+
 class TableNotes extends TableBase
 {
     TableNotes(Context context, SQLiteOpenHelper dbHelper)
@@ -160,6 +164,24 @@ class TableNotes extends TableBase
         }
     }
 
+    boolean createSample(int holidayId, MyInt myInt)
+    {
+        NoteItem item = new NoteItem();
+        Random random = new Random();
+        int lStart=random.nextInt(5)+1;
+        int lCount=random.nextInt(30)+4;
+                
+        if(!getNextNoteId(holidayId, myInt))
+            return(false);
+        item.holidayId = holidayId;
+        item.noteId = myInt.Value;
+        item.notes = myLoremIpsum().getWords(lCount, lStart);
+        if(!addNoteItem(item))
+            return(false);
+        
+        return(true);
+    }
+    
     boolean getNextNoteId(int holidayId, MyInt retInt)
     {
         String lSQL="SELECT IFNULL(MAX(noteId),0) " + "FROM notes " + "WHERE holidayId = " + holidayId;

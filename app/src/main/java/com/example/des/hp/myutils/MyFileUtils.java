@@ -20,7 +20,9 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Random;
 
+import static com.example.des.hp.myutils.MyLoremIpsum.myLoremIpsum;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 //
@@ -305,4 +307,56 @@ public class MyFileUtils
         }
     }
 
+    public boolean createSample(String newFilename)
+    {
+        try
+        {
+            File f99=new File(res.getString(R.string.files_path));
+            if(!f99.exists())
+            {
+                if(!f99.mkdir())
+                {
+                    myMessages().ShowMessageWithOk("DatabaseAccess()", "Unable to create directory " + "" + f99.getName(), null);
+                }
+            }
+
+            myMessages().LogMessage("createSample with filename " + newFilename);
+            File tof=new File(res.getString(R.string.files_path) + "/" + newFilename);
+            if(tof.exists())
+                return (false);
+
+            Uri toUri=Uri.fromFile(tof);
+            _context.grantUriPermission("com.example.des.hp", toUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+            OutputStream out=_context.getContentResolver().openOutputStream(toUri);
+            if(out == null)
+                throw new Exception("Unable to open for write" + tof);
+
+            Random random=new Random();
+            
+            int lParagraphCount=random.nextInt(10)+3;
+            int i;
+            StringBuilder lorem = new StringBuilder();
+            for(i=0;i<lParagraphCount;i++)
+            {
+                int lStart=random.nextInt(48);
+                int lCount=random.nextInt(48);
+                lorem.append(myLoremIpsum().getWords(lCount, lStart));
+                lorem.append("\n\n");
+            }
+            out.write(String.valueOf(lorem).getBytes(), 0, lorem.length());
+
+            // write the output file (You have now copied the file)
+            out.flush();
+            out.close();
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("createSample", e.getMessage());
+            return (false);
+        }
+    }
+    
 }

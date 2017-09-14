@@ -15,6 +15,7 @@ import com.example.des.hp.InternalImages.InternalImageItem;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.Holiday.*;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
@@ -173,6 +174,11 @@ public class MainActivity extends BaseActivity
         {
             SetTitles(getResources().getString(R.string.title_planner), "");
 
+            File f = new File(getResources().getString(R.string.database_filename));
+            boolean needToCreateSampleDatabase=false;
+            if(!f.exists())
+                needToCreateSampleDatabase=true;
+                
             if (!MyPermissions.checkIfAlreadyhavePermission(this))
             {
                 setTitle(getResources().getString(R.string.title_waitingforpermission));
@@ -181,6 +187,9 @@ public class MainActivity extends BaseActivity
             {
                 accessGranted = true;
                 invalidateOptionsMenu();
+                
+                if(needToCreateSampleDatabase)
+                    databaseAccess().createSampleDatabase();
                 
                 holidayList = new ArrayList<>();
                 if (!databaseAccess().getHolidayList(holidayList))
