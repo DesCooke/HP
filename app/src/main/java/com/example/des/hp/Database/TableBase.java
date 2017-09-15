@@ -59,6 +59,20 @@ public class TableBase
         return (true);
     }
 
+    public String randomPictureName()
+    {
+        Random random = new Random();
+        int fileid = random.nextInt(5)+1;
+        return("pic_" + String.valueOf(fileid) + ".png");
+    }
+    
+    public String randomFileName()
+    {
+        Random random = new Random();
+        int fileid = random.nextInt(5)+1;
+        return("testfile_" + String.valueOf(fileid) + ".txt");
+    }
+
     private String CleanString(String argString)
     {
         if(argString.length() == 0)

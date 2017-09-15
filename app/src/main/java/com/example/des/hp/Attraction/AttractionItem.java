@@ -3,7 +3,7 @@ package com.example.des.hp.Attraction;
 import android.graphics.Bitmap;
 
 /**
- ** Created by Des on 16/10/2016.
+ * * Created by Des on 16/10/2016.
  */
 
 public class AttractionItem
@@ -20,7 +20,7 @@ public class AttractionItem
     public int noteId;
     public int galleryId;
     public int sygicId;
-
+    
     // Original Fields
     public int origHolidayId;
     public int origAttractionId;
@@ -33,13 +33,13 @@ public class AttractionItem
     public int origNoteId;
     public int origGalleryId;
     public int origSygicId;
-
+    
     public boolean pictureChanged;
-
+    
     public Bitmap fileBitmap;
-
+    
     public AttractionItem()
     {
     }
-
+    
 }

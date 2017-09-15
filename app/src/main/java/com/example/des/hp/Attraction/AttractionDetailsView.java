@@ -32,14 +32,14 @@ public class AttractionDetailsView extends BaseActivity
         
         try
         {
-            layoutName="activity_attraction_details_view";
+            layoutName = "activity_attraction_details_view";
             setContentView(R.layout.activity_attraction_details_view);
             
             txtAttractionDescription = (TextView) findViewById(R.id.txtAttractionDescription);
-            btnClear=(ImageButton) findViewById(R.id.btnClear);
-            btnSave=(Button) findViewById(R.id.btnSave);
-            grpMenuFile=(LinearLayout) findViewById(R.id.grpMenuFile);
-            grpAttractionDescription=(LinearLayout) findViewById(R.id.grpAttractionDescription);
+            btnClear = (ImageButton) findViewById(R.id.btnClear);
+            btnSave = (Button) findViewById(R.id.btnSave);
+            grpMenuFile = (LinearLayout) findViewById(R.id.grpMenuFile);
+            grpAttractionDescription = (LinearLayout) findViewById(R.id.grpAttractionDescription);
             
             afterCreate();
             
@@ -70,13 +70,13 @@ public class AttractionDetailsView extends BaseActivity
     public void showForm()
     {
         super.showForm();
-    
+        
         try
         {
-            allowCellMove=true;
-
+            allowCellMove = true;
+            
             attractionItem = new AttractionItem();
-    
+            
             if (action != null && action.equals("add"))
             {
                 txtAttractionDescription.setText("");
@@ -85,9 +85,9 @@ public class AttractionDetailsView extends BaseActivity
             {
                 if (!databaseAccess().getAttractionItem(holidayId, attractionId, attractionItem))
                     return;
-    
+                
                 txtAttractionDescription.setText(attractionItem.attractionDescription);
-    
+                
                 SetImage(attractionItem.attractionPicture);
             }
             if (title.length() > 0)
@@ -97,9 +97,9 @@ public class AttractionDetailsView extends BaseActivity
             {
                 SetTitles(attractionItem.attractionDescription, "");
             }
-
+            
             afterShow();
-
+            
         }
         catch (Exception e)
         {
@@ -116,27 +116,27 @@ public class AttractionDetailsView extends BaseActivity
         {
             return (attractionItem.noteId);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("getNoteId", e.getMessage());
         }
         return (0);
     }
-
+    
     @Override
     public void setNoteId(int noteId)
     {
         try
         {
-            attractionItem.noteId=noteId;
+            attractionItem.noteId = noteId;
             databaseAccess().updateAttractionItem(attractionItem);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("setNoteId", e.getMessage());
         }
     }
-
+    
     @Override
     public int getInfoId()
     {
@@ -144,28 +144,28 @@ public class AttractionDetailsView extends BaseActivity
         {
             return (attractionItem.infoId);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("getInfoId", e.getMessage());
         }
         return (0);
     }
-
+    
     @Override
     public void setInfoId(int infoId)
     {
         try
         {
-            attractionItem.infoId=infoId;
+            attractionItem.infoId = infoId;
             databaseAccess().updateAttractionItem(attractionItem);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             ShowError("setInfoId", e.getMessage());
         }
-
+        
     }
- 
-   //endregion
-
+    
+    //endregion
+    
 }

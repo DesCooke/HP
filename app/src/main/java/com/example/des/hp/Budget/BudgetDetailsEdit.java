@@ -189,7 +189,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
         {
             ShowError("removePoundSign", e.getMessage());
         }
-        return(argString);
+        return (argString);
     }
     
     // Create a YES onclick procedure

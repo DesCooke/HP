@@ -182,7 +182,8 @@ class TableHoliday extends TableBase
             item.pictureAssigned = false;
             if (picture)
             {
-                item.holidayBitmap = randomPicture();
+                item.holidayBitmap = null;
+                item.holidayPicture = randomPictureName();
                 item.pictureAssigned = true;
             }
             

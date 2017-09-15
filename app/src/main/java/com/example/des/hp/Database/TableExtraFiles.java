@@ -10,6 +10,7 @@ import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.ImageUtils.imageUtils;
@@ -100,33 +101,22 @@ class TableExtraFiles extends TableBase
             item.sequenceNo=fileIdMyInt.Value;
             
             myMessages().LogMessage("next file id " + String.valueOf(item.fileId));
-            myMessages().LogMessage("hey001");
 
-            int lFileCount = imageUtils().countInternalFiles();
-            lFileCount++;
-
-            item.internalFilename = "sample_" + String.valueOf(lFileCount) + ".txt";
-            item.fileName = "sample_" + String.valueOf(lFileCount) + ".txt";
-            myMessages().LogMessage("hey002");
+            item.internalFilename = randomFileName();
+            item.fileName = item.internalFilename;
             item.fileDescription = "Sample file " + item.internalFilename;
-            myMessages().LogMessage("hey003");
             item.pictureAssigned = false;
             item.pictureChanged = false;
             item.fileBitmap = null;
-            myMessages().LogMessage("hey004");
             item.filePicture="";
             if (picture)
             {
-                item.fileBitmap = randomPicture();
+                item.fileBitmap = null;
+                item.filePicture = randomPictureName();
                 item.pictureAssigned = true;
             }
-            myMessages().LogMessage("hey005");
-            if (!myFileUtils().createSample(item.internalFilename))
-                return (false);
-            myMessages().LogMessage("hey006");
             if (!addExtraFilesItem(item))
                 return (false);
-            myMessages().LogMessage("hey007");
         }
         catch (Exception e)
         {

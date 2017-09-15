@@ -23,18 +23,18 @@ class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.ViewHolde
     public ArrayList<AttractionItem> data = null;
     private OnItemClickListener mOnItemClickListener;
     private ImageUtils imageUtils;
-
-
+    
+    
     interface OnItemClickListener
     {
         void onItemClick(View view, AttractionItem obj);
     }
-
+    
     void setOnItemClickListener(final OnItemClickListener mItemClickListener)
     {
         this.mOnItemClickListener = mItemClickListener;
     }
-
+    
     class ViewHolder extends RecyclerView.ViewHolder
     {
         // each data item is just a string in this case
@@ -42,17 +42,17 @@ class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.ViewHolde
         TextView txtAttractionDescription;
         LinearLayout attractionItemCell;
         
-
+        
         ViewHolder(View v)
         {
             super(v);
-
-            attractionImage = (ImageView) v.findViewById(R.id.imgIcon);
-            txtAttractionDescription = (TextView) v.findViewById(R.id.attractionDescription);
-            attractionItemCell = (LinearLayout) v.findViewById(R.id.attractionItemCell);
+            
+            attractionImage = v.findViewById(R.id.imgIcon);
+            txtAttractionDescription = v.findViewById(R.id.attractionDescription);
+            attractionItemCell = v.findViewById(R.id.attractionItemCell);
         }
     }
-
+    
     // Provide a suitable constructor (depends on the kind of dataset)
     AttractionAdapter(Activity activity, ArrayList<AttractionItem> items)
     {
@@ -60,36 +60,35 @@ class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.ViewHolde
         imageUtils = new ImageUtils(activity);
         data = items;
     }
-
+    
     @Override
     public AttractionAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.attractionlistitemrow, parent, false);
-
+        
         // set the view's size, margins, padding and layout parameters
         return new ViewHolder(v);
     }
-
+    
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position)
     {
-
+        
         final AttractionItem c = data.get(position);
         holder.txtAttractionDescription.setText(c.attractionDescription);
-
-        if(c.pictureAssigned)
+        
+        if (c.pictureAssigned)
         {
             holder.attractionImage.setVisibility(View.VISIBLE);
-            if(!imageUtils.getListIcon(context, c.attractionPicture, holder.attractionImage))
+            if (!imageUtils.getListIcon(context, c.attractionPicture, holder.attractionImage))
                 return;
-        }
-        else
+        } else
         {
             holder.attractionImage.setVisibility(View.INVISIBLE);
         }
-
-
+        
+        
         holder.attractionItemCell.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -102,38 +101,41 @@ class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.ViewHolde
             }
         });
     }
-
-
-    public AttractionItem getItem(int position){
+    
+    
+    public AttractionItem getItem(int position)
+    {
         return data.get(position);
     }
-
-    public void add(int position, AttractionItem mail){
+    
+    public void add(int position, AttractionItem mail)
+    {
         data.add(position, mail);
         notifyDataSetChanged();
     }
-
+    
     boolean onItemMove()
     {
         updateGlobalData(data);
         return true;
     }
-
+    
     private void updateGlobalData(ArrayList<AttractionItem> items)
     {
-        for (int i=0;i<items.size();i++)
+        for (int i = 0; i < items.size(); i++)
         {
-            items.get(i).sequenceNo=i+1;
+            items.get(i).sequenceNo = i + 1;
         }
-        if(!databaseAccess().updateAttractionItems(items))
+        if (!databaseAccess().updateAttractionItems(items))
             return;
         notifyDataSetChanged();
     }
-
+    
     // Return the size of your dataset (invoked by the layout manager)
     @Override
-    public int getItemCount() {
+    public int getItemCount()
+    {
         return data.size();
     }
-
+    
 }

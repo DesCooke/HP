@@ -22,21 +22,21 @@ import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
 {
     private Context context;
-    public ArrayList<BudgetItem> data=null;
+    public ArrayList<BudgetItem> data = null;
     private OnItemClickListener mOnItemClickListener;
     private ImageUtils imageUtils;
-    private static Bitmap imageTotal=null;
-
+    private static Bitmap imageTotal = null;
+    
     interface OnItemClickListener
     {
         void onItemClick(View view, BudgetItem obj);
     }
-
+    
     void setOnItemClickListener(final OnItemClickListener mItemClickListener)
     {
-        this.mOnItemClickListener=mItemClickListener;
+        this.mOnItemClickListener = mItemClickListener;
     }
-
+    
     class ViewHolder extends RecyclerView.ViewHolder
     {
         // each data item is just a string in this case
@@ -46,113 +46,113 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
         TextView txtBudgetTotal;
         TextView txtBudgetPaid;
         TextView txtBudgetUnpaid;
-
+        
         ViewHolder(View v)
         {
             super(v);
-
-            budgetImage=(ImageView) v.findViewById(R.id.imgIcon);
-            txtBudgetDescription=(TextView) v.findViewById(R.id.budgetDescription);
-            budgetItemCell=(LinearLayout) v.findViewById(R.id.budgetItemCell);
-            txtBudgetTotal=(TextView) v.findViewById(R.id.budgetTotal);
-            txtBudgetPaid=(TextView) v.findViewById(R.id.budgetPaid);
-            txtBudgetUnpaid=(TextView) v.findViewById(R.id.budgetUnpaid);
+            
+            budgetImage = v.findViewById(R.id.imgIcon);
+            txtBudgetDescription = v.findViewById(R.id.budgetDescription);
+            budgetItemCell = v.findViewById(R.id.budgetItemCell);
+            txtBudgetTotal = v.findViewById(R.id.budgetTotal);
+            txtBudgetPaid = v.findViewById(R.id.budgetPaid);
+            txtBudgetUnpaid = v.findViewById(R.id.budgetUnpaid);
         }
     }
-
+    
     // Provide a suitable constructor (depends on the kind of dataset)
     BudgetAdapter(Activity activity, ArrayList<BudgetItem> items)
     {
-        this.context=activity;
-        imageUtils=new ImageUtils(activity);
-        data=items;
+        this.context = activity;
+        imageUtils = new ImageUtils(activity);
+        data = items;
     }
-
+    
     @Override
     public BudgetAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         // create a new view
-        View v=LayoutInflater.from(parent.getContext()).inflate(R.layout.budgetlistitemrow, parent, false);
-
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.budgetlistitemrow, parent, false);
+        
         // set the view's size, margins, padding and layout parameters
         return new ViewHolder(v);
     }
-
+    
     @Override
     public void onBindViewHolder(ViewHolder holder, int position)
     {
-        final BudgetItem c=data.get(position);
+        final BudgetItem c = data.get(position);
         holder.txtBudgetDescription.setText(c.budgetDescription);
         holder.txtBudgetTotal.setText(StringUtils.IntToMoneyString(c.budgetTotal));
         holder.txtBudgetPaid.setText(StringUtils.IntToMoneyString(c.budgetPaid));
         holder.txtBudgetUnpaid.setText(StringUtils.IntToMoneyString(c.budgetUnpaid));
-
-        if(c.pictureAssigned)
+        
+        if (c.pictureAssigned)
         {
             holder.budgetImage.setVisibility(View.VISIBLE);
-            if(!imageUtils.getListIcon(context, c.budgetPicture, holder.budgetImage))
+            if (!imageUtils.getListIcon(context, c.budgetPicture, holder.budgetImage))
                 return;
         } else
         {
-            if(c.budgetDescription.equals("Total"))
+            if (c.budgetDescription.equals("Total"))
             {
-                if(imageTotal == null)
-                    imageTotal=BitmapFactory.decodeResource(context.getResources(), R.drawable.sum);
+                if (imageTotal == null)
+                    imageTotal = BitmapFactory.decodeResource(context.getResources(), R.drawable.sum);
                 holder.budgetImage.setImageBitmap(imageTotal);
             } else
             {
                 holder.budgetImage.setVisibility(View.INVISIBLE);
             }
         }
-
-
+        
+        
         holder.budgetItemCell.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                if(mOnItemClickListener != null)
+                if (mOnItemClickListener != null)
                 {
                     mOnItemClickListener.onItemClick(view, c);
                 }
             }
         });
     }
-
-
+    
+    
     public BudgetItem getItem(int position)
     {
         return data.get(position);
     }
-
+    
     public void add(int position, BudgetItem mail)
     {
         data.add(position, mail);
         notifyDataSetChanged();
     }
-
+    
     boolean onItemMove()
     {
         updateGlobalData(data);
         return true;
     }
-
+    
     private void updateGlobalData(ArrayList<BudgetItem> items)
     {
-        for(int i=0; i < items.size(); i++)
+        for (int i = 0; i < items.size(); i++)
         {
-            items.get(i).sequenceNo=i + 1;
+            items.get(i).sequenceNo = i + 1;
         }
-        if(!databaseAccess().updateBudgetItems(items))
+        if (!databaseAccess().updateBudgetItems(items))
             return;
         notifyDataSetChanged();
     }
-
+    
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount()
     {
         return data.size();
     }
-
+    
 }

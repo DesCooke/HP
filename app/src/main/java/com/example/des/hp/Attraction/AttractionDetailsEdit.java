@@ -13,12 +13,12 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class AttractionDetailsEdit extends AttractionDetailsView implements View.OnClickListener
 {
-
+    
     //region Member variables
     public View.OnClickListener dwetOnOkClick;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     //endregion
-
+    
     //region Constructors/Destructors
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -29,14 +29,14 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
         {
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
-
-            if(action != null && action.equals("add"))
+            
+            if (action != null && action.equals("add"))
             {
                 grpMenuFile.setVisibility(View.GONE);
                 txtAttractionDescription.setText("");
-                title="Add a Main Attraction";
+                title = "Add a Main Attraction";
             }
-
+            
             grpAttractionDescription.setOnClickListener(this);
             imageView.setOnClickListener(this);
         }
@@ -54,30 +54,30 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
         return false;
     }
     //endregion
-
+    
     //region OnClick Events
     public void onClick(View view)
     {
         try
         {
-        switch(view.getId())
-        {
-
-            case R.id.grpAttractionDescription:
-                pickAttractionDescription(view);
-                break;
-
-            case R.id.imageViewSmall:
-                pickImage(view);
-                break;
-        }
+            switch (view.getId())
+            {
+                
+                case R.id.grpAttractionDescription:
+                    pickAttractionDescription(view);
+                    break;
+                
+                case R.id.imageViewSmall:
+                    pickImage(view);
+                    break;
+            }
         }
         catch (Exception e)
         {
             ShowError("onClick", e.getMessage());
         }
     }
-
+    
     public void AttractionDescriptionPicked(View view)
     {
         try
@@ -129,7 +129,7 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
         
     }
     //endregion
-
+    
     //region Saving
     public void saveSchedule(View view)
     {
@@ -139,15 +139,15 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
             
             myMessages().ShowMessageShort("Saving " + txtAttractionDescription.getText().toString());
             
-            attractionItem.pictureAssigned=imageSet;
-            attractionItem.pictureChanged=imageChanged;
-            attractionItem.attractionPicture="";
-            if(internalImageFilename.length()>0)
-                attractionItem.attractionPicture=internalImageFilename;
-            attractionItem.fileBitmap=null;
-            if(imageSet)
-                attractionItem.fileBitmap =((BitmapDrawable) imageView.getDrawable()).getBitmap();
-
+            attractionItem.pictureAssigned = imageSet;
+            attractionItem.pictureChanged = imageChanged;
+            attractionItem.attractionPicture = "";
+            if (internalImageFilename.length() > 0)
+                attractionItem.attractionPicture = internalImageFilename;
+            attractionItem.fileBitmap = null;
+            if (imageSet)
+                attractionItem.fileBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            
             attractionItem.attractionDescription = txtAttractionDescription.getText().toString();
             attractionItem.attractionNotes = "";
             
