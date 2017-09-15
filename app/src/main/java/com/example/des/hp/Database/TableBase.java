@@ -50,27 +50,54 @@ public class TableBase
     //region HELPER FUNCTIONS
     public boolean IsValid()
     {
-        if(_context == null)
-            return (false);
-        if(_dbHelper == null)
-            return (false);
-        if(_myFileUtils == null)
-            return (false);
-        return (true);
+        try
+        {
+            if(_context == null)
+                return (false);
+            if(_dbHelper == null)
+                return (false);
+            if(_myFileUtils == null)
+                return (false);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("IsValid", e.getMessage());
+        }
+        return (false);
+
     }
 
-    public String randomPictureName()
+    String randomPictureName()
     {
-        Random random = new Random();
-        int fileid = random.nextInt(5)+1;
-        return("pic_" + String.valueOf(fileid) + ".png");
+        try
+        {
+            Random random=new Random();
+            int fileid=random.nextInt(5) + 1;
+            return ("pic_" + String.valueOf(fileid) + ".png");
+        }
+        catch(Exception e)
+        {
+            ShowError("randomPictureName", e.getMessage());
+        }
+        return ("");
+
     }
-    
-    public String randomFileName()
+
+    String randomFileName()
     {
-        Random random = new Random();
-        int fileid = random.nextInt(5)+1;
-        return("testfile_" + String.valueOf(fileid) + ".txt");
+        try
+        {
+            Random random=new Random();
+            int fileid=random.nextInt(5) + 1;
+            return ("testfile_" + String.valueOf(fileid) + ".txt");
+        }
+        catch(Exception e)
+        {
+            ShowError("randomFileName", e.getMessage());
+        }
+        return ("");
+
     }
 
     private String CleanString(String argString)
@@ -96,40 +123,65 @@ public class TableBase
         myMessages().ShowError("Error in DatabaseAccess::" + argFunction, argMessage);
     }
 
-    public long randomDateInt()
+    long randomDateInt()
     {
-        Date today = new Date();
-        MyLong myLong = new MyLong();
-        Random random = new Random();
-        int i = random.nextInt(100);
-        int addDays = random.nextInt(100) + 5;
-        if (!dateUtils().GetToday(today))
-            return (DateUtils.unknownDate);
-        
-        if (!dateUtils().DateToInt(today, myLong))
-            return (DateUtils.unknownDate);
-        return (myLong.Value + (addDays * DateUtils.milliSecondsInADay));
+        try
+        {
+            Date today=new Date();
+            MyLong myLong=new MyLong();
+            Random random=new Random();
+            int i=random.nextInt(100);
+            int addDays=random.nextInt(100) + 5;
+            if(!dateUtils().GetToday(today))
+                return (DateUtils.unknownDate);
+
+            if(!dateUtils().DateToInt(today, myLong))
+                return (DateUtils.unknownDate);
+            return (myLong.Value + (addDays * DateUtils.milliSecondsInADay));
+        }
+        catch(Exception e)
+        {
+            ShowError("randomDateInt", e.getMessage());
+        }
+        return (0);
+
     }
-    
+
     Bitmap randomPicture()
     {
-        int pictureId;
-        Random random=new Random();
-        int sample=random.nextInt(5);
-        pictureId=R.drawable.sample1;
-        switch(sample)
+        try
         {
-            case 0: pictureId=R.drawable.sample2; break;
-            case 1: pictureId=R.drawable.sample3; break;
-            case 2: pictureId=R.drawable.sample4; break;
-            case 3: pictureId=R.drawable.sample5; break;
+            int pictureId;
+            Random random=new Random();
+            int sample=random.nextInt(5);
+            pictureId=R.drawable.sample1;
+            switch(sample)
+            {
+                case 0:
+                    pictureId=R.drawable.sample2;
+                    break;
+                case 1:
+                    pictureId=R.drawable.sample3;
+                    break;
+                case 2:
+                    pictureId=R.drawable.sample4;
+                    break;
+                case 3:
+                    pictureId=R.drawable.sample5;
+                    break;
+            }
+
+            return (BitmapFactory.decodeResource(_resources, pictureId));
         }
-        
-        return(BitmapFactory.decodeResource(_resources, pictureId));
-    
+        catch(Exception e)
+        {
+            ShowError("onCreate", e.getMessage());
+        }
+        return (null);
+
     }
-    
-    
+
+
     // returns true/false
     public boolean removePicture(String argFilename)
     {
@@ -170,63 +222,90 @@ public class TableBase
 
     private int pictureUsageCount(String argFilename, String argTable, String argField)
     {
-        int lCount=0;
-        String lSQL;
-
-
-        lSQL="SELECT COUNT(*) " + "FROM " + argTable + " " + "WHERE " + argField + " = '" + argFilename + "' ";
-
-        Cursor cursor=executeSQLOpenCursor("pictureUsageCount", lSQL);
-        if(cursor != null)
+        try
         {
-            cursor.moveToFirst();
-            lCount=Integer.parseInt(cursor.getString(0));
+            int lCount=0;
+            String lSQL;
+
+
+            lSQL="SELECT COUNT(*) " + "FROM " + argTable + " " + "WHERE " + argField + " = '" + argFilename + "' ";
+
+            Cursor cursor=executeSQLOpenCursor("pictureUsageCount", lSQL);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                lCount=Integer.parseInt(cursor.getString(0));
+            }
+
+            myMessages().LogMessage("  Count of " + argFilename + " in " + argTable + ": " + String.valueOf(lCount));
+
+            executeSQLCloseCursor("pictureUsageCount");
+            return (lCount);
         }
+        catch(Exception e)
+        {
+            ShowError("onCreate", e.getMessage());
+        }
+        return (0);
 
-        myMessages().LogMessage("  Count of " + argFilename + " in " + argTable + ": " + String.valueOf(lCount));
-
-        executeSQLCloseCursor("pictureUsageCount");
-        return (lCount);
     }
 
     int totalUsageCount(String argFilename)
     {
-        int lCount=0;
-        lCount+=pictureUsageCount(argFilename, "Attraction", "attractionPicture");
-        lCount+=pictureUsageCount(argFilename, "AttractionArea", "attractionAreaPicture");
-        lCount+=pictureUsageCount(argFilename, "Budget", "budgetPicture");
-        lCount+=pictureUsageCount(argFilename, "Contact", "contactPicture");
-        lCount+=pictureUsageCount(argFilename, "Day", "dayPicture");
-        lCount+=pictureUsageCount(argFilename, "ExtraFiles", "filePicture");
-        lCount+=pictureUsageCount(argFilename, "Highlight", "highlightPicture");
-        lCount+=pictureUsageCount(argFilename, "HighlightGroup", "highlightGroupPicture");
-        lCount+=pictureUsageCount(argFilename, "Holiday", "holidayPicture");
-        lCount+=pictureUsageCount(argFilename, "Schedule", "schedPicture");
-        lCount+=pictureUsageCount(argFilename, "Tasks", "taskPicture");
-        lCount+=pictureUsageCount(argFilename, "Tip", "tipPicture");
-        lCount+=pictureUsageCount(argFilename, "TipGroup", "tipGroupPicture");
-        return (lCount);
+        try
+        {
+            int lCount=0;
+            lCount+=pictureUsageCount(argFilename, "Attraction", "attractionPicture");
+            lCount+=pictureUsageCount(argFilename, "AttractionArea", "attractionAreaPicture");
+            lCount+=pictureUsageCount(argFilename, "Budget", "budgetPicture");
+            lCount+=pictureUsageCount(argFilename, "Contact", "contactPicture");
+            lCount+=pictureUsageCount(argFilename, "Day", "dayPicture");
+            lCount+=pictureUsageCount(argFilename, "ExtraFiles", "filePicture");
+            lCount+=pictureUsageCount(argFilename, "Highlight", "highlightPicture");
+            lCount+=pictureUsageCount(argFilename, "HighlightGroup", "highlightGroupPicture");
+            lCount+=pictureUsageCount(argFilename, "Holiday", "holidayPicture");
+            lCount+=pictureUsageCount(argFilename, "Schedule", "schedPicture");
+            lCount+=pictureUsageCount(argFilename, "Tasks", "taskPicture");
+            lCount+=pictureUsageCount(argFilename, "Tip", "tipPicture");
+            lCount+=pictureUsageCount(argFilename, "TipGroup", "tipGroupPicture");
+            return (lCount);
+        }
+        catch(Exception e)
+        {
+            ShowError("totalUsageCount", e.getMessage());
+        }
+        return (0);
+
     }
 
     int fileUsageCount(String argFilename)
     {
-        int lCount=0;
-        String lSQL;
-
-
-        lSQL="SELECT COUNT(*) " + "FROM extraFiles " + "WHERE fileName = " + MyQuotedString(argFilename) + " ";
-
-        Cursor cursor=executeSQLOpenCursor("fileUsageCount", lSQL);
-        if(cursor != null)
+        try
         {
-            cursor.moveToFirst();
-            lCount=Integer.parseInt(cursor.getString(0));
+            int lCount=0;
+            String lSQL;
+
+
+            lSQL="SELECT COUNT(*) " + "FROM extraFiles " + "WHERE fileName = " + MyQuotedString(argFilename) + " ";
+
+            Cursor cursor=executeSQLOpenCursor("fileUsageCount", lSQL);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                lCount=Integer.parseInt(cursor.getString(0));
+            }
+
+            myMessages().LogMessage("  Count of " + argFilename + " in extraFiles: " + String.valueOf(lCount));
+
+            executeSQLCloseCursor("fileUsageCount");
+            return (lCount);
         }
+        catch(Exception e)
+        {
+            ShowError("fileUsageCount", e.getMessage());
+        }
+        return (0);
 
-        myMessages().LogMessage("  Count of " + argFilename + " in extraFiles: " + String.valueOf(lCount));
-
-        executeSQLCloseCursor("fileUsageCount");
-        return (lCount);
     }
 
 
@@ -283,16 +362,31 @@ public class TableBase
 
     boolean saveExtraFile(Uri uri, String newName)
     {
-
-        return (_myFileUtils.CopyFileToLocalDir(uri, newName));
+        try
+        {
+            return (_myFileUtils.CopyFileToLocalDir(uri, newName));
+        }
+        catch(Exception e)
+        {
+            ShowError("saveExtraFile", e.getMessage());
+        }
+        return (false);
     }
 
     boolean createExtraFileSample(String newName)
     {
+        try
+        {
+            return (_myFileUtils.createSample(newName));
+        }
+        catch(Exception e)
+        {
+            ShowError("createExtraFileSample", e.getMessage());
+        }
+        return (false);
 
-        return (_myFileUtils.createSample(newName));
     }
-    
+
     // returns true/false
     public boolean savePicture(Bitmap bm, MyString retString)
     {
@@ -436,27 +530,45 @@ public class TableBase
     // returns true/false
     boolean getNextFileId(String argType, MyInt retInt)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSQL;
-        lSQL="SELECT nextId " + "FROM fileIds " + "WHERE fileType = '" + argType + "' ";
+            String lSQL;
+            lSQL="SELECT nextId " + "FROM fileIds " + "WHERE fileType = '" + argType + "' ";
 
-        if(executeSQLGetInt("getNextFileId", lSQL, retInt) == false)
-            return (false);
+            if(executeSQLGetInt("getNextFileId", lSQL, retInt) == false)
+                return (false);
 
-        return (true);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNextFileId", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean setNextFileId(String argType, int argNextFileId)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSQL;
-        lSQL="UPDATE fileIds " + "SET nextId = " + argNextFileId + " " + "WHERE fileType='" + argType + "'";
+            String lSQL;
+            lSQL="UPDATE fileIds " + "SET nextId = " + argNextFileId + " " + "WHERE fileType='" + argType + "'";
 
-        return (executeSQL("setNextFileId", lSQL));
+            return (executeSQL("setNextFileId", lSQL));
+        }
+        catch(Exception e)
+        {
+            ShowError("setNextFileId", e.getMessage());
+        }
+        return (false);
+
     }
 
 }

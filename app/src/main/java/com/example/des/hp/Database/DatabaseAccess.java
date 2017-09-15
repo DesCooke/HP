@@ -74,8 +74,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
     private TableAttractionArea tableAttractionArea;
     private TableContact tableContact;
     private TableFileIds tableFileIds;
-    private TableHighlightGroup tableHighlightGroup;
-    private TableHighlight tableHighlight;
     private TableRide tableRide;
     private TableGeneralAttraction tableGeneralAttraction;
     private TableNotes tableNotes;
@@ -116,8 +114,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
             tableAttractionArea = new TableAttractionArea(context, this);
             tableContact = new TableContact(context, this);
             tableFileIds = new TableFileIds(context, this);
-            tableHighlightGroup = new TableHighlightGroup(context, this);
-            tableHighlight = new TableHighlight(context, this);
             tableNotes = new TableNotes(context, this);
             dateUtils = new DateUtils(context);
             
@@ -216,10 +212,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
             if (!tableContact.onCreate(db))
                 return;
             if (!tableFileIds.onCreate(db))
-                return;
-            if (!tableHighlightGroup.onCreate(db))
-                return;
-            if (!tableHighlight.onCreate(db))
                 return;
             if (!tableNotes.onCreate(db))
                 return;
@@ -366,10 +358,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
             if (!tableContact.onUpgrade(db, oldVersion, newVersion))
                 return;
             if (!tableFileIds.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableHighlightGroup.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableHighlight.onUpgrade(db, oldVersion, newVersion))
                 return;
             if (!tableNotes.onUpgrade(db, oldVersion, newVersion))
                 return;

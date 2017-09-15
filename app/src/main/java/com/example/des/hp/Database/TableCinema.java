@@ -51,71 +51,107 @@ class TableCinema extends TableBase
 
     boolean addCinemaItem(CinemaItem cinemaItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSql="INSERT INTO cinema " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, cinemaName, bookingReference) " + "VALUES " + "(" + cinemaItem.holidayId + "," + cinemaItem.dayId + "," + cinemaItem.attractionId + "," + cinemaItem.attractionAreaId + "," + cinemaItem.scheduleId + "," + MyQuotedString(cinemaItem.cinemaName) + "," + MyQuotedString(cinemaItem.bookingReference) + " " + ")";
+            String lSql="INSERT INTO cinema " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, cinemaName, bookingReference) " + "VALUES " + "(" + cinemaItem.holidayId + "," + cinemaItem.dayId + "," + cinemaItem.attractionId + "," + cinemaItem.attractionAreaId + "," + cinemaItem.scheduleId + "," + MyQuotedString(cinemaItem.cinemaName) + "," + MyQuotedString(cinemaItem.bookingReference) + " " + ")";
 
-        return (executeSQL("addCinemaItem", lSql));
+            return (executeSQL("addCinemaItem", lSql));
+        }
+        catch(Exception e)
+        {
+            ShowError("addCinemaItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean updateCinemaItem(CinemaItem cinemaItem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        if(ItemExists(cinemaItem) == false)
+        try
         {
-            return (addCinemaItem(cinemaItem));
+            if(IsValid() == false)
+                return (false);
+
+            if(ItemExists(cinemaItem) == false)
+            {
+                return (addCinemaItem(cinemaItem));
+            }
+
+            String lSQL="UPDATE cinema " + "SET cinemaName = " + MyQuotedString(cinemaItem.cinemaName) + ", " + "    bookingReference = " + MyQuotedString(cinemaItem.bookingReference) + ", " + "    dayId = " + cinemaItem.dayId + ", " + "    attractionId = " + cinemaItem.attractionId + ", " + "    attractionAreaId = " + cinemaItem.attractionAreaId + ", " + "    scheduleId = " + cinemaItem.scheduleId + " " + "WHERE holidayId = " + cinemaItem.holidayId + " " + "AND dayId = " + cinemaItem.origDayId + " " + "AND attractionId = " + cinemaItem.origAttractionId + " " + "AND attractionAreaId = " + cinemaItem.origAttractionAreaId + " " + "AND scheduleId = " + cinemaItem.origScheduleId;
+
+            return (executeSQL("updateCinemaItem", lSQL));
         }
+        catch(Exception e)
+        {
+            ShowError("updateCinemaItem", e.getMessage());
+        }
+        return (false);
 
-        String lSQL="UPDATE cinema " + "SET cinemaName = " + MyQuotedString(cinemaItem.cinemaName) + ", " + "    bookingReference = " + MyQuotedString(cinemaItem.bookingReference) + ", " + "    dayId = " + cinemaItem.dayId + ", " + "    attractionId = " + cinemaItem.attractionId + ", " + "    attractionAreaId = " + cinemaItem.attractionAreaId + ", " + "    scheduleId = " + cinemaItem.scheduleId + " " + "WHERE holidayId = " + cinemaItem.holidayId + " " + "AND dayId = " + cinemaItem.origDayId + " " + "AND attractionId = " + cinemaItem.origAttractionId + " " + "AND attractionAreaId = " + cinemaItem.origAttractionAreaId + " " + "AND scheduleId = " + cinemaItem.origScheduleId;
-
-        return (executeSQL("updateCinemaItem", lSQL));
     }
 
     boolean deleteCinemaItem(CinemaItem cinemaItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSQL="DELETE FROM cinema " + "WHERE holidayId = " + cinemaItem.holidayId + " " + "AND dayId = " + cinemaItem.dayId + " " + "AND attractionId = " + cinemaItem.attractionId + " " + "AND attractionAreaId = " + cinemaItem.attractionAreaId + " " + "AND scheduleId = " + cinemaItem.scheduleId;
+            String lSQL="DELETE FROM cinema " + "WHERE holidayId = " + cinemaItem.holidayId + " " + "AND dayId = " + cinemaItem.dayId + " " + "AND attractionId = " + cinemaItem.attractionId + " " + "AND attractionAreaId = " + cinemaItem.attractionAreaId + " " + "AND scheduleId = " + cinemaItem.scheduleId;
 
 
-        if(executeSQL("deleteCinemaItem", lSQL) == false)
-            return (false);
+            if(executeSQL("deleteCinemaItem", lSQL) == false)
+                return (false);
 
-        return (true);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteCinemaItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean getCinemaItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, CinemaItem litem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        litem.holidayId=holidayId;
-        litem.dayId=dayId;
-        litem.attractionId=attractionId;
-        litem.attractionAreaId=attractionAreaId;
-        litem.scheduleId=scheduleId;
-        litem.origHolidayId=holidayId;
-        litem.origDayId=dayId;
-        litem.origAttractionId=attractionId;
-        litem.origAttractionAreaId=attractionAreaId;
-        litem.origScheduleId=scheduleId;
-
-        String lSQL;
-        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, cinemaName, bookingReference " + "FROM Cinema " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
-
-        Cursor cursor=executeSQLOpenCursor("getCinemaItem", lSQL);
-        if(cursor != null)
+        try
         {
-            cursor.moveToFirst();
-            if(GetCinemaItemFromQuery(cursor, litem) == false)
+            if(IsValid() == false)
                 return (false);
+
+            litem.holidayId=holidayId;
+            litem.dayId=dayId;
+            litem.attractionId=attractionId;
+            litem.attractionAreaId=attractionAreaId;
+            litem.scheduleId=scheduleId;
+            litem.origHolidayId=holidayId;
+            litem.origDayId=dayId;
+            litem.origAttractionId=attractionId;
+            litem.origAttractionAreaId=attractionAreaId;
+            litem.origScheduleId=scheduleId;
+
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, cinemaName, bookingReference " + "FROM Cinema " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
+
+            Cursor cursor=executeSQLOpenCursor("getCinemaItem", lSQL);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                if(GetCinemaItemFromQuery(cursor, litem) == false)
+                    return (false);
+            }
+            executeSQLCloseCursor("getCinemaItem");
+            return (true);
         }
-        executeSQLCloseCursor("getCinemaItem");
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("getCinemaItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     private boolean GetCinemaItemFromQuery(Cursor cursor, CinemaItem cinemaItem)

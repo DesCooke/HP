@@ -23,18 +23,7 @@ class TableGeneralAttraction extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS generalattraction " +
-                "( " +
-                "  holidayId         INT(5),  " +
-                "  dayId             INT(5),  " +
-                "  attractionId      INT(5),  " +
-                "  attractionAreaId  INT(5),  " +
-                "  scheduleId        INT(5),  " +
-                "  name              VARCHAR, " +
-                "  heartRating       FLOAT,   " +
-                "  scenicRating      FLOAT,   " +
-                "  thrillRating      FLOAT   " +
-                ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS generalattraction " + "( " + "  holidayId         INT(5),  " + "  dayId             INT(5),  " + "  attractionId      INT(5),  " + "  attractionAreaId  INT(5),  " + "  scheduleId        INT(5),  " + "  name              VARCHAR, " + "  heartRating       FLOAT,   " + "  scenicRating      FLOAT,   " + "  thrillRating      FLOAT   " + ") ";
 
             db.execSQL(lSQL);
 
@@ -51,7 +40,7 @@ class TableGeneralAttraction extends TableBase
     {
         try
         {
-            if(oldVersion==41 && newVersion==42)
+            if(oldVersion == 41 && newVersion == 42)
             {
                 onCreate(db);
             }
@@ -66,107 +55,105 @@ class TableGeneralAttraction extends TableBase
 
     boolean addGeneralAttractionItem(GeneralAttractionItem item)
     {
-        if(!IsValid())
-            return (false);
+        try
+        {
+            if(!IsValid())
+                return (false);
 
-        String lSql="INSERT INTO generalattraction " +
-            "  (holidayId, dayId, attractionId, attractionAreaId, " +
-            "   scheduleId, heartRating, scenicRating, thrillRating) " +
-            "VALUES " +
-            "(" +
-            item.holidayId + "," +
-            item.dayId + "," +
-            item.attractionId + "," +
-            item.attractionAreaId + "," +
-            item.scheduleId + "," +
-            item.heartRating + "," +
-            item.scenicRating + "," +
-            item.thrillRating + " " +
-            ")";
+            String lSql="INSERT INTO generalattraction " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, heartRating, scenicRating, thrillRating) " + "VALUES " + "(" + item.holidayId + "," + item.dayId + "," + item.attractionId + "," + item.attractionAreaId + "," + item.scheduleId + "," + item.heartRating + "," + item.scenicRating + "," + item.thrillRating + " " + ")";
 
-        return (executeSQL("addGeneralAttractionItem", lSql));
+            return (executeSQL("addGeneralAttractionItem", lSql));
+        }
+        catch(Exception e)
+        {
+            ShowError("addGeneralAttractionItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean updateGeneralAttractionItem(GeneralAttractionItem item)
     {
-        if(!IsValid())
-            return (false);
-
-        if(ItemExists(item)==false)
+        try
         {
-            return(addGeneralAttractionItem(item));
+            if(!IsValid())
+                return (false);
+
+            if(ItemExists(item) == false)
+            {
+                return (addGeneralAttractionItem(item));
+            }
+
+            String lSQL;
+            lSQL="UPDATE generalattraction " + "SET heartRating = " + item.heartRating + ", " + "    scenicRating = " + item.scenicRating + ", " + "    thrillRating = " + item.thrillRating + ", " + "    dayId = " + item.dayId + ", " + "    attractionId = " + item.attractionId + ", " + "    attractionAreaId = " + item.attractionAreaId + ", " + "    scheduleId = " + item.scheduleId + " " + "WHERE holidayId = " + item.holidayId + " " + "AND dayId = " + item.origDayId + " " + "AND attractionId = " + item.origAttractionId + " " + "AND attractionAreaId = " + item.origAttractionAreaId + " " + "AND scheduleId = " + item.origScheduleId;
+
+            return (executeSQL("updateGeneralAttractionItem", lSQL));
         }
+        catch(Exception e)
+        {
+            ShowError("updateGeneralAttractionItem", e.getMessage());
+        }
+        return (false);
 
-        String lSQL;
-        lSQL="UPDATE generalattraction " +
-            "SET heartRating = " + item.heartRating + ", " +
-            "    scenicRating = " + item.scenicRating + ", " +
-            "    thrillRating = " + item.thrillRating + ", " +
-            "    dayId = " + item.dayId + ", " +
-            "    attractionId = " + item.attractionId + ", " +
-            "    attractionAreaId = " + item.attractionAreaId + ", " +
-            "    scheduleId = " + item.scheduleId + " " +
-            "WHERE holidayId = " + item.holidayId + " " +
-            "AND dayId = " + item.origDayId + " " +
-            "AND attractionId = " + item.origAttractionId + " " +
-            "AND attractionAreaId = " + item.origAttractionAreaId + " " +
-            "AND scheduleId = " + item.origScheduleId;
-
-        return (executeSQL("updateGeneralAttractionItem", lSQL));
     }
 
     boolean deleteGeneralAttractionItem(GeneralAttractionItem item)
     {
-        if(!IsValid())
-            return (false);
+        try
+        {
+            if(!IsValid())
+                return (false);
 
-        String lSQL="DELETE FROM generalattraction " +
-            "WHERE holidayId = " + item.holidayId + " " +
-            "AND dayId = " + item.dayId + " " +
-            "AND attractionId = " + item.attractionId + " " +
-            "AND attractionAreaId = " + item.attractionAreaId + " " +
-            "AND scheduleId = " + item.scheduleId;
+            String lSQL="DELETE FROM generalattraction " + "WHERE holidayId = " + item.holidayId + " " + "AND dayId = " + item.dayId + " " + "AND attractionId = " + item.attractionId + " " + "AND attractionAreaId = " + item.attractionAreaId + " " + "AND scheduleId = " + item.scheduleId;
 
-        return executeSQL("deleteGeneralAttractionItem", lSQL);
+            return executeSQL("deleteGeneralAttractionItem", lSQL);
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteGeneralAttractionItem", e.getMessage());
+        }
+        return (false);
+
 
     }
 
-    boolean getGeneralAttractionItem(int holidayId, int dayId, int attractionId, int attractionAreaId,
-        int scheduleId, GeneralAttractionItem litem)
+    boolean getGeneralAttractionItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, GeneralAttractionItem litem)
     {
-        if(!IsValid())
-            return (false);
-
-        litem.holidayId=holidayId;
-        litem.dayId=dayId;
-        litem.attractionId=attractionId;
-        litem.attractionAreaId=attractionAreaId;
-        litem.scheduleId=scheduleId;
-        litem.origHolidayId=holidayId;
-        litem.origDayId=dayId;
-        litem.origAttractionId=attractionId;
-        litem.origAttractionAreaId=attractionAreaId;
-        litem.origScheduleId=scheduleId;
-
-        String lSQL;
-        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
-            "  scheduleId, name, heartRating, scenicRating, thrillRating " +
-            "FROM generalAttraction " +
-            "WHERE HolidayId = " + holidayId + " " +
-            "AND DayId = " + dayId + " " +
-            "AND attractionId = " + attractionId + " " +
-            "AND attractionAreaId = " + attractionAreaId + " " +
-            "AND ScheduleId = " + scheduleId;
-
-        Cursor cursor=executeSQLOpenCursor("getGeneralAttractionItem", lSQL);
-        if(cursor != null)
+        try
         {
-            cursor.moveToFirst();
-            if(!GetGeneralAttractionItemFromQuery(cursor, litem))
+            if(!IsValid())
                 return (false);
+
+            litem.holidayId=holidayId;
+            litem.dayId=dayId;
+            litem.attractionId=attractionId;
+            litem.attractionAreaId=attractionAreaId;
+            litem.scheduleId=scheduleId;
+            litem.origHolidayId=holidayId;
+            litem.origDayId=dayId;
+            litem.origAttractionId=attractionId;
+            litem.origAttractionAreaId=attractionAreaId;
+            litem.origScheduleId=scheduleId;
+
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, name, heartRating, scenicRating, thrillRating " + "FROM generalAttraction " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
+
+            Cursor cursor=executeSQLOpenCursor("getGeneralAttractionItem", lSQL);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                if(!GetGeneralAttractionItemFromQuery(cursor, litem))
+                    return (false);
+            }
+            executeSQLCloseCursor("getGeneralAttractionItem");
+            return (true);
         }
-        executeSQLCloseCursor("getGeneralAttractionItem");
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("getGeneralAttractionItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     private boolean GetGeneralAttractionItemFromQuery(Cursor cursor, GeneralAttractionItem item)
@@ -215,17 +202,10 @@ class TableGeneralAttraction extends TableBase
         try
         {
             String lSQL;
-            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
-                "  scheduleId " +
-                "FROM GeneralAttraction " +
-                "WHERE HolidayId = " + litem.holidayId + " " +
-                "AND DayId = " + litem.dayId + " " +
-                "AND attractionId = " + litem.attractionId + " " +
-                "AND attractionAreaId = " + litem.attractionAreaId + " " +
-                "AND ScheduleId = " + litem.scheduleId;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId " + "FROM GeneralAttraction " + "WHERE HolidayId = " + litem.holidayId + " " + "AND DayId = " + litem.dayId + " " + "AND attractionId = " + litem.attractionId + " " + "AND attractionAreaId = " + litem.attractionAreaId + " " + "AND ScheduleId = " + litem.scheduleId;
             Cursor cursor=executeSQLOpenCursor("ItemExists(generalAttraction)", lSQL);
             if(cursor == null)
-                return(false);
+                return (false);
 
             if(cursor.getCount() == 0)
                 return (false);

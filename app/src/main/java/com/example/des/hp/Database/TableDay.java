@@ -69,92 +69,34 @@ class TableDay extends TableBase
 
     boolean getDayCount(int argHolidayId, MyInt retInt)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSQL;
-        lSQL="SELECT COUNT(*) " + "FROM Day " + "WHERE HolidayId = " + argHolidayId + " ";
+            String lSQL;
+            lSQL="SELECT COUNT(*) " + "FROM Day " + "WHERE HolidayId = " + argHolidayId + " ";
 
-        return (executeSQLGetInt("getDayCount", lSQL, retInt));
+            return (executeSQLGetInt("getDayCount", lSQL, retInt));
+        }
+        catch(Exception e)
+        {
+            ShowError("getDayCount", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean addDayItem(DayItem dayItem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        if(dayItem.pictureAssigned)
+        try
         {
+            if(IsValid() == false)
+                return (false);
+
+            if(dayItem.pictureAssigned)
+            {
             /* if picture name has something in it - it means it came from internal folder */
-            if(dayItem.dayPicture.length() == 0)
-            {
-                myMessages().LogMessage("  - New Image was not from internal folder...");
-                if(dayItem.pictureAssigned)
-                {
-                    myMessages().LogMessage("  - Save new image and get a filename...");
-                    MyString myString=new MyString();
-                    if(savePicture(dayItem.dayBitmap, myString) == false)
-                        return (false);
-                    dayItem.dayPicture=myString.Value;
-                    myMessages().LogMessage("  - New filename " + dayItem.dayPicture);
-                } else
-                {
-                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
-                }
-            } else
-            {
-                myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + dayItem.dayPicture + ")");
-            }
-        } else
-        {
-            myMessages().LogMessage("  - New Image not assigned - do nothing");
-        }
-
-        String lSql="INSERT INTO day " + "  (holidayId, dayId, dayName, dayPicture, sequenceNo, dayCat, infoId, " + "   noteId, galleryId, sygicId) " + "VALUES " + "(" + dayItem.holidayId + "," + dayItem.dayId + "," + MyQuotedString(dayItem.dayName) + "," + MyQuotedString(dayItem.dayPicture) + "," + dayItem.sequenceNo + ", " + dayItem.dayCat + ", " + dayItem.infoId + ", " + dayItem.noteId + ", " + dayItem.galleryId + ", " + dayItem.sygicId + " " + ")";
-
-        return (executeSQL("addDayItem", lSql));
-    }
-
-    boolean updateDayItems(ArrayList<DayItem> items)
-    {
-        if(IsValid() == false)
-            return (false);
-
-        if(items == null)
-            return (false);
-
-        for(int i=0; i < items.size(); i++)
-        {
-            if(items.get(i).sequenceNo != items.get(i).origSequenceNo)
-            {
-                if(updateDayItem(items.get(i)) == false)
-                    return (false);
-            }
-        }
-        return (true);
-    }
-
-    boolean updateDayItem(DayItem dayItem)
-    {
-        if(IsValid() == false)
-            return (false);
-
-        myMessages().LogMessage("updateDayItem:Handling Image");
-        if(dayItem.pictureChanged)
-        {
-            if(dayItem.origPictureAssigned && dayItem.dayPicture.length() > 0 && dayItem.dayPicture.compareTo(dayItem.origDayPicture) == 0)
-            {
-                myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
-            } else
-            {
-                if(dayItem.origPictureAssigned)
-                {
-                    myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                    if(removePicture(dayItem.origDayPicture) == false)
-                        return (false);
-                }
-            
-                /* if picture name has something in it - it means it came from internal folder */
                 if(dayItem.dayPicture.length() == 0)
                 {
                     myMessages().LogMessage("  - New Image was not from internal folder...");
@@ -174,66 +116,186 @@ class TableDay extends TableBase
                 {
                     myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + dayItem.dayPicture + ")");
                 }
+            } else
+            {
+                myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
-        } else
-        {
-            myMessages().LogMessage("  - Image not changed - do nothing");
+
+            String lSql="INSERT INTO day " + "  (holidayId, dayId, dayName, dayPicture, sequenceNo, dayCat, infoId, " + "   noteId, galleryId, sygicId) " + "VALUES " + "(" + dayItem.holidayId + "," + dayItem.dayId + "," + MyQuotedString(dayItem.dayName) + "," + MyQuotedString(dayItem.dayPicture) + "," + dayItem.sequenceNo + ", " + dayItem.dayCat + ", " + dayItem.infoId + ", " + dayItem.noteId + ", " + dayItem.galleryId + ", " + dayItem.sygicId + " " + ")";
+
+            return (executeSQL("addDayItem", lSql));
         }
+        catch(Exception e)
+        {
+            ShowError("addDayItem", e.getMessage());
+        }
+        return (false);
 
-        String lSQL;
-        lSQL="UPDATE day " + "SET dayName = " + MyQuotedString(dayItem.dayName) + ", " + "    dayPicture = " + MyQuotedString(dayItem.dayPicture) + ", " + "    dayId = " + dayItem.dayId + ", " + "    sequenceNo = " + dayItem.sequenceNo + ", " + "    dayCat = " + dayItem.dayCat + ", " + "    infoId = " + dayItem.infoId + ", " + "    noteId = " + dayItem.noteId + ", " + "    galleryId = " + dayItem.galleryId + ", " + "    sygicId = " + dayItem.sygicId + " " + "WHERE holidayId = " + dayItem.holidayId + " " + "AND dayId = " + dayItem.origDayId;
+    }
 
-        return (executeSQL("updateDayItem", lSQL));
+    boolean updateDayItems(ArrayList<DayItem> items)
+    {
+        try
+        {
+            if(IsValid() == false)
+                return (false);
+
+            if(items == null)
+                return (false);
+
+            for(int i=0; i < items.size(); i++)
+            {
+                if(items.get(i).sequenceNo != items.get(i).origSequenceNo)
+                {
+                    if(updateDayItem(items.get(i)) == false)
+                        return (false);
+                }
+            }
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("updateDayItems", e.getMessage());
+        }
+        return (false);
+
+    }
+
+    boolean updateDayItem(DayItem dayItem)
+    {
+        try
+        {
+            if(IsValid() == false)
+                return (false);
+
+            myMessages().LogMessage("updateDayItem:Handling Image");
+            if(dayItem.pictureChanged)
+            {
+                if(dayItem.origPictureAssigned && dayItem.dayPicture.length() > 0 && dayItem.dayPicture.compareTo(dayItem.origDayPicture) == 0)
+                {
+                    myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
+                } else
+                {
+                    if(dayItem.origPictureAssigned)
+                    {
+                        myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                        if(removePicture(dayItem.origDayPicture) == false)
+                            return (false);
+                    }
+            
+                /* if picture name has something in it - it means it came from internal folder */
+                    if(dayItem.dayPicture.length() == 0)
+                    {
+                        myMessages().LogMessage("  - New Image was not from internal folder...");
+                        if(dayItem.pictureAssigned)
+                        {
+                            myMessages().LogMessage("  - Save new image and get a filename...");
+                            MyString myString=new MyString();
+                            if(savePicture(dayItem.dayBitmap, myString) == false)
+                                return (false);
+                            dayItem.dayPicture=myString.Value;
+                            myMessages().LogMessage("  - New filename " + dayItem.dayPicture);
+                        } else
+                        {
+                            myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                        }
+                    } else
+                    {
+                        myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + dayItem.dayPicture + ")");
+                    }
+                }
+            } else
+            {
+                myMessages().LogMessage("  - Image not changed - do nothing");
+            }
+
+            String lSQL;
+            lSQL="UPDATE day " + "SET dayName = " + MyQuotedString(dayItem.dayName) + ", " + "    dayPicture = " + MyQuotedString(dayItem.dayPicture) + ", " + "    dayId = " + dayItem.dayId + ", " + "    sequenceNo = " + dayItem.sequenceNo + ", " + "    dayCat = " + dayItem.dayCat + ", " + "    infoId = " + dayItem.infoId + ", " + "    noteId = " + dayItem.noteId + ", " + "    galleryId = " + dayItem.galleryId + ", " + "    sygicId = " + dayItem.sygicId + " " + "WHERE holidayId = " + dayItem.holidayId + " " + "AND dayId = " + dayItem.origDayId;
+
+            return (executeSQL("updateDayItem", lSQL));
+        }
+        catch(Exception e)
+        {
+            ShowError("updateDayItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     public boolean deleteDays(int holidayId)
     {
-        ArrayList<DayItem> dayList=new ArrayList<>();
-        if(getDayList(holidayId, dayList) == false)
-            return (false);
-
-        for(DayItem dayItem : dayList)
-            if(deleteDayItem(dayItem) == false)
+        try
+        {
+            ArrayList<DayItem> dayList=new ArrayList<>();
+            if(getDayList(holidayId, dayList) == false)
                 return (false);
 
-        return (true);
+            for(DayItem dayItem : dayList)
+                if(deleteDayItem(dayItem) == false)
+                    return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteDays", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean deleteDayItem(DayItem dayItem)
-
     {
-        if(IsValid() == false)
-            return (false);
-
-        String lSQL="DELETE FROM day " + "WHERE holidayId = " + dayItem.holidayId + " " + "AND dayId = " + dayItem.dayId;
-
-        if(dayItem.dayPicture.length() > 0)
-            if(removePicture(dayItem.dayPicture) == false)
+        try
+        {
+            if(IsValid() == false)
                 return (false);
 
-        if(executeSQL("deleteDayItem", lSQL) == false)
-            return (false);
+            String lSQL="DELETE FROM day " + "WHERE holidayId = " + dayItem.holidayId + " " + "AND dayId = " + dayItem.dayId;
 
-        return (true);
+            if(dayItem.dayPicture.length() > 0)
+                if(removePicture(dayItem.dayPicture) == false)
+                    return (false);
+
+            if(executeSQL("deleteDayItem", lSQL) == false)
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteDayItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean getDayItem(int holidayId, int dayId, DayItem litem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        String lSQL;
-        lSQL="SELECT holidayId, dayId, dayName, dayPicture, sequenceNo, dayCat, infoId, " + " noteId, galleryId, sygicId " + "FROM Day " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId;
-
-        Cursor cursor=executeSQLOpenCursor("getDayItem", lSQL);
-        if(cursor != null)
+        try
         {
-            cursor.moveToFirst();
-            if(GetDayItemFromQuery(cursor, litem) == false)
+            if(IsValid() == false)
                 return (false);
+
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, dayName, dayPicture, sequenceNo, dayCat, infoId, " + " noteId, galleryId, sygicId " + "FROM Day " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId;
+
+            Cursor cursor=executeSQLOpenCursor("getDayItem", lSQL);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                if(GetDayItemFromQuery(cursor, litem) == false)
+                    return (false);
+            }
+            executeSQLCloseCursor("getDayItem");
+            return (true);
         }
-        executeSQLCloseCursor("getDayItem");
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("getDayItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     private boolean GetDayItemFromQuery(Cursor cursor, DayItem dayItem)
@@ -281,51 +343,78 @@ class TableDay extends TableBase
 
     boolean getNextDayId(int holidayId, MyInt retInt)
     {
-        String lSQL="SELECT IFNULL(MAX(dayId),0) FROM day WHERE holidayId = " + holidayId;
+        try
+        {
+            String lSQL="SELECT IFNULL(MAX(dayId),0) FROM day WHERE holidayId = " + holidayId;
 
-        if(executeSQLGetInt("getNextDayId", lSQL, retInt) == false)
-            return (false);
+            if(executeSQLGetInt("getNextDayId", lSQL, retInt) == false)
+                return (false);
 
-        retInt.Value=retInt.Value + 1;
-        return (true);
+            retInt.Value=retInt.Value + 1;
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNextDayId", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean getNextSequenceNo(int holidayId, MyInt retInt)
     {
-        String lSQL="SELECT IFNULL(MAX(SequenceNo),0) FROM day WHERE holidayId = " + holidayId;
+        try
+        {
+            String lSQL="SELECT IFNULL(MAX(SequenceNo),0) FROM day WHERE holidayId = " + holidayId;
 
-        if(executeSQLGetInt("getNextSequenceNo", lSQL, retInt) == false)
-            return (false);
+            if(executeSQLGetInt("getNextSequenceNo", lSQL, retInt) == false)
+                return (false);
 
-        retInt.Value=retInt.Value + 1;
-        return (true);
+            retInt.Value=retInt.Value + 1;
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNextSequenceNo", e.getMessage());
+        }
+        return (false);
+
     }
 
 
     boolean getDayList(int holidayId, ArrayList<DayItem> al)
     {
-        String lSql="SELECT holidayId, dayId, dayName, dayPicture, sequenceNo, dayCat, infoId, " + " noteId, galleryId, sygicId " + "FROM day " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
-
-        Cursor cursor=executeSQLOpenCursor("getDayList", lSql);
-        if(cursor == null)
-            return (false);
-
-        while(cursor.moveToNext())
+        try
         {
-            DayItem dayItem=new DayItem();
-            if(GetDayItemFromQuery(cursor, dayItem) == false)
+            String lSql="SELECT holidayId, dayId, dayName, dayPicture, sequenceNo, dayCat, infoId, " + " noteId, galleryId, sygicId " + "FROM day " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
+
+            Cursor cursor=executeSQLOpenCursor("getDayList", lSql);
+            if(cursor == null)
                 return (false);
 
-            al.add(dayItem);
-        }
+            while(cursor.moveToNext())
+            {
+                DayItem dayItem=new DayItem();
+                if(GetDayItemFromQuery(cursor, dayItem) == false)
+                    return (false);
 
-        for(int i=0; i < al.size(); i++)
+                al.add(dayItem);
+            }
+
+            for(int i=0; i < al.size(); i++)
+            {
+                getScheduledTimes(al.get(i));
+                getStartEndAt(al.get(i));
+            }
+
+            return (true);
+        }
+        catch(Exception e)
         {
-            getScheduledTimes(al.get(i));
-            getStartEndAt(al.get(i));
+            ShowError("getDayList", e.getMessage());
         }
+        return (false);
 
-        return (true);
     }
 
     private boolean getStartEndAt(DayItem dayItem)
@@ -439,15 +528,24 @@ class TableDay extends TableBase
 
     boolean clearNote(int holidayId, int noteId)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String l_SQL="UPDATE day SET noteId = 0 " + "WHERE holidayId = " + holidayId + " " + "AND noteId = " + noteId;
+            String l_SQL="UPDATE day SET noteId = 0 " + "WHERE holidayId = " + holidayId + " " + "AND noteId = " + noteId;
 
-        if(executeSQL("clearNote", l_SQL) == false)
-            return (false);
+            if(executeSQL("clearNote", l_SQL) == false)
+                return (false);
 
-        return (true);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("clearNote", e.getMessage());
+        }
+        return (false);
+
     }
 
 }

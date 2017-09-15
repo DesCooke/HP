@@ -51,72 +51,108 @@ class TableFlight extends TableBase
 
     boolean addFlightItem(FlightItem flightItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSql="INSERT INTO flight " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, flightNo, departsHour, departsMin, terminal, " + "   bookingReference) " + "VALUES " + "(" + flightItem.holidayId + "," + flightItem.dayId + "," + flightItem.attractionId + "," + flightItem.attractionAreaId + "," + flightItem.scheduleId + "," + MyQuotedString(flightItem.flightNo) + "," + flightItem.departsHour + "," + flightItem.departsMin + "," + MyQuotedString(flightItem.terminal) + "," + MyQuotedString(flightItem.bookingReference) + " " + ")";
+            String lSql="INSERT INTO flight " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, flightNo, departsHour, departsMin, terminal, " + "   bookingReference) " + "VALUES " + "(" + flightItem.holidayId + "," + flightItem.dayId + "," + flightItem.attractionId + "," + flightItem.attractionAreaId + "," + flightItem.scheduleId + "," + MyQuotedString(flightItem.flightNo) + "," + flightItem.departsHour + "," + flightItem.departsMin + "," + MyQuotedString(flightItem.terminal) + "," + MyQuotedString(flightItem.bookingReference) + " " + ")";
 
-        return (executeSQL("addFlightItem", lSql));
+            return (executeSQL("addFlightItem", lSql));
+        }
+        catch(Exception e)
+        {
+            ShowError("addFlightItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean updateFlightItem(FlightItem flightItem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        if(ItemExists(flightItem) == false)
+        try
         {
-            return (addFlightItem(flightItem));
+            if(IsValid() == false)
+                return (false);
+
+            if(ItemExists(flightItem) == false)
+            {
+                return (addFlightItem(flightItem));
+            }
+
+            String lSQL;
+            lSQL="UPDATE flight " + "SET flightNo = " + MyQuotedString(flightItem.flightNo) + ", " + "    departsHour = " + flightItem.departsHour + ", " + "    departsMin = " + flightItem.departsMin + ", " + "    terminal = " + MyQuotedString(flightItem.terminal) + ", " + "    bookingReference = " + MyQuotedString(flightItem.bookingReference) + ", " + "    dayId = " + flightItem.dayId + ", " + "    attractionId = " + flightItem.attractionId + ", " + "    attractionAreaId = " + flightItem.attractionAreaId + ", " + "    scheduleId = " + flightItem.scheduleId + " " + "WHERE holidayId = " + flightItem.holidayId + " " + "AND dayId = " + flightItem.origDayId + " " + "AND attractionId = " + flightItem.origAttractionId + " " + "AND attractionAreaId = " + flightItem.origAttractionAreaId + " " + "AND scheduleId = " + flightItem.origScheduleId;
+
+            return (executeSQL("updateFlightItem", lSQL));
         }
+        catch(Exception e)
+        {
+            ShowError("updateFlightItem", e.getMessage());
+        }
+        return (false);
 
-        String lSQL;
-        lSQL="UPDATE flight " + "SET flightNo = " + MyQuotedString(flightItem.flightNo) + ", " + "    departsHour = " + flightItem.departsHour + ", " + "    departsMin = " + flightItem.departsMin + ", " + "    terminal = " + MyQuotedString(flightItem.terminal) + ", " + "    bookingReference = " + MyQuotedString(flightItem.bookingReference) + ", " + "    dayId = " + flightItem.dayId + ", " + "    attractionId = " + flightItem.attractionId + ", " + "    attractionAreaId = " + flightItem.attractionAreaId + ", " + "    scheduleId = " + flightItem.scheduleId + " " + "WHERE holidayId = " + flightItem.holidayId + " " + "AND dayId = " + flightItem.origDayId + " " + "AND attractionId = " + flightItem.origAttractionId + " " + "AND attractionAreaId = " + flightItem.origAttractionAreaId + " " + "AND scheduleId = " + flightItem.origScheduleId;
-
-        return (executeSQL("updateFlightItem", lSQL));
     }
 
     boolean deleteFlightItem(FlightItem flightItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSQL="DELETE FROM flight " + "WHERE holidayId = " + flightItem.holidayId + " " + "AND dayId = " + flightItem.dayId + " " + "AND attractionId = " + flightItem.attractionId + " " + "AND attractionAreaId = " + flightItem.attractionAreaId + " " + "AND scheduleId = " + flightItem.scheduleId;
+            String lSQL="DELETE FROM flight " + "WHERE holidayId = " + flightItem.holidayId + " " + "AND dayId = " + flightItem.dayId + " " + "AND attractionId = " + flightItem.attractionId + " " + "AND attractionAreaId = " + flightItem.attractionAreaId + " " + "AND scheduleId = " + flightItem.scheduleId;
 
 
-        if(executeSQL("deleteFlightItem", lSQL) == false)
-            return (false);
+            if(executeSQL("deleteFlightItem", lSQL) == false)
+                return (false);
 
-        return (true);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteFlightItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean getFlightItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, FlightItem litem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        litem.holidayId=holidayId;
-        litem.dayId=dayId;
-        litem.attractionId=attractionId;
-        litem.attractionAreaId=attractionAreaId;
-        litem.scheduleId=scheduleId;
-        litem.origHolidayId=holidayId;
-        litem.origDayId=dayId;
-        litem.origAttractionId=attractionId;
-        litem.origAttractionAreaId=attractionAreaId;
-        litem.origScheduleId=scheduleId;
-
-        String lSQL;
-        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, flightNo, departsHour, departsMin, terminal, " + "  bookingReference " + "FROM Flight " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
-
-        Cursor cursor=executeSQLOpenCursor("getFlightItem", lSQL);
-        if(cursor != null)
+        try
         {
-            cursor.moveToFirst();
-            if(GetFlightItemFromQuery(cursor, litem) == false)
+            if(IsValid() == false)
                 return (false);
+
+            litem.holidayId=holidayId;
+            litem.dayId=dayId;
+            litem.attractionId=attractionId;
+            litem.attractionAreaId=attractionAreaId;
+            litem.scheduleId=scheduleId;
+            litem.origHolidayId=holidayId;
+            litem.origDayId=dayId;
+            litem.origAttractionId=attractionId;
+            litem.origAttractionAreaId=attractionAreaId;
+            litem.origScheduleId=scheduleId;
+
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, flightNo, departsHour, departsMin, terminal, " + "  bookingReference " + "FROM Flight " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
+
+            Cursor cursor=executeSQLOpenCursor("getFlightItem", lSQL);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                if(GetFlightItemFromQuery(cursor, litem) == false)
+                    return (false);
+            }
+            executeSQLCloseCursor("getFlightItem");
+            return (true);
         }
-        executeSQLCloseCursor("getFlightItem");
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("getFlightItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     private boolean GetFlightItemFromQuery(Cursor cursor, FlightItem flightItem)

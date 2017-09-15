@@ -67,139 +67,192 @@ class TableContact extends TableBase
 
     boolean getContactCount(int holidayId, MyInt retInt)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSQL="SELECT IFNULL(COUNT(*),0) " + "FROM Contact " + "WHERE holidayId = " + holidayId;
+            String lSQL="SELECT IFNULL(COUNT(*),0) " + "FROM Contact " + "WHERE holidayId = " + holidayId;
 
-        return (executeSQLGetInt("getContactCount", lSQL, retInt));
+            return (executeSQLGetInt("getContactCount", lSQL, retInt));
+        }
+        catch(Exception e)
+        {
+            ShowError("getContactCount", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean addContactItem(ContactItem contactItem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        contactItem.contactPicture="";
-        if(contactItem.pictureAssigned)
+        try
         {
-            MyString myString=new MyString();
-            if(savePicture(contactItem.fileBitmap, myString) == false)
+            if(IsValid() == false)
                 return (false);
-            contactItem.contactPicture=myString.Value;
+
+            contactItem.contactPicture="";
+            if(contactItem.pictureAssigned)
+            {
+                MyString myString=new MyString();
+                if(savePicture(contactItem.fileBitmap, myString) == false)
+                    return (false);
+                contactItem.contactPicture=myString.Value;
+            }
+
+            String lSql="INSERT INTO Contact " + "  (holidayId, contactId, sequenceNo, contactDescription, " + "   contactPicture, contactNotes, infoId, noteId, galleryId, sygicId) " + "VALUES " + "(" + contactItem.holidayId + "," + contactItem.contactId + "," + contactItem.sequenceNo + ", " + MyQuotedString(contactItem.contactDescription) + ", " + MyQuotedString(contactItem.contactPicture) + ", " + MyQuotedString(contactItem.contactNotes) + ", " + contactItem.infoId + ", " + contactItem.noteId + ", " + contactItem.galleryId + ", " + contactItem.sygicId + " " + ")";
+
+            return (executeSQL("addContactItem", lSql));
         }
+        catch(Exception e)
+        {
+            ShowError("addContactItem", e.getMessage());
+        }
+        return (false);
 
-        String lSql="INSERT INTO Contact " + "  (holidayId, contactId, sequenceNo, contactDescription, " + "   contactPicture, contactNotes, infoId, noteId, galleryId, sygicId) " + "VALUES " + "(" + contactItem.holidayId + "," + contactItem.contactId + "," + contactItem.sequenceNo + ", " + MyQuotedString(contactItem.contactDescription) + ", " + MyQuotedString(contactItem.contactPicture) + ", " + MyQuotedString(contactItem.contactNotes) + ", " + contactItem.infoId + ", " + contactItem.noteId + ", " + contactItem.galleryId + ", " + contactItem.sygicId + " " + ")";
-
-        return (executeSQL("addContactItem", lSql));
     }
 
     boolean updateContactItems(ArrayList<ContactItem> items)
     {
-        if(IsValid() == false)
-            return (false);
-
-        if(items == null)
-            return (false);
-
-        for(int i=0; i < items.size(); i++)
+        try
         {
-            if(items.get(i).sequenceNo != items.get(i).origSequenceNo)
+            if(IsValid() == false)
+                return (false);
+
+            if(items == null)
+                return (false);
+
+            for(int i=0; i < items.size(); i++)
             {
-                if(updateContactItem(items.get(i)) == false)
-                    return (false);
+                if(items.get(i).sequenceNo != items.get(i).origSequenceNo)
+                {
+                    if(updateContactItem(items.get(i)) == false)
+                        return (false);
+                }
             }
+            return (true);
         }
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("updateContactItems", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean updateContactItem(ContactItem contactItem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        myMessages().LogMessage("updateContactItem:Handling Image");
-        if(contactItem.pictureChanged)
+        try
         {
-            if(contactItem.origPictureAssigned && contactItem.contactPicture.length() > 0 && contactItem.contactPicture.compareTo(contactItem.origContactPicture) == 0)
+            if(IsValid() == false)
+                return (false);
+
+            myMessages().LogMessage("updateContactItem:Handling Image");
+            if(contactItem.pictureChanged)
             {
-                myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
-            } else
-            {
-                if(contactItem.origPictureAssigned)
+                if(contactItem.origPictureAssigned && contactItem.contactPicture.length() > 0 && contactItem.contactPicture.compareTo(contactItem.origContactPicture) == 0)
                 {
-                    myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                    if(removePicture(contactItem.origContactPicture) == false)
-                        return (false);
-                }
-            
-                /* if picture name has something in it - it means it came from internal folder */
-                if(contactItem.contactPicture.length() == 0)
-                {
-                    myMessages().LogMessage("  - New Image was not from internal folder...");
-                    if(contactItem.pictureAssigned)
-                    {
-                        myMessages().LogMessage("  - Save new image and get a filename...");
-                        MyString myString=new MyString();
-                        if(savePicture(contactItem.fileBitmap, myString) == false)
-                            return (false);
-                        contactItem.contactPicture=myString.Value;
-                        myMessages().LogMessage("  - New filename " + contactItem.contactPicture);
-                    } else
-                    {
-                        myMessages().LogMessage("  - New Image not setup - so - keep it blank");
-                    }
+                    myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
                 } else
                 {
-                    myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + contactItem.contactPicture + ")");
+                    if(contactItem.origPictureAssigned)
+                    {
+                        myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                        if(removePicture(contactItem.origContactPicture) == false)
+                            return (false);
+                    }
+            
+                /* if picture name has something in it - it means it came from internal folder */
+                    if(contactItem.contactPicture.length() == 0)
+                    {
+                        myMessages().LogMessage("  - New Image was not from internal folder...");
+                        if(contactItem.pictureAssigned)
+                        {
+                            myMessages().LogMessage("  - Save new image and get a filename...");
+                            MyString myString=new MyString();
+                            if(savePicture(contactItem.fileBitmap, myString) == false)
+                                return (false);
+                            contactItem.contactPicture=myString.Value;
+                            myMessages().LogMessage("  - New filename " + contactItem.contactPicture);
+                        } else
+                        {
+                            myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                        }
+                    } else
+                    {
+                        myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + contactItem.contactPicture + ")");
+                    }
                 }
+            } else
+            {
+                myMessages().LogMessage("  - Image not changed - do nothing");
             }
-        } else
-        {
-            myMessages().LogMessage("  - Image not changed - do nothing");
+
+            String lSQL;
+            lSQL="UPDATE Contact " + "SET sequenceNo = " + contactItem.sequenceNo + ", " + "    contactDescription = " + MyQuotedString(contactItem.contactDescription) + ", " + "    contactPicture = " + MyQuotedString(contactItem.contactPicture) + ", " + "    contactNotes = " + MyQuotedString(contactItem.contactNotes) + ", " + "    infoId = " + contactItem.infoId + ", " + "    noteId = " + contactItem.noteId + ", " + "    galleryId = " + contactItem.galleryId + ", " + "    sygicId = " + contactItem.sygicId + " " + "WHERE holidayId = " + contactItem.holidayId + " " + "AND contactId = " + contactItem.contactId;
+
+            return (executeSQL("updateContactItem", lSQL));
         }
+        catch(Exception e)
+        {
+            ShowError("updateContactItem", e.getMessage());
+        }
+        return (false);
 
-        String lSQL;
-        lSQL="UPDATE Contact " + "SET sequenceNo = " + contactItem.sequenceNo + ", " + "    contactDescription = " + MyQuotedString(contactItem.contactDescription) + ", " + "    contactPicture = " + MyQuotedString(contactItem.contactPicture) + ", " + "    contactNotes = " + MyQuotedString(contactItem.contactNotes) + ", " + "    infoId = " + contactItem.infoId + ", " + "    noteId = " + contactItem.noteId + ", " + "    galleryId = " + contactItem.galleryId + ", " + "    sygicId = " + contactItem.sygicId + " " + "WHERE holidayId = " + contactItem.holidayId + " " + "AND contactId = " + contactItem.contactId;
-
-        return (executeSQL("updateContactItem", lSQL));
     }
 
     boolean deleteContactItem(ContactItem contactItem)
-
     {
-        if(IsValid() == false)
-            return (false);
-
-        String lSQL="DELETE FROM Contact " + "WHERE holidayId = " + contactItem.holidayId + " " + "AND contactId = " + contactItem.contactId;
-
-        if(contactItem.contactPicture.length() > 0)
-            if(removePicture(contactItem.contactPicture) == false)
+        try
+        {
+            if(IsValid() == false)
                 return (false);
 
-        if(executeSQL("deleteContactItem", lSQL) == false)
-            return (false);
+            String lSQL="DELETE FROM Contact " + "WHERE holidayId = " + contactItem.holidayId + " " + "AND contactId = " + contactItem.contactId;
 
-        return (true);
+            if(contactItem.contactPicture.length() > 0)
+                if(removePicture(contactItem.contactPicture) == false)
+                    return (false);
+
+            if(executeSQL("deleteContactItem", lSQL) == false)
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteContactItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean getContactItem(int holidayId, int contactId, ContactItem litem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        String lSQL;
-        lSQL="SELECT holidayId, contactId, sequenceNo, contactDescription, " + "  contactPicture, contactNotes, infoId, noteId, galleryId, sygicId " + "FROM contact " + "WHERE HolidayId = " + holidayId + " " + "AND ContactId = " + contactId;
-
-        Cursor cursor=executeSQLOpenCursor("getContactItem", lSQL);
-        if(cursor != null)
+        try
         {
-            cursor.moveToFirst();
-            if(GetContactItemFromQuery(cursor, litem) == false)
+            if(IsValid() == false)
                 return (false);
+
+            String lSQL;
+            lSQL="SELECT holidayId, contactId, sequenceNo, contactDescription, " + "  contactPicture, contactNotes, infoId, noteId, galleryId, sygicId " + "FROM contact " + "WHERE HolidayId = " + holidayId + " " + "AND ContactId = " + contactId;
+
+            Cursor cursor=executeSQLOpenCursor("getContactItem", lSQL);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                if(GetContactItemFromQuery(cursor, litem) == false)
+                    return (false);
+            }
+            executeSQLCloseCursor("getContactItem");
+            return (true);
         }
-        executeSQLCloseCursor("getContactItem");
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("getContactItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     private boolean GetContactItemFromQuery(Cursor cursor, ContactItem contactItem)
@@ -256,62 +309,98 @@ class TableContact extends TableBase
 
     boolean getNextContactId(int holidayId, MyInt retInt)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSQL="SELECT IFNULL(MAX(contactId),0) " + "FROM Contact " + "WHERE holidayId = " + holidayId;
+            String lSQL="SELECT IFNULL(MAX(contactId),0) " + "FROM Contact " + "WHERE holidayId = " + holidayId;
 
-        if(executeSQLGetInt("getNextContactId", lSQL, retInt) == false)
-            return (false);
+            if(executeSQLGetInt("getNextContactId", lSQL, retInt) == false)
+                return (false);
 
-        retInt.Value=retInt.Value + 1;
+            retInt.Value=retInt.Value + 1;
 
-        return (true);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNextContactId", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean getNextContactSequenceNo(int holidayId, MyInt retInt)
     {
-        String lSQL="SELECT IFNULL(MAX(SequenceNo),0) " + "FROM Contact " + "WHERE holidayId = " + holidayId;
+        try
+        {
+            String lSQL="SELECT IFNULL(MAX(SequenceNo),0) " + "FROM Contact " + "WHERE holidayId = " + holidayId;
 
-        if(executeSQLGetInt("getNextContactSequenceNo", lSQL, retInt) == false)
-            return (false);
+            if(executeSQLGetInt("getNextContactSequenceNo", lSQL, retInt) == false)
+                return (false);
 
-        retInt.Value=retInt.Value + 1;
+            retInt.Value=retInt.Value + 1;
 
-        return (true);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNextContactSequenceNo", e.getMessage());
+        }
+        return (false);
+
     }
 
 
     boolean getContactList(int holidayId, ArrayList<ContactItem> al)
     {
-        String lSql="SELECT holidayId, contactId, sequenceNo, contactDescription, " + "  contactPicture, contactNotes, infoId, noteId, galleryId, sygicId  " + "FROM Contact " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
-
-        Cursor cursor=executeSQLOpenCursor("getContactList", lSql);
-        if(cursor == null)
-            return (false);
-
-        while(cursor.moveToNext())
+        try
         {
-            ContactItem contactItem=new ContactItem();
-            if(GetContactItemFromQuery(cursor, contactItem) == false)
+            String lSql="SELECT holidayId, contactId, sequenceNo, contactDescription, " + "  contactPicture, contactNotes, infoId, noteId, galleryId, sygicId  " + "FROM Contact " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
+
+            Cursor cursor=executeSQLOpenCursor("getContactList", lSql);
+            if(cursor == null)
                 return (false);
 
-            al.add(contactItem);
+            while(cursor.moveToNext())
+            {
+                ContactItem contactItem=new ContactItem();
+                if(GetContactItemFromQuery(cursor, contactItem) == false)
+                    return (false);
+
+                al.add(contactItem);
+            }
+            return (true);
         }
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("getContactList", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean clearNote(int holidayId, int noteId)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String l_SQL="UPDATE contact SET noteId = 0 " + "WHERE holidayId = " + holidayId + " " + "AND noteId = " + noteId;
+            String l_SQL="UPDATE contact SET noteId = 0 " + "WHERE holidayId = " + holidayId + " " + "AND noteId = " + noteId;
 
-        if(executeSQL("clearNote", l_SQL) == false)
-            return (false);
+            if(executeSQL("clearNote", l_SQL) == false)
+                return (false);
 
-        return (true);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("clearNote", e.getMessage());
+        }
+        return (false);
+
     }
 
 }
