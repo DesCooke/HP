@@ -32,8 +32,8 @@ class TableRide extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -49,76 +49,110 @@ class TableRide extends TableBase
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean addRideItem(RideItem rideItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSql="INSERT INTO ride " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, heartRating, scenicRating, thrillRating) " + "VALUES " + "(" + rideItem.holidayId + "," + rideItem.dayId + "," + rideItem.attractionId + "," + rideItem.attractionAreaId + "," + rideItem.scheduleId + "," + rideItem.heartRating + "," + rideItem.scenicRating + "," + rideItem.thrillRating + " " + ")";
+            String lSql="INSERT INTO ride " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, heartRating, scenicRating, thrillRating) " + "VALUES " + "(" + rideItem.holidayId + "," + rideItem.dayId + "," + rideItem.attractionId + "," + rideItem.attractionAreaId + "," + rideItem.scheduleId + "," + rideItem.heartRating + "," + rideItem.scenicRating + "," + rideItem.thrillRating + " " + ")";
 
-        return (executeSQL("addRideItem", lSql));
+            return (executeSQL("addRideItem", lSql));
+        }
+        catch(Exception e)
+        {
+            ShowError("addRideItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean updateRideItem(RideItem rideItem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        if(ItemExists(rideItem) == false)
+        try
         {
-            return (addRideItem(rideItem));
-        }
-        String lSQL;
-        lSQL="UPDATE ride " + "SET heartRating = " + rideItem.heartRating + ", " + "    scenicRating = " + rideItem.scenicRating + ", " + "    thrillRating = " + rideItem.thrillRating + ", " + "    dayId = " + rideItem.dayId + ", " + "    attractionId = " + rideItem.attractionId + ", " + "    attractionAreaId = " + rideItem.attractionAreaId + ", " + "    scheduleId = " + rideItem.scheduleId + " " + "WHERE holidayId = " + rideItem.holidayId + " " + "AND dayId = " + rideItem.origDayId + " " + "AND attractionId = " + rideItem.origAttractionId + " " + "AND attractionAreaId = " + rideItem.origAttractionAreaId + " " + "AND scheduleId = " + rideItem.origScheduleId;
+            if(IsValid() == false)
+                return (false);
 
-        return (executeSQL("updateRideItem", lSQL));
+            if(ItemExists(rideItem) == false)
+            {
+                return (addRideItem(rideItem));
+            }
+            String lSQL;
+            lSQL="UPDATE ride " + "SET heartRating = " + rideItem.heartRating + ", " + "    scenicRating = " + rideItem.scenicRating + ", " + "    thrillRating = " + rideItem.thrillRating + ", " + "    dayId = " + rideItem.dayId + ", " + "    attractionId = " + rideItem.attractionId + ", " + "    attractionAreaId = " + rideItem.attractionAreaId + ", " + "    scheduleId = " + rideItem.scheduleId + " " + "WHERE holidayId = " + rideItem.holidayId + " " + "AND dayId = " + rideItem.origDayId + " " + "AND attractionId = " + rideItem.origAttractionId + " " + "AND attractionAreaId = " + rideItem.origAttractionAreaId + " " + "AND scheduleId = " + rideItem.origScheduleId;
+
+            return (executeSQL("updateRideItem", lSQL));
+        }
+        catch(Exception e)
+        {
+            ShowError("updateRideItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean deleteRideItem(RideItem rideItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSQL="DELETE FROM ride " + "WHERE holidayId = " + rideItem.holidayId + " " + "AND dayId = " + rideItem.dayId + " " + "AND attractionId = " + rideItem.attractionId + " " + "AND attractionAreaId = " + rideItem.attractionAreaId + " " + "AND scheduleId = " + rideItem.scheduleId;
+            String lSQL="DELETE FROM ride " + "WHERE holidayId = " + rideItem.holidayId + " " + "AND dayId = " + rideItem.dayId + " " + "AND attractionId = " + rideItem.attractionId + " " + "AND attractionAreaId = " + rideItem.attractionAreaId + " " + "AND scheduleId = " + rideItem.scheduleId;
 
-        if(executeSQL("deleteRideItem", lSQL) == false)
-            return (false);
+            if(executeSQL("deleteRideItem", lSQL) == false)
+                return (false);
 
-        return (true);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteRideItem", e.getMessage());
+        }
+        return (false);
     }
 
     boolean getRideItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, RideItem litem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        litem.holidayId=holidayId;
-        litem.dayId=dayId;
-        litem.attractionId=attractionId;
-        litem.attractionAreaId=attractionAreaId;
-        litem.scheduleId=scheduleId;
-        litem.origHolidayId=holidayId;
-        litem.origDayId=dayId;
-        litem.origAttractionId=attractionId;
-        litem.origAttractionAreaId=attractionAreaId;
-        litem.origScheduleId=scheduleId;
-
-        String lSQL;
-        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, rideName, heartRating, scenicRating, thrillRating " + "FROM ride " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
-
-        Cursor cursor=executeSQLOpenCursor("getRestaurantItem", lSQL);
-        if(cursor != null)
+        try
         {
-            cursor.moveToFirst();
-            if(GetRideItemFromQuery(cursor, litem) == false)
+            if(IsValid() == false)
                 return (false);
+
+            litem.holidayId=holidayId;
+            litem.dayId=dayId;
+            litem.attractionId=attractionId;
+            litem.attractionAreaId=attractionAreaId;
+            litem.scheduleId=scheduleId;
+            litem.origHolidayId=holidayId;
+            litem.origDayId=dayId;
+            litem.origAttractionId=attractionId;
+            litem.origAttractionAreaId=attractionAreaId;
+            litem.origScheduleId=scheduleId;
+
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, rideName, heartRating, scenicRating, thrillRating " + "FROM ride " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
+
+            Cursor cursor=executeSQLOpenCursor("getRestaurantItem", lSQL);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                if(GetRideItemFromQuery(cursor, litem) == false)
+                    return (false);
+            }
+            executeSQLCloseCursor("getRideItem");
+            return (true);
         }
-        executeSQLCloseCursor("getRideItem");
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("getRideItem", e.getMessage());
+        }
+        return (false);
     }
 
     private boolean GetRideItemFromQuery(Cursor cursor, RideItem litem)
@@ -150,13 +184,14 @@ class TableRide extends TableBase
             litem.origHeartRating=litem.heartRating;
             litem.origScenicRating=litem.scenicRating;
             litem.origThrillRating=litem.scenicRating;
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("GetRideItemFromQuery", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
     private boolean ItemExists(RideItem litem)
@@ -174,13 +209,15 @@ class TableRide extends TableBase
 
             if(cursor.getCount() == 0)
                 return (false);
+
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("ItemExists(ride)", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
 }

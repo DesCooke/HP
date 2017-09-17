@@ -20,6 +20,8 @@ import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyApiSpecific.myApiSpecific;
+import static com.example.des.hp.myutils.MyColor.myColor;
 
 /**
  * * Created by Des on 06/10/2016.
@@ -158,21 +160,21 @@ class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
 
             if(c.totalHours > 12)
             {
-                holder.txtHours.setTextColor(context.getColor(R.color.colorWarning));
+                holder.txtHours.setTextColor(myApiSpecific().getTheColor(R.color.colorWarning));
             } else
             {
-                holder.txtHours.setTextColor(context.getColor(R.color.colorOk));
+                holder.txtHours.setTextColor(myApiSpecific().getTheColor(R.color.colorOk));
             }
 
         }
 
         int lColor=-1;
         if(c.dayCat == res.getInteger(R.integer.day_cat_easy))
-            lColor=context.getColor(R.color.colorEasy);
+            lColor=myApiSpecific().getTheColor(R.color.colorEasy);
         if(c.dayCat == res.getInteger(R.integer.day_cat_moderate))
-            lColor=context.getColor(R.color.colorModerate);
+            lColor=myApiSpecific().getTheColor(R.color.colorModerate);
         if(c.dayCat == res.getInteger(R.integer.day_cat_busy))
-            lColor=context.getColor(R.color.colorBusy);
+            lColor=myApiSpecific().getTheColor(R.color.colorBusy);
 
         if(lColor != -1)
         {

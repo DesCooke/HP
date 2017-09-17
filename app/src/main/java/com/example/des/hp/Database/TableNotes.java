@@ -37,8 +37,8 @@ class TableNotes extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -56,85 +56,126 @@ class TableNotes extends TableBase
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean addNoteItem(NoteItem noteItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSql="INSERT INTO notes " + "  (holidayId, noteId, notes) " + "VALUES " + "(" + noteItem.holidayId + ", " + noteItem.noteId + "," + MyQuotedString(noteItem.notes) + " " + ")";
+            String lSql="INSERT INTO notes " + "  (holidayId, noteId, notes) " + "VALUES " + "(" + noteItem.holidayId + ", " + noteItem.noteId + "," + MyQuotedString(noteItem.notes) + " " + ")";
 
-        return (executeSQL("addNoteItem", lSql));
+            return (executeSQL("addNoteItem", lSql));
+        }
+        catch(Exception e)
+        {
+            ShowError("addNoteItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean updateNoteItem(NoteItem noteItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSQL="UPDATE notes SET notes=" + MyQuotedString(noteItem.notes) + " " + "WHERE holidayId = " + noteItem.holidayId + " " + "AND noteId = " + noteItem.noteId;
+            String lSQL="UPDATE notes SET notes=" + MyQuotedString(noteItem.notes) + " " + "WHERE holidayId = " + noteItem.holidayId + " " + "AND noteId = " + noteItem.noteId;
 
-        if(executeSQL("updateNoteItem", lSQL) == false)
-            return (false);
+            if(executeSQL("updateNoteItem", lSQL) == false)
+                return (false);
 
-        return (true);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("updateNoteItem", e.getMessage());
+        }
+        return (false);
     }
 
     boolean deleteNoteItem(NoteItem noteItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        noteItem.notes="";
-        String lSQL="UPDATE notes SET notes=" + MyQuotedString(noteItem.notes) + " " + "WHERE holidayId = " + noteItem.holidayId + " " + "AND noteId = " + noteItem.noteId;
+            noteItem.notes="";
+            String lSQL="UPDATE notes SET notes=" + MyQuotedString(noteItem.notes) + " " + "WHERE holidayId = " + noteItem.holidayId + " " + "AND noteId = " + noteItem.noteId;
 
-        if(executeSQL("deleteNoteItem", lSQL) == false)
-            return (false);
+            if(executeSQL("deleteNoteItem", lSQL) == false)
+                return (false);
 
-        return (true);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteNoteItem", e.getMessage());
+        }
+        return (false);
     }
 
     boolean getNoteItem(int holidayId, int noteId, NoteItem noteItem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        String lSQL;
-        lSQL="SELECT holidayId, noteId, notes " + "FROM notes " + "WHERE holidayId = " + holidayId + " " + "AND NoteId = " + noteId;
-
-        Cursor cursor=executeSQLOpenCursor("getNoteItem", lSQL);
-        if(cursor != null)
+        try
         {
-            cursor.moveToFirst();
-            if(GetNoteItemFromQuery(cursor, noteItem) == false)
+            if(IsValid() == false)
                 return (false);
+
+            String lSQL;
+            lSQL="SELECT holidayId, noteId, notes " + "FROM notes " + "WHERE holidayId = " + holidayId + " " + "AND NoteId = " + noteId;
+
+            Cursor cursor=executeSQLOpenCursor("getNoteItem", lSQL);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                if(GetNoteItemFromQuery(cursor, noteItem) == false)
+                    return (false);
+            }
+            executeSQLCloseCursor("getNoteItem");
+            return (true);
         }
-        executeSQLCloseCursor("getNoteItem");
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("getNoteItem", e.getMessage());
+        }
+        return (false);
     }
 
     boolean noteExists(int holidayId, int noteId, MyBoolean myBoolean)
     {
-        if(IsValid() == false)
-            return (false);
-
-        myBoolean.Value=false;
-
-        String lSQL;
-        lSQL="SELECT holidayId, noteId, notes " + "FROM notes " + "WHERE holidayId = " + holidayId + " " + "AND NoteId = " + noteId;
-
-        Cursor cursor=executeSQLOpenCursor("noteExists", lSQL);
-        if(cursor != null)
+        try
         {
-            cursor.moveToFirst();
-            if(cursor.getCount() > 0)
-                myBoolean.Value=true;
+            if(IsValid() == false)
+                return (false);
+
+            myBoolean.Value=false;
+
+            String lSQL;
+            lSQL="SELECT holidayId, noteId, notes " + "FROM notes " + "WHERE holidayId = " + holidayId + " " + "AND NoteId = " + noteId;
+
+            Cursor cursor=executeSQLOpenCursor("noteExists", lSQL);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                if(cursor.getCount() > 0)
+                    myBoolean.Value=true;
+            }
+            executeSQLCloseCursor("noteExists");
+            return (true);
         }
-        executeSQLCloseCursor("noteExists");
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("noteExists", e.getMessage());
+        }
+        return (false);
     }
 
     private boolean GetNoteItemFromQuery(Cursor cursor, NoteItem noteItem)
@@ -160,36 +201,52 @@ class TableNotes extends TableBase
         catch(Exception e)
         {
             ShowError("GetNoteItemFromQuery", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean createSample(int holidayId, MyInt myInt)
     {
-        NoteItem item = new NoteItem();
-        Random random = new Random();
-        int lStart=random.nextInt(5)+1;
-        int lCount=random.nextInt(30)+4;
-                
-        if(!getNextNoteId(holidayId, myInt))
-            return(false);
-        item.holidayId = holidayId;
-        item.noteId = myInt.Value;
-        item.notes = myLoremIpsum().getWords(lCount, lStart);
-        if(!addNoteItem(item))
-            return(false);
-        
-        return(true);
+        try
+        {
+            NoteItem item=new NoteItem();
+            Random random=new Random();
+            int lStart=random.nextInt(5) + 1;
+            int lCount=random.nextInt(30) + 4;
+
+            if(!getNextNoteId(holidayId, myInt))
+                return (false);
+            item.holidayId=holidayId;
+            item.noteId=myInt.Value;
+            item.notes=myLoremIpsum().getWords(lCount, lStart);
+            if(!addNoteItem(item))
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("createSample", e.getMessage());
+        }
+        return (false);
     }
-    
+
     boolean getNextNoteId(int holidayId, MyInt retInt)
     {
-        String lSQL="SELECT IFNULL(MAX(noteId),0) " + "FROM notes " + "WHERE holidayId = " + holidayId;
+        try
+        {
+            String lSQL="SELECT IFNULL(MAX(noteId),0) " + "FROM notes " + "WHERE holidayId = " + holidayId;
 
-        if(executeSQLGetInt("getNextNoteId", lSQL, retInt) == false)
-            return (false);
-        retInt.Value=retInt.Value + 1;
-        return (true);
+            if(executeSQLGetInt("getNextNoteId", lSQL, retInt) == false)
+                return (false);
+            retInt.Value=retInt.Value + 1;
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNextNoteId", e.getMessage());
+        }
+        return (false);
     }
 
 }

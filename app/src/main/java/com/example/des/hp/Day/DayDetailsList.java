@@ -126,19 +126,44 @@ public class DayDetailsList extends BaseActivity
     @Override
     public void SwapItems(int from, int to)
     {
-        Collections.swap(dayAdapter.data, from, to);
+        try
+        {
+            Collections.swap(dayAdapter.data, from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("SwapItems", e.getMessage());
+        }
+
     }
 
     @Override
     public void OnItemMove(int from, int to)
     {
-        dayAdapter.onItemMove(from, to);
+        try
+        {
+            dayAdapter.onItemMove(from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("OnItemMove", e.getMessage());
+        }
+
     }
 
     @Override
     public void NotifyItemMoved(int from, int to)
     {
-        dayAdapter.notifyItemMoved(from, to);
+        try
+        {
+            dayAdapter.notifyItemMoved(from, to);
+
+        }
+        catch(Exception e)
+        {
+            ShowError("NotifyItemMoved", e.getMessage());
+        }
+
     }
 
     //endregion

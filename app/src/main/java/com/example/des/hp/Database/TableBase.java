@@ -216,8 +216,8 @@ public class TableBase
         catch(Exception e)
         {
             ShowError("removePicture", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     private int pictureUsageCount(String argFilename, String argTable, String argField)
@@ -356,8 +356,8 @@ public class TableBase
         catch(Exception e)
         {
             ShowError("saveImageToInternalStorage-2", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean saveExtraFile(Uri uri, String newName)
@@ -411,8 +411,8 @@ public class TableBase
         catch(Exception e)
         {
             ShowError("savePicture", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     //endregion
@@ -449,8 +449,8 @@ public class TableBase
         catch(Exception e)
         {
             ShowError(argFunction, e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean executeSQL(String argFunction, String argSql)
@@ -472,8 +472,8 @@ public class TableBase
         catch(Exception e)
         {
             ShowError(argFunction, e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public Cursor executeSQLOpenCursor(String argFunction, String argSql)
@@ -501,8 +501,8 @@ public class TableBase
         catch(Exception e)
         {
             ShowError(argFunction, e.getMessage());
-            return (null);
         }
+        return (null);
     }
 
     public boolean executeSQLCloseCursor(String argFunction)
@@ -521,8 +521,8 @@ public class TableBase
         catch(Exception e)
         {
             ShowError(argFunction, e.getMessage());
-            return (false);
         }
+        return (false);
     }
     //endregion
 

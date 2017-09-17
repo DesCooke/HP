@@ -59,39 +59,62 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
     //region OnClick Events
     public void onClick(View view)
     {
-        switch(view.getId())
+        try
         {
+            switch(view.getId())
+            {
 
-            case R.id.grpStartTime:
-                checkInClick(view);
-                break;
+                case R.id.grpStartTime:
+                    checkInClick(view);
+                    break;
 
-            case R.id.grpBookingRef:
-                pickBookingRef(view);
-                break;
+                case R.id.grpBookingRef:
+                    pickBookingRef(view);
+                    break;
 
-            case R.id.grpSchedName:
-                pickSchedName(view);
-                break;
+                case R.id.grpSchedName:
+                    pickSchedName(view);
+                    break;
 
-            case R.id.grpEndTime:
-                arrivesClick(view);
-                break;
+                case R.id.grpEndTime:
+                    arrivesClick(view);
+                    break;
 
-            case R.id.imageViewSmall:
-                pickImage(view);
-                break;
+                case R.id.imageViewSmall:
+                    pickImage(view);
+                    break;
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("onClick", e.getMessage());
         }
     }
 
     public void checkInClick(View view)
     {
-        handleTime(checkIn, chkCheckinKnown, "Bus Arrives");
+        try
+        {
+            handleTime(checkIn, chkCheckinKnown, "Bus Arrives");
+        }
+        catch(Exception e)
+        {
+            ShowError("checkInClick", e.getMessage());
+        }
+
     }
 
     public void arrivesClick(View view)
     {
-        handleTime(arrives, chkArriveKnown, "Journey Ends");
+        try
+        {
+            handleTime(arrives, chkArriveKnown, "Journey Ends");
+        }
+        catch(Exception e)
+        {
+            ShowError("arrivesClick", e.getMessage());
+        }
+
     }
 
     public void BookingRefPicked(View view)
@@ -140,7 +163,7 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
     //region Saving
     public void saveSchedule(View view)
     {
-      try
+        try
         {
             myMessages().ShowMessageShort("Saving Schedule");
 
@@ -149,7 +172,7 @@ public class BusDetailsEdit extends BusDetailsView implements View.OnClickListen
             scheduleItem.schedName=txtSchedName.getText().toString();
 
             scheduleItem.schedPicture="";
-            if(internalImageFilename.length()>0)
+            if(internalImageFilename.length() > 0)
                 scheduleItem.schedPicture=internalImageFilename;
             scheduleItem.pictureAssigned=imageSet;
             scheduleItem.pictureChanged=imageChanged;

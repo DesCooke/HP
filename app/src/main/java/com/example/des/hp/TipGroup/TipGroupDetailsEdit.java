@@ -58,17 +58,25 @@ public class TipGroupDetailsEdit extends TipGroupDetailsView implements View.OnC
     //region OnClick Events
     public void onClick(View view)
     {
-        switch (view.getId())
+        try
         {
+            switch(view.getId())
+            {
 
-            case R.id.grpTipGroupDescription:
-                pickTipGroupDescription(view);
-                break;
+                case R.id.grpTipGroupDescription:
+                    pickTipGroupDescription(view);
+                    break;
 
-            case R.id.imageViewSmall:
-                pickImage(view);
-                break;
+                case R.id.imageViewSmall:
+                    pickImage(view);
+                    break;
+            }
         }
+        catch(Exception e)
+        {
+            ShowError("onClick", e.getMessage());
+        }
+
     }
 
     public void TipGroupDescriptionPicked(View view)
@@ -128,13 +136,13 @@ public class TipGroupDetailsEdit extends TipGroupDetailsView implements View.OnC
             tipGroupItem.tipGroupDescription=txtTipGroupDescription.getText().toString();
 
             tipGroupItem.tipGroupPicture="";
-            if(internalImageFilename.length()>0)
+            if(internalImageFilename.length() > 0)
                 tipGroupItem.tipGroupPicture=internalImageFilename;
-            tipGroupItem.pictureAssigned = imageSet;
-            tipGroupItem.pictureChanged = imageChanged;
-            tipGroupItem.fileBitmap = null;
-            if (imageSet)
-                tipGroupItem.fileBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            tipGroupItem.pictureAssigned=imageSet;
+            tipGroupItem.pictureChanged=imageChanged;
+            tipGroupItem.fileBitmap=null;
+            if(imageSet)
+                tipGroupItem.fileBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
             tipGroupItem.tipGroupNotes="";
 

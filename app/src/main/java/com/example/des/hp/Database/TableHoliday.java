@@ -44,8 +44,8 @@ class TableHoliday extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -67,8 +67,8 @@ class TableHoliday extends TableBase
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean addHolidayItem(HolidayItem holidayItem)
@@ -201,12 +201,13 @@ class TableHoliday extends TableBase
             if(!addHolidayItem(item))
                 return (false);
 
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("createSample", e.getMessage());
         }
-        return (true);
+        return (false);
     }
 
     boolean updateHolidayItem(HolidayItem holidayItem)
@@ -519,6 +520,7 @@ class TableHoliday extends TableBase
 
                 retAl.add(holidayItem);
             }
+            return (true);
         }
         catch(Exception e)
         {

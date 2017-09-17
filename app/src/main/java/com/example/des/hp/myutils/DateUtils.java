@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import static com.example.des.hp.myutils.MyApiSpecific.myApiSpecific;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 import static java.text.DateFormat.getDateInstance;
 
@@ -420,8 +421,8 @@ public class DateUtils extends BaseActivity
             int hour;
             int minute;
 
-            hour=timePicker.getHour();
-            minute=timePicker.getMinute();
+            hour=myApiSpecific().GetHour(timePicker);
+            minute=myApiSpecific().GetMinute(timePicker);
 
             timeString=DateUtils.FormatTime(hour, minute);
             retString.Value=timeString;

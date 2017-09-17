@@ -130,19 +130,43 @@ public class TipDetailsList extends BaseActivity
     @Override
     public void SwapItems(int from, int to)
     {
-        Collections.swap(tipAdapter.data, from, to);
+        try
+        {
+            Collections.swap(tipAdapter.data, from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("SwapItems", e.getMessage());
+        }
+
     }
 
     @Override
     public void OnItemMove(int from, int to)
     {
-        tipAdapter.onItemMove(from, to);
+        try
+        {
+            tipAdapter.onItemMove(from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("OnItemMove", e.getMessage());
+        }
+
     }
 
     @Override
     public void NotifyItemMoved(int from, int to)
     {
-        tipAdapter.notifyItemMoved(from, to);
+        try
+        {
+            tipAdapter.notifyItemMoved(from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("NotifyItemMoved", e.getMessage());
+        }
+
     }
     //endregion
 

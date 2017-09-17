@@ -20,7 +20,7 @@ import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 public class TaskDetailsView extends BaseActivity
 {
-    
+
     //region Member variables
     public TextView txtTaskDate;
     public TaskItem taskItem;
@@ -36,7 +36,7 @@ public class TaskDetailsView extends BaseActivity
     public LinearLayout grpKnownDate;
     public Switch swKnownDate;
     //endregion
-    
+
     //region Constructors/Destructors
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -44,55 +44,55 @@ public class TaskDetailsView extends BaseActivity
         super.onCreate(savedInstanceState);
         try
         {
-            layoutName = "activity_task_details_view";
+            layoutName="activity_task_details_view";
             setContentView(R.layout.activity_task_details_view);
-            
-            txtTaskDescription = (TextView) findViewById(R.id.txtTaskName);
-            grpTaskDate = (LinearLayout) findViewById(R.id.grpTaskDate);
-            txtTaskDate = (TextView) findViewById(R.id.txtTaskDate);
-            chkTaskComplete = (CheckBox) findViewById(R.id.chkTaskComplete);
+
+            txtTaskDescription=(TextView) findViewById(R.id.txtTaskName);
+            grpTaskDate=(LinearLayout) findViewById(R.id.grpTaskDate);
+            txtTaskDate=(TextView) findViewById(R.id.txtTaskDate);
+            chkTaskComplete=(CheckBox) findViewById(R.id.chkTaskComplete);
             btnClear=(ImageButton) findViewById(R.id.btnClear);
             btnSave=(Button) findViewById(R.id.btnSave);
             grpMenuFile=(LinearLayout) findViewById(R.id.grpMenuFile);
             grpTaskName=(LinearLayout) findViewById(R.id.grpTaskName);
-            lblTaskDate=(TextView)findViewById(R.id.lblTaskDate);
-            lblKnownDate=(TextView)findViewById(R.id.lblKnownDate);
+            lblTaskDate=(TextView) findViewById(R.id.lblTaskDate);
+            lblKnownDate=(TextView) findViewById(R.id.lblKnownDate);
             grpKnownDate=(LinearLayout) findViewById(R.id.grpKnownDate);
             swKnownDate=(Switch) findViewById(R.id.swKnownDate);
-            
+
             afterCreate();
-            
+
             showForm();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
     }
-    
+
     public boolean onCreateOptionsMenu(Menu menu)
     {
         try
         {
-            MenuInflater inflater = getMenuInflater();
+            MenuInflater inflater=getMenuInflater();
             inflater.inflate(R.menu.taskdetailsformmenu, menu);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreateOptionsMenu", e.getMessage());
         }
-        
+
         return true;
     }
     //endregion
-    
+
     //region OnClick Events
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         try
         {
-            switch (item.getItemId())
+            switch(item.getItemId())
             {
                 case R.id.action_delete_task:
                     deleteTask();
@@ -104,38 +104,38 @@ public class TaskDetailsView extends BaseActivity
                     return super.onOptionsItemSelected(item);
             }
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onOptionsItemSelected", e.getMessage());
         }
         return true;
-        
+
     }
     //endregion
-    
+
     //region showForm
     public void showForm()
     {
         super.showForm();
         try
         {
-            taskItem = new TaskItem();
-            if (!databaseAccess().getTaskItem(holidayId, taskId, taskItem))
+            taskItem=new TaskItem();
+            if(!databaseAccess().getTaskItem(holidayId, taskId, taskItem))
                 return;
-            
-            if (title == null || (title.length() == 0) )
+
+            if(title == null || (title.length() == 0))
             {
                 SetTitles(taskItem.taskDescription, "");
             } else
             {
                 SetTitles(title, subTitle);
             }
-            
+
             SetImage(taskItem.taskPicture);
-            
+
             txtTaskDescription.setText(taskItem.taskDescription);
-            
-            if (taskItem.taskDateKnown)
+
+            if(taskItem.taskDateKnown)
             {
                 grpTaskDate.setVisibility(View.VISIBLE);
                 txtTaskDate.setText(taskItem.taskDateString);
@@ -143,49 +143,82 @@ public class TaskDetailsView extends BaseActivity
             {
                 grpTaskDate.setVisibility(View.GONE);
             }
-            
+
             chkTaskComplete.setChecked(taskItem.taskComplete);
-            
+
             afterShow();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("showForm", e.getMessage());
         }
     }
     //endregion
-    
+
     //region form Functions
     @Override
     public int getInfoId()
     {
-        return (taskItem.infoId);
+        try
+        {
+            return (taskItem.infoId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getInfoId", e.getMessage());
+        }
+        return (0);
+
     }
 
     public void setNoteId(int pNoteId)
     {
-        taskItem.noteId=pNoteId;
-        databaseAccess().updateTaskItem(taskItem);
+        try
+        {
+            taskItem.noteId=pNoteId;
+            databaseAccess().updateTaskItem(taskItem);
+        }
+        catch(Exception e)
+        {
+            ShowError("setNoteId", e.getMessage());
+        }
+
     }
 
     @Override
     public int getNoteId()
     {
-        return (taskItem.noteId);
+        try
+        {
+            return (taskItem.noteId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNoteId", e.getMessage());
+        }
+        return (0);
     }
 
     @Override
     public void setInfoId(int pInfoId)
     {
-        taskItem.infoId=pInfoId;
-        databaseAccess().updateTaskItem(taskItem);
+        try
+        {
+            taskItem.infoId=pInfoId;
+            databaseAccess().updateTaskItem(taskItem);
+        }
+        catch(Exception e)
+        {
+            ShowError("setInfoId", e.getMessage());
+        }
+
     }
 
     public void editTask()
     {
         try
         {
-            Intent intent = new Intent(getApplicationContext(), TaskDetailsEdit.class);
+            Intent intent=new Intent(getApplicationContext(), TaskDetailsEdit.class);
             intent.putExtra("ACTION", "modify");
             intent.putExtra("HOLIDAYID", holidayId);
             intent.putExtra("TASKID", taskId);
@@ -193,27 +226,27 @@ public class TaskDetailsView extends BaseActivity
             intent.putExtra("SUBTITLE", subTitle);
             startActivity(intent);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("editTask", e.getMessage());
         }
-        
+
     }
-    
+
     public void deleteTask()
     {
         try
         {
-            if (!databaseAccess().deleteTaskItem(taskItem))
+            if(!databaseAccess().deleteTaskItem(taskItem))
                 return;
             finish();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("deleteTask", e.getMessage());
         }
-        
+
     }
     //endregion
-    
+
 }

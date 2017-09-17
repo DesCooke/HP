@@ -38,8 +38,8 @@ class TableExtraFiles extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -51,8 +51,8 @@ class TableExtraFiles extends TableBase
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean createSampleExtraFileGroup(MyInt myInt)
@@ -69,14 +69,14 @@ class TableExtraFiles extends TableBase
                 return (false);
             if(!createSampleExtraFile(fileGroupId, true))
                 return (false);
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("createSampleExtraFileGroup", e.getMessage());
-            return (false);
         }
 
-        return (true);
+        return (false);
     }
 
     private boolean createSampleExtraFile(int fileGroupId, boolean picture)
@@ -113,14 +113,14 @@ class TableExtraFiles extends TableBase
             }
             if(!addExtraFilesItem(item))
                 return (false);
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("createSampleExtraFile", e.getMessage());
-            return (false);
         }
 
-        return (true);
+        return (false);
     }
 
     public boolean createSample(String newName)
@@ -129,13 +129,13 @@ class TableExtraFiles extends TableBase
         {
             if(!createExtraFileSample(newName))
                 return (false);
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("createSample", e.getMessage());
-            return (false);
         }
-        return (true);
+        return (false);
     }
 
     boolean addExtraFilesItem(ExtraFilesItem extraFilesItem)
@@ -188,8 +188,8 @@ class TableExtraFiles extends TableBase
         catch(Exception e)
         {
             ShowError("addExtraFilesItem", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean updateExtraFilesItems(ArrayList<ExtraFilesItem> items)
@@ -387,13 +387,14 @@ class TableExtraFiles extends TableBase
                 extraFilesItem.pictureAssigned=false;
                 extraFilesItem.origPictureAssigned=false;
             }
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("GetExtraFilesItemFromQuery", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
     boolean getNextExtraFilesId(int fileGroupId, MyInt retInt)

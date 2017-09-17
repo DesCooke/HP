@@ -11,7 +11,7 @@ import com.example.des.hp.myutils.*;
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
-public class ParadeDetailsEdit  extends ParadeDetailsView implements View.OnClickListener
+public class ParadeDetailsEdit extends ParadeDetailsView implements View.OnClickListener
 {
 
 
@@ -63,39 +63,64 @@ public class ParadeDetailsEdit  extends ParadeDetailsView implements View.OnClic
 
     public void onClick(View view)
     {
-        switch(view.getId())
+        try
         {
+            switch(view.getId())
+            {
 
-            case R.id.grpStartTime:
-                checkInClick(view);
-                break;
+                case R.id.grpStartTime:
+                    checkInClick(view);
+                    break;
 
-            case R.id.grpBookingRef:
-                pickBookingRef(view);
-                break;
+                case R.id.grpBookingRef:
+                    pickBookingRef(view);
+                    break;
 
-            case R.id.grpSchedName:
-                pickSchedName(view);
-                break;
+                case R.id.grpSchedName:
+                    pickSchedName(view);
+                    break;
 
-            case R.id.grpEndTime:
-                departureClick(view);
-                break;
+                case R.id.grpEndTime:
+                    departureClick(view);
+                    break;
 
-            case R.id.imageViewSmall:
-                pickImage(view);
-                break;
+                case R.id.imageViewSmall:
+                    pickImage(view);
+                    break;
+            }
         }
+        catch(Exception e)
+        {
+            ShowError("onClick", e.getMessage());
+        }
+
+
     }
 
     public void checkInClick(View view)
     {
-        handleTime(checkIn, chkCheckinKnown, "Select Check-in Time");
+        try
+        {
+            handleTime(checkIn, chkCheckinKnown, "Select Check-in Time");
+        }
+        catch(Exception e)
+        {
+            ShowError("checkInClick", e.getMessage());
+        }
+
     }
 
     public void departureClick(View view)
     {
-        handleTime(departs, chkDepartureKnown, "Select Departure Time");
+        try
+        {
+            handleTime(departs, chkDepartureKnown, "Select Departure Time");
+        }
+        catch(Exception e)
+        {
+            ShowError("departureClick", e.getMessage());
+        }
+
     }
 
     public void BookingRefPicked(View view)
@@ -154,7 +179,7 @@ public class ParadeDetailsEdit  extends ParadeDetailsView implements View.OnClic
             scheduleItem.schedName=txtSchedName.getText().toString();
 
             scheduleItem.schedPicture="";
-            if(internalImageFilename.length()>0)
+            if(internalImageFilename.length() > 0)
                 scheduleItem.schedPicture=internalImageFilename;
             scheduleItem.pictureAssigned=imageSet;
             scheduleItem.pictureChanged=imageChanged;

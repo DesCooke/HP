@@ -2,11 +2,11 @@ package com.example.des.hp.myutils;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v4.content.ContextCompat;
 import android.widget.ImageButton;
 
 import com.example.des.hp.MainActivity;
 
+import static com.example.des.hp.myutils.MyApiSpecific.myApiSpecific;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 //
@@ -42,7 +42,7 @@ public class MyColor
     {
         try
         {
-            object.setColorFilter(ContextCompat.getColor(_context, resourceId));
+            object.setColorFilter(myApiSpecific().getTheColor(resourceId));
             return (true);
         }
         catch(Exception e)

@@ -32,8 +32,8 @@ class TableFlight extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -45,8 +45,8 @@ class TableFlight extends TableBase
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean addFlightItem(FlightItem flightItem)
@@ -186,13 +186,14 @@ class TableFlight extends TableBase
             flightItem.origDepartsMin=flightItem.departsMin;
             flightItem.origTerminal=flightItem.terminal;
             flightItem.origBookingReference=flightItem.bookingReference;
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("GetFlightItemFromQuery", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
     private boolean ItemExists(FlightItem litem)
@@ -210,13 +211,15 @@ class TableFlight extends TableBase
 
             if(cursor.getCount() == 0)
                 return (false);
+
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("ItemExists(flight)", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
 }

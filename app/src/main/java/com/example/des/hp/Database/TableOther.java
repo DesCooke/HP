@@ -32,8 +32,8 @@ class TableOther extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -45,76 +45,111 @@ class TableOther extends TableBase
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean addOtherItem(OtherItem otherItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSql="INSERT INTO other " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, otherName, bookingReference) " + "VALUES " + "(" + otherItem.holidayId + "," + otherItem.dayId + "," + otherItem.attractionId + "," + otherItem.attractionAreaId + "," + otherItem.scheduleId + "," + MyQuotedString(otherItem.otherName) + "," + MyQuotedString(otherItem.bookingReference) + " " + ")";
+            String lSql="INSERT INTO other " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, otherName, bookingReference) " + "VALUES " + "(" + otherItem.holidayId + "," + otherItem.dayId + "," + otherItem.attractionId + "," + otherItem.attractionAreaId + "," + otherItem.scheduleId + "," + MyQuotedString(otherItem.otherName) + "," + MyQuotedString(otherItem.bookingReference) + " " + ")";
 
-        return (executeSQL("addOtherItem", lSql));
+            return (executeSQL("addOtherItem", lSql));
+        }
+        catch(Exception e)
+        {
+            ShowError("addOtherItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean updateOtherItem(OtherItem otherItem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        if(ItemExists(otherItem) == false)
+        try
         {
-            return (addOtherItem(otherItem));
-        }
-        String lSQL;
-        lSQL="UPDATE other " + "SET otherName = " + MyQuotedString(otherItem.otherName) + ", " + "    bookingReference = " + MyQuotedString(otherItem.bookingReference) + ", " + "    dayId = " + otherItem.dayId + ", " + "    attractionId = " + otherItem.attractionId + ", " + "    attractionAreaId = " + otherItem.attractionAreaId + ", " + "    scheduleId = " + otherItem.scheduleId + " " + "WHERE holidayId = " + otherItem.holidayId + " " + "AND dayId = " + otherItem.origDayId + " " + "AND attractionId = " + otherItem.origAttractionId + " " + "AND attractionAreaId = " + otherItem.origAttractionAreaId + " " + "AND scheduleId = " + otherItem.origScheduleId;
+            if(IsValid() == false)
+                return (false);
 
-        return (executeSQL("updateOtherItem", lSQL));
+            if(ItemExists(otherItem) == false)
+            {
+                return (addOtherItem(otherItem));
+            }
+            String lSQL;
+            lSQL="UPDATE other " + "SET otherName = " + MyQuotedString(otherItem.otherName) + ", " + "    bookingReference = " + MyQuotedString(otherItem.bookingReference) + ", " + "    dayId = " + otherItem.dayId + ", " + "    attractionId = " + otherItem.attractionId + ", " + "    attractionAreaId = " + otherItem.attractionAreaId + ", " + "    scheduleId = " + otherItem.scheduleId + " " + "WHERE holidayId = " + otherItem.holidayId + " " + "AND dayId = " + otherItem.origDayId + " " + "AND attractionId = " + otherItem.origAttractionId + " " + "AND attractionAreaId = " + otherItem.origAttractionAreaId + " " + "AND scheduleId = " + otherItem.origScheduleId;
+
+            return (executeSQL("updateOtherItem", lSQL));
+        }
+        catch(Exception e)
+        {
+            ShowError("updateOtherItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean deleteOtherItem(OtherItem otherItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSQL="DELETE FROM other " + "WHERE holidayId = " + otherItem.holidayId + " " + "AND dayId = " + otherItem.dayId + " " + "AND attractionId = " + otherItem.attractionId + " " + "AND attractionAreaId = " + otherItem.attractionAreaId + " " + "AND scheduleId = " + otherItem.scheduleId;
+            String lSQL="DELETE FROM other " + "WHERE holidayId = " + otherItem.holidayId + " " + "AND dayId = " + otherItem.dayId + " " + "AND attractionId = " + otherItem.attractionId + " " + "AND attractionAreaId = " + otherItem.attractionAreaId + " " + "AND scheduleId = " + otherItem.scheduleId;
 
-        if(executeSQL("deleteOtherItem", lSQL) == false)
-            return (false);
+            if(executeSQL("deleteOtherItem", lSQL) == false)
+                return (false);
 
-        return (true);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteOtherItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean getOtherItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, OtherItem litem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        litem.holidayId=holidayId;
-        litem.dayId=dayId;
-        litem.attractionId=attractionId;
-        litem.attractionAreaId=attractionAreaId;
-        litem.scheduleId=scheduleId;
-        litem.origHolidayId=holidayId;
-        litem.origDayId=dayId;
-        litem.origAttractionId=attractionId;
-        litem.origAttractionAreaId=attractionAreaId;
-        litem.origScheduleId=scheduleId;
-
-        String lSQL;
-        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, otherName, bookingReference " + "FROM Other " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
-
-        Cursor cursor=executeSQLOpenCursor("getOtherItem", lSQL);
-        if(cursor != null)
+        try
         {
-            cursor.moveToFirst();
-            if(GetOtherItemFromQuery(cursor, litem) == false)
+            if(IsValid() == false)
                 return (false);
+
+            litem.holidayId=holidayId;
+            litem.dayId=dayId;
+            litem.attractionId=attractionId;
+            litem.attractionAreaId=attractionAreaId;
+            litem.scheduleId=scheduleId;
+            litem.origHolidayId=holidayId;
+            litem.origDayId=dayId;
+            litem.origAttractionId=attractionId;
+            litem.origAttractionAreaId=attractionAreaId;
+            litem.origScheduleId=scheduleId;
+
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, otherName, bookingReference " + "FROM Other " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
+
+            Cursor cursor=executeSQLOpenCursor("getOtherItem", lSQL);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                if(GetOtherItemFromQuery(cursor, litem) == false)
+                    return (false);
+            }
+            executeSQLCloseCursor("getOtherItem");
+            return (true);
         }
-        executeSQLCloseCursor("getOtherItem");
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("getOtherItem", e.getMessage());
+        }
+        return (false);
     }
 
     private boolean GetOtherItemFromQuery(Cursor cursor, OtherItem otherItem)
@@ -142,13 +177,14 @@ class TableOther extends TableBase
             otherItem.origScheduleId=otherItem.scheduleId;
             otherItem.origOtherName=otherItem.otherName;
             otherItem.origBookingReference=otherItem.bookingReference;
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("GetOtherItemFromQuery", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
     private boolean ItemExists(OtherItem litem)
@@ -166,13 +202,14 @@ class TableOther extends TableBase
 
             if(cursor.getCount() == 0)
                 return (false);
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("ItemExists(other)", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
 }

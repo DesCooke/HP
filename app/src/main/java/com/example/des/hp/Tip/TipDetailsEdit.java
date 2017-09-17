@@ -121,21 +121,29 @@ public class TipDetailsEdit extends TipDetailsView implements View.OnClickListen
     // Create a YES onclick procedure
     public void onClick(View view)
     {
-        switch(view.getId())
+        try
         {
+            switch(view.getId())
+            {
 
-            case R.id.grpTipDescription:
-                pickTipDescription(view);
-                break;
+                case R.id.grpTipDescription:
+                    pickTipDescription(view);
+                    break;
 
-            case R.id.txtTipNotes:
-                pickTipNotes(view);
-                break;
+                case R.id.txtTipNotes:
+                    pickTipNotes(view);
+                    break;
 
-            case R.id.imageViewSmall:
-                pickImage(view);
-                break;
+                case R.id.imageViewSmall:
+                    pickImage(view);
+                    break;
+            }
         }
+        catch(Exception e)
+        {
+            ShowError("onClick", e.getMessage());
+        }
+
     }
 
     public void pickTipNotes(View view)

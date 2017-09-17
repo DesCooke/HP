@@ -123,19 +123,43 @@ public class TaskDetailsList extends BaseActivity
     @Override
     public void SwapItems(int from, int to)
     {
-        Collections.swap(taskAdapter.data, from, to);
+        try
+        {
+            Collections.swap(taskAdapter.data, from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("SwapItems", e.getMessage());
+        }
+
     }
 
     @Override
     public void OnItemMove(int from, int to)
     {
-        taskAdapter.onItemMove(from, to);
+        try
+        {
+            taskAdapter.onItemMove(from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("OnItemMove", e.getMessage());
+        }
+
     }
 
     @Override
     public void NotifyItemMoved(int from, int to)
     {
-        taskAdapter.notifyItemMoved(from, to);
+        try
+        {
+            taskAdapter.notifyItemMoved(from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("NotifyItemMoved", e.getMessage());
+        }
+
     }
 
     //endregion

@@ -1633,8 +1633,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
     {
         try
         {
-            if (tableSchedule.getScheduleList(holidayId, dayId, attractionId, attractionAreaId, al) ==
-                false)
+            if (tableSchedule.getScheduleList(holidayId, dayId, attractionId, attractionAreaId, al) == false)
                 return (false);
             
             for (ScheduleItem item : al)

@@ -41,8 +41,8 @@ class TableTip extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -64,87 +64,20 @@ class TableTip extends TableBase
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean addTipItem(TipItem tipItem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        if(tipItem.pictureAssigned)
+        try
         {
+            if(IsValid() == false)
+                return (false);
+
+            if(tipItem.pictureAssigned)
+            {
             /* if picture name has something in it - it means it came from internal folder */
-            if(tipItem.tipPicture.length() == 0)
-            {
-                myMessages().LogMessage("  - New Image was not from internal folder...");
-                if(tipItem.pictureAssigned)
-                {
-                    myMessages().LogMessage("  - Save new image and get a filename...");
-                    MyString myString=new MyString();
-                    if(savePicture(tipItem.fileBitmap, myString) == false)
-                        return (false);
-                    tipItem.tipPicture=myString.Value;
-                    myMessages().LogMessage("  - New filename " + tipItem.tipPicture);
-                } else
-                {
-                    myMessages().LogMessage("  - New Image not setup - so - keep it blank");
-                }
-            } else
-            {
-                myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + tipItem.tipPicture + ")");
-            }
-        } else
-        {
-            myMessages().LogMessage("  - New Image not assigned - do nothing");
-        }
-
-        String lSql="INSERT INTO Tip " + "  (holidayId, tipGroupId, tipId, sequenceNo, tipDescription, " + "   tipPicture, tipNotes, infoId, noteId, galleryId, sygicId) " + "VALUES " + "(" + tipItem.holidayId + "," + tipItem.tipGroupId + "," + tipItem.tipId + "," + tipItem.sequenceNo + ", " + MyQuotedString(tipItem.tipDescription) + ", " + MyQuotedString(tipItem.tipPicture) + ", " + MyQuotedString(tipItem.tipNotes) + ", " + tipItem.infoId + ", " + tipItem.noteId + ", " + tipItem.galleryId + ", " + tipItem.sygicId + " " + ")";
-
-        return (executeSQL("addTipItem", lSql));
-    }
-
-    boolean updateTipItems(ArrayList<TipItem> items)
-    {
-        if(IsValid() == false)
-            return (false);
-
-        if(items == null)
-            return (false);
-
-        for(int i=0; i < items.size(); i++)
-        {
-            if(items.get(i).sequenceNo != items.get(i).origSequenceNo)
-            {
-                if(updateTipItem(items.get(i)) == false)
-                    return (false);
-            }
-        }
-        return (true);
-    }
-
-    boolean updateTipItem(TipItem tipItem)
-    {
-        if(IsValid() == false)
-            return (false);
-
-        myMessages().LogMessage("updateTipItem:Handling Image");
-        if(tipItem.pictureChanged)
-        {
-            if(tipItem.origPictureAssigned && tipItem.tipPicture.length() > 0 && tipItem.tipPicture.compareTo(tipItem.origTipPicture) == 0)
-            {
-                myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
-            } else
-            {
-                if(tipItem.origPictureAssigned)
-                {
-                    myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                    if(removePicture(tipItem.origTipPicture) == false)
-                        return (false);
-                }
-            
-                /* if picture name has something in it - it means it came from internal folder */
                 if(tipItem.tipPicture.length() == 0)
                 {
                     myMessages().LogMessage("  - New Image was not from internal folder...");
@@ -164,54 +97,163 @@ class TableTip extends TableBase
                 {
                     myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + tipItem.tipPicture + ")");
                 }
+            } else
+            {
+                myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
-        } else
-        {
-            myMessages().LogMessage("  - Image not changed - do nothing");
+
+            String lSql="INSERT INTO Tip " + "  (holidayId, tipGroupId, tipId, sequenceNo, tipDescription, " + "   tipPicture, tipNotes, infoId, noteId, galleryId, sygicId) " + "VALUES " + "(" + tipItem.holidayId + "," + tipItem.tipGroupId + "," + tipItem.tipId + "," + tipItem.sequenceNo + ", " + MyQuotedString(tipItem.tipDescription) + ", " + MyQuotedString(tipItem.tipPicture) + ", " + MyQuotedString(tipItem.tipNotes) + ", " + tipItem.infoId + ", " + tipItem.noteId + ", " + tipItem.galleryId + ", " + tipItem.sygicId + " " + ")";
+
+            return (executeSQL("addTipItem", lSql));
+
         }
+        catch(Exception e)
+        {
+            ShowError("addTipItem", e.getMessage());
+        }
+        return (false);
+
+    }
+
+    boolean updateTipItems(ArrayList<TipItem> items)
+    {
+        try
+        {
+            if(IsValid() == false)
+                return (false);
+
+            if(items == null)
+                return (false);
+
+            for(int i=0; i < items.size(); i++)
+            {
+                if(items.get(i).sequenceNo != items.get(i).origSequenceNo)
+                {
+                    if(updateTipItem(items.get(i)) == false)
+                        return (false);
+                }
+            }
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("updateTipItems", e.getMessage());
+        }
+        return (false);
+    }
+
+    boolean updateTipItem(TipItem tipItem)
+    {
+        try
+        {
+            if(IsValid() == false)
+                return (false);
+
+            myMessages().LogMessage("updateTipItem:Handling Image");
+            if(tipItem.pictureChanged)
+            {
+                if(tipItem.origPictureAssigned && tipItem.tipPicture.length() > 0 && tipItem.tipPicture.compareTo(tipItem.origTipPicture) == 0)
+                {
+                    myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
+                } else
+                {
+                    if(tipItem.origPictureAssigned)
+                    {
+                        myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                        if(removePicture(tipItem.origTipPicture) == false)
+                            return (false);
+                    }
+            
+                /* if picture name has something in it - it means it came from internal folder */
+                    if(tipItem.tipPicture.length() == 0)
+                    {
+                        myMessages().LogMessage("  - New Image was not from internal folder...");
+                        if(tipItem.pictureAssigned)
+                        {
+                            myMessages().LogMessage("  - Save new image and get a filename...");
+                            MyString myString=new MyString();
+                            if(savePicture(tipItem.fileBitmap, myString) == false)
+                                return (false);
+                            tipItem.tipPicture=myString.Value;
+                            myMessages().LogMessage("  - New filename " + tipItem.tipPicture);
+                        } else
+                        {
+                            myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                        }
+                    } else
+                    {
+                        myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + tipItem.tipPicture + ")");
+                    }
+                }
+            } else
+            {
+                myMessages().LogMessage("  - Image not changed - do nothing");
+            }
 
 
-        String lSQL;
-        lSQL="UPDATE Tip " + "SET sequenceNo = " + tipItem.sequenceNo + ", " + "    tipDescription = " + MyQuotedString(tipItem.tipDescription) + ", " + "    tipPicture = " + MyQuotedString(tipItem.tipPicture) + ", " + "    tipNotes = " + MyQuotedString(tipItem.tipNotes) + ", " + "    infoId = " + tipItem.infoId + ", " + "    noteId = " + tipItem.noteId + ", " + "    galleryId = " + tipItem.galleryId + ", " + "    sygicId = " + tipItem.sygicId + " " + "WHERE holidayId = " + tipItem.holidayId + " " + "AND tipGroupId = " + tipItem.tipGroupId + " " + "AND tipId = " + tipItem.tipId;
+            String lSQL;
+            lSQL="UPDATE Tip " + "SET sequenceNo = " + tipItem.sequenceNo + ", " + "    tipDescription = " + MyQuotedString(tipItem.tipDescription) + ", " + "    tipPicture = " + MyQuotedString(tipItem.tipPicture) + ", " + "    tipNotes = " + MyQuotedString(tipItem.tipNotes) + ", " + "    infoId = " + tipItem.infoId + ", " + "    noteId = " + tipItem.noteId + ", " + "    galleryId = " + tipItem.galleryId + ", " + "    sygicId = " + tipItem.sygicId + " " + "WHERE holidayId = " + tipItem.holidayId + " " + "AND tipGroupId = " + tipItem.tipGroupId + " " + "AND tipId = " + tipItem.tipId;
 
-        return (executeSQL("updateTipItem", lSQL));
+            return (executeSQL("updateTipItem", lSQL));
+        }
+        catch(Exception e)
+        {
+            ShowError("updateTipItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean deleteTipItem(TipItem tipItem)
-
     {
-        if(IsValid() == false)
-            return (false);
-
-        String lSQL="DELETE FROM Tip " + "WHERE holidayId = " + tipItem.holidayId + " " + "AND tipGroupId = " + tipItem.tipGroupId + " " + "AND tipId = " + tipItem.tipId;
-
-        if(tipItem.tipPicture.length() > 0)
-            if(removePicture(tipItem.tipPicture) == false)
+        try
+        {
+            if(IsValid() == false)
                 return (false);
 
-        if(executeSQL("deleteTipItem", lSQL) == false)
-            return (false);
+            String lSQL="DELETE FROM Tip " + "WHERE holidayId = " + tipItem.holidayId + " " + "AND tipGroupId = " + tipItem.tipGroupId + " " + "AND tipId = " + tipItem.tipId;
 
-        return (true);
+            if(tipItem.tipPicture.length() > 0)
+                if(removePicture(tipItem.tipPicture) == false)
+                    return (false);
+
+            if(executeSQL("deleteTipItem", lSQL) == false)
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteTipItem", e.getMessage());
+        }
+        return (false);
     }
 
     boolean getTipItem(int holidayId, int tipGroupId, int tipId, TipItem litem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        String lSQL;
-        lSQL="SELECT holidayId, tipGroupId, tipId, sequenceNo, tipDescription, " + "  tipPicture, tipNotes, infoId, noteId, galleryId, sygicId " + "FROM tip " + "WHERE HolidayId = " + holidayId + " " + "AND TipGroupId = " + tipGroupId + " " + "and TipId = " + tipId;
-
-        Cursor cursor=executeSQLOpenCursor("getTipItem", lSQL);
-        if(cursor != null)
+        try
         {
-            cursor.moveToFirst();
-            if(GetTipItemFromQuery(cursor, litem) == false)
+            if(IsValid() == false)
                 return (false);
+
+            String lSQL;
+            lSQL="SELECT holidayId, tipGroupId, tipId, sequenceNo, tipDescription, " + "  tipPicture, tipNotes, infoId, noteId, galleryId, sygicId " + "FROM tip " + "WHERE HolidayId = " + holidayId + " " + "AND TipGroupId = " + tipGroupId + " " + "and TipId = " + tipId;
+
+            Cursor cursor=executeSQLOpenCursor("getTipItem", lSQL);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                if(GetTipItemFromQuery(cursor, litem) == false)
+                    return (false);
+            }
+            executeSQLCloseCursor("getTipItem");
+            return (true);
         }
-        executeSQLCloseCursor("getTipItem");
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("getTipItem", e.getMessage());
+        }
+        return (false);
     }
 
     private boolean GetTipItemFromQuery(Cursor cursor, TipItem tipItem)
@@ -259,62 +301,95 @@ class TableTip extends TableBase
                 tipItem.pictureAssigned=false;
                 tipItem.origPictureAssigned=false;
             }
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("GetTipItemFromQuery", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
     boolean getNextTipId(int holidayId, int tidGroupId, MyInt retInt)
     {
-        String lSQL="SELECT IFNULL(MAX(tipId),0) " + "FROM Tip " + "WHERE holidayId = " + holidayId + " " + "AND tipGroupId = " + tidGroupId;
+        try
+        {
+            String lSQL="SELECT IFNULL(MAX(tipId),0) " + "FROM Tip " + "WHERE holidayId = " + holidayId + " " + "AND tipGroupId = " + tidGroupId;
 
-        if(executeSQLGetInt("getNextTipId", lSQL, retInt) == false)
-            return (false);
-        retInt.Value=retInt.Value + 1;
-        return (true);
+            if(executeSQLGetInt("getNextTipId", lSQL, retInt) == false)
+                return (false);
+            retInt.Value=retInt.Value + 1;
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNextTipId", e.getMessage());
+        }
+        return (false);
     }
 
     boolean getTipsCount(int holidayId, MyInt retInt)
     {
-        String lSQL="SELECT IFNULL(COUNT(*),0) " + "FROM TipGroup " + "WHERE holidayId = " + holidayId;
+        try
+        {
+            String lSQL="SELECT IFNULL(COUNT(*),0) " + "FROM TipGroup " + "WHERE holidayId = " + holidayId;
 
-        if(executeSQLGetInt("getTipsCount", lSQL, retInt) == false)
-            return (false);
-        return (true);
+            if(executeSQLGetInt("getTipsCount", lSQL, retInt) == false)
+                return (false);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("getTipsCount", e.getMessage());
+        }
+        return (false);
     }
 
     boolean getNextTipSequenceNo(int holidayId, int tipGroupId, MyInt retInt)
     {
-        String lSQL="SELECT IFNULL(MAX(SequenceNo),0) " + "FROM Tip " + "WHERE holidayId = " + holidayId + " " + "AND tipGroupId = " + tipGroupId;
+        try
+        {
+            String lSQL="SELECT IFNULL(MAX(SequenceNo),0) " + "FROM Tip " + "WHERE holidayId = " + holidayId + " " + "AND tipGroupId = " + tipGroupId;
 
-        if(executeSQLGetInt("getNextTipSequenceNo", lSQL, retInt) == false)
-            return (false);
-        retInt.Value=retInt.Value + 1;
-        return (true);
+            if(executeSQLGetInt("getNextTipSequenceNo", lSQL, retInt) == false)
+                return (false);
+            retInt.Value=retInt.Value + 1;
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNextTipSequenceNo", e.getMessage());
+        }
+        return (false);
     }
 
 
     boolean getTipList(int holidayId, int tipGroupId, ArrayList<TipItem> al)
     {
-        String lSql="SELECT holidayId, tipGroupId, tipId, sequenceNo, tipDescription, " + "  tipPicture, tipNotes, infoId, noteId, galleryId, sygicId  " + "FROM Tip " + "WHERE holidayId = " + holidayId + " " + "AND tipGroupId = " + tipGroupId + " " + "ORDER BY SequenceNo ";
-
-        Cursor cursor=executeSQLOpenCursor("getTipList", lSql);
-        if(cursor == null)
-            return (false);
-
-        while(cursor.moveToNext())
+        try
         {
-            TipItem tipItem=new TipItem();
-            if(GetTipItemFromQuery(cursor, tipItem) == false)
+            String lSql="SELECT holidayId, tipGroupId, tipId, sequenceNo, tipDescription, " + "  tipPicture, tipNotes, infoId, noteId, galleryId, sygicId  " + "FROM Tip " + "WHERE holidayId = " + holidayId + " " + "AND tipGroupId = " + tipGroupId + " " + "ORDER BY SequenceNo ";
+
+            Cursor cursor=executeSQLOpenCursor("getTipList", lSql);
+            if(cursor == null)
                 return (false);
 
-            al.add(tipItem);
+            while(cursor.moveToNext())
+            {
+                TipItem tipItem=new TipItem();
+                if(GetTipItemFromQuery(cursor, tipItem) == false)
+                    return (false);
+
+                al.add(tipItem);
+            }
+            return (true);
         }
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("getTipList", e.getMessage());
+        }
+        return (false);
     }
 
     public boolean deleteTips(int holidayId, int tipGroupId)
@@ -329,25 +404,34 @@ class TableTip extends TableBase
                 if(deleteTipItem(tipItem) == false)
                     return (false);
             }
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("deleteTips", e.getMessage());
         }
-        return (true);
+        return (false);
     }
 
     boolean clearNote(int holidayId, int noteId)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String l_SQL="UPDATE tip SET noteId = 0 " + "WHERE holidayId = " + holidayId + " " + "AND noteId = " + noteId;
+            String l_SQL="UPDATE tip SET noteId = 0 " + "WHERE holidayId = " + holidayId + " " + "AND noteId = " + noteId;
 
-        if(executeSQL("clearNote", l_SQL) == false)
-            return (false);
+            if(executeSQL("clearNote", l_SQL) == false)
+                return (false);
 
-        return (true);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("clearNote", e.getMessage());
+        }
+        return (false);
     }
 
 }

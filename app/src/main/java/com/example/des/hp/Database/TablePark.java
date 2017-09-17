@@ -32,8 +32,8 @@ class TablePark extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -45,76 +45,111 @@ class TablePark extends TableBase
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean addParkItem(ParkItem parkItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSql="INSERT INTO park " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, parkName, " + "   bookingReference) " + "VALUES " + "(" + parkItem.holidayId + "," + parkItem.dayId + "," + parkItem.attractionId + "," + parkItem.attractionAreaId + "," + parkItem.scheduleId + "," + MyQuotedString(parkItem.parkName) + "," + MyQuotedString(parkItem.bookingReference) + " " + ")";
+            String lSql="INSERT INTO park " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, parkName, " + "   bookingReference) " + "VALUES " + "(" + parkItem.holidayId + "," + parkItem.dayId + "," + parkItem.attractionId + "," + parkItem.attractionAreaId + "," + parkItem.scheduleId + "," + MyQuotedString(parkItem.parkName) + "," + MyQuotedString(parkItem.bookingReference) + " " + ")";
 
-        return (executeSQL("addParkItem", lSql));
+            return (executeSQL("addParkItem", lSql));
+        }
+        catch(Exception e)
+        {
+            ShowError("addParkItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean updateParkItem(ParkItem parkItem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        if(ItemExists(parkItem) == false)
+        try
         {
-            return (addParkItem(parkItem));
-        }
-        String lSQL;
-        lSQL="UPDATE park " + "SET parkName = " + MyQuotedString(parkItem.parkName) + ", " + "    bookingReference = " + MyQuotedString(parkItem.bookingReference) + ", " + "    dayId = " + parkItem.dayId + ", " + "    attractionId = " + parkItem.attractionId + ", " + "    attractionAreaId = " + parkItem.attractionAreaId + ", " + "    scheduleId = " + parkItem.scheduleId + " " + "WHERE holidayId = " + parkItem.holidayId + " " + "AND dayId = " + parkItem.origDayId + " " + "AND attractionId = " + parkItem.origAttractionId + " " + "AND attractionAreaId = " + parkItem.origAttractionAreaId + " " + "AND scheduleId = " + parkItem.origScheduleId;
+            if(IsValid() == false)
+                return (false);
 
-        return (executeSQL("updateParkItem", lSQL));
+            if(ItemExists(parkItem) == false)
+            {
+                return (addParkItem(parkItem));
+            }
+            String lSQL;
+            lSQL="UPDATE park " + "SET parkName = " + MyQuotedString(parkItem.parkName) + ", " + "    bookingReference = " + MyQuotedString(parkItem.bookingReference) + ", " + "    dayId = " + parkItem.dayId + ", " + "    attractionId = " + parkItem.attractionId + ", " + "    attractionAreaId = " + parkItem.attractionAreaId + ", " + "    scheduleId = " + parkItem.scheduleId + " " + "WHERE holidayId = " + parkItem.holidayId + " " + "AND dayId = " + parkItem.origDayId + " " + "AND attractionId = " + parkItem.origAttractionId + " " + "AND attractionAreaId = " + parkItem.origAttractionAreaId + " " + "AND scheduleId = " + parkItem.origScheduleId;
+
+            return (executeSQL("updateParkItem", lSQL));
+        }
+        catch(Exception e)
+        {
+            ShowError("updateParkItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean deleteParkItem(ParkItem parkItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSQL="DELETE FROM park " + "WHERE holidayId = " + parkItem.holidayId + " " + "AND dayId = " + parkItem.dayId + " " + "AND attractionId = " + parkItem.attractionId + " " + "AND attractionAreaId = " + parkItem.attractionAreaId + " " + "AND scheduleId = " + parkItem.scheduleId;
+            String lSQL="DELETE FROM park " + "WHERE holidayId = " + parkItem.holidayId + " " + "AND dayId = " + parkItem.dayId + " " + "AND attractionId = " + parkItem.attractionId + " " + "AND attractionAreaId = " + parkItem.attractionAreaId + " " + "AND scheduleId = " + parkItem.scheduleId;
 
-        if(executeSQL("deleteParkItem", lSQL) == false)
-            return (false);
+            if(executeSQL("deleteParkItem", lSQL) == false)
+                return (false);
 
-        return (true);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteParkItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean getParkItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, ParkItem litem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        litem.holidayId=holidayId;
-        litem.dayId=dayId;
-        litem.attractionId=attractionId;
-        litem.attractionAreaId=attractionAreaId;
-        litem.scheduleId=scheduleId;
-        litem.origHolidayId=holidayId;
-        litem.origDayId=dayId;
-        litem.origAttractionId=attractionId;
-        litem.origAttractionAreaId=attractionAreaId;
-        litem.origScheduleId=scheduleId;
-
-        String lSQL;
-        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, parkName, bookingReference " + "FROM Park " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
-
-        Cursor cursor=executeSQLOpenCursor("getParkItem", lSQL);
-        if(cursor != null)
+        try
         {
-            cursor.moveToFirst();
-            if(GetParkItemFromQuery(cursor, litem) == false)
+            if(IsValid() == false)
                 return (false);
+
+            litem.holidayId=holidayId;
+            litem.dayId=dayId;
+            litem.attractionId=attractionId;
+            litem.attractionAreaId=attractionAreaId;
+            litem.scheduleId=scheduleId;
+            litem.origHolidayId=holidayId;
+            litem.origDayId=dayId;
+            litem.origAttractionId=attractionId;
+            litem.origAttractionAreaId=attractionAreaId;
+            litem.origScheduleId=scheduleId;
+
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, parkName, bookingReference " + "FROM Park " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
+
+            Cursor cursor=executeSQLOpenCursor("getParkItem", lSQL);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                if(GetParkItemFromQuery(cursor, litem) == false)
+                    return (false);
+            }
+            executeSQLCloseCursor("getParkItem");
+            return (true);
         }
-        executeSQLCloseCursor("getParkItem");
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("getParkItem", e.getMessage());
+        }
+        return (false);
     }
 
     private boolean GetParkItemFromQuery(Cursor cursor, ParkItem parkItem)
@@ -142,13 +177,15 @@ class TablePark extends TableBase
             parkItem.origScheduleId=parkItem.scheduleId;
             parkItem.origParkName=parkItem.parkName;
             parkItem.origBookingReference=parkItem.bookingReference;
+
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("GetParkItemFromQuery", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
     private boolean ItemExists(ParkItem litem)
@@ -166,13 +203,15 @@ class TablePark extends TableBase
 
             if(cursor.getCount() == 0)
                 return (false);
+
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("ItemExists(park)", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
 }

@@ -32,8 +32,8 @@ class TableHotel extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -45,76 +45,111 @@ class TableHotel extends TableBase
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean addHotelItem(HotelItem hotelItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSql="INSERT INTO hotel " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, hotelName, bookingReference) " + "VALUES " + "(" + hotelItem.holidayId + "," + hotelItem.dayId + "," + hotelItem.attractionId + "," + hotelItem.attractionAreaId + "," + hotelItem.scheduleId + "," + MyQuotedString(hotelItem.hotelName) + "," + MyQuotedString(hotelItem.bookingReference) + " " + ")";
+            String lSql="INSERT INTO hotel " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, hotelName, bookingReference) " + "VALUES " + "(" + hotelItem.holidayId + "," + hotelItem.dayId + "," + hotelItem.attractionId + "," + hotelItem.attractionAreaId + "," + hotelItem.scheduleId + "," + MyQuotedString(hotelItem.hotelName) + "," + MyQuotedString(hotelItem.bookingReference) + " " + ")";
 
-        return (executeSQL("addHotelItem", lSql));
+            return (executeSQL("addHotelItem", lSql));
+        }
+        catch(Exception e)
+        {
+            ShowError("addHotelItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean updateHotelItem(HotelItem hotelItem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        if(ItemExists(hotelItem) == false)
+        try
         {
-            return (addHotelItem(hotelItem));
-        }
-        String lSQL;
-        lSQL="UPDATE hotel " + "SET hotelName = " + MyQuotedString(hotelItem.hotelName) + ", " + "    bookingReference = " + MyQuotedString(hotelItem.bookingReference) + ", " + "    dayId = " + hotelItem.dayId + ", " + "    attractionId = " + hotelItem.attractionId + ", " + "    attractionAreaId = " + hotelItem.attractionAreaId + ", " + "    scheduleId = " + hotelItem.scheduleId + " " + "WHERE holidayId = " + hotelItem.holidayId + " " + "AND dayId = " + hotelItem.origDayId + " " + "AND attractionId = " + hotelItem.origAttractionId + " " + "AND attractionAreaId = " + hotelItem.origAttractionAreaId + " " + "AND scheduleId = " + hotelItem.origScheduleId;
+            if(IsValid() == false)
+                return (false);
 
-        return (executeSQL("updateHotelItem", lSQL));
+            if(ItemExists(hotelItem) == false)
+            {
+                return (addHotelItem(hotelItem));
+            }
+            String lSQL;
+            lSQL="UPDATE hotel " + "SET hotelName = " + MyQuotedString(hotelItem.hotelName) + ", " + "    bookingReference = " + MyQuotedString(hotelItem.bookingReference) + ", " + "    dayId = " + hotelItem.dayId + ", " + "    attractionId = " + hotelItem.attractionId + ", " + "    attractionAreaId = " + hotelItem.attractionAreaId + ", " + "    scheduleId = " + hotelItem.scheduleId + " " + "WHERE holidayId = " + hotelItem.holidayId + " " + "AND dayId = " + hotelItem.origDayId + " " + "AND attractionId = " + hotelItem.origAttractionId + " " + "AND attractionAreaId = " + hotelItem.origAttractionAreaId + " " + "AND scheduleId = " + hotelItem.origScheduleId;
+
+            return (executeSQL("updateHotelItem", lSQL));
+        }
+        catch(Exception e)
+        {
+            ShowError("updateHotelItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean deleteHotelItem(HotelItem hotelItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSQL="DELETE FROM hotel " + "WHERE holidayId = " + hotelItem.holidayId + " " + "AND dayId = " + hotelItem.dayId + " " + "AND attractionId = " + hotelItem.attractionId + " " + "AND attractionAreaId = " + hotelItem.attractionAreaId + " " + "AND scheduleId = " + hotelItem.scheduleId;
+            String lSQL="DELETE FROM hotel " + "WHERE holidayId = " + hotelItem.holidayId + " " + "AND dayId = " + hotelItem.dayId + " " + "AND attractionId = " + hotelItem.attractionId + " " + "AND attractionAreaId = " + hotelItem.attractionAreaId + " " + "AND scheduleId = " + hotelItem.scheduleId;
 
-        if(executeSQL("deleteHotelItem", lSQL) == false)
-            return (false);
+            if(executeSQL("deleteHotelItem", lSQL) == false)
+                return (false);
 
-        return (true);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteHotelItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean getHotelItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, HotelItem litem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        litem.holidayId=holidayId;
-        litem.dayId=dayId;
-        litem.attractionId=attractionId;
-        litem.attractionAreaId=attractionAreaId;
-        litem.scheduleId=scheduleId;
-        litem.origHolidayId=holidayId;
-        litem.origDayId=dayId;
-        litem.origAttractionId=attractionId;
-        litem.origAttractionAreaId=attractionAreaId;
-        litem.origScheduleId=scheduleId;
-
-        String lSQL;
-        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, hotelName, bookingReference " + "FROM Hotel " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
-
-        Cursor cursor=executeSQLOpenCursor("getHotelItem", lSQL);
-        if(cursor != null)
+        try
         {
-            cursor.moveToFirst();
-            if(GetHotelItemFromQuery(cursor, litem) == false)
+            if(IsValid() == false)
                 return (false);
+
+            litem.holidayId=holidayId;
+            litem.dayId=dayId;
+            litem.attractionId=attractionId;
+            litem.attractionAreaId=attractionAreaId;
+            litem.scheduleId=scheduleId;
+            litem.origHolidayId=holidayId;
+            litem.origDayId=dayId;
+            litem.origAttractionId=attractionId;
+            litem.origAttractionAreaId=attractionAreaId;
+            litem.origScheduleId=scheduleId;
+
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, hotelName, bookingReference " + "FROM Hotel " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
+
+            Cursor cursor=executeSQLOpenCursor("getHotelItem", lSQL);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                if(GetHotelItemFromQuery(cursor, litem) == false)
+                    return (false);
+            }
+            executeSQLCloseCursor("getHotelItem");
+            return (true);
         }
-        executeSQLCloseCursor("getHotelItem");
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("getHotelItem", e.getMessage());
+        }
+        return (false);
     }
 
     private boolean GetHotelItemFromQuery(Cursor cursor, HotelItem hotelItem)
@@ -142,13 +177,14 @@ class TableHotel extends TableBase
             hotelItem.origScheduleId=hotelItem.scheduleId;
             hotelItem.origHotelName=hotelItem.hotelName;
             hotelItem.origBookingReference=hotelItem.bookingReference;
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("GetHotelItemFromQuery", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
     private boolean ItemExists(HotelItem litem)
@@ -166,12 +202,14 @@ class TableHotel extends TableBase
 
             if(cursor.getCount() == 0)
                 return (false);
+
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("ItemExists(hotel)", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 }

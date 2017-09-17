@@ -32,8 +32,8 @@ class TableBus extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -166,13 +166,15 @@ class TableBus extends TableBase
             busItem.origAttractionAreaId=busItem.attractionAreaId;
             busItem.origScheduleId=busItem.scheduleId;
             busItem.origBookingReference=busItem.bookingReference;
+
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("GetBusItemFromQuery", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
     private boolean ItemExists(BusItem litem)
@@ -190,13 +192,15 @@ class TableBus extends TableBase
 
             if(cursor.getCount() == 0)
                 return (false);
+
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("ItemExists(bus)", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
 }

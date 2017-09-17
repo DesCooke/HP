@@ -74,8 +74,8 @@ public class MyFileUtils
         catch(Exception e)
         {
             ShowError("BaseFilenameFromUri", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public Uri StringToUri(String path)
@@ -129,8 +129,8 @@ public class MyFileUtils
         catch(Exception e)
         {
             ShowError("OpenAFile", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public String getMyFilePath(Uri uri)
@@ -303,8 +303,8 @@ public class MyFileUtils
         catch(Exception e)
         {
             ShowError("CopyFileToLocalDir", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean createSample(String newFilename)
@@ -333,11 +333,11 @@ public class MyFileUtils
                 throw new Exception("Unable to open for write" + tof);
 
             Random random=new Random();
-            
-            int lParagraphCount=random.nextInt(10)+3;
+
+            int lParagraphCount=random.nextInt(10) + 3;
             int i;
-            StringBuilder lorem = new StringBuilder();
-            for(i=0;i<lParagraphCount;i++)
+            StringBuilder lorem=new StringBuilder();
+            for(i=0; i < lParagraphCount; i++)
             {
                 int lStart=random.nextInt(48);
                 int lCount=random.nextInt(48);
@@ -355,8 +355,8 @@ public class MyFileUtils
         catch(Exception e)
         {
             ShowError("createSample", e.getMessage());
-            return (false);
         }
+        return (false);
     }
-    
+
 }

@@ -19,7 +19,7 @@ import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 public class NoteView extends BaseActivity
 {
-    
+
     private ImageView imageView;
     public int holidayId;
     public int noteId;
@@ -34,31 +34,31 @@ public class NoteView extends BaseActivity
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
     public MyColor myColor;
-    
+
     public void showForm()
     {
         try
         {
-            Bundle extras = getIntent().getExtras();
-            if (extras != null)
+            Bundle extras=getIntent().getExtras();
+            if(extras != null)
             {
-                String action = extras.getString("ACTION");
-                if (action != null && action.equals("view"))
+                String action=extras.getString("ACTION");
+                if(action != null && action.equals("view"))
                 {
-                    holidayId = extras.getInt("HOLIDAYID");
-                    noteId = extras.getInt("NOTEID");
-                    noteItem = new NoteItem();
-                    noteItem.holidayId = holidayId;
-                    noteItem.noteId = noteId;
-                    if (!databaseAccess().getNoteItem(holidayId, noteId, noteItem))
+                    holidayId=extras.getInt("HOLIDAYID");
+                    noteId=extras.getInt("NOTEID");
+                    noteItem=new NoteItem();
+                    noteItem.holidayId=holidayId;
+                    noteItem.noteId=noteId;
+                    if(!databaseAccess().getNoteItem(holidayId, noteId, noteItem))
                         return;
-                    
-                    actionBar = getSupportActionBar();
-                    if (actionBar != null)
+
+                    actionBar=getSupportActionBar();
+                    if(actionBar != null)
                     {
-                        String title = extras.getString("TITLE");
-                        String subtitle = extras.getString("SUBTITLE");
-                        if (title != null && title.length() > 0)
+                        String title=extras.getString("TITLE");
+                        String subtitle=extras.getString("SUBTITLE");
+                        if(title != null && title.length() > 0)
                         {
                             actionBar.setTitle(title);
                             actionBar.setSubtitle(subtitle);
@@ -68,39 +68,39 @@ public class NoteView extends BaseActivity
                             actionBar.setSubtitle("");
                         }
                     }
-                    
+
                     txtNoteView.setText(noteItem.notes);
                 }
             }
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("showForm", e.getMessage());
         }
     }
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        
+
         try
         {
             setContentView(R.layout.activity_notes_view);
-            txtNoteView = (TextView) findViewById(R.id.txtNotes);
+            txtNoteView=(TextView) findViewById(R.id.txtNotes);
             showForm();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
     }
-    
+
     public void editNotes()
     {
         try
         {
-            Intent intent = new Intent(getApplicationContext(), NoteEdit.class);
+            Intent intent=new Intent(getApplicationContext(), NoteEdit.class);
             intent.putExtra("ACTION", "modify");
             intent.putExtra("HOLIDAYID", holidayId);
             intent.putExtra("NOTEID", noteId);
@@ -108,26 +108,26 @@ public class NoteView extends BaseActivity
             intent.putExtra("SUBTITLE", actionBar.getSubtitle());
             startActivity(intent);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("editNotes", e.getMessage());
         }
     }
-    
+
     public boolean onCreateOptionsMenu(Menu menu)
     {
         try
         {
-            MenuInflater inflater = getMenuInflater();
+            MenuInflater inflater=getMenuInflater();
             inflater.inflate(R.menu.notesformmenu, menu);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreateOptionsMenu", e.getMessage());
         }
         return true;
     }
-    
+
     @Override
     protected void onResume()
     {
@@ -136,34 +136,34 @@ public class NoteView extends BaseActivity
         {
             showForm();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onResume", e.getMessage());
         }
-        
+
     }
-    
+
     public void deleteNotes()
     {
         try
         {
-            noteItem.notes = "";
-            if (!databaseAccess().updateNoteItem(noteItem))
+            noteItem.notes="";
+            if(!databaseAccess().updateNoteItem(noteItem))
                 return;
             finish();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("deleteNotes", e.getMessage());
         }
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         try
         {
-            switch (item.getItemId())
+            switch(item.getItemId())
             {
                 case R.id.action_edit_notes:
                     editNotes();
@@ -175,7 +175,7 @@ public class NoteView extends BaseActivity
                     return super.onOptionsItemSelected(item);
             }
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onOptionsItemSelected", e.getMessage());
         }

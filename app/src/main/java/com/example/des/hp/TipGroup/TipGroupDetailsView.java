@@ -96,26 +96,59 @@ public class TipGroupDetailsView extends BaseActivity
     @Override
     public int getInfoId()
     {
-        return (tipGroupItem.infoId);
+        try
+        {
+            return (tipGroupItem.infoId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getInfoId", e.getMessage());
+        }
+        return (0);
+
     }
 
     public void setNoteId(int pNoteId)
     {
-        tipGroupItem.noteId=pNoteId;
-        databaseAccess().updateTipGroupItem(tipGroupItem);
+        try
+        {
+            tipGroupItem.noteId=pNoteId;
+            databaseAccess().updateTipGroupItem(tipGroupItem);
+        }
+        catch(Exception e)
+        {
+            ShowError("setNoteId", e.getMessage());
+        }
+
     }
 
     @Override
     public int getNoteId()
     {
-        return (tipGroupItem.noteId);
+        try
+        {
+            return (tipGroupItem.noteId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNoteId", e.getMessage());
+        }
+        return (0);
     }
 
     @Override
     public void setInfoId(int pInfoId)
     {
-        tipGroupItem.infoId=pInfoId;
-        databaseAccess().updateTipGroupItem(tipGroupItem);
+        try
+        {
+            tipGroupItem.infoId=pInfoId;
+            databaseAccess().updateTipGroupItem(tipGroupItem);
+        }
+        catch(Exception e)
+        {
+            ShowError("setInfoId", e.getMessage());
+        }
+
     }
     //endregion
 }

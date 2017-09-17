@@ -32,8 +32,8 @@ class TableRestaurant extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -49,76 +49,110 @@ class TableRestaurant extends TableBase
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean addRestaurantItem(RestaurantItem restaurantItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSql="INSERT INTO restaurant " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, restaurantName, bookingReference, " + "   restaurantFullId, reservationType) " + "VALUES " + "(" + restaurantItem.holidayId + "," + restaurantItem.dayId + "," + restaurantItem.attractionId + "," + restaurantItem.attractionAreaId + "," + restaurantItem.scheduleId + "," + MyQuotedString(restaurantItem.restaurantName) + "," + MyQuotedString(restaurantItem.bookingReference) + ", " + restaurantItem.restaurantFullId + ", " + restaurantItem.reservationType + " " + ")";
+            String lSql="INSERT INTO restaurant " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, restaurantName, bookingReference, " + "   restaurantFullId, reservationType) " + "VALUES " + "(" + restaurantItem.holidayId + "," + restaurantItem.dayId + "," + restaurantItem.attractionId + "," + restaurantItem.attractionAreaId + "," + restaurantItem.scheduleId + "," + MyQuotedString(restaurantItem.restaurantName) + "," + MyQuotedString(restaurantItem.bookingReference) + ", " + restaurantItem.restaurantFullId + ", " + restaurantItem.reservationType + " " + ")";
 
-        return (executeSQL("addRestaurantItem", lSql));
+            return (executeSQL("addRestaurantItem", lSql));
+        }
+        catch(Exception e)
+        {
+            ShowError("addRestaurantItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean updateRestaurantItem(RestaurantItem restaurantItem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        if(ItemExists(restaurantItem) == false)
+        try
         {
-            return (addRestaurantItem(restaurantItem));
-        }
-        String lSQL;
-        lSQL="UPDATE restaurant " + "SET restaurantName = " + MyQuotedString(restaurantItem.restaurantName) + ", " + "    bookingReference = " + MyQuotedString(restaurantItem.bookingReference) + ", " + "    restaurantFullId = " + restaurantItem.restaurantFullId + ", " + "    reservationType = " + restaurantItem.reservationType + ", " + "    dayId = " + restaurantItem.dayId + ", " + "    attractionId = " + restaurantItem.attractionId + ", " + "    attractionAreaId = " + restaurantItem.attractionAreaId + ", " + "    scheduleId = " + restaurantItem.scheduleId + " " + "WHERE holidayId = " + restaurantItem.holidayId + " " + "AND dayId = " + restaurantItem.origDayId + " " + "AND attractionId = " + restaurantItem.origAttractionId + " " + "AND attractionAreaId = " + restaurantItem.origAttractionAreaId + " " + "AND scheduleId = " + restaurantItem.origScheduleId;
+            if(IsValid() == false)
+                return (false);
 
-        return (executeSQL("updateRestaurantItem", lSQL));
+            if(ItemExists(restaurantItem) == false)
+            {
+                return (addRestaurantItem(restaurantItem));
+            }
+            String lSQL;
+            lSQL="UPDATE restaurant " + "SET restaurantName = " + MyQuotedString(restaurantItem.restaurantName) + ", " + "    bookingReference = " + MyQuotedString(restaurantItem.bookingReference) + ", " + "    restaurantFullId = " + restaurantItem.restaurantFullId + ", " + "    reservationType = " + restaurantItem.reservationType + ", " + "    dayId = " + restaurantItem.dayId + ", " + "    attractionId = " + restaurantItem.attractionId + ", " + "    attractionAreaId = " + restaurantItem.attractionAreaId + ", " + "    scheduleId = " + restaurantItem.scheduleId + " " + "WHERE holidayId = " + restaurantItem.holidayId + " " + "AND dayId = " + restaurantItem.origDayId + " " + "AND attractionId = " + restaurantItem.origAttractionId + " " + "AND attractionAreaId = " + restaurantItem.origAttractionAreaId + " " + "AND scheduleId = " + restaurantItem.origScheduleId;
+
+            return (executeSQL("updateRestaurantItem", lSQL));
+        }
+        catch(Exception e)
+        {
+            ShowError("updateRestaurantItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean deleteRestaurantItem(RestaurantItem restaurantItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSQL="DELETE FROM restaurant " + "WHERE holidayId = " + restaurantItem.holidayId + " " + "AND dayId = " + restaurantItem.dayId + " " + "AND attractionId = " + restaurantItem.attractionId + " " + "AND attractionAreaId = " + restaurantItem.attractionAreaId + " " + "AND scheduleId = " + restaurantItem.scheduleId;
+            String lSQL="DELETE FROM restaurant " + "WHERE holidayId = " + restaurantItem.holidayId + " " + "AND dayId = " + restaurantItem.dayId + " " + "AND attractionId = " + restaurantItem.attractionId + " " + "AND attractionAreaId = " + restaurantItem.attractionAreaId + " " + "AND scheduleId = " + restaurantItem.scheduleId;
 
-        if(executeSQL("deleteRestaurantItem", lSQL) == false)
-            return (false);
+            if(executeSQL("deleteRestaurantItem", lSQL) == false)
+                return (false);
 
-        return (true);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteRestaurantItem", e.getMessage());
+        }
+        return (false);
     }
 
     boolean getRestaurantItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, RestaurantItem litem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        litem.holidayId=holidayId;
-        litem.dayId=dayId;
-        litem.attractionId=attractionId;
-        litem.attractionAreaId=attractionAreaId;
-        litem.scheduleId=scheduleId;
-        litem.origHolidayId=holidayId;
-        litem.origDayId=dayId;
-        litem.origAttractionId=attractionId;
-        litem.origAttractionAreaId=attractionAreaId;
-        litem.origScheduleId=scheduleId;
-
-        String lSQL;
-        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, restaurantName, bookingReference, " + "  restaurantFullId, reservationType " + "FROM Restaurant " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
-
-        Cursor cursor=executeSQLOpenCursor("getRestaurantItem", lSQL);
-        if(cursor != null)
+        try
         {
-            cursor.moveToFirst();
-            if(GetRestaurantItemFromQuery(cursor, litem) == false)
+            if(IsValid() == false)
                 return (false);
+
+            litem.holidayId=holidayId;
+            litem.dayId=dayId;
+            litem.attractionId=attractionId;
+            litem.attractionAreaId=attractionAreaId;
+            litem.scheduleId=scheduleId;
+            litem.origHolidayId=holidayId;
+            litem.origDayId=dayId;
+            litem.origAttractionId=attractionId;
+            litem.origAttractionAreaId=attractionAreaId;
+            litem.origScheduleId=scheduleId;
+
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, restaurantName, bookingReference, " + "  restaurantFullId, reservationType " + "FROM Restaurant " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
+
+            Cursor cursor=executeSQLOpenCursor("getRestaurantItem", lSQL);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                if(GetRestaurantItemFromQuery(cursor, litem) == false)
+                    return (false);
+            }
+            executeSQLCloseCursor("getRestaurantItem");
+            return (true);
         }
-        executeSQLCloseCursor("getRestaurantItem");
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("getRestaurantItem", e.getMessage());
+        }
+        return (false);
     }
 
     private boolean GetRestaurantItemFromQuery(Cursor cursor, RestaurantItem restaurantItem)
@@ -150,13 +184,15 @@ class TableRestaurant extends TableBase
             restaurantItem.origBookingReference=restaurantItem.bookingReference;
             restaurantItem.origRestaurantFullId=restaurantItem.restaurantFullId;
             restaurantItem.origReservationType=restaurantItem.reservationType;
+
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("GetRestaurantItemFromQuery", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
     private boolean ItemExists(RestaurantItem litem)
@@ -174,13 +210,15 @@ class TableRestaurant extends TableBase
 
             if(cursor.getCount() == 0)
                 return (false);
+
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("ItemExists(restaurant)", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
 }

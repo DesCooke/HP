@@ -73,6 +73,7 @@ public class DialogWithEditTextFragment extends DialogFragment
 
         dialogTag = tag;
         fragmentTransaction = fm.beginTransaction();
+
         Fragment prev = fm.findFragmentByTag(tag);
         if (prev != null)
             fragmentTransaction.remove(prev);

@@ -38,8 +38,8 @@ class TableContact extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -61,8 +61,8 @@ class TableContact extends TableBase
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean getContactCount(int holidayId, MyInt retInt)
@@ -298,13 +298,14 @@ class TableContact extends TableBase
                 contactItem.pictureAssigned=false;
                 contactItem.origPictureAssigned=false;
             }
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("GetContactItemFromQuery", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
     boolean getNextContactId(int holidayId, MyInt retInt)

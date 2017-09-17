@@ -47,15 +47,15 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
             layoutName="activity_day_details_edit";
             setContentView(R.layout.activity_day_details_edit);
 
-            dayItem = new DayItem();
+            dayItem=new DayItem();
 
-            imageView = (ImageView) findViewById(R.id.imageViewSmall);
-            dayName = (TextView) findViewById(R.id.txtDayName);
-            radUnknown = (RadioButton) findViewById(R.id.radUnknown);
-            radEasy = (RadioButton) findViewById(R.id.radEasy);
-            radModerate = (RadioButton) findViewById(R.id.radModerate);
-            radBusy = (RadioButton) findViewById(R.id.radBusy);
-            grpDayName = (LinearLayout) findViewById(R.id.grpDayName);
+            imageView=(ImageView) findViewById(R.id.imageViewSmall);
+            dayName=(TextView) findViewById(R.id.txtDayName);
+            radUnknown=(RadioButton) findViewById(R.id.radUnknown);
+            radEasy=(RadioButton) findViewById(R.id.radEasy);
+            radModerate=(RadioButton) findViewById(R.id.radModerate);
+            radBusy=(RadioButton) findViewById(R.id.radBusy);
+            grpDayName=(LinearLayout) findViewById(R.id.grpDayName);
             btnClear=(ImageButton) findViewById(R.id.btnClear);
             btnSave=(Button) findViewById(R.id.btnSave);
 
@@ -64,26 +64,26 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
 
             btnClearImage(null);
 
-            Bundle extras = getIntent().getExtras();
-            if (extras != null)
+            Bundle extras=getIntent().getExtras();
+            if(extras != null)
             {
-                action = extras.getString("ACTION");
-                if (action != null && action.equals("add"))
+                action=extras.getString("ACTION");
+                if(action != null && action.equals("add"))
                 {
-                    holidayId = extras.getInt("HOLIDAYID");
-                    holidayName = extras.getString("HOLIDAYNAME");
+                    holidayId=extras.getInt("HOLIDAYID");
+                    holidayName=extras.getString("HOLIDAYNAME");
                     dayName.setText("");
                     SetTitles(holidayName, "Add a Day");
                 }
-                if (action != null && action.equals("modify"))
+                if(action != null && action.equals("modify"))
                 {
-                    holidayId = extras.getInt("HOLIDAYID");
-                    dayId = extras.getInt("DAYID");
-                    holidayName = extras.getString("HOLIDAYNAME");
-                    if (!databaseAccess().getDayItem(holidayId, dayId, dayItem))
+                    holidayId=extras.getInt("HOLIDAYID");
+                    dayId=extras.getInt("DAYID");
+                    holidayName=extras.getString("HOLIDAYNAME");
+                    if(!databaseAccess().getDayItem(holidayId, dayId, dayItem))
                         return;
 
-                    SetTitles(holidayName,dayItem.dayName);
+                    SetTitles(holidayName, dayItem.dayName);
 
                 }
             }
@@ -96,7 +96,7 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
             showForm();
 
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
@@ -116,13 +116,13 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
             radEasy.setChecked(false);
             radModerate.setChecked(false);
             radBusy.setChecked(false);
-            if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_unknown))
+            if(dayItem.dayCat == getResources().getInteger(R.integer.day_cat_unknown))
                 radUnknown.setChecked(true);
-            if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_easy))
+            if(dayItem.dayCat == getResources().getInteger(R.integer.day_cat_easy))
                 radEasy.setChecked(true);
-            if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_moderate))
+            if(dayItem.dayCat == getResources().getInteger(R.integer.day_cat_moderate))
                 radModerate.setChecked(true);
-            if (dayItem.dayCat == getResources().getInteger(R.integer.day_cat_busy))
+            if(dayItem.dayCat == getResources().getInteger(R.integer.day_cat_busy))
                 radBusy.setChecked(true);
 
             SetImage(dayItem.dayPicture);
@@ -139,16 +139,23 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
     //region OnClick events
     public void onClick(View view)
     {
-        switch(view.getId())
+        try
         {
+            switch(view.getId())
+            {
 
-            case R.id.grpDayName:
-                pickDayName(view);
-                break;
+                case R.id.grpDayName:
+                    pickDayName(view);
+                    break;
 
-            case R.id.imageViewSmall:
-                pickImage(view);
-                break;
+                case R.id.imageViewSmall:
+                    pickImage(view);
+                    break;
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("onClick", e.getMessage());
         }
     }
 
@@ -156,33 +163,34 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
     {
         try
         {
-            if (view != radUnknown)
-                if (radUnknown.isChecked())
+            if(view != radUnknown)
+                if(radUnknown.isChecked())
                     radUnknown.setChecked(false);
-            if (view != radEasy)
-                if (radEasy.isChecked())
+            if(view != radEasy)
+                if(radEasy.isChecked())
                     radEasy.setChecked(false);
-            if (view != radModerate)
-                if (radModerate.isChecked())
+            if(view != radModerate)
+                if(radModerate.isChecked())
                     radModerate.setChecked(false);
-            if (view != radBusy)
-                if (radBusy.isChecked())
+            if(view != radBusy)
+                if(radBusy.isChecked())
                     radBusy.setChecked(false);
 
-            if (radUnknown.isChecked())
-                dayItem.dayCat = getResources().getInteger(R.integer.day_cat_unknown);
-            if (radEasy.isChecked())
-                dayItem.dayCat = getResources().getInteger(R.integer.day_cat_easy);
-            if (radModerate.isChecked())
-                dayItem.dayCat = getResources().getInteger(R.integer.day_cat_moderate);
-            if (radBusy.isChecked())
-                dayItem.dayCat = getResources().getInteger(R.integer.day_cat_busy);
+            if(radUnknown.isChecked())
+                dayItem.dayCat=getResources().getInteger(R.integer.day_cat_unknown);
+            if(radEasy.isChecked())
+                dayItem.dayCat=getResources().getInteger(R.integer.day_cat_easy);
+            if(radModerate.isChecked())
+                dayItem.dayCat=getResources().getInteger(R.integer.day_cat_moderate);
+            if(radBusy.isChecked())
+                dayItem.dayCat=getResources().getInteger(R.integer.day_cat_busy);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("handleDayCatOnClick", e.getMessage());
         }
     }
+
     public void DayNamePicked(View view)
     {
         try
@@ -191,7 +199,7 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
 
             dialogWithEditTextFragment.dismiss();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("DayNamePicked", e.getMessage());
         }
@@ -201,7 +209,7 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
     {
         try
         {
-            dwetOnOkClick = new View.OnClickListener()
+            dwetOnOkClick=new View.OnClickListener()
             {
                 public void onClick(View view)
                 {
@@ -209,23 +217,17 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
                 }
             };
 
-            dialogWithEditTextFragment =
-                DialogWithEditTextFragment.newInstance
-                    (
-                        getFragmentManager(),     // for the transaction bit
-                        "hihi",            // unique name for this dialog type
-                        "Day",    // form caption
-                        "Description",             // form message
-                        R.drawable.attachment,
-                        dayName.getText().toString(), // initial text
-                        dwetOnOkClick,
-                        this,
-                        false
-                    );
+            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+                "hihi",            // unique name for this dialog type
+                "Day",    // form caption
+                "Description",             // form message
+                R.drawable.attachment, dayName.getText().toString(), // initial text
+                dwetOnOkClick, this, false
+            );
 
             dialogWithEditTextFragment.showIt();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("pickDayName", e.getMessage());
         }
@@ -241,47 +243,47 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
         {
             myMessages().ShowMessageShort("Saving Day");
 
-            MyInt myInt = new MyInt();
+            MyInt myInt=new MyInt();
 
-            dayItem.dayName = dayName.getText().toString();
+            dayItem.dayName=dayName.getText().toString();
 
             dayItem.dayPicture="";
-            if(internalImageFilename.length()>0)
+            if(internalImageFilename.length() > 0)
                 dayItem.dayPicture=internalImageFilename;
             dayItem.pictureAssigned=imageSet;
             dayItem.pictureChanged=imageChanged;
-            dayItem.dayBitmap = null;
-            if (imageSet)
-                dayItem.dayBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            dayItem.dayBitmap=null;
+            if(imageSet)
+                dayItem.dayBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
-            if (action.equals("add"))
+            if(action.equals("add"))
             {
-                dayItem.holidayId = holidayId;
-                
-                if (!databaseAccess().getNextDayId(holidayId, myInt))
+                dayItem.holidayId=holidayId;
+
+                if(!databaseAccess().getNextDayId(holidayId, myInt))
                     return;
-                dayItem.dayId = myInt.Value;
-                
-                if (!databaseAccess().getNextSequenceNo(holidayId, myInt))
+                dayItem.dayId=myInt.Value;
+
+                if(!databaseAccess().getNextSequenceNo(holidayId, myInt))
                     return;
-                dayItem.sequenceNo = myInt.Value;
-                if (!databaseAccess().addDayItem(dayItem))
+                dayItem.sequenceNo=myInt.Value;
+                if(!databaseAccess().addDayItem(dayItem))
                     return;
             }
-            
-            if (action.equals("modify"))
+
+            if(action.equals("modify"))
             {
-                if (!databaseAccess().updateDayItem(dayItem))
+                if(!databaseAccess().updateDayItem(dayItem))
                     return;
             }
-            
+
             finish();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("saveDay", e.getMessage());
         }
     }
-    
+
     //endregion
 }

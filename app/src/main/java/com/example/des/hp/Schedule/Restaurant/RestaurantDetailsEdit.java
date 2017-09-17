@@ -65,47 +65,55 @@ public class RestaurantDetailsEdit extends RestaurantDetailsView implements View
     //region OnClick Events
     public void onClick(View view)
     {
-        switch(view.getId())
+        try
         {
+            switch(view.getId())
+            {
 
-            case R.id.grpStartTime:
-                checkInClick(view);
-                break;
+                case R.id.grpStartTime:
+                    checkInClick(view);
+                    break;
 
-            case R.id.grpBookingRef:
-                pickBookingRef(view);
-                break;
+                case R.id.grpBookingRef:
+                    pickBookingRef(view);
+                    break;
 
-            case R.id.grpSchedName:
-                pickSchedName(view);
-                break;
+                case R.id.grpSchedName:
+                    pickSchedName(view);
+                    break;
 
-            case R.id.grpEndTime:
-                departureClick(view);
-                break;
+                case R.id.grpEndTime:
+                    departureClick(view);
+                    break;
 
-            case R.id.imageViewSmall:
-                pickImage(view);
-                break;
-
-
-            case R.id.radUnknown:
-                selectReservationType(view);
-                break;
+                case R.id.imageViewSmall:
+                    pickImage(view);
+                    break;
 
 
-            case R.id.radWalkIn:
-                selectReservationType(view);
-                break;
+                case R.id.radUnknown:
+                    selectReservationType(view);
+                    break;
 
-            case R.id.radOnTheDay:
-                selectReservationType(view);
-                break;
 
-            case R.id.rad180Days:
-                selectReservationType(view);
-                break;
+                case R.id.radWalkIn:
+                    selectReservationType(view);
+                    break;
+
+                case R.id.radOnTheDay:
+                    selectReservationType(view);
+                    break;
+
+                case R.id.rad180Days:
+                    selectReservationType(view);
+                    break;
+            }
         }
+        catch(Exception e)
+        {
+            ShowError("onClick", e.getMessage());
+        }
+
     }
 
     public void selectReservationType(View view)
@@ -170,12 +178,28 @@ public class RestaurantDetailsEdit extends RestaurantDetailsView implements View
 
     public void checkInClick(View view)
     {
-        handleTime(checkIn, chkCheckinKnown, "Select Reservation Time");
+        try
+        {
+            handleTime(checkIn, chkCheckinKnown, "Select Reservation Time");
+        }
+        catch(Exception e)
+        {
+            ShowError("checkInClick", e.getMessage());
+        }
+
     }
 
     public void departureClick(View view)
     {
-        handleTime(departs, chkDepartureKnown, "Select Finish Time");
+        try
+        {
+            handleTime(departs, chkDepartureKnown, "Select Finish Time");
+        }
+        catch(Exception e)
+        {
+            ShowError("departureClick", e.getMessage());
+        }
+
     }
 
     //endregion
@@ -192,7 +216,7 @@ public class RestaurantDetailsEdit extends RestaurantDetailsView implements View
             scheduleItem.schedName=txtSchedName.getText().toString();
 
             scheduleItem.schedPicture="";
-            if(internalImageFilename.length()>0)
+            if(internalImageFilename.length() > 0)
                 scheduleItem.schedPicture=internalImageFilename;
             scheduleItem.pictureAssigned=imageSet;
             scheduleItem.pictureChanged=imageChanged;

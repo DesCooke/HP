@@ -74,15 +74,23 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
     //region OnClick Events
     public void onClick(View view)
     {
-        switch(view.getId())
+        try
         {
-            case R.id.imageViewSmall:
-                pickImage(view);
-                break;
-            case R.id.btnFile:
-                pickPDF(view);
-                break;
+            switch(view.getId())
+            {
+                case R.id.imageViewSmall:
+                    pickImage(view);
+                    break;
+                case R.id.btnFile:
+                    pickPDF(view);
+                    break;
+            }
         }
+        catch(Exception e)
+        {
+            ShowError("onClick", e.getMessage());
+        }
+
     }
 
     public void pickDevicePDF(View view)
@@ -230,7 +238,7 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
         {
             if(mySelectedFileUri != null)
             {
-                if(internalFilename.length()==0)
+                if(internalFilename.length() == 0)
                 {
                     grantUriPermission("com.example.des.hp", mySelectedFileUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     try
@@ -264,8 +272,7 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
                     {
                         SaveIt();
                     }
-                }
-                else
+                } else
                 {
                     newFilename=internalFilename;
                     extraFilesItem.fileUri=null;
@@ -279,7 +286,7 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
         }
         catch(Exception e)
         {
-            ShowError("SaveExtraFile", e.getMessage());
+            ShowError("SaveSchedule", e.getMessage());
         }
 
     }

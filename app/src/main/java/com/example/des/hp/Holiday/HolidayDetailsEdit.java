@@ -101,12 +101,20 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
     //region OnClick Events
     public void onClick(View view)
     {
-        switch(view.getId())
+        try
         {
-            case R.id.imageViewSmall:
-                pickImage(view);
-                break;
+            switch(view.getId())
+            {
+                case R.id.imageViewSmall:
+                    pickImage(view);
+                    break;
+            }
         }
+        catch(Exception e)
+        {
+            ShowError("onClick", e.getMessage());
+        }
+
     }
 
     public void pickDateTime(View view)
@@ -222,11 +230,19 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
     @Override
     public void showForm()
     {
-        super.showForm();
+        try
+        {
+            super.showForm();
 
-        SetImage(holidayItem.holidayPicture);
+            SetImage(holidayItem.holidayPicture);
 
-        afterShow();
+            afterShow();
+        }
+        catch(Exception e)
+        {
+            ShowError("showForm", e.getMessage());
+        }
+
     }
 
     public void saveHoliday(View view)

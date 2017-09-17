@@ -40,25 +40,24 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
  */
 public class MyLoremIpsum
 {
-    private Context _context;
-    public static final String LOREM_IPSUM = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.";
+    private static final String LOREM_IPSUM="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.";
     private String[] loremIpsumWords;
-    private static MyLoremIpsum myStaticLoremIpsum = null;
-    
+    private static MyLoremIpsum myStaticLoremIpsum=null;
+
     public static MyLoremIpsum myLoremIpsum()
     {
-        if (myStaticLoremIpsum == null)
-            myStaticLoremIpsum = new MyLoremIpsum(MainActivity.getInstance());
-        
+        if(myStaticLoremIpsum == null)
+            myStaticLoremIpsum=new MyLoremIpsum(MainActivity.getInstance());
+
         return (myStaticLoremIpsum);
     }
-    
-    public MyLoremIpsum(Context context)
+
+    private MyLoremIpsum(Context context)
     {
-        _context = context;
-        this.loremIpsumWords = LOREM_IPSUM.split("\\s");
+        Context _context=context;
+        this.loremIpsumWords=LOREM_IPSUM.split("\\s");
     }
-    
+
     /**
      * Returns one sentence (50 words) of the lorem ipsum text.
      *
@@ -68,18 +67,18 @@ public class MyLoremIpsum
     {
         return getWords(50);
     }
-    
+
     /**
      * Returns words from the lorem ipsum text.
      *
      * @param amount Amount of words
      * @return Lorem ipsum text
      */
-    public String getWords(int amount)
+    private String getWords(int amount)
     {
         return getWords(amount, 0);
     }
-    
+
     /**
      * Returns words from the lorem ipsum text.
      *
@@ -92,53 +91,52 @@ public class MyLoremIpsum
     {
         try
         {
-            myMessages().LogMessage("getWords amount " + String.valueOf(amount) + ", " +
-                String.valueOf(startIndex));
-            
-            startIndex = startIndex % 50;
+            myMessages().LogMessage("getWords amount " + String.valueOf(amount) + ", " + String.valueOf(startIndex));
+
+            startIndex=startIndex % 50;
             myMessages().LogMessage("startIndex is " + String.valueOf(startIndex));
-            
-            int word = startIndex;
-            StringBuilder lorem = new StringBuilder();
-            
-            for (int i = 0; i < amount; i++)
+
+            int word=startIndex;
+            StringBuilder lorem=new StringBuilder();
+
+            for(int i=0; i < amount; i++)
             {
-                if (word == 50)
+                if(word == 50)
                 {
-                    word = 0;
+                    word=0;
                 }
-                
+
                 myMessages().LogMessage("using word " + String.valueOf(i) + ":" + loremIpsumWords[word]);
                 lorem.append(loremIpsumWords[word]);
-                
-                if (i < amount - 1)
+
+                if(i < amount - 1)
                 {
                     lorem.append(' ');
                 }
-                
+
                 word++;
             }
-            
+
             myMessages().LogMessage("returning " + lorem.toString());
             return lorem.toString();
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             ShowError("createSample", e.getMessage());
         }
         return ("");
     }
-    
+
     protected void ShowError(String argFunction, String argMessage)
     {
         String lv_title;
-        
-        lv_title = argFunction;
-        
+
+        lv_title=argFunction;
+
         myLog().WriteLogMessage("Error in " + lv_title + ". " + argMessage);
     }
-    
-    
+
+
     /**
      * Returns two paragraphs of lorem ipsum.
      *
@@ -146,29 +144,47 @@ public class MyLoremIpsum
      */
     public String getParagraphs()
     {
-        return getParagraphs(2);
+        try
+        {
+            return getParagraphs(2);
+        }
+        catch(Exception e)
+        {
+            ShowError("getParagraphs", e.getMessage());
+        }
+        return ("");
+
     }
-    
+
     /**
      * Returns paragraphs of lorem ipsum.
      *
      * @param amount Amount of paragraphs
      * @return Lorem ipsum paragraphs
      */
-    public String getParagraphs(int amount)
+    private String getParagraphs(int amount)
     {
-        StringBuilder lorem = new StringBuilder();
-        
-        for (int i = 0; i < amount; i++)
+        try
         {
-            lorem.append(LOREM_IPSUM);
-            
-            if (i < amount - 1)
+            StringBuilder lorem=new StringBuilder();
+
+            for(int i=0; i < amount; i++)
             {
-                lorem.append("\n\n");
+                lorem.append(LOREM_IPSUM);
+
+                if(i < amount - 1)
+                {
+                    lorem.append("\n\n");
+                }
             }
+
+            return lorem.toString();
         }
-        
-        return lorem.toString();
+        catch(Exception e)
+        {
+            ShowError("getParagraphs", e.getMessage());
+        }
+        return ("");
+
     }
 }

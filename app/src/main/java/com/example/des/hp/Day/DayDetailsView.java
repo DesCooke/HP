@@ -38,6 +38,8 @@ import java.util.Locale;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.DateUtils.dateUtils;
+import static com.example.des.hp.myutils.MyApiSpecific.myApiSpecific;
+import static com.example.des.hp.myutils.MyColor.myColor;
 
 public class DayDetailsView extends BaseActivity
 {
@@ -87,7 +89,7 @@ public class DayDetailsView extends BaseActivity
         {
             ShowError("onCreateOptionsMenu", e.getMessage());
         }
-        return true;
+        return (true);
     }
     //endregion
 
@@ -198,17 +200,17 @@ public class DayDetailsView extends BaseActivity
             String lDayCat="Day Category: <unknown>";
             if(dayItem.dayCat == getResources().getInteger(R.integer.day_cat_easy))
             {
-                lColor=getColor(R.color.colorEasy);
+                lColor=myApiSpecific().getTheColor(R.color.colorEasy);
                 lDayCat="Day Category: Easy";
             }
             if(dayItem.dayCat == getResources().getInteger(R.integer.day_cat_moderate))
             {
-                lColor=getColor(R.color.colorModerate);
+                lColor=myApiSpecific().getTheColor(R.color.colorModerate);
                 lDayCat="Day Category: Moderate";
             }
             if(dayItem.dayCat == getResources().getInteger(R.integer.day_cat_busy))
             {
-                lColor=getColor(R.color.colorBusy);
+                lColor=myApiSpecific().getTheColor(R.color.colorBusy);
                 lDayCat="Day Category: VBusy";
             }
 
@@ -293,26 +295,59 @@ public class DayDetailsView extends BaseActivity
     @Override
     public int getInfoId()
     {
-        return (dayItem.infoId);
+        try
+        {
+            return (dayItem.infoId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getInfoId", e.getMessage());
+        }
+        return (0);
+
     }
 
     public void setNoteId(int pNoteId)
     {
-        dayItem.noteId=pNoteId;
-        databaseAccess().updateDayItem(dayItem);
+        try
+        {
+            dayItem.noteId=pNoteId;
+            databaseAccess().updateDayItem(dayItem);
+        }
+        catch(Exception e)
+        {
+            ShowError("setNoteId", e.getMessage());
+        }
+
     }
 
     @Override
     public int getNoteId()
     {
-        return (dayItem.noteId);
+        try
+        {
+            return (dayItem.noteId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNoteId", e.getMessage());
+        }
+        return (0);
     }
 
     @Override
     public void setInfoId(int pInfoId)
     {
-        dayItem.infoId=pInfoId;
-        databaseAccess().updateDayItem(dayItem);
+        try
+        {
+            dayItem.infoId=pInfoId;
+            databaseAccess().updateDayItem(dayItem);
+        }
+        catch(Exception e)
+        {
+            ShowError("setInfoId", e.getMessage());
+        }
+
     }
 
     public void editDay()
@@ -333,17 +368,25 @@ public class DayDetailsView extends BaseActivity
 
     public void StartNewEditIntent(Class neededClass, ScheduleItem obj)
     {
-        Intent intent=new Intent(getApplicationContext(), neededClass);
-        intent.putExtra("ACTION", "view");
-        intent.putExtra("HOLIDAYID", obj.holidayId);
-        intent.putExtra("DAYID", obj.dayId);
-        intent.putExtra("ATTRACTIONID", obj.attractionId);
-        intent.putExtra("ATTRACTIONAREAID", obj.attractionAreaId);
-        intent.putExtra("SCHEDULEID", obj.scheduleId);
-        intent.putExtra("TITLE", title);
-        intent.putExtra("SUBTITLE", subTitle);
+        try
+        {
+            Intent intent=new Intent(getApplicationContext(), neededClass);
+            intent.putExtra("ACTION", "view");
+            intent.putExtra("HOLIDAYID", obj.holidayId);
+            intent.putExtra("DAYID", obj.dayId);
+            intent.putExtra("ATTRACTIONID", obj.attractionId);
+            intent.putExtra("ATTRACTIONAREAID", obj.attractionAreaId);
+            intent.putExtra("SCHEDULEID", obj.scheduleId);
+            intent.putExtra("TITLE", title);
+            intent.putExtra("SUBTITLE", subTitle);
 
-        startActivity(intent);
+            startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            ShowError("StartNewEditIntent", e.getMessage());
+        }
+
     }
 
     public void StartNewAddIntent(Class neededClass)
@@ -385,19 +428,43 @@ public class DayDetailsView extends BaseActivity
     @Override
     public void SwapItems(int from, int to)
     {
-        Collections.swap(scheduleAdapter.data, from, to);
+        try
+        {
+            Collections.swap(scheduleAdapter.data, from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("SwapItems", e.getMessage());
+        }
+
     }
 
     @Override
     public void OnItemMove(int from, int to)
     {
-        scheduleAdapter.onItemMove(from, to);
+        try
+        {
+            scheduleAdapter.onItemMove(from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("OnItemMove", e.getMessage());
+        }
+
     }
 
     @Override
     public void NotifyItemMoved(int from, int to)
     {
-        scheduleAdapter.notifyItemMoved(from, to);
+        try
+        {
+            scheduleAdapter.notifyItemMoved(from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("NotifyItemMoved", e.getMessage());
+        }
+
     }
 
     //endregion

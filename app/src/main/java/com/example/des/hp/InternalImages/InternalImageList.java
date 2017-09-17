@@ -26,7 +26,7 @@ public class InternalImageList extends BaseActivity
             SetTitles("Internal Images", "please select one");
 
             internalImageList=imageUtils().listInternalImages();
-            
+
             internalImageAdapter=new InternalImageAdapter(this, internalImageList);
 
             gridLayout=true;
@@ -36,12 +36,13 @@ public class InternalImageList extends BaseActivity
             internalImageAdapter.setOnItemClickListener(new InternalImageAdapter.OnItemClickListener()
             {
                 @Override
-                public void onItemClick(View view, InternalImageItem obj, int position)
+                public void onItemClick(View view, InternalImageItem obj)
                 {
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra("selectedfile", internalImageList.get(position).internalImageFilename);
+                    Intent resultIntent=new Intent();
+                    resultIntent.putExtra("selectedfile", obj.internalImageFilename);
                     setResult(Activity.RESULT_OK, resultIntent);
-                    finish();                }
+                    finish();
+                }
             });
 
         }

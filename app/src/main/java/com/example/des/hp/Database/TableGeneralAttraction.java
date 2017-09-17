@@ -32,8 +32,8 @@ class TableGeneralAttraction extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -49,8 +49,8 @@ class TableGeneralAttraction extends TableBase
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean addGeneralAttractionItem(GeneralAttractionItem item)
@@ -185,13 +185,15 @@ class TableGeneralAttraction extends TableBase
             item.origHeartRating=item.heartRating;
             item.origScenicRating=item.scenicRating;
             item.origThrillRating=item.scenicRating;
+
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("GetGeneralAttractionItemFromQuery", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
     private boolean ItemExists(GeneralAttractionItem litem)
@@ -209,13 +211,15 @@ class TableGeneralAttraction extends TableBase
 
             if(cursor.getCount() == 0)
                 return (false);
+
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("ItemExists(generalAttraction)", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
 

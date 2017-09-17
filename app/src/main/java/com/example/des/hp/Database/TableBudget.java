@@ -40,8 +40,8 @@ class TableBudget extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -63,8 +63,8 @@ class TableBudget extends TableBase
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean getBudgetCount(int argholidayId, MyInt retInt)
@@ -327,13 +327,14 @@ class TableBudget extends TableBase
                 budgetItem.pictureAssigned=false;
                 budgetItem.origPictureAssigned=false;
             }
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("GetBudgetItemFromQuery", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
     boolean getNextBudgetId(int holidayId, MyInt retInt)

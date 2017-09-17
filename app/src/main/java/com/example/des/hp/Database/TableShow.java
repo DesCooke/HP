@@ -33,8 +33,8 @@ class TableShow extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -55,76 +55,110 @@ class TableShow extends TableBase
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean addShowItem(ShowItem showItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSql="INSERT INTO show " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, showName, showHour, " + "   showMin, bookingReference, heartRating, scenicRating, thrillRating) " + "VALUES " + "(" + showItem.holidayId + "," + showItem.dayId + "," + showItem.attractionId + "," + showItem.attractionAreaId + "," + showItem.scheduleId + "," + MyQuotedString(showItem.showName) + "," + showItem.showHour + "," + showItem.showMin + "," + MyQuotedString(showItem.bookingReference) + ", " + showItem.heartRating + "," + showItem.scenicRating + "," + showItem.thrillRating + " " + ")";
+            String lSql="INSERT INTO show " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, showName, showHour, " + "   showMin, bookingReference, heartRating, scenicRating, thrillRating) " + "VALUES " + "(" + showItem.holidayId + "," + showItem.dayId + "," + showItem.attractionId + "," + showItem.attractionAreaId + "," + showItem.scheduleId + "," + MyQuotedString(showItem.showName) + "," + showItem.showHour + "," + showItem.showMin + "," + MyQuotedString(showItem.bookingReference) + ", " + showItem.heartRating + "," + showItem.scenicRating + "," + showItem.thrillRating + " " + ")";
 
-        return (executeSQL("addShowItem", lSql));
+            return (executeSQL("addShowItem", lSql));
+        }
+        catch(Exception e)
+        {
+            ShowError("addShowItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean updateShowItem(ShowItem showItem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        if(ItemExists(showItem) == false)
+        try
         {
-            return (addShowItem(showItem));
+            if(IsValid() == false)
+                return (false);
+
+            if(ItemExists(showItem) == false)
+            {
+                return (addShowItem(showItem));
+            }
+
+            String lSQL;
+            lSQL="UPDATE Show " + "SET showName = " + MyQuotedString(showItem.showName) + ", " + "    showHour = " + showItem.showHour + ", " + "    showMin = " + showItem.showMin + ", " + "    bookingReference = " + MyQuotedString(showItem.bookingReference) + ", " + "    heartRating = " + showItem.heartRating + ", " + "    scenicRating = " + showItem.scenicRating + ", " + "    thrillRating = " + showItem.thrillRating + ", " + "    dayId = " + showItem.dayId + ", " + "    attractionId = " + showItem.attractionId + ", " + "    attractionAreaId = " + showItem.attractionAreaId + ", " + "    scheduleId = " + showItem.scheduleId + " " + "WHERE holidayId = " + showItem.holidayId + " " + "AND dayId = " + showItem.origDayId + " " + "AND attractionId = " + showItem.origAttractionId + " " + "AND attractionAreaId = " + showItem.origAttractionAreaId + " " + "AND scheduleId = " + showItem.origScheduleId;
+
+            return (executeSQL("updateShowItem", lSQL));
         }
+        catch(Exception e)
+        {
+            ShowError("updateShowItem", e.getMessage());
+        }
+        return (false);
 
-        String lSQL;
-        lSQL="UPDATE Show " + "SET showName = " + MyQuotedString(showItem.showName) + ", " + "    showHour = " + showItem.showHour + ", " + "    showMin = " + showItem.showMin + ", " + "    bookingReference = " + MyQuotedString(showItem.bookingReference) + ", " + "    heartRating = " + showItem.heartRating + ", " + "    scenicRating = " + showItem.scenicRating + ", " + "    thrillRating = " + showItem.thrillRating + ", " + "    dayId = " + showItem.dayId + ", " + "    attractionId = " + showItem.attractionId + ", " + "    attractionAreaId = " + showItem.attractionAreaId + ", " + "    scheduleId = " + showItem.scheduleId + " " + "WHERE holidayId = " + showItem.holidayId + " " + "AND dayId = " + showItem.origDayId + " " + "AND attractionId = " + showItem.origAttractionId + " " + "AND attractionAreaId = " + showItem.origAttractionAreaId + " " + "AND scheduleId = " + showItem.origScheduleId;
-
-        return (executeSQL("updateShowItem", lSQL));
     }
 
     boolean deleteShowItem(ShowItem showItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSQL="DELETE FROM show " + "WHERE holidayId = " + showItem.holidayId + " " + "AND dayId = " + showItem.dayId + " " + "AND attractionId = " + showItem.attractionId + " " + "AND attractionAreaId = " + showItem.attractionAreaId + " " + "AND scheduleId = " + showItem.scheduleId;
+            String lSQL="DELETE FROM show " + "WHERE holidayId = " + showItem.holidayId + " " + "AND dayId = " + showItem.dayId + " " + "AND attractionId = " + showItem.attractionId + " " + "AND attractionAreaId = " + showItem.attractionAreaId + " " + "AND scheduleId = " + showItem.scheduleId;
 
-        if(executeSQL("deleteShowItem", lSQL) == false)
-            return (false);
+            if(executeSQL("deleteShowItem", lSQL) == false)
+                return (false);
 
-        return (true);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteShowItem", e.getMessage());
+        }
+        return (false);
     }
 
     boolean getShowItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, ShowItem litem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        litem.holidayId=holidayId;
-        litem.dayId=dayId;
-        litem.attractionId=attractionId;
-        litem.attractionAreaId=attractionAreaId;
-        litem.scheduleId=scheduleId;
-        litem.origHolidayId=holidayId;
-        litem.origDayId=dayId;
-        litem.origAttractionId=attractionId;
-        litem.origAttractionAreaId=attractionAreaId;
-        litem.origScheduleId=scheduleId;
-
-        String lSQL;
-        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, showName, showHour, " + "  showMin, bookingReference, heartRating, scenicRating, thrillRating " + "FROM Show " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
-        Cursor cursor=executeSQLOpenCursor("getShowItem", lSQL);
-        if(cursor != null)
+        try
         {
-            cursor.moveToFirst();
-            if(GetShowItemFromQuery(cursor, litem) == false)
+            if(IsValid() == false)
                 return (false);
+
+            litem.holidayId=holidayId;
+            litem.dayId=dayId;
+            litem.attractionId=attractionId;
+            litem.attractionAreaId=attractionAreaId;
+            litem.scheduleId=scheduleId;
+            litem.origHolidayId=holidayId;
+            litem.origDayId=dayId;
+            litem.origAttractionId=attractionId;
+            litem.origAttractionAreaId=attractionAreaId;
+            litem.origScheduleId=scheduleId;
+
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, showName, showHour, " + "  showMin, bookingReference, heartRating, scenicRating, thrillRating " + "FROM Show " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
+            Cursor cursor=executeSQLOpenCursor("getShowItem", lSQL);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                if(GetShowItemFromQuery(cursor, litem) == false)
+                    return (false);
+            }
+            executeSQLCloseCursor("getShowItem");
+            return (true);
         }
-        executeSQLCloseCursor("getShowItem");
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("getShowItem", e.getMessage());
+        }
+        return (false);
     }
 
     private boolean GetShowItemFromQuery(Cursor cursor, ShowItem showItem)
@@ -162,13 +196,14 @@ class TableShow extends TableBase
             showItem.origHeartRating=showItem.heartRating;
             showItem.origScenicRating=showItem.scenicRating;
             showItem.origThrillRating=showItem.scenicRating;
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("GetShowItemFromQuery", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
     private boolean ItemExists(ShowItem litem)
@@ -186,13 +221,14 @@ class TableShow extends TableBase
 
             if(cursor.getCount() == 0)
                 return (false);
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("ItemExists(show)", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
 }

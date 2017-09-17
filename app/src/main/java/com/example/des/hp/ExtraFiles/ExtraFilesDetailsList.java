@@ -105,19 +105,43 @@ public class ExtraFilesDetailsList extends BaseActivity
     @Override
     public void SwapItems(int from, int to)
     {
-        Collections.swap(extraFilesAdapter.data, from, to);
+        try
+        {
+            Collections.swap(extraFilesAdapter.data, from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("SwapItems", e.getMessage());
+        }
+
     }
 
     @Override
     public void OnItemMove(int from, int to)
     {
-        extraFilesAdapter.onItemMove(from, to);
+        try
+        {
+            extraFilesAdapter.onItemMove(from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("OnItemMove", e.getMessage());
+        }
+
     }
 
     @Override
     public void NotifyItemMoved(int from, int to)
     {
-        extraFilesAdapter.notifyItemMoved(from, to);
+        try
+        {
+            extraFilesAdapter.notifyItemMoved(from, to);
+        }
+        catch(Exception e)
+        {
+            ShowError("NotifyItemMoved", e.getMessage());
+        }
+
     }
 
 

@@ -63,41 +63,49 @@ public class FlightDetailsEdit extends FlightDetailsView implements View.OnClick
     //region OnClick Events
     public void onClick(View view)
     {
-        switch(view.getId())
+        try
         {
+            switch(view.getId())
+            {
 
-            case R.id.grpCheckin:
-                checkInClick(view);
-                break;
+                case R.id.grpCheckin:
+                    checkInClick(view);
+                    break;
 
-            case R.id.grpBookingRef:
-                pickBookingRef(view);
-                break;
+                case R.id.grpBookingRef:
+                    pickBookingRef(view);
+                    break;
 
-            case R.id.grpSchedName:
-                pickSchedName(view);
-                break;
+                case R.id.grpSchedName:
+                    pickSchedName(view);
+                    break;
 
-            case R.id.grpDeparture:
-                departureClick(view);
-                break;
+                case R.id.grpDeparture:
+                    departureClick(view);
+                    break;
 
-            case R.id.imageViewSmall:
-                pickImage(view);
-                break;
+                case R.id.imageViewSmall:
+                    pickImage(view);
+                    break;
 
-            case R.id.grpArrival:
-                arrivalClick(view);
-                break;
+                case R.id.grpArrival:
+                    arrivalClick(view);
+                    break;
 
-            case R.id.grpTerminal:
-                pickTerminal(view);
-                break;
+                case R.id.grpTerminal:
+                    pickTerminal(view);
+                    break;
 
-            case R.id.grpFlightNo:
-                pickFlightNo(view);
-                break;
+                case R.id.grpFlightNo:
+                    pickFlightNo(view);
+                    break;
+            }
         }
+        catch(Exception e)
+        {
+            ShowError("onClick", e.getMessage());
+        }
+
     }
 
     public void BookingRefPicked(View view)
@@ -231,17 +239,41 @@ public class FlightDetailsEdit extends FlightDetailsView implements View.OnClick
 
     public void checkInClick(View view)
     {
-        handleTime(checkIn, chkCheckinKnown, "Select Check-in Time");
+        try
+        {
+            handleTime(checkIn, chkCheckinKnown, "Select Check-in Time");
+        }
+        catch(Exception e)
+        {
+            ShowError("checkInClick", e.getMessage());
+        }
+
     }
 
     public void departureClick(View view)
     {
-        handleTime(departs, chkDepartureKnown, "Select Departure Time");
+        try
+        {
+            handleTime(departs, chkDepartureKnown, "Select Departure Time");
+        }
+        catch(Exception e)
+        {
+            ShowError("departureClick", e.getMessage());
+        }
+
     }
 
     public void arrivalClick(View view)
     {
-        handleTime(arrives, chkArriveKnown, "Select Arrival Time");
+        try
+        {
+            handleTime(arrives, chkArriveKnown, "Select Arrival Time");
+        }
+        catch(Exception e)
+        {
+            ShowError("arrivalClick", e.getMessage());
+        }
+
     }
 
 
@@ -257,7 +289,7 @@ public class FlightDetailsEdit extends FlightDetailsView implements View.OnClick
             myMessages().ShowMessageShort("Saving Schedule");
 
             scheduleItem.schedPicture="";
-            if(internalImageFilename.length()>0)
+            if(internalImageFilename.length() > 0)
                 scheduleItem.schedPicture=internalImageFilename;
             scheduleItem.pictureAssigned=imageSet;
             scheduleItem.pictureChanged=imageChanged;

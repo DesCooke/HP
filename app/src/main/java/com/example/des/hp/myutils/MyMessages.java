@@ -64,12 +64,28 @@ public class MyMessages extends Activity
 
     public void LogMessage(String argMessage)
     {
-        myLog().WriteLogMessage(argMessage);
+        try
+        {
+            myLog().WriteLogMessage(argMessage);
+        }
+        catch(Exception e)
+        {
+            ShowError("LogMessage", e.getMessage());
+        }
     }
 
     public void ClearLog()
     {
-        myLog().RemoveLog();
+
+        try
+        {
+            myLog().RemoveLog();
+        }
+        catch(Exception e)
+        {
+            ShowError("ClearLog", e.getMessage());
+        }
+
     }
 
     public void ShowError(String argTitle, String argMessage)

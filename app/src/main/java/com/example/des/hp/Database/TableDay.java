@@ -40,8 +40,8 @@ class TableDay extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -63,8 +63,8 @@ class TableDay extends TableBase
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean getDayCount(int argHolidayId, MyInt retInt)
@@ -332,13 +332,14 @@ class TableDay extends TableBase
 
             dayItem.pictureChanged=false;
 
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("GetDayItemFromQuery", e.getMessage());
         }
 
-        return true;
+        return (false);
     }
 
     boolean getNextDayId(int holidayId, MyInt retInt)
@@ -455,7 +456,7 @@ class TableDay extends TableBase
         {
             ShowError("getStartEndAt", e.getMessage());
         }
-        return (true);
+        return (false);
     }
 
     private boolean getScheduledTimes(DayItem dayItem)
@@ -523,7 +524,7 @@ class TableDay extends TableBase
         {
             ShowError("GetDayItemFromQuery", e.getMessage());
         }
-        return (true);
+        return (false);
     }
 
     boolean clearNote(int holidayId, int noteId)

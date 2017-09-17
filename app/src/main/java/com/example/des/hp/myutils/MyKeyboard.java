@@ -47,8 +47,8 @@ public class MyKeyboard
         catch(Exception e)
         {
             ShowError("show", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     private boolean hide(Dialog dialog)
@@ -73,8 +73,8 @@ public class MyKeyboard
         catch(Exception e)
         {
             ShowError("hide", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean showNumeric(Dialog dialog, EditText editText)
@@ -91,8 +91,8 @@ public class MyKeyboard
         catch(Exception e)
         {
             ShowError("showNumeric", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean toggle(Dialog dialog)
@@ -117,7 +117,7 @@ public class MyKeyboard
         catch(Exception e)
         {
             ShowError("toggle", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 }

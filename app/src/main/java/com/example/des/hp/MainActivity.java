@@ -124,6 +124,7 @@ public class MainActivity extends BaseActivity
     
     public void handleOrphanedImages()
     {
+        try{
         int lCount=0;
         myMessages().LogMessage("Identifying orphaned images....");
         
@@ -159,9 +160,15 @@ public class MainActivity extends BaseActivity
             }
             myMessages().LogMessage("There are a total of " + String.valueOf(internalFileList.size()) + " and " + String.valueOf(lCount2) + " were orphaned");
 
-
-            myMessages().ShowMessageLong("Images: Orphaned " + String.valueOf(lCount) + ", " + "Total " + String.valueOf(internalImageList.size()) + ", " + "Files: Orphaned " + String.valueOf(lCount2) + ", " + "Total " + String.valueOf(internalFileList.size()) + " ");
+            if(internalImageList!=null)
+                myMessages().ShowMessageLong("Images: Orphaned " + String.valueOf(lCount) + ", " + "Total " + String.valueOf(internalImageList.size()) + ", " + "Files: Orphaned " + String.valueOf(lCount2) + ", " + "Total " + String.valueOf(internalFileList.size()) + " ");
         }
+        }
+        catch(Exception e)
+        {
+            ShowError("handleOrphanedImages", e.getMessage());
+        }
+
     }
     //endregion
     

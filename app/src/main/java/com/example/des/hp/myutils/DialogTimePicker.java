@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.example.des.hp.R;
 
+import static com.example.des.hp.myutils.DateUtils.dateUtils;
+import static com.example.des.hp.myutils.MyApiSpecific.myApiSpecific;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 /**
@@ -71,7 +73,7 @@ public class DialogTimePicker extends Dialog implements android.view.View.OnClic
                 public void onTimeChanged(TimePicker view, int hourOfDay, int minute)
                 {
                     //Display the new time to app interface
-                    if(frmTimePicker.getHour() > 0 || frmTimePicker.getMinute() > 0)
+                    if(myApiSpecific().GetHour(frmTimePicker) > 0 || myApiSpecific().GetMinute(frmTimePicker) > 0)
                     {
                         frmCheckBox.setChecked(true);
                     }
@@ -116,8 +118,10 @@ public class DialogTimePicker extends Dialog implements android.view.View.OnClic
         try
         {
             setTimeText(hour, minute);
-            frmTimePicker.setHour(hour);
-            frmTimePicker.setMinute(minute);
+
+            myApiSpecific().SetHour(frmTimePicker, hour);
+            myApiSpecific().SetMinute(frmTimePicker, minute);
+
             frmTimePicker.refreshDrawableState();
         }
         catch(Exception e)
@@ -139,7 +143,7 @@ public class DialogTimePicker extends Dialog implements android.view.View.OnClic
                         setTimeText(0, 0);
                     } else
                     {
-                        setTimeText(frmTimePicker.getHour(), frmTimePicker.getMinute());
+                        setTimeText(myApiSpecific().GetHour(frmTimePicker), myApiSpecific().GetMinute(frmTimePicker));
                     }
                     chkTimeKnown.setChecked(frmCheckBox.isChecked());
                     dismiss();

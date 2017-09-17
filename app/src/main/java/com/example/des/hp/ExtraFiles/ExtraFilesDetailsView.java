@@ -98,7 +98,7 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
                 SetImage(extraFilesItem.filePicture);
 
                 if(title.length() == 0)
-                    if(extraFilesItem.fileDescription!=null)
+                    if(extraFilesItem.fileDescription != null)
                         SetTitles(extraFilesItem.fileDescription, "");
             }
 
@@ -117,15 +117,23 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
     @Override
     public void onClick(View view)
     {
-        switch(view.getId())
+        try
         {
-            case R.id.imageViewSmall:
-                pickImage(view);
-                break;
-            case R.id.btnFile:
-                ViewFile(view);
-                break;
+            switch(view.getId())
+            {
+                case R.id.imageViewSmall:
+                    pickImage(view);
+                    break;
+                case R.id.btnFile:
+                    ViewFile(view);
+                    break;
+            }
         }
+        catch(Exception e)
+        {
+            ShowError("onClick", e.getMessage());
+        }
+
     }
 
     public boolean onOptionsItemSelected(MenuItem item)

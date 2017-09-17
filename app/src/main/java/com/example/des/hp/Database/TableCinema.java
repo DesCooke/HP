@@ -32,8 +32,8 @@ class TableCinema extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -45,8 +45,8 @@ class TableCinema extends TableBase
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean addCinemaItem(CinemaItem cinemaItem)
@@ -204,13 +204,15 @@ class TableCinema extends TableBase
 
             if(cursor.getCount() == 0)
                 return (false);
+
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("ItemExists(cinema)", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
 }

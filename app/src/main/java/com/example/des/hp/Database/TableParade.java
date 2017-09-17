@@ -32,8 +32,8 @@ class TableParade extends TableBase
         catch(Exception e)
         {
             ShowError("onCreate", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -45,76 +45,112 @@ class TableParade extends TableBase
         catch(Exception e)
         {
             ShowError("onUpgrade", e.getMessage());
-            return (false);
         }
+        return (false);
     }
 
     boolean addParadeItem(ParadeItem paradeItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSql="INSERT INTO parade " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, paradeName, bookingReference) " + "VALUES " + "(" + paradeItem.holidayId + "," + paradeItem.dayId + "," + paradeItem.attractionId + "," + paradeItem.attractionAreaId + "," + paradeItem.scheduleId + "," + MyQuotedString(paradeItem.paradeName) + "," + MyQuotedString(paradeItem.bookingReference) + " " + ")";
+            String lSql="INSERT INTO parade " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, paradeName, bookingReference) " + "VALUES " + "(" + paradeItem.holidayId + "," + paradeItem.dayId + "," + paradeItem.attractionId + "," + paradeItem.attractionAreaId + "," + paradeItem.scheduleId + "," + MyQuotedString(paradeItem.paradeName) + "," + MyQuotedString(paradeItem.bookingReference) + " " + ")";
 
-        return (executeSQL("addParadeItem", lSql));
+            return (executeSQL("addParadeItem", lSql));
+        }
+        catch(Exception e)
+        {
+            ShowError("addParadeItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean updateParadeItem(ParadeItem paradeItem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        if(ItemExists(paradeItem) == false)
+        try
         {
-            return (addParadeItem(paradeItem));
-        }
-        String lSQL;
-        lSQL="UPDATE parade " + "SET paradeName = " + MyQuotedString(paradeItem.paradeName) + ", " + "    bookingReference = " + MyQuotedString(paradeItem.bookingReference) + ", " + "    dayId = " + paradeItem.dayId + ", " + "    attractionId = " + paradeItem.attractionId + ", " + "    attractionAreaId = " + paradeItem.attractionAreaId + ", " + "    scheduleId = " + paradeItem.scheduleId + " " + "WHERE holidayId = " + paradeItem.holidayId + " " + "AND dayId = " + paradeItem.origDayId + " " + "AND attractionId = " + paradeItem.origAttractionId + " " + "AND attractionAreaId = " + paradeItem.origAttractionAreaId + " " + "AND scheduleId = " + paradeItem.origScheduleId;
+            if(IsValid() == false)
+                return (false);
 
-        return (executeSQL("updateParadeItem", lSQL));
+            if(ItemExists(paradeItem) == false)
+            {
+                return (addParadeItem(paradeItem));
+            }
+            String lSQL;
+            lSQL="UPDATE parade " + "SET paradeName = " + MyQuotedString(paradeItem.paradeName) + ", " + "    bookingReference = " + MyQuotedString(paradeItem.bookingReference) + ", " + "    dayId = " + paradeItem.dayId + ", " + "    attractionId = " + paradeItem.attractionId + ", " + "    attractionAreaId = " + paradeItem.attractionAreaId + ", " + "    scheduleId = " + paradeItem.scheduleId + " " + "WHERE holidayId = " + paradeItem.holidayId + " " + "AND dayId = " + paradeItem.origDayId + " " + "AND attractionId = " + paradeItem.origAttractionId + " " + "AND attractionAreaId = " + paradeItem.origAttractionAreaId + " " + "AND scheduleId = " + paradeItem.origScheduleId;
+
+            return (executeSQL("updateParadeItem", lSQL));
+        }
+        catch(Exception e)
+        {
+            ShowError("updateParadeItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean deleteParadeItem(ParadeItem paradeItem)
     {
-        if(IsValid() == false)
-            return (false);
+        try
+        {
+            if(IsValid() == false)
+                return (false);
 
-        String lSQL="DELETE FROM parade " + "WHERE holidayId = " + paradeItem.holidayId + " " + "AND dayId = " + paradeItem.dayId + " " + "AND attractionId = " + paradeItem.attractionId + " " + "AND attractionAreaId = " + paradeItem.attractionAreaId + " " + "AND scheduleId = " + paradeItem.scheduleId;
+            String lSQL="DELETE FROM parade " + "WHERE holidayId = " + paradeItem.holidayId + " " + "AND dayId = " + paradeItem.dayId + " " + "AND attractionId = " + paradeItem.attractionId + " " + "AND attractionAreaId = " + paradeItem.attractionAreaId + " " + "AND scheduleId = " + paradeItem.scheduleId;
 
-        if(executeSQL("deleteParadeItem", lSQL) == false)
-            return (false);
+            if(executeSQL("deleteParadeItem", lSQL) == false)
+                return (false);
 
-        return (true);
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteParadeItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     boolean getParadeItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, ParadeItem litem)
     {
-        if(IsValid() == false)
-            return (false);
-
-        litem.holidayId=holidayId;
-        litem.dayId=dayId;
-        litem.attractionId=attractionId;
-        litem.attractionAreaId=attractionAreaId;
-        litem.scheduleId=scheduleId;
-        litem.origHolidayId=holidayId;
-        litem.origDayId=dayId;
-        litem.origAttractionId=attractionId;
-        litem.origAttractionAreaId=attractionAreaId;
-        litem.origScheduleId=scheduleId;
-
-        String lSQL;
-        lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, paradeName, bookingReference " + "FROM Parade " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
-
-        Cursor cursor=executeSQLOpenCursor("getParadeItem", lSQL);
-        if(cursor != null)
+        try
         {
-            cursor.moveToFirst();
-            if(GetParadeItemFromQuery(cursor, litem) == false)
+            if(IsValid() == false)
                 return (false);
+
+            litem.holidayId=holidayId;
+            litem.dayId=dayId;
+            litem.attractionId=attractionId;
+            litem.attractionAreaId=attractionAreaId;
+            litem.scheduleId=scheduleId;
+            litem.origHolidayId=holidayId;
+            litem.origDayId=dayId;
+            litem.origAttractionId=attractionId;
+            litem.origAttractionAreaId=attractionAreaId;
+            litem.origScheduleId=scheduleId;
+
+            String lSQL;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "  scheduleId, paradeName, bookingReference " + "FROM Parade " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
+
+            Cursor cursor=executeSQLOpenCursor("getParadeItem", lSQL);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                if(GetParadeItemFromQuery(cursor, litem) == false)
+                    return (false);
+            }
+            executeSQLCloseCursor("getParadeItem");
+            return (true);
         }
-        executeSQLCloseCursor("getParadeItem");
-        return (true);
+        catch(Exception e)
+        {
+            ShowError("getParadeItem", e.getMessage());
+        }
+        return (false);
+
     }
 
     private boolean GetParadeItemFromQuery(Cursor cursor, ParadeItem paradeItem)
@@ -142,13 +178,14 @@ class TableParade extends TableBase
             paradeItem.origScheduleId=paradeItem.scheduleId;
             paradeItem.origParadeName=paradeItem.paradeName;
             paradeItem.origBookingReference=paradeItem.bookingReference;
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("GetParadeItemFromQuery", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
     private boolean ItemExists(ParadeItem litem)
@@ -166,13 +203,14 @@ class TableParade extends TableBase
 
             if(cursor.getCount() == 0)
                 return (false);
+            return (true);
         }
         catch(Exception e)
         {
             ShowError("ItemExists(parade)", e.getMessage());
         }
 
-        return (true);
+        return (false);
     }
 
 }
