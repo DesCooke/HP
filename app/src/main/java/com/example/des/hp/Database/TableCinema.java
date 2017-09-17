@@ -215,4 +215,29 @@ class TableCinema extends TableBase
         return (false);
     }
 
+    boolean createSample(int lHolidayId, int lDayId, int lAttractionId, int lAttractionAreaId, int lScheduleId)
+    {
+        try
+        {
+            CinemaItem item=new CinemaItem();
+
+            item.holidayId=lHolidayId;
+            item.dayId=lDayId;
+            item.attractionId=lAttractionId;
+            item.attractionAreaId=lAttractionAreaId;
+            item.scheduleId=lScheduleId;
+            item.bookingReference="Test Booking Ref";
+
+            if(!addCinemaItem(item))
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("createSample", e.getMessage());
+        }
+        return (false);
+    }
+
 }

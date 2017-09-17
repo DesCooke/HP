@@ -6,6 +6,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionItem;
+import com.example.des.hp.Schedule.ScheduleItem;
+import com.example.des.hp.myutils.MyInt;
+
+import java.util.Random;
+
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 class TableGeneralAttraction extends TableBase
 {
@@ -222,5 +228,32 @@ class TableGeneralAttraction extends TableBase
         return (false);
     }
 
+    boolean createSample(int lHolidayId, int lDayId, int lAttractionId, int lAttractionAreaId, int lScheduleId)
+    {
+        try
+        {
+            GeneralAttractionItem item=new GeneralAttractionItem();
+
+            item.holidayId=lHolidayId;
+            item.dayId=lDayId;
+            item.attractionId=lAttractionId;
+            item.attractionAreaId=lAttractionAreaId;
+            item.scheduleId=lScheduleId;
+
+            Random random=new Random();
+            item.heartRating=random.nextFloat() * 5;
+            item.scenicRating=random.nextFloat() * 5;
+            item.thrillRating=random.nextFloat() * 5;
+            if(!addGeneralAttractionItem(item))
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("createSample", e.getMessage());
+        }
+        return (false);
+    }
 
 }
