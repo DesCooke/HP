@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Schedule.Restaurant.RestaurantItem;
 
+import java.util.Random;
+
 class TableRestaurant extends TableBase
 {
     TableRestaurant(Context context, SQLiteOpenHelper dbHelper)
@@ -221,4 +223,31 @@ class TableRestaurant extends TableBase
         return (false);
     }
 
+    boolean createSample(int lHolidayId, int lDayId, int lAttractionId, int lAttractionAreaId, int lScheduleId)
+    {
+        try
+        {
+            RestaurantItem item=new RestaurantItem();
+
+            item.holidayId=lHolidayId;
+            item.dayId=lDayId;
+            item.attractionId=lAttractionId;
+            item.attractionAreaId=lAttractionAreaId;
+            item.scheduleId=lScheduleId;
+
+            Random random=new Random();
+            item.reservationType = random.nextInt(4);
+            if(!addRestaurantItem(item))
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("createSample", e.getMessage());
+        }
+        return (false);
+    }
+
+    
 }

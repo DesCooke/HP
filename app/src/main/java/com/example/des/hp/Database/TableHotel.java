@@ -212,4 +212,30 @@ class TableHotel extends TableBase
 
         return (false);
     }
+
+    boolean createSample(int lHolidayId, int lDayId, int lAttractionId, int lAttractionAreaId, int lScheduleId)
+    {
+        try
+        {
+            HotelItem item=new HotelItem();
+
+            item.holidayId=lHolidayId;
+            item.dayId=lDayId;
+            item.attractionId=lAttractionId;
+            item.attractionAreaId=lAttractionAreaId;
+            item.scheduleId=lScheduleId;
+
+            if(!addHotelItem(item))
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("createSample", e.getMessage());
+        }
+        return (false);
+    }
+
+    
 }

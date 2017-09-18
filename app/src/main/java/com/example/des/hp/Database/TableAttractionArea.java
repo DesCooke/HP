@@ -10,7 +10,9 @@ import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
+import java.util.Random;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 class TableAttractionArea extends TableBase
@@ -385,4 +387,101 @@ class TableAttractionArea extends TableBase
 
     }
 
+    boolean createSample(int lHolidayId, int lAttractionId, MyInt myInt, boolean info, boolean notes, boolean picture)
+    {
+        try
+        {
+            int noteId=0;
+            MyInt noteMyInt=new MyInt();
+            MyInt seqNoMyInt=new MyInt();
+
+            AttractionAreaItem item=new AttractionAreaItem();
+
+            if(!getNextAttractionAreaId(lHolidayId, lAttractionId, myInt))
+                return (false);
+            item.holidayId=lHolidayId;
+            item.attractionId=lAttractionId;
+            item.attractionAreaId=myInt.Value;
+            
+            if(!getNextAttractionAreaSequenceNo(lHolidayId, lAttractionId, seqNoMyInt))
+                return(false);
+            item.sequenceNo= seqNoMyInt.Value;
+            item.attractionAreaDescription=randomAttractionAreaDescription();
+
+            item.infoId=0;
+            if(info)
+            {
+                MyInt infoIdMyInt=new MyInt();
+                if(!databaseAccess().createSampleExtraFileGroup(infoIdMyInt))
+                    return (false);
+                item.infoId=infoIdMyInt.Value;
+            }
+
+            if(notes)
+            {
+                if(!databaseAccess().createSampleNote(item.holidayId, noteMyInt))
+                    return (false);
+                item.noteId=noteMyInt.Value;
+            }
+            item.galleryId=0;
+            item.sygicId=0;
+            item.attractionAreaPicture="";
+            item.fileBitmap=null;
+            item.pictureAssigned=false;
+            if(picture)
+            {
+                item.fileBitmap=null;
+                item.attractionAreaPicture=randomPictureName();
+                item.pictureAssigned=true;
+            }
+
+            if(!addAttractionAreaItem(item))
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("createSample", e.getMessage());
+        }
+        return (false);
+    }
+
+    private String randomAttractionAreaDescription()
+    {
+        try
+        {
+            Random random=new Random();
+            int i=random.nextInt(10);
+            switch(i)
+            {
+                case 0:
+                    return ("FantasyLand");
+                case 1:
+                    return ("Harry Potter Land");
+                case 2:
+                    return ("Future World");
+                case 3:
+                    return ("Main Street USA");
+                case 4:
+                    return ("TomorrowLand");
+                case 5:
+                    return ("Frontierland");
+                case 6:
+                    return ("Liberty Square");
+                case 7:
+                    return ("Adventure Land");
+                case 8:
+                    return ("Coco Beach");
+            }
+            return ("Spare Area");
+        }
+        catch(Exception e)
+        {
+            ShowError("randomAttractionAreaDescription", e.getMessage());
+        }
+        return ("Spare Day");
+
+    }
+    
 }

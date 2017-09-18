@@ -42,6 +42,12 @@ public class AttractionAreaItem
 
     public AttractionAreaItem()
     {
+        attractionAreaDescription="";
+        attractionAreaPicture="";
+        attractionAreaNotes="";
+        origAttractionAreaDescription="";
+        origAttractionAreaPicture="";
+        origAttractionAreaNotes="";
     }
 
 }

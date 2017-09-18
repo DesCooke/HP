@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.des.hp.Schedule.Cinema.CinemaItem;
 import com.example.des.hp.Schedule.Other.OtherItem;
 
 class TableOther extends TableBase
@@ -212,4 +213,30 @@ class TableOther extends TableBase
         return (false);
     }
 
+    boolean createSample(int lHolidayId, int lDayId, int lAttractionId, int lAttractionAreaId, int lScheduleId)
+    {
+        try
+        {
+            OtherItem item=new OtherItem();
+
+            item.holidayId=lHolidayId;
+            item.dayId=lDayId;
+            item.attractionId=lAttractionId;
+            item.attractionAreaId=lAttractionAreaId;
+            item.scheduleId=lScheduleId;
+            item.bookingReference="Test Booking Ref";
+
+            if(!addOtherItem(item))
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("createSample", e.getMessage());
+        }
+        return (false);
+    }
+
+    
 }

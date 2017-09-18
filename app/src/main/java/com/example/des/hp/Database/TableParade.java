@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Schedule.Parade.ParadeItem;
 
+import java.util.Random;
+
 class TableParade extends TableBase
 {
     TableParade(Context context, SQLiteOpenHelper dbHelper)
@@ -213,4 +215,29 @@ class TableParade extends TableBase
         return (false);
     }
 
+    boolean createSample(int lHolidayId, int lDayId, int lAttractionId, int lAttractionAreaId, int lScheduleId)
+    {
+        try
+        {
+            ParadeItem item=new ParadeItem();
+
+            item.holidayId=lHolidayId;
+            item.dayId=lDayId;
+            item.attractionId=lAttractionId;
+            item.attractionAreaId=lAttractionAreaId;
+            item.scheduleId=lScheduleId;
+
+            if(!addParadeItem(item))
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("createSample", e.getMessage());
+        }
+        return (false);
+    }
+
+    
 }

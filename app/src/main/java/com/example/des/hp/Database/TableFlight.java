@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Schedule.Flight.FlightItem;
 
+import java.util.Random;
+
 class TableFlight extends TableBase
 {
     TableFlight(Context context, SQLiteOpenHelper dbHelper)
@@ -222,4 +224,68 @@ class TableFlight extends TableBase
         return (false);
     }
 
+    String randomTerminal()
+    {
+        Random random = new Random();
+        return(String.valueOf(random.nextInt(5)+1));
+    }
+    
+    String randomFlightNo()
+    {
+        Random random = new Random();
+        char l1 = (char)(random.nextInt(26) + 'A');
+        char l2 = (char)(random.nextInt(26) + 'A');
+        char l3 = (char)(random.nextInt(10) + '0');
+        char l4 = (char)(random.nextInt(10) + '0');
+        char l5 = (char)(random.nextInt(10) + '0');
+        
+        StringBuilder sb=new StringBuilder();
+        sb.append(l1);
+        sb.append(l2);
+        sb.append(l3);
+        sb.append(l4);
+        sb.append(l5);
+        return(sb.toString());
+    }
+    
+    boolean createSample(int lHolidayId, int lDayId, int lAttractionId, int lAttractionAreaId, int lScheduleId)
+    {
+        try
+        {
+            FlightItem item=new FlightItem();
+
+            item.holidayId=lHolidayId;
+            item.dayId=lDayId;
+            item.attractionId=lAttractionId;
+            item.attractionAreaId=lAttractionAreaId;
+            item.scheduleId=lScheduleId;
+            item.bookingReference="Test Booking Ref";
+            item.flightNo=randomFlightNo();
+            item.terminal=randomTerminal();
+            Random random = new Random();
+            if(random.nextInt(10)<5)
+            {
+                item.departsKnown=false;
+                item.departsHour=0;
+                item.departsMin=0;
+            }
+            else
+            {
+                item.departsKnown = true;
+                item.departsHour = random.nextInt(23);
+                item.departsMin = random.nextInt(60);
+            }
+            
+            if(!addFlightItem(item))
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("createSample", e.getMessage());
+        }
+        return (false);
+    }
+    
 }

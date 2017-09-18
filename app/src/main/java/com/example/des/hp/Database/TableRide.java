@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Schedule.Ride.RideItem;
 
+import java.util.Random;
+
 class TableRide extends TableBase
 {
     TableRide(Context context, SQLiteOpenHelper dbHelper)
@@ -220,4 +222,33 @@ class TableRide extends TableBase
         return (false);
     }
 
+    boolean createSample(int lHolidayId, int lDayId, int lAttractionId, int lAttractionAreaId, int lScheduleId)
+    {
+        try
+        {
+            RideItem item=new RideItem();
+
+            item.holidayId=lHolidayId;
+            item.dayId=lDayId;
+            item.attractionId=lAttractionId;
+            item.attractionAreaId=lAttractionAreaId;
+            item.scheduleId=lScheduleId;
+
+            Random random=new Random();
+            item.heartRating=random.nextFloat() * 5;
+            item.scenicRating=random.nextFloat() * 5;
+            item.thrillRating=random.nextFloat() * 5;
+            if(!addRideItem(item))
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("createSample", e.getMessage());
+        }
+        return (false);
+    }
+
+    
 }

@@ -40,6 +40,12 @@ public class AttractionItem
     
     public AttractionItem()
     {
+        attractionDescription="";
+        attractionNotes="";
+        attractionPicture="";
+        origAttractionDescription="";
+        origAttractionNotes="";
+        origAttractionPicture="";
     }
     
 }
