@@ -11,7 +11,9 @@ import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
+import java.util.Random;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 class TableTipGroup extends TableBase
@@ -410,4 +412,94 @@ class TableTipGroup extends TableBase
         return (false);
     }
 
+    boolean createSample(int lHolidayId, MyInt myInt, boolean info, boolean notes, boolean picture)
+    {
+        try
+        {
+            int noteId=0;
+            MyInt noteMyInt=new MyInt();
+            MyInt seqNoMyInt=new MyInt();
+
+            TipGroupItem item=new TipGroupItem();
+
+            if(!getNextTipGroupId(lHolidayId, myInt))
+                return (false);
+            item.holidayId=lHolidayId;
+            item.tipGroupId=myInt.Value;
+            if(!getNextTipGroupSequenceNo(lHolidayId, seqNoMyInt))
+                return(false);
+            item.sequenceNo= seqNoMyInt.Value;
+            item.tipGroupDescription=randomTipGroupDescription();
+            item.tipGroupNotes="";
+
+            item.infoId=0;
+            if(info)
+            {
+                MyInt infoIdMyInt=new MyInt();
+                if(!databaseAccess().createSampleExtraFileGroup(infoIdMyInt))
+                    return (false);
+                item.infoId=infoIdMyInt.Value;
+            }
+
+            if(notes)
+            {
+                if(!databaseAccess().createSampleNote(item.holidayId, noteMyInt))
+                    return (false);
+                item.noteId=noteMyInt.Value;
+            }
+            item.galleryId=0;
+            item.sygicId=0;
+            item.tipGroupPicture="";
+            item.fileBitmap=null;
+            item.pictureAssigned=false;
+            if(picture)
+            {
+                item.fileBitmap=null;
+                item.tipGroupPicture=randomPictureName();
+                item.pictureAssigned=true;
+            }
+
+            if(!addTipGroupItem(item))
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("createSample", e.getMessage());
+        }
+        return (false);
+    }
+
+    private String randomTipGroupDescription()
+    {
+        try
+        {
+            Random random=new Random();
+            int i=random.nextInt(6);
+            switch(i)
+            {
+                case 0:
+                    return ("Car Tips");
+                case 1:
+                    return ("Villa Tips");
+                case 2:
+                    return ("General Tips");
+                case 3:
+                    return ("Food Tips");
+                case 4:
+                    return ("Money Tips");
+                case 5:
+                    return ("Ticket Tips");
+            }
+            return ("Packing Tips");
+        }
+        catch(Exception e)
+        {
+            ShowError("randomTipGroupDescription", e.getMessage());
+        }
+        return ("Packing Tips");
+
+    }
+    
 }

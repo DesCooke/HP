@@ -70,7 +70,7 @@ public class HolidayDetailsView extends BaseActivity
 
             context=this;
 
-            imageView=(ImageView) findViewById(R.id.imageView);
+            imageView=(ImageView) findViewById(R.id.imageViewSmall);
             txtStartDate=(TextView) findViewById(R.id.txtStartDate);
             grpStartDate=(LinearLayout) findViewById(R.id.grpStartDate);
             btnShowItinerary=(ImageButton) findViewById(R.id.btnShowItinerary);

@@ -12,6 +12,7 @@ import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 class TableTip extends TableBase
@@ -430,6 +431,67 @@ class TableTip extends TableBase
         catch(Exception e)
         {
             ShowError("clearNote", e.getMessage());
+        }
+        return (false);
+    }
+
+    boolean createSample(int lHolidayId, int lTipGroupId, boolean info, boolean notes, boolean picture)
+    {
+        try
+        {
+            int noteId=0;
+            MyInt noteMyInt=new MyInt();
+            MyInt seqNoMyInt=new MyInt();
+            MyInt tipIdMyInt = new MyInt();
+
+            TipItem item=new TipItem();
+
+            if(!getNextTipId(lHolidayId, lTipGroupId, tipIdMyInt))
+                return (false);
+            item.holidayId=lHolidayId;
+            item.tipGroupId=lTipGroupId;
+            item.tipId = tipIdMyInt.Value;
+            if(!getNextTipSequenceNo(lHolidayId, lTipGroupId, seqNoMyInt))
+                return(false);
+            item.sequenceNo= seqNoMyInt.Value;
+            item.tipDescription="Test Tip";
+            item.tipNotes="";
+
+            item.infoId=0;
+            if(info)
+            {
+                MyInt infoIdMyInt=new MyInt();
+                if(!databaseAccess().createSampleExtraFileGroup(infoIdMyInt))
+                    return (false);
+                item.infoId=infoIdMyInt.Value;
+            }
+
+            if(notes)
+            {
+                if(!databaseAccess().createSampleNote(item.holidayId, noteMyInt))
+                    return (false);
+                item.noteId=noteMyInt.Value;
+            }
+            item.galleryId=0;
+            item.sygicId=0;
+            item.tipPicture="";
+            item.fileBitmap=null;
+            item.pictureAssigned=false;
+            if(picture)
+            {
+                item.fileBitmap=null;
+                item.tipPicture=randomPictureName();
+                item.pictureAssigned=true;
+            }
+
+            if(!addTipItem(item))
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("createSample", e.getMessage());
         }
         return (false);
     }

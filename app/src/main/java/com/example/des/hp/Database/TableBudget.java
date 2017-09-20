@@ -11,7 +11,9 @@ import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
+import java.util.Random;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 class TableBudget extends TableBase
@@ -482,4 +484,102 @@ class TableBudget extends TableBase
 
     }
 
+    boolean createSample(int lHolidayId,  boolean info, boolean notes, boolean picture)
+    {
+        try
+        {
+            int noteId=0;
+            Random random = new Random();
+            MyInt noteMyInt=new MyInt();
+            MyInt seqNoMyInt=new MyInt();
+            MyInt budgetIdMyInt = new MyInt();
+
+            BudgetItem item=new BudgetItem();
+
+            if(!getNextBudgetId(lHolidayId, budgetIdMyInt))
+                return (false);
+            item.holidayId=lHolidayId;
+            item.budgetId=budgetIdMyInt.Value;
+            if(!getNextBudgetSequenceNo(lHolidayId, seqNoMyInt))
+                return(false);
+            item.sequenceNo= seqNoMyInt.Value;
+            item.budgetDescription=randomBudgetDescription();
+
+            item.infoId=0;
+            if(info)
+            {
+                MyInt infoIdMyInt=new MyInt();
+                if(!databaseAccess().createSampleExtraFileGroup(infoIdMyInt))
+                    return (false);
+                item.infoId=infoIdMyInt.Value;
+            }
+
+            if(notes)
+            {
+                if(!databaseAccess().createSampleNote(item.holidayId, noteMyInt))
+                    return (false);
+                item.noteId=noteMyInt.Value;
+            }
+            item.galleryId=0;
+            item.sygicId=0;
+            item.budgetPicture="";
+            item.fileBitmap=null;
+            item.pictureAssigned=false;
+            if(picture)
+            {
+                item.fileBitmap=null;
+                item.budgetPicture=randomPictureName();
+                item.pictureAssigned=true;
+            }
+            
+            item.budgetPaid = random.nextInt(250);
+            item.budgetUnpaid = random.nextInt(250);
+            item.budgetTotal = item.budgetPaid + item.budgetUnpaid;
+
+            if(!addBudgetItem(item))
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("createSample", e.getMessage());
+        }
+        return (false);
+    }
+    private String randomBudgetDescription()
+    {
+        try
+        {
+            Random random=new Random();
+            int i=random.nextInt(7);
+            switch(i)
+            {
+                case 0:
+                    return ("Villa");
+                case 1:
+                    return ("Park Tickets");
+                case 2:
+                    return ("Flight");
+                case 3:
+                    return ("VIP Room");
+                case 4:
+                    return ("Special Event");
+                case 5:
+                    return ("Cruise");
+                case 6:
+                    return ("Photo Pass");
+            }
+            return ("Photo Pass");
+        }
+        catch(Exception e)
+        {
+            ShowError("randomBudgetDescription", e.getMessage());
+        }
+        return ("Photo Pass");
+
+    }
+
+
+    
 }

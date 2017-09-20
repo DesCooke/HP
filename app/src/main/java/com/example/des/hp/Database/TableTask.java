@@ -11,7 +11,9 @@ import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
+import java.util.Random;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 class TableTask extends TableBase
@@ -471,4 +473,111 @@ class TableTask extends TableBase
         return (false);
     }
 
+    boolean createSample(int lHolidayId,  boolean info, boolean notes, boolean picture, boolean dateKnown, boolean complete)
+    {
+        try
+        {
+            int noteId=0;
+            MyInt noteMyInt=new MyInt();
+            MyInt seqNoMyInt=new MyInt();
+            MyInt taskIdMyInt = new MyInt();
+
+            TaskItem item=new TaskItem();
+
+            if(!getNextTaskId(lHolidayId, taskIdMyInt))
+                return (false);
+            item.holidayId=lHolidayId;
+            item.taskId=taskIdMyInt.Value;
+            if(!getNextSequenceNo(lHolidayId, seqNoMyInt))
+                return(false);
+            item.sequenceNo= seqNoMyInt.Value;
+            item.taskDescription=randomTaskDescription();
+
+            item.infoId=0;
+            if(info)
+            {
+                MyInt infoIdMyInt=new MyInt();
+                if(!databaseAccess().createSampleExtraFileGroup(infoIdMyInt))
+                    return (false);
+                item.infoId=infoIdMyInt.Value;
+            }
+
+            if(notes)
+            {
+                if(!databaseAccess().createSampleNote(item.holidayId, noteMyInt))
+                    return (false);
+                item.noteId=noteMyInt.Value;
+            }
+            item.galleryId=0;
+            item.sygicId=0;
+            item.taskPicture="";
+            item.fileBitmap=null;
+            item.pictureAssigned=false;
+            if(picture)
+            {
+                item.fileBitmap=null;
+                item.taskPicture=randomPictureName();
+                item.pictureAssigned=true;
+            }
+            item.taskDateKnown=dateKnown;
+            if(dateKnown)
+            {
+                item.taskDateInt=randomDateInt();
+            }
+            else
+            {
+                item.taskDateInt=DateUtils.unknownDate;
+            }
+            item.taskComplete = complete;
+            
+            if(!addTaskItem(item))
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("createSample", e.getMessage());
+        }
+        return (false);
+    }
+    private String randomTaskDescription()
+    {
+        try
+        {
+            Random random=new Random();
+            int i=random.nextInt(10);
+            switch(i)
+            {
+                case 0:
+                    return ("Change Currency");
+                case 1:
+                    return ("Get Park Tickets");
+                case 2:
+                    return ("Book Cinema");
+                case 3:
+                    return ("Checkin");
+                case 4:
+                    return ("Check Park Times");
+                case 5:
+                    return ("Book Holiday");
+                case 6:
+                    return ("Check Passport");
+                case 7:
+                    return ("Check Parade Times");
+                case 8:
+                    return ("Book Time Off");
+            }
+            return ("Book VIP Room");
+        }
+        catch(Exception e)
+        {
+            ShowError("randomTaskDescription", e.getMessage());
+        }
+        return ("Spare Day");
+
+    }
+
+
+    
 }

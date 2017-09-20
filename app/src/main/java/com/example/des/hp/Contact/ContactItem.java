@@ -40,6 +40,12 @@ public class ContactItem
 
     public ContactItem()
     {
+        contactDescription="";
+        contactPicture="";
+        contactNotes="";
+        origContactDescription="";
+        origContactPicture="";
+        origContactNotes="";
     }
 
 }

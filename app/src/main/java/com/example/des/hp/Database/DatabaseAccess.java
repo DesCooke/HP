@@ -326,7 +326,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
         }
         return (false);
     }
-
+    
     private boolean createAttractions(int lHolidayId)
     {
         try
@@ -348,11 +348,137 @@ public class DatabaseAccess extends SQLiteOpenHelper
         }
         catch (Exception e)
         {
-            ShowError("createDays", e.getMessage());
+            ShowError("createAttractions", e.getMessage());
+        }
+        return (false);
+    }
+
+    private boolean createTips(int lHolidayId)
+    {
+        try
+        {
+            Random random = new Random();
+            int lCount = random.nextInt(4) + 4;
+            for (int i = 0; i < lCount; i++)
+            {
+                int lFlags = random.nextInt(8);
+                
+                boolean lFirstFlag = (lFlags & 1) == 1;
+                boolean lSecondFlag = (lFlags & 2) == 2;
+                boolean lThirdFlag = (lFlags & 4) == 4;
+                
+                if (!createTipGroup(lHolidayId, lFirstFlag, lSecondFlag, lThirdFlag))
+                    return (false);
+            }
+            return (true);
+        }
+        catch (Exception e)
+        {
+            ShowError("createTips", e.getMessage());
         }
         return (false);
     }
     
+    
+    private boolean createMaps(int lHolidayId)
+    {
+        try
+        {
+            HolidayItem lHolidayItem = new HolidayItem();
+            if (!tableHoliday.getHolidayItem(lHolidayId, lHolidayItem))
+                return (false);
+            
+            MyInt mapGroupIdMyInt = new MyInt();
+            if (!databaseAccess().createSampleExtraFileGroup(mapGroupIdMyInt))
+                return (false);
+            lHolidayItem.mapFileGroupId = mapGroupIdMyInt.Value;
+            tableHoliday.updateHolidayItem(lHolidayItem);
+
+            return (true);
+        }
+        catch (Exception e)
+        {
+            ShowError("createMaps", e.getMessage());
+        }
+        return (false);
+    }
+    
+    private boolean createTasks(int lHolidayId)
+    {
+        try
+        {
+            Random random = new Random();
+            int lCount = random.nextInt(12)+5;
+            for(int i=0;i<lCount;i++)
+            {
+                int lFlags = random.nextInt(32);
+                boolean lFirst = (lFlags & 1) == 1;
+                boolean lSecond = (lFlags & 2) == 2;
+                boolean lThird = (lFlags & 4) == 4;
+                boolean lFourth = (lFlags & 8) == 8;
+                boolean lFifth = (lFlags & 16) == 16;
+                
+                if (!tableTask.createSample(lHolidayId, lFirst, lSecond, lThird, lFourth, lFifth))
+                    return (false);
+            }
+            return (true);
+        }
+        catch (Exception e)
+        {
+            ShowError("createTasks", e.getMessage());
+        }
+        return (false);
+    }
+    
+    private boolean createBudget(int lHolidayId)
+    {
+        try
+        {
+            Random random = new Random();
+            int lCount = random.nextInt(12)+5;
+            for(int i=0;i<lCount;i++)
+            {
+                int lFlags = random.nextInt(8);
+                boolean lFirst = (lFlags & 1) == 1;
+                boolean lSecond = (lFlags & 2) == 2;
+                boolean lThird = (lFlags & 4) == 4;
+                
+                if (!tableBudget.createSample(lHolidayId, lFirst, lSecond, lThird))
+                    return (false);
+            }
+            return (true);
+        }
+        catch (Exception e)
+        {
+            ShowError("createBudget", e.getMessage());
+        }
+        return (false);
+    }
+    
+    private boolean createContacts(int lHolidayId)
+    {
+        try
+        {
+            Random random = new Random();
+            int lCount = random.nextInt(12)+5;
+            for(int i=0;i<lCount;i++)
+            {
+                int lFlags = random.nextInt(8);
+                boolean lFirst = (lFlags & 1) == 1;
+                boolean lSecond = (lFlags & 2) == 2;
+                boolean lThird = (lFlags & 4) == 4;
+                
+                if (!tableContact.createSample(lHolidayId, lFirst, lSecond, lThird))
+                    return (false);
+            }
+            return (true);
+        }
+        catch (Exception e)
+        {
+            ShowError("createContacts", e.getMessage());
+        }
+        return (false);
+    }
     
     private boolean createGeneralAttraction(int lHolidayId, int lDayId, int lAttractionId, int lAttractionAreaId)
     {
@@ -480,7 +606,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
         }
         return (false);
     }
-
+    
     private boolean createOther(int lHolidayId, int lDayId, int lAttractionId, int lAttractionAreaId)
     {
         try
@@ -544,7 +670,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
         }
         return (false);
     }
-
+    
     private boolean createPark(int lHolidayId, int lDayId, int lAttractionId, int lAttractionAreaId)
     {
         try
@@ -705,7 +831,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
         return (false);
     }
     
-
+    
     private boolean createDay(int lHolidayId, boolean info, boolean notes, boolean picture)
     {
         try
@@ -776,7 +902,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
         }
         return (false);
     }
-
+    
     private boolean createAttractionGroup(int lHolidayId, boolean info, boolean notes, boolean picture)
     {
         try
@@ -787,17 +913,10 @@ public class DatabaseAccess extends SQLiteOpenHelper
             int lAttractionId = myInt.Value;
             
             Random random = new Random();
-            for(int i=0;i<random.nextInt(4)+2; i++)
+            for (int i = 0; i < random.nextInt(4) + 2; i++)
             {
-                int lFlags = random.nextInt(8);
-                
-                boolean lFirstFlag = (lFlags & 1) == 1;
-                boolean lSecondFlag = (lFlags & 2) == 2;
-                boolean lThirdFlag = (lFlags & 4) == 4;
-
-                if (!tableAttractionArea.createSample(lHolidayId, lAttractionId, myInt, lFirstFlag, lSecondFlag, lThirdFlag))
+                if (!createAttractionArea(lHolidayId, lAttractionId))
                     return (false);
-                int lAttractionAreaId = myInt.Value;
             }
             
             return (true);
@@ -805,6 +924,136 @@ public class DatabaseAccess extends SQLiteOpenHelper
         catch (Exception e)
         {
             ShowError("createAttractionGroup", e.getMessage());
+        }
+        return (false);
+    }
+    
+    private boolean createTipGroup(int lHolidayId, boolean info, boolean notes, boolean picture)
+    {
+        try
+        {
+            HolidayItem lHolidayItem=new HolidayItem();
+            
+            if(!getHolidayItem(lHolidayId, lHolidayItem))
+                return(false);
+            
+            MyInt myInt = new MyInt();
+            if (!tableTipGroup.createSample(lHolidayId, myInt, info, notes, picture))
+                return (false);
+            int lTipGroupId = myInt.Value;
+
+            Random random = new Random();
+            for (int i = 0; i < random.nextInt(4) + 2; i++)
+            {
+                if (!createTip(lHolidayId, lTipGroupId))
+                    return (false);
+            }
+  
+            return (true);
+        }
+        catch (Exception e)
+        {
+            ShowError("createTipGroup", e.getMessage());
+        }
+        return (false);
+    }
+    
+    private boolean createAttractionArea(int lHolidayId, int lAttractionId)
+    {
+        try
+        {
+            Random random = new Random();
+            MyInt myInt = new MyInt();
+            int lFlags = random.nextInt(8);
+            
+            boolean lFirstFlag = (lFlags & 1) == 1;
+            boolean lSecondFlag = (lFlags & 2) == 2;
+            boolean lThirdFlag = (lFlags & 4) == 4;
+            
+            if (!tableAttractionArea.createSample(lHolidayId, lAttractionId, myInt, lFirstFlag, lSecondFlag, lThirdFlag))
+                return (false);
+            
+            int lAttractionAreaId = myInt.Value;
+            for (int i = 0; i < random.nextInt(4) + 2; i++)
+            {
+                int lAttraction = random.nextInt(11);
+                switch (lAttraction)
+                {
+                    case 0:
+                        if (!createGeneralAttraction(lHolidayId, 0, lAttractionId, lAttractionAreaId))
+                            return (false);
+                        break;
+                    case 1:
+                        if (!createBus(lHolidayId, 0, lAttractionId, lAttractionAreaId))
+                            return (false);
+                        break;
+                    case 2:
+                        if (!createCinema(lHolidayId, 0, lAttractionId, lAttractionAreaId))
+                            return (false);
+                        break;
+                    case 3:
+                        if (!createFlight(lHolidayId, 0, lAttractionId, lAttractionAreaId))
+                            return (false);
+                        break;
+                    case 4:
+                        if (!createHotel(lHolidayId, 0, lAttractionId, lAttractionAreaId))
+                            return (false);
+                        break;
+                    case 5:
+                        if (!createOther(lHolidayId, 0, lAttractionId, lAttractionAreaId))
+                            return (false);
+                        break;
+                    case 6:
+                        if (!createParade(lHolidayId, 0, lAttractionId, lAttractionAreaId))
+                            return (false);
+                        break;
+                    case 7:
+                        if (!createPark(lHolidayId, 0, lAttractionId, lAttractionAreaId))
+                            return (false);
+                        break;
+                    case 8:
+                        if (!createRestaurant(lHolidayId, 0, lAttractionId, lAttractionAreaId))
+                            return (false);
+                        break;
+                    case 9:
+                        if (!createRide(lHolidayId, 0, lAttractionId, lAttractionAreaId))
+                            return (false);
+                        break;
+                    case 10:
+                        if (!createShow(lHolidayId, 0, lAttractionId, lAttractionAreaId))
+                            return (false);
+                        break;
+                }
+            }
+            return (true);
+        }
+        catch (Exception e)
+        {
+            ShowError("createAttractionArea", e.getMessage());
+        }
+        return (false);
+    }
+    
+    private boolean createTip(int lHolidayId, int lTipGroupId)
+    {
+        try
+        {
+            Random random = new Random();
+            MyInt myInt = new MyInt();
+            int lFlags = random.nextInt(8);
+            
+            boolean lFirstFlag = (lFlags & 1) == 1;
+            boolean lSecondFlag = (lFlags & 2) == 2;
+            boolean lThirdFlag = (lFlags & 4) == 4;
+            
+            if (!tableTip.createSample(lHolidayId, lTipGroupId, lFirstFlag, lSecondFlag, lThirdFlag))
+                return (false);
+            
+            return (true);
+        }
+        catch (Exception e)
+        {
+            ShowError("createAttractionArea", e.getMessage());
         }
         return (false);
     }
@@ -820,8 +1069,23 @@ public class DatabaseAccess extends SQLiteOpenHelper
             
             if (!createDays(lHolidayId))
                 return (false);
-
+            
             if (!createAttractions(lHolidayId))
+                return (false);
+            
+            if (!createMaps(lHolidayId))
+                return (false);
+            
+            if (!createTasks(lHolidayId))
+                return (false);
+
+            if (!createTips(lHolidayId))
+                return (false);
+
+            if (!createBudget(lHolidayId))
+                return (false);
+
+            if (!createContacts(lHolidayId))
                 return (false);
 
             return (true);

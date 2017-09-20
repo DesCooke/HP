@@ -10,7 +10,9 @@ import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
+import java.util.Random;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 class TableContact extends TableBase
@@ -91,13 +93,31 @@ class TableContact extends TableBase
             if(IsValid() == false)
                 return (false);
 
-            contactItem.contactPicture="";
             if(contactItem.pictureAssigned)
             {
-                MyString myString=new MyString();
-                if(savePicture(contactItem.fileBitmap, myString) == false)
-                    return (false);
-                contactItem.contactPicture=myString.Value;
+            /* if picture name has something in it - it means it came from internal folder */
+                if(contactItem.contactPicture.length() == 0)
+                {
+                    myMessages().LogMessage("  - New Image was not from internal folder...");
+                    if(contactItem.pictureAssigned)
+                    {
+                        myMessages().LogMessage("  - Save new image and get a filename...");
+                        MyString myString=new MyString();
+                        if(savePicture(contactItem.fileBitmap, myString) == false)
+                            return (false);
+                        contactItem.contactPicture=myString.Value;
+                        myMessages().LogMessage("  - New filename " + contactItem.contactPicture);
+                    } else
+                    {
+                        myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                    }
+                } else
+                {
+                    myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + contactItem.contactPicture + ")");
+                }
+            } else
+            {
+                myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
             String lSql="INSERT INTO Contact " + "  (holidayId, contactId, sequenceNo, contactDescription, " + "   contactPicture, contactNotes, infoId, noteId, galleryId, sygicId) " + "VALUES " + "(" + contactItem.holidayId + "," + contactItem.contactId + "," + contactItem.sequenceNo + ", " + MyQuotedString(contactItem.contactDescription) + ", " + MyQuotedString(contactItem.contactPicture) + ", " + MyQuotedString(contactItem.contactNotes) + ", " + contactItem.infoId + ", " + contactItem.noteId + ", " + contactItem.galleryId + ", " + contactItem.sygicId + " " + ")";
@@ -404,4 +424,96 @@ class TableContact extends TableBase
 
     }
 
+    boolean createSample(int lHolidayId,  boolean info, boolean notes, boolean picture)
+    {
+        try
+        {
+            int noteId=0;
+            MyInt noteMyInt=new MyInt();
+            MyInt seqNoMyInt=new MyInt();
+            MyInt contactIdMyInt = new MyInt();
+
+            ContactItem item=new ContactItem();
+
+            if(!getNextContactId(lHolidayId, contactIdMyInt))
+                return (false);
+            item.holidayId=lHolidayId;
+            item.contactId=contactIdMyInt.Value;
+            if(!getNextContactSequenceNo(lHolidayId, seqNoMyInt))
+                return(false);
+            item.sequenceNo= seqNoMyInt.Value;
+            item.contactDescription=randomContactDescription();
+
+            item.infoId=0;
+            if(info)
+            {
+                MyInt infoIdMyInt=new MyInt();
+                if(!databaseAccess().createSampleExtraFileGroup(infoIdMyInt))
+                    return (false);
+                item.infoId=infoIdMyInt.Value;
+            }
+
+            if(notes)
+            {
+                if(!databaseAccess().createSampleNote(item.holidayId, noteMyInt))
+                    return (false);
+                item.noteId=noteMyInt.Value;
+            }
+            item.galleryId=0;
+            item.sygicId=0;
+            item.contactPicture="";
+            item.fileBitmap=null;
+            item.pictureAssigned=false;
+            if(picture)
+            {
+                item.fileBitmap=null;
+                item.contactPicture=randomPictureName();
+                item.pictureAssigned=true;
+            }
+            
+            if(!addContactItem(item))
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("createSample", e.getMessage());
+        }
+        return (false);
+    }
+    private String randomContactDescription()
+    {
+        try
+        {
+            Random random=new Random();
+            int i=random.nextInt(7);
+            switch(i)
+            {
+                case 0:
+                    return ("Mr A");
+                case 1:
+                    return ("Mr B");
+                case 2:
+                    return ("Mr C");
+                case 3:
+                    return ("Mr D");
+                case 4:
+                    return ("Mr E");
+                case 5:
+                    return ("Mr F");
+                case 6:
+                    return ("Mr G");
+            }
+            return ("Mr G");
+        }
+        catch(Exception e)
+        {
+            ShowError("randomContactDescription", e.getMessage());
+        }
+        return ("Mr G");
+
+    }
+
+    
 }

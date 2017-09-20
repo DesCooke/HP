@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import java.util.Date;
 
 /**
- ** Created by Des on 16/10/2016.
+ * * Created by Des on 16/10/2016.
  */
 
 public class TaskItem
@@ -27,7 +27,7 @@ public class TaskItem
     public int noteId;
     public int galleryId;
     public int sygicId;
-
+    
     // Original Fields
     public int origHolidayId;
     public int origTaskId;
@@ -45,15 +45,24 @@ public class TaskItem
     public int origNoteId;
     public int origGalleryId;
     public int origSygicId;
-
+    
     public boolean pictureChanged;
-
+    
     public Bitmap fileBitmap;
-
+    
     public TaskItem()
     {
         taskDateDate = new Date();
         origTaskDateDate = new Date();
+        
+        taskDescription = "";
+        taskDateString = "";
+        taskPicture = "";
+        taskNotes = "";
+        origTaskDescription = "";
+        origTaskDateString = "";
+        origTaskPicture = "";
+        origTaskNotes = "";
     }
-
+    
 }

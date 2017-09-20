@@ -261,8 +261,6 @@ public class TableBase
             lCount+=pictureUsageCount(argFilename, "Contact", "contactPicture");
             lCount+=pictureUsageCount(argFilename, "Day", "dayPicture");
             lCount+=pictureUsageCount(argFilename, "ExtraFiles", "filePicture");
-            lCount+=pictureUsageCount(argFilename, "Highlight", "highlightPicture");
-            lCount+=pictureUsageCount(argFilename, "HighlightGroup", "highlightGroupPicture");
             lCount+=pictureUsageCount(argFilename, "Holiday", "holidayPicture");
             lCount+=pictureUsageCount(argFilename, "Schedule", "schedPicture");
             lCount+=pictureUsageCount(argFilename, "Tasks", "taskPicture");

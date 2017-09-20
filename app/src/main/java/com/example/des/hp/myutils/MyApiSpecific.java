@@ -1,6 +1,7 @@
 package com.example.des.hp.myutils;
 
 import android.content.Context;
+import android.media.ExifInterface;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.widget.TimePicker;
@@ -8,6 +9,8 @@ import android.widget.TimePicker;
 
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.MainActivity;
+
+import java.io.InputStream;
 
 
 //
@@ -39,6 +42,27 @@ public class MyApiSpecific extends BaseActivity
         }
     }
 
+    public int GetImageOrientation(InputStream imageStream)
+    {
+        try
+        {
+            if(Build.VERSION.SDK_INT < 24)
+            {
+                return(0);
+            }
+            
+            ExifInterface exif = null;
+            exif = new ExifInterface(imageStream);
+            return exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                                       ExifInterface.ORIENTATION_UNDEFINED);
+        }
+        catch(Exception e)
+        {
+            ShowError("GetImageOrientation", e.getMessage());
+        }
+        return (0);
+        
+    }
     public int GetHour(TimePicker time)
     {
         try
