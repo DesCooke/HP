@@ -126,7 +126,7 @@ public class MainActivity extends BaseActivity
     {
         try{
         int lCount=0;
-        myMessages().LogMessage("Identifying orphaned images....");
+        //myMessages().LogMessage("Identifying orphaned images....");
         
         ArrayList<InternalImageItem>internalImageList=imageUtils().listInternalImages();
         if(internalImageList!=null)
@@ -135,15 +135,15 @@ public class MainActivity extends BaseActivity
             {
                 if(databaseAccess().pictureUsageCount(item.internalImageFilename) == 0)
                 {
-                    myMessages().LogMessage("Picture " + item.internalImageFilename + ", is not linked to anything - removing");
+                    //myMessages().LogMessage("Picture " + item.internalImageFilename + ", is not linked to anything - removing");
                     databaseAccess().removePicture(item.internalImageFilename);
                     lCount++;
                 }
             }
-            myMessages().LogMessage("There are a total of " + String.valueOf(internalImageList.size()) + " and " + String.valueOf(lCount) + " were orphaned");
+            //myMessages().LogMessage("There are a total of " + String.valueOf(internalImageList.size()) + " and " + String.valueOf(lCount) + " were orphaned");
         }
 
-        myMessages().LogMessage("Identifying orphaned files....");
+        //myMessages().LogMessage("Identifying orphaned files....");
 
         int lCount2=0;
         ArrayList<InternalFileItem>internalFileList=imageUtils().listInternalFiles();
@@ -153,12 +153,12 @@ public class MainActivity extends BaseActivity
             {
                 if(databaseAccess().fileUsageCount(item.filename) == 0)
                 {
-                    myMessages().LogMessage("File " + item.filename + ", is not linked to anything - removing");
+                    //myMessages().LogMessage("File " + item.filename + ", is not linked to anything - removing");
                     databaseAccess().removeExtraFile(item.filename);
                     lCount2++;
                 }
             }
-            myMessages().LogMessage("There are a total of " + String.valueOf(internalFileList.size()) + " and " + String.valueOf(lCount2) + " were orphaned");
+            //myMessages().LogMessage("There are a total of " + String.valueOf(internalFileList.size()) + " and " + String.valueOf(lCount2) + " were orphaned");
 
             if(internalImageList!=null)
                 myMessages().ShowMessageLong("Images: Orphaned " + String.valueOf(lCount) + ", " + "Total " + String.valueOf(internalImageList.size()) + ", " + "Files: Orphaned " + String.valueOf(lCount2) + ", " + "Total " + String.valueOf(internalFileList.size()) + " ");

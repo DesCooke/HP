@@ -102,26 +102,26 @@ class TableTask extends TableBase
             /* if picture name has something in it - it means it came from internal folder */
                 if(taskItem.taskPicture.length() == 0)
                 {
-                    myMessages().LogMessage("  - New Image was not from internal folder...");
+                    //myMessages().LogMessage("  - New Image was not from internal folder...");
                     if(taskItem.pictureAssigned)
                     {
-                        myMessages().LogMessage("  - Save new image and get a filename...");
+                        //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
                         if(savePicture(taskItem.fileBitmap, myString) == false)
                             return (false);
                         taskItem.taskPicture=myString.Value;
-                        myMessages().LogMessage("  - New filename " + taskItem.taskPicture);
+                        //myMessages().LogMessage("  - New filename " + taskItem.taskPicture);
                     } else
                     {
-                        myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                        //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                     }
                 } else
                 {
-                    myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + taskItem.taskPicture + ")");
+                    //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + taskItem.taskPicture + ")");
                 }
             } else
             {
-                myMessages().LogMessage("  - New Image not assigned - do nothing");
+                //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
             int lTaskDateKnown=0;
@@ -179,17 +179,17 @@ class TableTask extends TableBase
             if(IsValid() == false)
                 return (false);
 
-            myMessages().LogMessage("updateTaskItem:Handling Image");
+            //myMessages().LogMessage("updateTaskItem:Handling Image");
             if(taskItem.pictureChanged)
             {
                 if(taskItem.origPictureAssigned && taskItem.taskPicture.length() > 0 && taskItem.taskPicture.compareTo(taskItem.origTaskPicture) == 0)
                 {
-                    myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
+                    //myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
                 } else
                 {
                     if(taskItem.origPictureAssigned)
                     {
-                        myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                        //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
                         if(removePicture(taskItem.origTaskPicture) == false)
                             return (false);
                     }
@@ -197,27 +197,27 @@ class TableTask extends TableBase
                 /* if picture name has something in it - it means it came from internal folder */
                     if(taskItem.taskPicture.length() == 0)
                     {
-                        myMessages().LogMessage("  - New Image was not from internal folder...");
+                        //myMessages().LogMessage("  - New Image was not from internal folder...");
                         if(taskItem.pictureAssigned)
                         {
-                            myMessages().LogMessage("  - Save new image and get a filename...");
+                            //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
                             if(savePicture(taskItem.fileBitmap, myString) == false)
                                 return (false);
                             taskItem.taskPicture=myString.Value;
-                            myMessages().LogMessage("  - New filename " + taskItem.taskPicture);
+                            //myMessages().LogMessage("  - New filename " + taskItem.taskPicture);
                         } else
                         {
-                            myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                            //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                         }
                     } else
                     {
-                        myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + taskItem.taskPicture + ")");
+                        //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + taskItem.taskPicture + ")");
                     }
                 }
             } else
             {
-                myMessages().LogMessage("  - Image not changed - do nothing");
+                //myMessages().LogMessage("  - Image not changed - do nothing");
             }
 
 

@@ -252,14 +252,14 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
                     }
                     extraFilesItem.fileUri=mySelectedFileUri;
 
-                    myMessages().LogMessage("URI is " + mySelectedFileUri.getPath());
+                    //myMessages().LogMessage("URI is " + mySelectedFileUri.getPath());
 
                     MyString myString=new MyString();
                     if(!myFileUtils().BaseFilenameFromUri(mySelectedFileUri, myString))
                         return;
                     newFilename=myString.Value;
 
-                    myMessages().LogMessage("New Filename is " + newFilename);
+                    //myMessages().LogMessage("New Filename is " + newFilename);
 
                     File tof=new File(getResources().getString(R.string.files_path) + "/" + newFilename);
                     if(tof.exists())

@@ -318,18 +318,18 @@ public class BaseActivity extends AppCompatActivity
                         mySelectedFileUri=imageReturnedIntent.getData();
                         grantUriPermission("com.example.des.hp", mySelectedFileUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-                        myMessages().LogMessage("Getting just the filename.");
+                        //myMessages().LogMessage("Getting just the filename.");
                         MyString myString=new MyString();
                         if(myFileUtils().BaseFilenameFromUri(mySelectedFileUri, myString) == false)
                             return;
                         mySelectedFileNameOnly=myString.Value;
-                        myMessages().LogMessage("mySelectedFileNameOnly = " + mySelectedFileNameOnly);
+                        //myMessages().LogMessage("mySelectedFileNameOnly = " + mySelectedFileNameOnly);
 
-                        myMessages().LogMessage("Getting fully qualified path...");
+                        //myMessages().LogMessage("Getting fully qualified path...");
                         mySelectedFullFilePath=myFileUtils().getMyFilePath(mySelectedFileUri);
-                        myMessages().LogMessage("mySelectedFullFilePath = " + mySelectedFullFilePath);
+                        //myMessages().LogMessage("mySelectedFullFilePath = " + mySelectedFullFilePath);
 
-                        myMessages().LogMessage("done");
+                        //myMessages().LogMessage("done");
                         mySelectedFileChanged=true;
                         reloadOnShow=false;
                         internalFilename="";

@@ -103,26 +103,26 @@ class TableBudget extends TableBase
             /* if picture name has something in it - it means it came from internal folder */
                 if(budgetItem.budgetPicture.length() == 0)
                 {
-                    myMessages().LogMessage("  - New Image was not from internal folder...");
+                    //myMessages().LogMessage("  - New Image was not from internal folder...");
                     if(budgetItem.pictureAssigned)
                     {
-                        myMessages().LogMessage("  - Save new image and get a filename...");
+                        //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
                         if(savePicture(budgetItem.fileBitmap, myString) == false)
                             return (false);
                         budgetItem.budgetPicture=myString.Value;
-                        myMessages().LogMessage("  - New filename " + budgetItem.budgetPicture);
+                        //myMessages().LogMessage("  - New filename " + budgetItem.budgetPicture);
                     } else
                     {
-                        myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                        //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                     }
                 } else
                 {
-                    myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + budgetItem.budgetPicture + ")");
+                    //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + budgetItem.budgetPicture + ")");
                 }
             } else
             {
-                myMessages().LogMessage("  - New Image not assigned - do nothing");
+                //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
             String lSql="INSERT INTO Budget " + "  (holidayId, budgetId, sequenceNo, budgetDescription, " + "   budgetTotal, budgetPaid, budgetUnpaid, budgetPicture, " + "   budgetNotes, infoId, noteId, galleryId, sygicId) " + "VALUES " + "(" + budgetItem.holidayId + "," + budgetItem.budgetId + "," + budgetItem.sequenceNo + ", " + MyQuotedString(budgetItem.budgetDescription) + ", " + budgetItem.budgetTotal + "," + budgetItem.budgetPaid + "," + budgetItem.budgetUnpaid + "," + MyQuotedString(budgetItem.budgetPicture) + ", " + MyQuotedString(budgetItem.budgetNotes) + ", " + budgetItem.infoId + ", " + budgetItem.noteId + ", " + budgetItem.galleryId + ", " + budgetItem.sygicId + " " + ")";
@@ -172,17 +172,17 @@ class TableBudget extends TableBase
             if(IsValid() == false)
                 return (false);
 
-            myMessages().LogMessage("updateBudgetItem:Handling Image");
+            //myMessages().LogMessage("updateBudgetItem:Handling Image");
             if(budgetItem.pictureChanged)
             {
                 if(budgetItem.origPictureAssigned && budgetItem.budgetPicture.length() > 0 && budgetItem.budgetPicture.compareTo(budgetItem.origBudgetPicture) == 0)
                 {
-                    myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
+                    //myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
                 } else
                 {
                     if(budgetItem.origPictureAssigned)
                     {
-                        myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                        //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
                         if(removePicture(budgetItem.origBudgetPicture) == false)
                             return (false);
                     }
@@ -190,27 +190,27 @@ class TableBudget extends TableBase
                 /* if picture name has something in it - it means it came from internal folder */
                     if(budgetItem.budgetPicture.length() == 0)
                     {
-                        myMessages().LogMessage("  - New Image was not from internal folder...");
+                        //myMessages().LogMessage("  - New Image was not from internal folder...");
                         if(budgetItem.pictureAssigned)
                         {
-                            myMessages().LogMessage("  - Save new image and get a filename...");
+                            //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
                             if(savePicture(budgetItem.fileBitmap, myString) == false)
                                 return (false);
                             budgetItem.budgetPicture=myString.Value;
-                            myMessages().LogMessage("  - New filename " + budgetItem.budgetPicture);
+                            //myMessages().LogMessage("  - New filename " + budgetItem.budgetPicture);
                         } else
                         {
-                            myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                            //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                         }
                     } else
                     {
-                        myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + budgetItem.budgetPicture + ")");
+                        //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + budgetItem.budgetPicture + ")");
                     }
                 }
             } else
             {
-                myMessages().LogMessage("  - Image not changed - do nothing");
+                //myMessages().LogMessage("  - Image not changed - do nothing");
             }
 
             String lSQL;

@@ -91,10 +91,10 @@ public class MyLoremIpsum
     {
         try
         {
-            myMessages().LogMessage("getWords amount " + String.valueOf(amount) + ", " + String.valueOf(startIndex));
+            //myMessages().LogMessage("getWords amount " + String.valueOf(amount) + ", " + String.valueOf(startIndex));
 
             startIndex=startIndex % 50;
-            myMessages().LogMessage("startIndex is " + String.valueOf(startIndex));
+            //myMessages().LogMessage("startIndex is " + String.valueOf(startIndex));
 
             int word=startIndex;
             StringBuilder lorem=new StringBuilder();
@@ -106,7 +106,7 @@ public class MyLoremIpsum
                     word=0;
                 }
 
-                myMessages().LogMessage("using word " + String.valueOf(i) + ":" + loremIpsumWords[word]);
+                //myMessages().LogMessage("using word " + String.valueOf(i) + ":" + loremIpsumWords[word]);
                 lorem.append(loremIpsumWords[word]);
 
                 if(i < amount - 1)
@@ -117,7 +117,7 @@ public class MyLoremIpsum
                 word++;
             }
 
-            myMessages().LogMessage("returning " + lorem.toString());
+            //myMessages().LogMessage("returning " + lorem.toString());
             return lorem.toString();
         }
         catch(Exception e)

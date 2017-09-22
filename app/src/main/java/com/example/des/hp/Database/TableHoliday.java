@@ -83,26 +83,26 @@ class TableHoliday extends TableBase
             /* if picture name has something in it - it means it came from internal folder */
                 if(holidayItem.holidayPicture.length() == 0)
                 {
-                    myMessages().LogMessage("  - New Image was not from internal folder...");
+                    //myMessages().LogMessage("  - New Image was not from internal folder...");
                     if(holidayItem.pictureAssigned)
                     {
-                        myMessages().LogMessage("  - Save new image and get a filename...");
+                        //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
                         if(savePicture(holidayItem.holidayBitmap, myString) == false)
                             return (false);
                         holidayItem.holidayPicture=myString.Value;
-                        myMessages().LogMessage("  - New filename " + holidayItem.holidayPicture);
+                        //myMessages().LogMessage("  - New filename " + holidayItem.holidayPicture);
                     } else
                     {
-                        myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                        //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                     }
                 } else
                 {
-                    myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + holidayItem.holidayPicture + ")");
+                    //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + holidayItem.holidayPicture + ")");
                 }
             } else
             {
-                myMessages().LogMessage("  - New Image not assigned - do nothing");
+                //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
             String lSql="INSERT INTO holiday " + "  (holidayName, holidayId, startDate, holidayPicture, infoId, " + "   noteId, galleryId, sygicId) " + "VALUES " + "(" + MyQuotedString(holidayItem.holidayName) + "," + holidayItem.holidayId + "," + holidayItem.startDateInt + "," + MyQuotedString(holidayItem.holidayPicture) + ", " + holidayItem.infoId + ", " + holidayItem.noteId + ", " + holidayItem.galleryId + ", " + holidayItem.sygicId + " " + ")";
@@ -217,17 +217,17 @@ class TableHoliday extends TableBase
             if(IsValid() == false)
                 return (false);
 
-            myMessages().LogMessage("updateHolidayItem:Handling Image");
+            //myMessages().LogMessage("updateHolidayItem:Handling Image");
             if(holidayItem.pictureChanged)
             {
                 if(holidayItem.origPictureAssigned && holidayItem.holidayPicture.length() > 0 && holidayItem.holidayPicture.compareTo(holidayItem.origHolidayPicture) == 0)
                 {
-                    myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
+                    //myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
                 } else
                 {
                     if(holidayItem.origPictureAssigned)
                     {
-                        myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                        //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
                         if(removePicture(holidayItem.origHolidayPicture) == false)
                             return (false);
                     }
@@ -235,27 +235,27 @@ class TableHoliday extends TableBase
                 /* if picture name has something in it - it means it came from internal folder */
                     if(holidayItem.holidayPicture.length() == 0)
                     {
-                        myMessages().LogMessage("  - New Image was not from internal folder...");
+                        //myMessages().LogMessage("  - New Image was not from internal folder...");
                         if(holidayItem.pictureAssigned)
                         {
-                            myMessages().LogMessage("  - Save new image and get a filename...");
+                            //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
                             if(savePicture(holidayItem.holidayBitmap, myString) == false)
                                 return (false);
                             holidayItem.holidayPicture=myString.Value;
-                            myMessages().LogMessage("  - New filename " + holidayItem.holidayPicture);
+                            //myMessages().LogMessage("  - New filename " + holidayItem.holidayPicture);
                         } else
                         {
-                            myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                            //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                         }
                     } else
                     {
-                        myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + holidayItem.holidayPicture + ")");
+                        //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + holidayItem.holidayPicture + ")");
                     }
                 }
             } else
             {
-                myMessages().LogMessage("  - Image not changed - do nothing");
+                //myMessages().LogMessage("  - Image not changed - do nothing");
             }
 
 

@@ -214,7 +214,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
             if (!tableNotes.onCreate(db))
                 return;
             
-            myMessages().LogMessage("Finished onCreate");
+            //myMessages().LogMessage("Finished onCreate");
         }
         catch (Exception e)
         {
@@ -262,7 +262,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
             if (!createHolidays())
                 return (false);
             
-            myMessages().LogMessage("Finished createSampleDatabase");
+            //myMessages().LogMessage("Finished createSampleDatabase");
             
             return (true);
         }
@@ -1152,7 +1152,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
                 return;
             if (!tableNotes.onUpgrade(db, oldVersion, newVersion))
                 return;
-            myMessages().LogMessage("Finished onUpgrade");
+            //myMessages().LogMessage("Finished onUpgrade");
         }
         catch (Exception e)
         {
@@ -1233,7 +1233,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
             if (!tableNotes.deleteNoteItem(item))
                 return (false);
             
-            myMessages().LogMessage("Finished removeNote");
+            //myMessages().LogMessage("Finished removeNote");
             
             return (true);
         }

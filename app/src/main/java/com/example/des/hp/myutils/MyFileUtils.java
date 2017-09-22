@@ -256,7 +256,7 @@ public class MyFileUtils
     {
         try
         {
-            myMessages().LogMessage("Copying file to local directory " + argFromUri.getPath());
+            //myMessages().LogMessage("Copying file to local directory " + argFromUri.getPath());
 
             _context.grantUriPermission("com.example.des.hp", argFromUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             InputStream in=_context.getContentResolver().openInputStream(argFromUri);
@@ -320,7 +320,7 @@ public class MyFileUtils
                 }
             }
 
-            myMessages().LogMessage("createSample with filename " + newFilename);
+            //myMessages().LogMessage("createSample with filename " + newFilename);
             File tof=new File(res.getString(R.string.files_path) + "/" + newFilename);
             if(tof.exists())
                 return (false);

@@ -101,26 +101,26 @@ class TableDay extends TableBase
             /* if picture name has something in it - it means it came from internal folder */
                 if(dayItem.dayPicture.length() == 0)
                 {
-                    myMessages().LogMessage("  - New Image was not from internal folder...");
+                    //myMessages().LogMessage("  - New Image was not from internal folder...");
                     if(dayItem.pictureAssigned)
                     {
-                        myMessages().LogMessage("  - Save new image and get a filename...");
+                        //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
                         if(savePicture(dayItem.dayBitmap, myString) == false)
                             return (false);
                         dayItem.dayPicture=myString.Value;
-                        myMessages().LogMessage("  - New filename " + dayItem.dayPicture);
+                        //myMessages().LogMessage("  - New filename " + dayItem.dayPicture);
                     } else
                     {
-                        myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                        //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                     }
                 } else
                 {
-                    myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + dayItem.dayPicture + ")");
+                    //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + dayItem.dayPicture + ")");
                 }
             } else
             {
-                myMessages().LogMessage("  - New Image not assigned - do nothing");
+                //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
             String lSql="INSERT INTO day " + "  (holidayId, dayId, dayName, dayPicture, sequenceNo, dayCat, infoId, " + "   noteId, galleryId, sygicId) " + "VALUES " + "(" + dayItem.holidayId + "," + dayItem.dayId + "," + MyQuotedString(dayItem.dayName) + "," + MyQuotedString(dayItem.dayPicture) + "," + dayItem.sequenceNo + ", " + dayItem.dayCat + ", " + dayItem.infoId + ", " + dayItem.noteId + ", " + dayItem.galleryId + ", " + dayItem.sygicId + " " + ")";
@@ -170,17 +170,17 @@ class TableDay extends TableBase
             if(IsValid() == false)
                 return (false);
 
-            myMessages().LogMessage("updateDayItem:Handling Image");
+            //myMessages().LogMessage("updateDayItem:Handling Image");
             if(dayItem.pictureChanged)
             {
                 if(dayItem.origPictureAssigned && dayItem.dayPicture.length() > 0 && dayItem.dayPicture.compareTo(dayItem.origDayPicture) == 0)
                 {
-                    myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
+                    //myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
                 } else
                 {
                     if(dayItem.origPictureAssigned)
                     {
-                        myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                        //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
                         if(removePicture(dayItem.origDayPicture) == false)
                             return (false);
                     }
@@ -188,27 +188,27 @@ class TableDay extends TableBase
                 /* if picture name has something in it - it means it came from internal folder */
                     if(dayItem.dayPicture.length() == 0)
                     {
-                        myMessages().LogMessage("  - New Image was not from internal folder...");
+                        //myMessages().LogMessage("  - New Image was not from internal folder...");
                         if(dayItem.pictureAssigned)
                         {
-                            myMessages().LogMessage("  - Save new image and get a filename...");
+                            //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
                             if(savePicture(dayItem.dayBitmap, myString) == false)
                                 return (false);
                             dayItem.dayPicture=myString.Value;
-                            myMessages().LogMessage("  - New filename " + dayItem.dayPicture);
+                            //myMessages().LogMessage("  - New filename " + dayItem.dayPicture);
                         } else
                         {
-                            myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                            //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                         }
                     } else
                     {
-                        myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + dayItem.dayPicture + ")");
+                        //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + dayItem.dayPicture + ")");
                     }
                 }
             } else
             {
-                myMessages().LogMessage("  - Image not changed - do nothing");
+                //myMessages().LogMessage("  - Image not changed - do nothing");
             }
 
             String lSQL;

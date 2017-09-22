@@ -98,26 +98,26 @@ class TableContact extends TableBase
             /* if picture name has something in it - it means it came from internal folder */
                 if(contactItem.contactPicture.length() == 0)
                 {
-                    myMessages().LogMessage("  - New Image was not from internal folder...");
+                    //myMessages().LogMessage("  - New Image was not from internal folder...");
                     if(contactItem.pictureAssigned)
                     {
-                        myMessages().LogMessage("  - Save new image and get a filename...");
+                        //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
                         if(savePicture(contactItem.fileBitmap, myString) == false)
                             return (false);
                         contactItem.contactPicture=myString.Value;
-                        myMessages().LogMessage("  - New filename " + contactItem.contactPicture);
+                        //myMessages().LogMessage("  - New filename " + contactItem.contactPicture);
                     } else
                     {
-                        myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                        //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                     }
                 } else
                 {
-                    myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + contactItem.contactPicture + ")");
+                    //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + contactItem.contactPicture + ")");
                 }
             } else
             {
-                myMessages().LogMessage("  - New Image not assigned - do nothing");
+                //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
             String lSql="INSERT INTO Contact " + "  (holidayId, contactId, sequenceNo, contactDescription, " + "   contactPicture, contactNotes, infoId, noteId, galleryId, sygicId) " + "VALUES " + "(" + contactItem.holidayId + "," + contactItem.contactId + "," + contactItem.sequenceNo + ", " + MyQuotedString(contactItem.contactDescription) + ", " + MyQuotedString(contactItem.contactPicture) + ", " + MyQuotedString(contactItem.contactNotes) + ", " + contactItem.infoId + ", " + contactItem.noteId + ", " + contactItem.galleryId + ", " + contactItem.sygicId + " " + ")";
@@ -167,17 +167,17 @@ class TableContact extends TableBase
             if(IsValid() == false)
                 return (false);
 
-            myMessages().LogMessage("updateContactItem:Handling Image");
+            //myMessages().LogMessage("updateContactItem:Handling Image");
             if(contactItem.pictureChanged)
             {
                 if(contactItem.origPictureAssigned && contactItem.contactPicture.length() > 0 && contactItem.contactPicture.compareTo(contactItem.origContactPicture) == 0)
                 {
-                    myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
+                    //myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
                 } else
                 {
                     if(contactItem.origPictureAssigned)
                     {
-                        myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                        //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
                         if(removePicture(contactItem.origContactPicture) == false)
                             return (false);
                     }
@@ -185,27 +185,27 @@ class TableContact extends TableBase
                 /* if picture name has something in it - it means it came from internal folder */
                     if(contactItem.contactPicture.length() == 0)
                     {
-                        myMessages().LogMessage("  - New Image was not from internal folder...");
+                        //myMessages().LogMessage("  - New Image was not from internal folder...");
                         if(contactItem.pictureAssigned)
                         {
-                            myMessages().LogMessage("  - Save new image and get a filename...");
+                            //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
                             if(savePicture(contactItem.fileBitmap, myString) == false)
                                 return (false);
                             contactItem.contactPicture=myString.Value;
-                            myMessages().LogMessage("  - New filename " + contactItem.contactPicture);
+                            //myMessages().LogMessage("  - New filename " + contactItem.contactPicture);
                         } else
                         {
-                            myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                            //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                         }
                     } else
                     {
-                        myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + contactItem.contactPicture + ")");
+                        //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + contactItem.contactPicture + ")");
                     }
                 }
             } else
             {
-                myMessages().LogMessage("  - Image not changed - do nothing");
+                //myMessages().LogMessage("  - Image not changed - do nothing");
             }
 
             String lSQL;

@@ -347,16 +347,32 @@ public class ImageUtils
             _context.grantUriPermission("com.example.des.hp", imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             InputStream imageStream = cr.openInputStream(imageUri);
             Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-/*
-            int orientation=myApiSpecific().GetImageOrientation(imageStream);
-            Bitmap rotatedBitmap = rotateBitmap(selectedImage, orientation);
-  */
-            Point lCurrPoint = new Point(selectedImage.getWidth(), selectedImage.getHeight());
+            
+            int orientation = myApiSpecific().GetImageOrientation(imageUri);
+            
+            Bitmap finalImage;
+            
+            switch (orientation)
+            {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    finalImage = rotateImage(selectedImage, 90);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    finalImage = rotateImage(selectedImage, 180);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    finalImage = rotateImage(selectedImage, 270);
+                    break;
+                default:
+                    finalImage = selectedImage;
+            }
+            
+            Point lCurrPoint = new Point(finalImage.getWidth(), finalImage.getHeight());
             Point lIdealPoint = new Point(512, 512);
             Point lNewPoint = new Point(0, 0);
             if (ScaleKeepingAspectRatio(lCurrPoint, lIdealPoint, lNewPoint) == false)
                 return (false);
-            retBitmap.Value = Bitmap.createScaledBitmap(selectedImage, lNewPoint.x, lNewPoint.y, false);
+            retBitmap.Value = Bitmap.createScaledBitmap(finalImage, lNewPoint.x, lNewPoint.y, false);
             
             return (true);
         }
@@ -365,54 +381,6 @@ public class ImageUtils
             ShowError("ScaleBitmapFromUrl", e.getMessage());
         }
         return (false);
-    }
-    
-    public Bitmap rotateBitmap(Bitmap bitmap, int orientation)
-    {
-        
-        Matrix matrix = new Matrix();
-        switch (orientation)
-        {
-            case ExifInterface.ORIENTATION_NORMAL:
-                return bitmap;
-            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
-                matrix.setScale(-1, 1);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                matrix.setRotate(180);
-                break;
-            case ExifInterface.ORIENTATION_FLIP_VERTICAL:
-                matrix.setRotate(180);
-                matrix.postScale(-1, 1);
-                break;
-            case ExifInterface.ORIENTATION_TRANSPOSE:
-                matrix.setRotate(90);
-                matrix.postScale(-1, 1);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                matrix.setRotate(90);
-                break;
-            case ExifInterface.ORIENTATION_TRANSVERSE:
-                matrix.setRotate(-90);
-                matrix.postScale(-1, 1);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                matrix.setRotate(-90);
-                break;
-            default:
-                return bitmap;
-        }
-        try
-        {
-            Bitmap bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-            bitmap.recycle();
-            return bmRotated;
-        }
-        catch (OutOfMemoryError e)
-        {
-            e.printStackTrace();
-            return null;
-        }
     }
     
     public boolean ScaleBitmapFromFile(String lfile, ContentResolver cr, MyBitmap retBitmap)
@@ -421,23 +389,23 @@ public class ImageUtils
         {
             Uri uri = Uri.fromFile(new File(res.getString(R.string.picture_path) + "/" + lfile));
             
-            _context.grantUriPermission("com.example.des.hp", uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            InputStream imageStream = cr.openInputStream(uri);
-            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-            
-            Point lCurrPoint = new Point(selectedImage.getWidth(), selectedImage.getHeight());
-            Point lIdealPoint = new Point(512, 512);
-            Point lNewPoint = new Point(0, 0);
-            if (ScaleKeepingAspectRatio(lCurrPoint, lIdealPoint, lNewPoint) == false)
-                return (false);
-            retBitmap.Value = Bitmap.createScaledBitmap(selectedImage, lNewPoint.x, lNewPoint.y, false);
-            
-            return (true);
+            return(ScaleBitmapFromUrl(uri, cr, retBitmap));
         }
         catch (Exception e)
         {
-            ShowError("ScaleBitmapFromUrl", e.getMessage());
+            ShowError("ScaleBitmapFromFile", e.getMessage());
         }
         return (false);
     }
+    
+    private static Bitmap rotateImage(Bitmap img, int degree)
+    {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
+        img.recycle();
+        return rotatedImg;
+    }
+    
+    
 }

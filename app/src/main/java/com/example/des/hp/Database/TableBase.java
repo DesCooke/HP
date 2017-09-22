@@ -187,29 +187,29 @@ public class TableBase
     {
         try
         {
-            myMessages().LogMessage("  - removePicture " + argFilename);
+            //myMessages().LogMessage("  - removePicture " + argFilename);
             if(argFilename.length() == 0)
                 return (true);
 
             int lUsageCount=totalUsageCount(argFilename);
-            myMessages().LogMessage("  Total Usage Count " + String.valueOf(lUsageCount));
+            //myMessages().LogMessage("  Total Usage Count " + String.valueOf(lUsageCount));
 
             File file=new File(_resources.getString(R.string.picture_path) + "/" + argFilename);
             if(lUsageCount < 2)
             {
                 if(file.exists())
                 {
-                    myMessages().LogMessage("  Deleting " + file.getAbsolutePath());
+                    //myMessages().LogMessage("  Deleting " + file.getAbsolutePath());
 
                     if(!file.delete())
                         throw new Exception("unable to delete " + file.getAbsolutePath());
                 } else
                 {
-                    myMessages().LogMessage("  Does not seem to exist!... " + file.getAbsolutePath());
+                    //myMessages().LogMessage("  Does not seem to exist!... " + file.getAbsolutePath());
                 }
             } else
             {
-                myMessages().LogMessage("  Not deleting - something else appears to use it" + file.getAbsolutePath());
+                //myMessages().LogMessage("  Not deleting - something else appears to use it" + file.getAbsolutePath());
             }
             return (true);
         }
@@ -237,7 +237,7 @@ public class TableBase
                 lCount=Integer.parseInt(cursor.getString(0));
             }
 
-            myMessages().LogMessage("  Count of " + argFilename + " in " + argTable + ": " + String.valueOf(lCount));
+            //myMessages().LogMessage("  Count of " + argFilename + " in " + argTable + ": " + String.valueOf(lCount));
 
             executeSQLCloseCursor("pictureUsageCount");
             return (lCount);
@@ -293,7 +293,7 @@ public class TableBase
                 lCount=Integer.parseInt(cursor.getString(0));
             }
 
-            myMessages().LogMessage("  Count of " + argFilename + " in extraFiles: " + String.valueOf(lCount));
+//            myMessages().LogMessage("  Count of " + argFilename + " in extraFiles: " + String.valueOf(lCount));
 
             executeSQLCloseCursor("fileUsageCount");
             return (lCount);
@@ -425,7 +425,7 @@ public class TableBase
 
             SQLiteDatabase db=_dbHelper.getReadableDatabase();
 
-            myMessages().LogMessage("executeSQLGetInt from " + argFunction + ":" + argSql);
+            //myMessages().LogMessage("executeSQLGetInt from " + argFunction + ":" + argSql);
 
             Cursor cursor=db.rawQuery(argSql, new String[]{});
             if(cursor == null)
@@ -440,7 +440,7 @@ public class TableBase
             db.close();
             retInt.Value=Integer.parseInt(str);
 
-            myMessages().LogMessage("  return value: " + retInt.Value);
+            //myMessages().LogMessage("  return value: " + retInt.Value);
 
             return (true);
         }
@@ -460,7 +460,7 @@ public class TableBase
 
             SQLiteDatabase db=_dbHelper.getWritableDatabase();
 
-            myMessages().LogMessage("executeSQL from " + argFunction + ":" + argSql);
+            //myMessages().LogMessage("executeSQL from " + argFunction + ":" + argSql);
 
             db.execSQL(argSql);
 
@@ -485,7 +485,7 @@ public class TableBase
         {
             SQLiteDatabase db=_dbHelper.getReadableDatabase();
 
-            myMessages().LogMessage("executeSQLOpenCursor from " + argFunction + ":" + argSql);
+            //myMessages().LogMessage("executeSQLOpenCursor from " + argFunction + ":" + argSql);
 
             Cursor cursor=db.rawQuery(argSql, new String[]{});
             if(cursor == null)

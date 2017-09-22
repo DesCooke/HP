@@ -96,32 +96,32 @@ class TableAttraction extends TableBase
                 return (false);
 
 
-            myMessages().LogMessage("addAttractionItem:Handling Image");
+            //myMessages().LogMessage("addAttractionItem:Handling Image");
             if(attractionItem.pictureAssigned)
             {
             /* if picture name has something in it - it means it came from internal folder */
                 if(attractionItem.attractionPicture.length() == 0)
                 {
-                    myMessages().LogMessage("  - New Image was not from internal folder...");
+                    //myMessages().LogMessage("  - New Image was not from internal folder...");
                     if(attractionItem.pictureAssigned)
                     {
-                        myMessages().LogMessage("  - Save new image and get a filename...");
+                        //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
                         if(savePicture(attractionItem.fileBitmap, myString) == false)
                             return (false);
                         attractionItem.attractionPicture=myString.Value;
-                        myMessages().LogMessage("  - New filename " + attractionItem.attractionPicture);
+                        //myMessages().LogMessage("  - New filename " + attractionItem.attractionPicture);
                     } else
                     {
-                        myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                        //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                     }
                 } else
                 {
-                    myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + attractionItem.attractionPicture + ")");
+                    //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + attractionItem.attractionPicture + ")");
                 }
             } else
             {
-                myMessages().LogMessage("  - New Image not assigned - do nothing");
+                //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
             String lSql="INSERT INTO Attraction " + "  (holidayId, attractionId, sequenceNo, attractionDescription, " + "   attractionPicture, attractionNotes, infoId, noteId, galleryId, sygicId) " + "VALUES " + "(" + attractionItem.holidayId + "," + attractionItem.attractionId + "," + attractionItem.sequenceNo + ", " + MyQuotedString(attractionItem.attractionDescription) + ", " + MyQuotedString(attractionItem.attractionPicture) + ", " + MyQuotedString(attractionItem.attractionNotes) + ", " + attractionItem.infoId + ", " + attractionItem.noteId + ", " + attractionItem.galleryId + ", " + attractionItem.sygicId + " " + ")";
@@ -171,18 +171,18 @@ class TableAttraction extends TableBase
             if(IsValid() == false)
                 return (false);
 
-            myMessages().LogMessage("updateAttractionItem:Handling Image");
+            //myMessages().LogMessage("updateAttractionItem:Handling Image");
             if(attractionItem.pictureChanged)
             {
                 if(attractionItem.origPictureAssigned && attractionItem.attractionPicture.length() > 0 && attractionItem.attractionPicture.compareTo(attractionItem.origAttractionPicture) == 0)
                 {
-                    myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
+                    //myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
                 } else
                 {
 
                     if(attractionItem.origPictureAssigned)
                     {
-                        myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                        //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
                         if(removePicture(attractionItem.origAttractionPicture) == false)
                             return (false);
                     }
@@ -190,27 +190,27 @@ class TableAttraction extends TableBase
                 /* if picture name has something in it - it means it came from internal folder */
                     if(attractionItem.attractionPicture.length() == 0)
                     {
-                        myMessages().LogMessage("  - New Image was not from internal folder...");
+                        //myMessages().LogMessage("  - New Image was not from internal folder...");
                         if(attractionItem.pictureAssigned)
                         {
-                            myMessages().LogMessage("  - Save new image and get a filename...");
+                            //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
                             if(savePicture(attractionItem.fileBitmap, myString) == false)
                                 return (false);
                             attractionItem.attractionPicture=myString.Value;
-                            myMessages().LogMessage("  - New filename " + attractionItem.attractionPicture);
+                            //myMessages().LogMessage("  - New filename " + attractionItem.attractionPicture);
                         } else
                         {
-                            myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                            //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                         }
                     } else
                     {
-                        myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + attractionItem.attractionPicture + ")");
+                        //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + attractionItem.attractionPicture + ")");
                     }
                 }
             } else
             {
-                myMessages().LogMessage("  - Image not changed - do nothing");
+                //myMessages().LogMessage("  - Image not changed - do nothing");
             }
 
 

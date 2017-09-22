@@ -75,32 +75,32 @@ class TableAttractionArea extends TableBase
             if(IsValid() == false)
                 return (false);
 
-            myMessages().LogMessage("addAttractionAreaItem:Handling Image");
+            //myMessages().LogMessage("addAttractionAreaItem:Handling Image");
             if(attractionAreaItem.pictureAssigned)
             {
             /* if picture name has something in it - it means it came from internal folder */
                 if(attractionAreaItem.attractionAreaPicture.length() == 0)
                 {
-                    myMessages().LogMessage("  - New Image was not from internal folder...");
+                    //myMessages().LogMessage("  - New Image was not from internal folder...");
                     if(attractionAreaItem.pictureAssigned)
                     {
-                        myMessages().LogMessage("  - Save new image and get a filename...");
+                        //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
                         if(savePicture(attractionAreaItem.fileBitmap, myString) == false)
                             return (false);
                         attractionAreaItem.attractionAreaPicture=myString.Value;
-                        myMessages().LogMessage("  - New filename " + attractionAreaItem.attractionAreaPicture);
+                        //myMessages().LogMessage("  - New filename " + attractionAreaItem.attractionAreaPicture);
                     } else
                     {
-                        myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                        //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                     }
                 } else
                 {
-                    myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + attractionAreaItem.attractionAreaPicture + ")");
+                    //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + attractionAreaItem.attractionAreaPicture + ")");
                 }
             } else
             {
-                myMessages().LogMessage("  - New Image not assigned - do nothing");
+                //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
             String lSql="INSERT INTO AttractionArea " + "  (holidayId, attractionId, attractionAreaId, sequenceNo, attractionAreaDescription," + " " + "   attractionAreaPicture, attractionAreaNotes, infoId, noteId, galleryId, sygicId) " + "VALUES " + "(" + attractionAreaItem.holidayId + "," + attractionAreaItem.attractionId + "," + attractionAreaItem.attractionAreaId + "," + attractionAreaItem.sequenceNo + ", " + MyQuotedString(attractionAreaItem.attractionAreaDescription) + ", " + MyQuotedString(attractionAreaItem.attractionAreaPicture) + ", " + MyQuotedString(attractionAreaItem.attractionAreaNotes) + ", " + attractionAreaItem.infoId + ", " + attractionAreaItem.noteId + ", " + attractionAreaItem.galleryId + ", " + attractionAreaItem.sygicId + " " + ")";
@@ -150,18 +150,18 @@ class TableAttractionArea extends TableBase
             if(IsValid() == false)
                 return (false);
 
-            myMessages().LogMessage("updateAttractionAreaItem:Handling Image");
+            //myMessages().LogMessage("updateAttractionAreaItem:Handling Image");
             if(item.pictureChanged)
             {
                 if(item.origPictureAssigned && item.attractionAreaPicture.length() > 0 && item.attractionAreaPicture.compareTo(item.origAttractionAreaPicture) == 0)
                 {
-                    myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
+                    //myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
                 } else
                 {
 
                     if(item.origPictureAssigned)
                     {
-                        myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                        //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
                         if(removePicture(item.origAttractionAreaPicture) == false)
                             return (false);
                     }
@@ -169,28 +169,28 @@ class TableAttractionArea extends TableBase
                 /* if picture name has something in it - it means it came from internal folder */
                     if(item.attractionAreaPicture.length() == 0)
                     {
-                        myMessages().LogMessage("  - New Image was not from internal folder...");
+                        //myMessages().LogMessage("  - New Image was not from internal folder...");
                         if(item.pictureAssigned)
                         {
-                            myMessages().LogMessage("  - Save new image and get a filename...");
+                            //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
                             if(savePicture(item.fileBitmap, myString) == false)
                                 return (false);
                             item.attractionAreaPicture=myString.Value;
-                            myMessages().LogMessage("  - New filename " + item.attractionAreaPicture);
+                            //myMessages().LogMessage("  - New filename " + item.attractionAreaPicture);
                         } else
                         {
-                            myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                            //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                         }
                     } else
                     {
-                        myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + item.attractionAreaPicture + ")");
+                        //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + item.attractionAreaPicture + ")");
                     }
                 }
 
             } else
             {
-                myMessages().LogMessage("  - Image not changed - do nothing");
+                //myMessages().LogMessage("  - Image not changed - do nothing");
             }
 
 

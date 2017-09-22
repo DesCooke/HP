@@ -2,6 +2,7 @@ package com.example.des.hp.myutils;
 
 import android.content.Context;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.widget.TimePicker;
@@ -11,6 +12,8 @@ import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.MainActivity;
 
 import java.io.InputStream;
+
+import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 
 //
@@ -42,19 +45,20 @@ public class MyApiSpecific extends BaseActivity
         }
     }
 
-    public int GetImageOrientation(InputStream imageStream)
+    public int GetImageOrientation(Uri imageUri)
     {
         try
         {
-            if(Build.VERSION.SDK_INT < 24)
-            {
-                return(0);
-            }
-            
-            ExifInterface exif = null;
-            exif = new ExifInterface(imageStream);
-            return exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                                       ExifInterface.ORIENTATION_UNDEFINED);
+            InputStream input = _context.getContentResolver().openInputStream(imageUri);
+            ExifInterface ei;
+            if (Build.VERSION.SDK_INT > 23)
+                ei = new ExifInterface(input);
+            else
+                ei = new ExifInterface(imageUri.getPath());
+
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            //myMessages().LogMessage("***ORIENTATION*** of " + imageUri.getPath() + " is " + String.valueOf(orientation));
+            return orientation;
         }
         catch(Exception e)
         {

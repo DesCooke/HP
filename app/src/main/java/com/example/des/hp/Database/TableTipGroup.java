@@ -82,26 +82,26 @@ class TableTipGroup extends TableBase
             /* if picture name has something in it - it means it came from internal folder */
                 if(tipGroupItem.tipGroupPicture.length() == 0)
                 {
-                    myMessages().LogMessage("  - New Image was not from internal folder...");
+                    //myMessages().LogMessage("  - New Image was not from internal folder...");
                     if(tipGroupItem.pictureAssigned)
                     {
-                        myMessages().LogMessage("  - Save new image and get a filename...");
+                        //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
                         if(savePicture(tipGroupItem.fileBitmap, myString) == false)
                             return (false);
                         tipGroupItem.tipGroupPicture=myString.Value;
-                        myMessages().LogMessage("  - New filename " + tipGroupItem.tipGroupPicture);
+                        //myMessages().LogMessage("  - New filename " + tipGroupItem.tipGroupPicture);
                     } else
                     {
-                        myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                        //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                     }
                 } else
                 {
-                    myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + tipGroupItem.tipGroupPicture + ")");
+                    //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + tipGroupItem.tipGroupPicture + ")");
                 }
             } else
             {
-                myMessages().LogMessage("  - New Image not assigned - do nothing");
+                //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
             String lSql="INSERT INTO TipGroup " + "  (holidayId, tipGroupId, sequenceNo, tipGroupDescription, " + "   tipGroupPicture, tipGroupNotes, infoId, noteId, galleryId, sygicId) " + "VALUES " + "(" + tipGroupItem.holidayId + "," + tipGroupItem.tipGroupId + "," + tipGroupItem.sequenceNo + ", " + MyQuotedString(tipGroupItem.tipGroupDescription) + ", " + MyQuotedString(tipGroupItem.tipGroupPicture) + ", " + MyQuotedString(tipGroupItem.tipGroupNotes) + ", " + tipGroupItem.infoId + ", " + tipGroupItem.noteId + ", " + tipGroupItem.galleryId + ", " + tipGroupItem.sygicId + " " + ")";
@@ -151,17 +151,17 @@ class TableTipGroup extends TableBase
             if(IsValid() == false)
                 return (false);
 
-            myMessages().LogMessage("updateTipGroupItem:Handling Image");
+            //myMessages().LogMessage("updateTipGroupItem:Handling Image");
             if(tipGroupItem.pictureChanged)
             {
                 if(tipGroupItem.origPictureAssigned && tipGroupItem.tipGroupPicture.length() > 0 && tipGroupItem.tipGroupPicture.compareTo(tipGroupItem.origTipGroupPicture) == 0)
                 {
-                    myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
+                    //myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
                 } else
                 {
                     if(tipGroupItem.origPictureAssigned)
                     {
-                        myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                        //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
                         if(removePicture(tipGroupItem.origTipGroupPicture) == false)
                             return (false);
                     }
@@ -169,27 +169,27 @@ class TableTipGroup extends TableBase
                 /* if picture name has something in it - it means it came from internal folder */
                     if(tipGroupItem.tipGroupPicture.length() == 0)
                     {
-                        myMessages().LogMessage("  - New Image was not from internal folder...");
+                        //myMessages().LogMessage("  - New Image was not from internal folder...");
                         if(tipGroupItem.pictureAssigned)
                         {
-                            myMessages().LogMessage("  - Save new image and get a filename...");
+                            //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
                             if(savePicture(tipGroupItem.fileBitmap, myString) == false)
                                 return (false);
                             tipGroupItem.tipGroupPicture=myString.Value;
-                            myMessages().LogMessage("  - New filename " + tipGroupItem.tipGroupPicture);
+                            //myMessages().LogMessage("  - New filename " + tipGroupItem.tipGroupPicture);
                         } else
                         {
-                            myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                            //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                         }
                     } else
                     {
-                        myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + tipGroupItem.tipGroupPicture + ")");
+                        //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + tipGroupItem.tipGroupPicture + ")");
                     }
                 }
             } else
             {
-                myMessages().LogMessage("  - Image not changed - do nothing");
+                //myMessages().LogMessage("  - Image not changed - do nothing");
             }
 
             String lSQL;

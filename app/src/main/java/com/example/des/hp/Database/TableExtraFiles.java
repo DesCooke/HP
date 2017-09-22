@@ -64,7 +64,7 @@ class TableExtraFiles extends TableBase
                 return (false);
 
             fileGroupId=myInt.Value;
-            myMessages().LogMessage("Using file group id " + String.valueOf(fileGroupId));
+            //myMessages().LogMessage("Using file group id " + String.valueOf(fileGroupId));
             if(!createSampleExtraFile(fileGroupId, false))
                 return (false);
             if(!createSampleExtraFile(fileGroupId, true))
@@ -96,7 +96,7 @@ class TableExtraFiles extends TableBase
                 return (false);
             item.sequenceNo=fileIdMyInt.Value;
 
-            myMessages().LogMessage("next file id " + String.valueOf(item.fileId));
+            //myMessages().LogMessage("next file id " + String.valueOf(item.fileId));
 
             item.internalFilename=randomFileName();
             item.fileName=item.internalFilename;
@@ -150,26 +150,26 @@ class TableExtraFiles extends TableBase
             /* if picture name has something in it - it means it came from internal folder */
                 if(extraFilesItem.filePicture.length() == 0)
                 {
-                    myMessages().LogMessage("  - New Image was not from internal folder...");
+                    //myMessages().LogMessage("  - New Image was not from internal folder...");
                     if(extraFilesItem.pictureAssigned)
                     {
-                        myMessages().LogMessage("  - Save new image and get a filename...");
+                        //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
                         if(savePicture(extraFilesItem.fileBitmap, myString) == false)
                             return (false);
                         extraFilesItem.filePicture=myString.Value;
-                        myMessages().LogMessage("  - New filename " + extraFilesItem.filePicture);
+                        //myMessages().LogMessage("  - New filename " + extraFilesItem.filePicture);
                     } else
                     {
-                        myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                        //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                     }
                 } else
                 {
-                    myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + extraFilesItem.filePicture + ")");
+                    //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + extraFilesItem.filePicture + ")");
                 }
             } else
             {
-                myMessages().LogMessage("  - New Image not assigned - do nothing");
+                //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
 
@@ -227,17 +227,17 @@ class TableExtraFiles extends TableBase
             if(IsValid() == false)
                 return (false);
 
-            myMessages().LogMessage("updateExtraFilesItem:Handling Image");
+            //myMessages().LogMessage("updateExtraFilesItem:Handling Image");
             if(extraFilesItem.pictureChanged)
             {
                 if(extraFilesItem.origPictureAssigned && extraFilesItem.filePicture.length() > 0 && extraFilesItem.filePicture.compareTo(extraFilesItem.origFilePicture) == 0)
                 {
-                    myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
+                    //myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
                 } else
                 {
                     if(extraFilesItem.origPictureAssigned)
                     {
-                        myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
+                        //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
                         if(removePicture(extraFilesItem.origFilePicture) == false)
                             return (false);
                     }
@@ -245,27 +245,27 @@ class TableExtraFiles extends TableBase
                 /* if picture name has something in it - it means it came from internal folder */
                     if(extraFilesItem.filePicture.length() == 0)
                     {
-                        myMessages().LogMessage("  - New Image was not from internal folder...");
+                        //myMessages().LogMessage("  - New Image was not from internal folder...");
                         if(extraFilesItem.pictureAssigned)
                         {
-                            myMessages().LogMessage("  - Save new image and get a filename...");
+                            //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
                             if(savePicture(extraFilesItem.fileBitmap, myString) == false)
                                 return (false);
                             extraFilesItem.filePicture=myString.Value;
-                            myMessages().LogMessage("  - New filename " + extraFilesItem.filePicture);
+                            //myMessages().LogMessage("  - New filename " + extraFilesItem.filePicture);
                         } else
                         {
-                            myMessages().LogMessage("  - New Image not setup - so - keep it blank");
+                            //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                         }
                     } else
                     {
-                        myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + extraFilesItem.filePicture + ")");
+                        //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + extraFilesItem.filePicture + ")");
                     }
                 }
             } else
             {
-                myMessages().LogMessage("  - Image not changed - do nothing");
+                //myMessages().LogMessage("  - Image not changed - do nothing");
             }
 
             if(extraFilesItem.fileChanged)
