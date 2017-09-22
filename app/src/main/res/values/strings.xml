@@ -130,5 +130,6 @@
     <string name="ReservationTypeJustWalkIn">No Reservations needed - just walk in</string>
     <string name="ReservationTypeReserveOnTheDay">Reserve a table as early as possible on the day</string>
     <string name="ReservationTypeReserve180DaysInAdvance">Reserve a table 180 days in advance</string>
+    <string name="ReservationTypeBooked">***Booked***</string>
 
 </resources>

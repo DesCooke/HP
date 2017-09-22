@@ -27,6 +27,7 @@ public class RestaurantDetailsView extends BaseScheduleView
     public RadioButton radWalkIn;
     public RadioButton radOnTheDay;
     public RadioButton rad180Days;
+    public RadioButton radBooked;
     public LinearLayout grpBookingRef;
     public ImageButton btnClear;
     public Button btnSave;
@@ -57,6 +58,7 @@ public class RestaurantDetailsView extends BaseScheduleView
             radWalkIn=(RadioButton) findViewById(R.id.radWalkIn);
             radOnTheDay=(RadioButton) findViewById(R.id.radOnTheDay);
             rad180Days=(RadioButton) findViewById(R.id.rad180Days);
+            radBooked=(RadioButton) findViewById(R.id.radBooked);
             btnClear=(ImageButton) findViewById(R.id.btnClear);
             btnSave=(Button) findViewById(R.id.btnSave);
             grpStartTime=(LinearLayout) findViewById(R.id.grpStartTime);
@@ -104,6 +106,7 @@ public class RestaurantDetailsView extends BaseScheduleView
             radWalkIn.setChecked(false);
             radOnTheDay.setChecked(false);
             rad180Days.setChecked(false);
+            radBooked.setChecked(false);
             if(scheduleItem.restaurantItem.reservationType == 0)
                 radUnknown.setChecked(true);
             if(scheduleItem.restaurantItem.reservationType == 1)
@@ -112,6 +115,8 @@ public class RestaurantDetailsView extends BaseScheduleView
                 radOnTheDay.setChecked(true);
             if(scheduleItem.restaurantItem.reservationType == 3)
                 rad180Days.setChecked(true);
+            if(scheduleItem.restaurantItem.reservationType == 4)
+                radBooked.setChecked(true);
 
             chkCheckinKnown.setChecked(scheduleItem.startTimeKnown);
             setTimeText(checkIn, scheduleItem.startHour, scheduleItem.startMin);

@@ -46,6 +46,7 @@ public class RestaurantDetailsEdit extends RestaurantDetailsView implements View
             radWalkIn.setOnClickListener(this);
             radOnTheDay.setOnClickListener(this);
             rad180Days.setOnClickListener(this);
+            radBooked.setOnClickListener(this);
         }
         catch(Exception e)
         {
@@ -124,6 +125,7 @@ public class RestaurantDetailsEdit extends RestaurantDetailsView implements View
             radWalkIn.setChecked(false);
             radOnTheDay.setChecked(false);
             rad180Days.setChecked(false);
+            radBooked.setChecked(false);
             ((RadioButton) view).setChecked(true);
         }
         catch(Exception e)
@@ -231,6 +233,8 @@ public class RestaurantDetailsEdit extends RestaurantDetailsView implements View
                 scheduleItem.restaurantItem.reservationType=2;
             if(rad180Days.isChecked())
                 scheduleItem.restaurantItem.reservationType=3;
+            if(radBooked.isChecked())
+                scheduleItem.restaurantItem.reservationType=4;
 
             scheduleItem.startTimeKnown=chkCheckinKnown.isChecked();
             scheduleItem.startHour=getHour(checkIn);

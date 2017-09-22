@@ -189,6 +189,16 @@
                 android:text="180 days"
                 android:textSize="10sp"/>
 
+            <RadioButton
+                android:id="@+id/radBooked"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:clickable="false"
+                android:focusable="false"
+                android:text="Booked"
+                android:textSize="10sp"/>
+
         </LinearLayout>
 
         <LinearLayout
