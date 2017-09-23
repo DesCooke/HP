@@ -108,6 +108,10 @@ public class RestaurantDetailsEdit extends RestaurantDetailsView implements View
                 case R.id.rad180Days:
                     selectReservationType(view);
                     break;
+
+                case R.id.radBooked:
+                    selectReservationType(view);
+                    break;
             }
         }
         catch(Exception e)

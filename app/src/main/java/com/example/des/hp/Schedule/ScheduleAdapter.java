@@ -202,7 +202,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
                 if(c.restaurantItem.reservationType == 4)
                 {
                     holder.txtReservationType.setVisibility(View.VISIBLE);
-                    holder.txtReservationType.setText(R.string.ReservationTypeReserve180DaysInAdvance);
+                    holder.txtReservationType.setText(R.string.ReservationTypeBooked);
                 }
             }
         }
