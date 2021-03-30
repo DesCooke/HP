@@ -8,13 +8,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:orientation="vertical">
 
         <include
             layout="@layout/included_program_info"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/lblTitle"
@@ -22,12 +23,12 @@
             android:layout_height="wrap_content"
             android:text="Holiday Details"
             android:textAlignment="center"
-            android:textSize="36sp"/>
+            android:textSize="36sp" />
 
         <include
             layout="@layout/included_schedule_header"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
 
         <LinearLayout
@@ -43,14 +44,14 @@
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:text="Holiday Name"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/txtHolidayName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TextView"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -64,13 +65,13 @@
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:text="Dates Known"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
             <Switch
                 android:id="@+id/swKnownDates"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="toggleVisibility"/>
+                android:onClick="toggleVisibility" />
 
         </LinearLayout>
 
@@ -79,15 +80,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="pickDateTime"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/lblStartDate"
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:text="Start Date"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/txtStartDate"
@@ -95,9 +95,73 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="TextView"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
         </LinearLayout>
+
+        <Switch
+            android:id="@+id/swDays"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Itinerary Button-Multiple Days"
+            android:textColor="?android:attr/textColorTertiary"
+            android:textSize="18sp" />
+
+        <Switch
+            android:id="@+id/swDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Itinerary Button-Single Day"
+            android:textColor="?android:attr/textColorTertiary"
+            android:textSize="18sp" />
+
+        <Switch
+            android:id="@+id/swMaps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Maps Button"
+            android:textColor="?android:attr/textColorTertiary"
+            android:textSize="18sp" />
+
+        <Switch
+            android:id="@+id/swTasks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Tasks Button"
+            android:textColor="?android:attr/textColorTertiary"
+            android:textSize="18sp" />
+
+        <Switch
+            android:id="@+id/swTips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Tips Button"
+            android:textColor="?android:attr/textColorTertiary"
+            android:textSize="18sp" />
+
+        <Switch
+            android:id="@+id/swBudget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Budget Button"
+            android:textColor="?android:attr/textColorTertiary"
+            android:textSize="18sp" />
+
+        <Switch
+            android:id="@+id/swAttractions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Attractions Button"
+            android:textColor="?android:attr/textColorTertiary"
+            android:textSize="18sp" />
+
+        <Switch
+            android:id="@+id/swContacts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Contacts Button"
+            android:textColor="?android:attr/textColorTertiary"
+            android:textSize="18sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -109,12 +173,12 @@
                 android:id="@+id/btnSave"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignLeft="@+id/button"
-                android:layout_alignStart="@+id/button"
                 android:layout_below="@+id/button"
+                android:layout_alignStart="@+id/button"
+                android:layout_alignLeft="@+id/button"
                 android:layout_weight="1"
                 android:onClick="saveHoliday"
-                android:text="Save"/>
+                android:text="Save" />
         </LinearLayout>
 
         <CheckBox
@@ -122,7 +186,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="CheckBox"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 

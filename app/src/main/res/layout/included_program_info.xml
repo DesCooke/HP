@@ -10,5 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text=""
-        android:textSize="8sp"/>
+        android:textSize="8sp"
+        android:visibility="gone" />
 </LinearLayout>

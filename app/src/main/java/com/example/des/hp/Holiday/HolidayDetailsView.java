@@ -11,9 +11,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.des.hp.Budget.BudgetDetailsList;
@@ -50,6 +52,18 @@ public class HolidayDetailsView extends BaseActivity
     public TextView tipsBadge;
     public TextView attractionsBadge;
     public TextView contactsBadge;
+    private int buttonCount;
+    public RelativeLayout btnGroupDays;
+    public RelativeLayout btnGroupMaps;
+    public RelativeLayout btnGroupTasks;
+    public RelativeLayout btnGroupTips;
+    public RelativeLayout btnGroupBudget;
+    public RelativeLayout btnGroupAttractions;
+    public RelativeLayout btnGroupContacts;
+    public LinearLayout row1;
+    public LinearLayout row2;
+    public LinearLayout row3;
+
 
     // EditText Dialog
     public DialogWithEditTextFragment dialogWithEditTextFragment;
@@ -88,6 +102,18 @@ public class HolidayDetailsView extends BaseActivity
             contactsBadge=(TextView) findViewById(R.id.txtContactBadge);
             tipsBadge=(TextView) findViewById(R.id.txtTipsBadge);
             attractionsBadge=(TextView) findViewById(R.id.txtAttractionBadge);
+
+            row1=(LinearLayout)findViewById(R.id.row1);
+            row2=(LinearLayout)findViewById(R.id.row2);
+            row3=(LinearLayout)findViewById(R.id.row3);
+
+            btnGroupDays=(RelativeLayout)findViewById(R.id.btnGroupDays);
+            btnGroupMaps=(RelativeLayout)findViewById(R.id.btnGroupMaps);
+            btnGroupTasks=(RelativeLayout)findViewById(R.id.btnGroupTasks);
+            btnGroupTips=(RelativeLayout)findViewById(R.id.btnGroupTips);
+            btnGroupBudget=(RelativeLayout)findViewById(R.id.btnGroupBudget);
+            btnGroupAttractions=(RelativeLayout)findViewById(R.id.btnGroupAttractions);
+            btnGroupContacts=(RelativeLayout)findViewById(R.id.btnGroupContacts);
 
             afterCreate();
 
@@ -296,6 +322,15 @@ public class HolidayDetailsView extends BaseActivity
                 txtStartDate.setText(holidayItem.startDateStr);
             }
 
+            buttonCount=0;
+            showOrHideButton(btnGroupDays, holidayItem.buttonDays);
+            showOrHideButton(btnGroupMaps, holidayItem.buttonMaps);
+            showOrHideButton(btnGroupTasks, holidayItem.buttonTasks);
+            showOrHideButton(btnGroupTips, holidayItem.buttonTips);
+            showOrHideButton(btnGroupBudget, holidayItem.buttonBudget);
+            showOrHideButton(btnGroupAttractions, holidayItem.buttonAttractions);
+            showOrHideButton(btnGroupContacts, holidayItem.buttonContacts);
+
             afterShow();
         }
         catch(Exception e)
@@ -306,6 +341,31 @@ public class HolidayDetailsView extends BaseActivity
 
     }
 
+    public void showOrHideButton(RelativeLayout layout, boolean show)
+    {
+        if(show)
+        {
+            buttonCount++;
+            layout.setVisibility(View.VISIBLE);
+
+            ViewGroup parent = (ViewGroup) layout.getParent();
+            if (parent != null)
+                parent.removeView(layout);
+
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutP...
+//            yourChildView.setLayoutParams(params);
+            if(buttonCount==1 || buttonCount==2 || buttonCount==3)
+                row1.addView(layout);
+            if(buttonCount==4 || buttonCount==5 || buttonCount==6)
+                row2.addView(layout);
+            if(buttonCount==7 || buttonCount==8 || buttonCount==9)
+                row3.addView(layout);
+        }
+        else
+        {
+            layout.setVisibility(View.GONE);
+        }
+    }
     public void editHoliday()
     {
         try
