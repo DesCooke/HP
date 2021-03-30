@@ -11,10 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="176dp"
         android:layout_alignParentTop="true"
+        android:background="@android:drawable/screen_background_light_transparent"
         android:scaleType="fitCenter"
         android:visibility="visible"
         app:srcCompat="@drawable/imagemissing"
-        tools:ignore="ContentDescription,RtlHardcoded"/>
+        tools:ignore="ContentDescription,RtlHardcoded" />
 
     <ImageButton
         android:id="@+id/btnClear"
@@ -33,6 +34,7 @@
         android:layout_alignBottom="@+id/imageViewSmall"
         android:layout_toEndOf="@+id/btnClear"
         android:background="@android:color/background_light"
-        android:text="TextView"/>
+        android:text="TextView"
+        android:visibility="gone" />
 
 </RelativeLayout>

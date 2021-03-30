@@ -24,6 +24,14 @@ public class HolidayItem
     public int noteId;
     public int galleryId;
     public int sygicId;
+    public boolean buttonDays;
+    public boolean buttonDay;
+    public boolean buttonMaps;
+    public boolean buttonTasks;
+    public boolean buttonTips;
+    public boolean buttonBudget;
+    public boolean buttonAttractions;
+    public boolean buttonContacts;
 
     // Original Fields
     public int origHolidayId;
@@ -39,6 +47,14 @@ public class HolidayItem
     public int origNoteId;
     public int origGalleryId;
     public int origSygicId;
+    public boolean origButtonDays;
+    public boolean origButtonDay;
+    public boolean origButtonMaps;
+    public boolean origButtonTasks;
+    public boolean origButtonTips;
+    public boolean origButtonBudget;
+    public boolean origButtonAttractions;
+    public boolean origButtonContacts;
 
     public String ToGo;
 
@@ -77,6 +93,22 @@ public class HolidayItem
         if(item1.galleryId!=item2.galleryId)
             return(false);
         if(item1.sygicId!=item2.sygicId)
+            return(false);
+        if(item1.buttonDays!=item2.buttonDays)
+            return(false);
+        if(item1.buttonDay!=item2.buttonDay)
+            return(false);
+        if(item1.buttonMaps!=item2.buttonMaps)
+            return(false);
+        if(item1.buttonTasks!=item2.buttonTasks)
+            return(false);
+        if(item1.buttonTips!=item2.buttonTips)
+            return(false);
+        if(item1.buttonBudget!=item2.buttonBudget)
+            return(false);
+        if(item1.buttonAttractions!=item2.buttonAttractions)
+            return(false);
+        if(item1.buttonContacts!=item2.buttonContacts)
             return(false);
 
         return(true);

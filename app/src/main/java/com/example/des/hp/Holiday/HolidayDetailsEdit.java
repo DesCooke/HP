@@ -34,6 +34,15 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
     public View.OnClickListener dwetOnOkClick;
     public ImageButton btnClear;
     public Button btnSave;
+    public Switch swDays;
+    public Switch swDay;
+    public Switch swMaps;
+    public Switch swTasks;
+    public Switch swTips;
+    public Switch swBudget;
+    public Switch swAttractions;
+    public Switch swContacts;
+
     //endregion
 
     //region Constructors/Destructors
@@ -55,6 +64,14 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
             grpHolidayName=(LinearLayout) findViewById(R.id.grpHolidayName);
             btnClear=(ImageButton) findViewById(R.id.btnClear);
             btnSave=(Button) findViewById(R.id.btnSave);
+            swDays=(Switch) findViewById(R.id.swDays);
+            swDay=(Switch) findViewById(R.id.swDay);
+            swMaps=(Switch) findViewById(R.id.swMaps);
+            swTasks=(Switch) findViewById(R.id.swTasks);
+            swTips=(Switch) findViewById(R.id.swTips);
+            swBudget=(Switch) findViewById(R.id.swBudget);
+            swAttractions=(Switch) findViewById(R.id.swAttractions);
+            swContacts=(Switch) findViewById(R.id.swContacts);
 
             holidayItem=new HolidayItem();
 
@@ -84,6 +101,15 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
                     sw.setChecked(true);
                     datesAreKnown();
                 }
+                swDays.setChecked(holidayItem.buttonDays);
+                swDay.setChecked(holidayItem.buttonDay);
+                swMaps.setChecked(holidayItem.buttonMaps);
+                swTasks.setChecked(holidayItem.buttonTasks);
+                swTips.setChecked(holidayItem.buttonTips);
+                swBudget.setChecked(holidayItem.buttonBudget);
+                swAttractions.setChecked(holidayItem.buttonAttractions);
+                swContacts.setChecked(holidayItem.buttonContacts);
+
                 setTitle(holidayItem.holidayName);
                 SetImage(holidayItem.holidayPicture);
             }
@@ -277,6 +303,14 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
             if(holidayItem.pictureAssigned)
                 holidayItem.holidayBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
+            holidayItem.buttonDays = swDays.isChecked();
+            holidayItem.buttonDay = swDay.isChecked();
+            holidayItem.buttonMaps = swMaps.isChecked();
+            holidayItem.buttonTasks = swTasks.isChecked();
+            holidayItem.buttonTips = swTips.isChecked();
+            holidayItem.buttonBudget = swBudget.isChecked();
+            holidayItem.buttonAttractions = swAttractions.isChecked();
+            holidayItem.buttonContacts = swContacts.isChecked();
 
             if(action.equals("add"))
             {

@@ -23,8 +23,7 @@
         <LinearLayout
             android:id="@+id/grpStartDate"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.1"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
@@ -33,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Start Date"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/txtStartDate"
@@ -42,7 +41,7 @@
                 android:layout_weight="1"
                 android:text="TextView"
                 android:textAlignment="textEnd"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
         </LinearLayout>
 
@@ -85,115 +84,113 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.8"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <LinearLayout
+                android:id="@+id/row1"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="120dp"
                 android:orientation="horizontal">
 
                 <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:id="@+id/btnGroupDays"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent">
 
                     <ImageButton
                         android:id="@+id/btnShowItinerary"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:background="@android:drawable/alert_light_frame"
                         android:onClick="showDay"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/calendar"/>
+                        app:srcCompat="@drawable/calendar" />
 
                     <TextView
                         android:id="@+id/txtItineraryBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
                         android:background="@android:drawable/alert_light_frame"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="99"
                         android:textAlignment="gravity"
-                        android:textSize="10sp"/>
+                        android:textSize="10sp" />
 
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:id="@+id/btnGroupMaps"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent">
 
                     <ImageButton
                         android:id="@+id/btnShowMaps"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:background="@android:drawable/alert_light_frame"
                         android:onClick="showMaps"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/map"/>
+                        app:srcCompat="@drawable/map" />
 
                     <TextView
                         android:id="@+id/txtMapBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
                         android:background="@android:drawable/alert_light_frame"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="99"
                         android:textAlignment="gravity"
-                        android:textSize="10sp"/>
+                        android:textSize="10sp" />
 
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:id="@+id/btnGroupTasks"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent">
+
 
                     <ImageButton
                         android:id="@+id/btnShowTasks"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:background="@android:drawable/alert_light_frame"
                         android:onClick="showTasks"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/task"/>
+                        app:srcCompat="@drawable/task" />
 
                     <TextView
                         android:id="@+id/txtTaskBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
                         android:background="@android:drawable/alert_light_frame"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="99"
                         android:textAlignment="gravity"
-                        android:textSize="10sp"/>
-
+                        android:textSize="10sp" />
                 </RelativeLayout>
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/row2"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="120dp"
                 android:orientation="horizontal">
 
                 <RelativeLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/btnGroupTips"
+                    android:layout_width="120dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="0">
 
                     <ImageButton
                         android:id="@+id/btnShowTips"
@@ -203,26 +200,27 @@
                         android:background="@android:drawable/alert_light_frame"
                         android:onClick="showTipGroups"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/tips"/>
+                        app:srcCompat="@drawable/tips" />
 
                     <TextView
                         android:id="@+id/txtTipsBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
                         android:background="@android:drawable/alert_light_frame"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="99"
                         android:textAlignment="gravity"
-                        android:textSize="10sp"/>
+                        android:textSize="10sp" />
 
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/btnGroupBudget"
+                    android:layout_width="120dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="0">
 
                     <ImageButton
                         android:id="@+id/btnShowBudget"
@@ -232,26 +230,27 @@
                         android:background="@android:drawable/alert_light_frame"
                         android:onClick="showBudget"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/budget"/>
+                        app:srcCompat="@drawable/budget" />
 
                     <TextView
                         android:id="@+id/txtBudgetBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
                         android:background="@android:drawable/alert_light_frame"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="99"
                         android:textAlignment="gravity"
-                        android:textSize="10sp"/>
+                        android:textSize="10sp" />
 
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/btnGroupAttractions"
+                    android:layout_width="120dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="0">
 
                     <ImageButton
                         android:id="@+id/btnShowAttractions"
@@ -261,50 +260,35 @@
                         android:background="@android:drawable/alert_light_frame"
                         android:onClick="showAttractions"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/attractions"/>
+                        app:srcCompat="@drawable/attractions" />
 
                     <TextView
                         android:id="@+id/txtAttractionBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
                         android:background="@android:drawable/alert_light_frame"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="99"
                         android:textAlignment="gravity"
-                        android:textSize="10sp"/>
+                        android:textSize="10sp" />
 
                 </RelativeLayout>
-
             </LinearLayout>
 
+
             <LinearLayout
+                android:id="@+id/row3"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="120dp"
                 android:orientation="horizontal">
 
                 <RelativeLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/btnGroupContacts"
+                    android:layout_width="120dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <ImageButton
-                        android:id="@+id/btnSpare"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@android:drawable/alert_light_frame"
-                        android:scaleType="fitXY"
-                        android:visibility="gone"/>
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="0">
 
                     <ImageButton
                         android:id="@+id/btnShowContacts"
@@ -314,56 +298,26 @@
                         android:background="@android:drawable/alert_light_frame"
                         android:onClick="showContacts"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/contacts"/>
+                        app:srcCompat="@drawable/contacts" />
 
                     <TextView
                         android:id="@+id/txtContactBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
                         android:background="@android:drawable/alert_light_frame"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="99"
                         android:textAlignment="gravity"
-                        android:textSize="10sp"/>
+                        android:textSize="10sp" />
 
                 </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <ImageButton
-                        android:id="@+id/btnSpare2"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@android:drawable/alert_light_frame"
-                        android:scaleType="fitXY"
-                        android:visibility="gone"/>
-
-                    <TextView
-                        android:id="@+id/txtInfoBadge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:background="@android:drawable/alert_light_frame"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:text="99"
-                        android:textAlignment="gravity"
-                        android:textSize="10sp"
-                        android:visibility="gone"/>
-
-                </RelativeLayout>
-
             </LinearLayout>
 
         </LinearLayout>
 
-
     </LinearLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>
