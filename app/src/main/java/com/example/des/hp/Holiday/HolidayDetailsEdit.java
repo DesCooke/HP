@@ -35,7 +35,6 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
     public ImageButton btnClear;
     public Button btnSave;
     public Switch swDays;
-    public Switch swDay;
     public Switch swMaps;
     public Switch swTasks;
     public Switch swTips;
@@ -65,7 +64,6 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
             btnClear=(ImageButton) findViewById(R.id.btnClear);
             btnSave=(Button) findViewById(R.id.btnSave);
             swDays=(Switch) findViewById(R.id.swDays);
-            swDay=(Switch) findViewById(R.id.swDay);
             swMaps=(Switch) findViewById(R.id.swMaps);
             swTasks=(Switch) findViewById(R.id.swTasks);
             swTips=(Switch) findViewById(R.id.swTips);
@@ -102,7 +100,6 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
                     datesAreKnown();
                 }
                 swDays.setChecked(holidayItem.buttonDays);
-                swDay.setChecked(holidayItem.buttonDay);
                 swMaps.setChecked(holidayItem.buttonMaps);
                 swTasks.setChecked(holidayItem.buttonTasks);
                 swTips.setChecked(holidayItem.buttonTips);
@@ -304,7 +301,6 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
                 holidayItem.holidayBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
             holidayItem.buttonDays = swDays.isChecked();
-            holidayItem.buttonDay = swDay.isChecked();
             holidayItem.buttonMaps = swMaps.isChecked();
             holidayItem.buttonTasks = swTasks.isChecked();
             holidayItem.buttonTips = swTips.isChecked();

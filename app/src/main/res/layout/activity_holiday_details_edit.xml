@@ -103,15 +103,7 @@
             android:id="@+id/swDays"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Show Itinerary Button-Multiple Days"
-            android:textColor="?android:attr/textColorTertiary"
-            android:textSize="18sp" />
-
-        <Switch
-            android:id="@+id/swDay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Show Itinerary Button-Single Day"
+            android:text="Show Itinerary Button"
             android:textColor="?android:attr/textColorTertiary"
             android:textSize="18sp" />
 
