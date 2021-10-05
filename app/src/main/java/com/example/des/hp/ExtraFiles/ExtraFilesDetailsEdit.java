@@ -261,7 +261,9 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
 
                     //myMessages().LogMessage("New Filename is " + newFilename);
 
-                    File tof=new File(getResources().getString(R.string.files_path) + "/" + newFilename);
+                    File tof=new File(MyFileUtils.MyDocuments() + "/" +
+                            getResources().getString(R.string.application_file_path) + "/" +
+                            getResources().getString(R.string.files_path) + "/" + newFilename);
                     if(tof.exists())
                     {
                         origFilename=newFilename;

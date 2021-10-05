@@ -35,6 +35,12 @@ public class MyFileUtils
     private MyUri myUri;
     private static MyFileUtils fileUtils=null;
 
+    public static String MyDocuments()
+    {
+        return("/storage/emulated/0");
+        //return(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath());
+    }
+
     public static MyFileUtils myFileUtils()
     {
         if(fileUtils == null)
@@ -266,7 +272,9 @@ public class MyFileUtils
             String ffromPath=argFromUri.getPath();
             File f=new File(ffromPath);
 
-            File f99=new File(res.getString(R.string.files_path));
+            File f99=new File(MyFileUtils.MyDocuments() + "/" +
+                    res.getString(R.string.application_file_path) + "/" +
+                    res.getString(R.string.files_path));
             if(!f99.exists())
             {
                 if(!f99.mkdir())
@@ -275,7 +283,9 @@ public class MyFileUtils
                 }
             }
 
-            File tof=new File(res.getString(R.string.files_path) + "/" + newFilename);
+            File tof=new File(MyFileUtils.MyDocuments() + "/" +
+                    res.getString(R.string.application_file_path) + "/" +
+                    res.getString(R.string.files_path) + "/" + newFilename);
             if(tof.exists())
                 return (false);
 
@@ -311,7 +321,9 @@ public class MyFileUtils
     {
         try
         {
-            File f99=new File(res.getString(R.string.files_path));
+            File f99=new File(MyFileUtils.MyDocuments() + "/" +
+                    res.getString(R.string.application_file_path) + "/" +
+                    res.getString(R.string.files_path));
             if(!f99.exists())
             {
                 if(!f99.mkdir())
@@ -321,7 +333,9 @@ public class MyFileUtils
             }
 
             //myMessages().LogMessage("createSample with filename " + newFilename);
-            File tof=new File(res.getString(R.string.files_path) + "/" + newFilename);
+            File tof=new File(MyFileUtils.MyDocuments() + "/" +
+                    res.getString(R.string.application_file_path) + "/" +
+                    res.getString(R.string.files_path) + "/" + newFilename);
             if(tof.exists())
                 return (false);
 

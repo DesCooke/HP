@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 
 import com.example.des.hp.MainActivity;
 import com.example.des.hp.Notes.NoteItem;
@@ -35,6 +36,7 @@ import com.example.des.hp.AttractionArea.*;
 import com.example.des.hp.Contact.*;
 import com.example.des.hp.myutils.DateUtils;
 import com.example.des.hp.myutils.MyBoolean;
+import com.example.des.hp.myutils.MyFileUtils;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
@@ -84,7 +86,11 @@ public class DatabaseAccess extends SQLiteOpenHelper
     //region CONSTRUCTOR/DESTRUCTORS
     public DatabaseAccess(Context context)
     {
-        super(context, context.getResources().getString(R.string.database_filename), null, DATABASE_VERSION);
+        super(context,
+                MyFileUtils.MyDocuments() + "/" +
+                        context.getResources().getString(R.string.application_file_path) + "/" +
+                         context.getResources().getString(R.string.database_filename),
+                null, DATABASE_VERSION);
         
         try
         {
@@ -117,7 +123,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
             tableNotes = new TableNotes(context, this);
             dateUtils = new DateUtils(context);
             
-            File f1 = new File(res.getString(R.string.application_file_path));
+            File f1 = new File(MyFileUtils.MyDocuments() + "/" + res.getString(R.string.application_file_path));
             if (!f1.exists())
             {
                 if (!f1.mkdir())
@@ -126,7 +132,9 @@ public class DatabaseAccess extends SQLiteOpenHelper
                 }
             }
             
-            File f = new File(res.getString(R.string.picture_path));
+            File f = new File(MyFileUtils.MyDocuments() + "/" +
+                                res.getString(R.string.application_file_path) + "/" +
+                                res.getString(R.string.picture_path));
             if (!f.exists())
             {
                 if (!f.mkdir())

@@ -2,6 +2,7 @@ package com.example.des.hp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -181,7 +182,9 @@ public class MainActivity extends BaseActivity
         {
             SetTitles(getResources().getString(R.string.title_planner), "");
 
-            File f = new File(getResources().getString(R.string.database_filename));
+            File f = new File(MyFileUtils.MyDocuments() + "/" +
+                    getResources().getString(R.string.application_file_path) + "/" +
+                    getResources().getString(R.string.database_filename));
             boolean needToCreateSampleDatabase=false;
             if(!f.exists())
                 needToCreateSampleDatabase=true;
@@ -192,36 +195,40 @@ public class MainActivity extends BaseActivity
                 MyPermissions.requestForSpecificPermission(this);
             } else
             {
-                accessGranted = true;
-                invalidateOptionsMenu();
-                
-                if(needToCreateSampleDatabase)
-                    databaseAccess().createSampleDatabase();
-                
-                holidayList = new ArrayList<>();
-                if (!databaseAccess().getHolidayList(holidayList))
-                    return;
+                if (!MyPermissions.AllowedToUseManageStored(this))
+                {
+                    setTitle(getResources().getString(R.string.title_waitingforpermission));
+                    MyPermissions.requestManageStored(this);
+                } else {
+                    accessGranted = true;
+                    invalidateOptionsMenu();
 
-                HolidayAdapter adapter = new HolidayAdapter(this, R.layout.holidaylistitemrow, holidayList);
-                ListView listView1 = (ListView) findViewById(R.id.holidayListView);
-                listView1.setOnItemClickListener
-                    (
-                        new AdapterView.OnItemClickListener()
-                        {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-                            {
-                                Intent intent = new Intent(getApplicationContext(), HolidayDetailsView.class);
-                                intent.putExtra("ACTION", "view");
-                                intent.putExtra("HOLIDAYID", holidayList.get(position).holidayId);
-                                startActivity(intent);
-                            }
-                        }
-                    );
-                listView1.setDivider(null);
-                listView1.setAdapter(adapter);
-                
-                afterShow();
+                    if (needToCreateSampleDatabase)
+                        databaseAccess().createSampleDatabase();
+
+                    holidayList = new ArrayList<>();
+                    if (!databaseAccess().getHolidayList(holidayList))
+                        return;
+
+                    HolidayAdapter adapter = new HolidayAdapter(this, R.layout.holidaylistitemrow, holidayList);
+                    ListView listView1 = (ListView) findViewById(R.id.holidayListView);
+                    listView1.setOnItemClickListener
+                            (
+                                    new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                            Intent intent = new Intent(getApplicationContext(), HolidayDetailsView.class);
+                                            intent.putExtra("ACTION", "view");
+                                            intent.putExtra("HOLIDAYID", holidayList.get(position).holidayId);
+                                            startActivity(intent);
+                                        }
+                                    }
+                            );
+                    listView1.setDivider(null);
+                    listView1.setAdapter(adapter);
+
+                    afterShow();
+                }
             }
         }
         catch (Exception e)
