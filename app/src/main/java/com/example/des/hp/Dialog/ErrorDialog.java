@@ -1,7 +1,7 @@
 package com.example.des.hp.Dialog;
 
 import android.content.Context;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 
 class ErrorDialog
 {

@@ -69,7 +69,9 @@ public class ImageUtils
         {
             if (lValid.Value == true)
             {
-                Uri uri = Uri.fromFile(new File(res.getString(R.string.picture_path) + "/" + argFilename));
+                Uri uri = Uri.fromFile(new File(MyFileUtils.MyDocuments() + "/" +
+                        res.getString(R.string.application_file_path) + "/" +
+                        res.getString(R.string.picture_path) + "/" + argFilename));
                 
                 Picasso.with(context).load(uri).resize(100, 100).transform(new CircleTransform()).into(destImageView);
             } else
@@ -95,7 +97,9 @@ public class ImageUtils
         {
             if (lValid.Value == true)
             {
-                Uri uri = Uri.fromFile(new File(res.getString(R.string.picture_path) + "/" + argFilename));
+                Uri uri = Uri.fromFile(new File(MyFileUtils.MyDocuments() + "/" +
+                        res.getString(R.string.application_file_path) + "/" +
+                        res.getString(R.string.picture_path) + "/" + argFilename));
                 
                 Picasso.with(context).load(uri).resize(150, 150)
                     //.transform(new CircleTransform())
@@ -122,7 +126,9 @@ public class ImageUtils
         {
             ArrayList<InternalImageItem> l_array = new ArrayList<>();
             
-            File directory = new File(res.getString(R.string.picture_path));
+            File directory = new File(MyFileUtils.MyDocuments() + "/" +
+                    res.getString(R.string.application_file_path) + "/" +
+                    res.getString(R.string.picture_path));
             File[] files = directory.listFiles();
             
             if (files == null)
@@ -174,7 +180,9 @@ public class ImageUtils
         {
             ArrayList<InternalFileItem> l_array = new ArrayList<>();
             
-            File directory = new File(res.getString(R.string.files_path));
+            File directory = new File(MyFileUtils.MyDocuments() + "/" +
+                    res.getString(R.string.application_file_path) + "/" +
+                    res.getString(R.string.files_path));
             File[] files = directory.listFiles();
             
             if (files == null)
@@ -202,7 +210,9 @@ public class ImageUtils
     {
         try
         {
-            File directory = new File(res.getString(R.string.files_path));
+            File directory = new File(MyFileUtils.MyDocuments() + "/" +
+                    res.getString(R.string.application_file_path) + "/" +
+                    res.getString(R.string.files_path));
             File[] files = directory.listFiles();
             
             if (files == null)
@@ -227,7 +237,9 @@ public class ImageUtils
         {
             if (filename.length() == 0)
                 return (false);
-            File f = new File(res.getString(R.string.picture_path) + "/" + filename);
+            File f = new File(MyFileUtils.MyDocuments() + "/" +
+                    res.getString(R.string.application_file_path) + "/" +
+                    res.getString(R.string.picture_path) + "/" + filename);
             retBoolean.Value = f.exists();
             return (true);
         }
@@ -256,7 +268,9 @@ public class ImageUtils
         {
             if (lValid.Value == true)
             {
-                Uri uri = Uri.fromFile(new File(res.getString(R.string.picture_path) + "/" + argFilename));
+                Uri uri = Uri.fromFile(new File(MyFileUtils.MyDocuments() + "/" +
+                        res.getString(R.string.application_file_path) + "/" +
+                        res.getString(R.string.picture_path) + "/" + argFilename));
                 
                 Picasso.with(context).load(uri).resize(256, 256).into(destImageView);
             } else
@@ -292,7 +306,9 @@ public class ImageUtils
         {
             if (lValid.Value == true)
             {
-                Uri uri = Uri.fromFile(new File(res.getString(R.string.picture_path) + "/" + argFilename));
+                Uri uri = Uri.fromFile(new File(MyFileUtils.MyDocuments() + "/" +
+                        res.getString(R.string.application_file_path) + "/" +
+                        res.getString(R.string.picture_path) + "/" + argFilename));
                 
                 MyBitmap myBitmap = new MyBitmap();
                 if (!ScaleBitmapFromUrl(uri, _context.getContentResolver(), myBitmap))
@@ -387,7 +403,9 @@ public class ImageUtils
     {
         try
         {
-            Uri uri = Uri.fromFile(new File(res.getString(R.string.picture_path) + "/" + lfile));
+            Uri uri = Uri.fromFile(new File(MyFileUtils.MyDocuments() + "/" +
+                    res.getString(R.string.application_file_path) + "/" +
+                    res.getString(R.string.picture_path) + "/" + lfile));
             
             return(ScaleBitmapFromUrl(uri, cr, retBitmap));
         }

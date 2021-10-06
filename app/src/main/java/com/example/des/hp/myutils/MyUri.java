@@ -3,7 +3,7 @@ package com.example.des.hp.myutils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.support.v4.content.FileProvider;
+import androidx.core.content.FileProvider;
 
 import com.example.des.hp.R;
 
@@ -30,7 +30,9 @@ class MyUri
     Uri getUri(String filename)
     {
         // get the full path, "/storage/emulated/0/HP/files" "/" "fred.jpg"
-        String originalfullurl=res.getString(R.string.files_path) + "/" + filename;
+        String originalfullurl=MyFileUtils.MyDocuments() + "/" +
+                res.getString(R.string.application_file_path) + "/" +
+                res.getString(R.string.files_path) + "/" + filename;
 
         // create a File object from it
         File originalFile=new File(originalfullurl);

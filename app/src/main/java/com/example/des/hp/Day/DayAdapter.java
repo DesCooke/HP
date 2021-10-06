@@ -3,7 +3,7 @@ package com.example.des.hp.Day;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +21,6 @@ import com.example.des.hp.R;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyApiSpecific.myApiSpecific;
-import static com.example.des.hp.myutils.MyColor.myColor;
 
 /**
  * * Created by Des on 06/10/2016.
