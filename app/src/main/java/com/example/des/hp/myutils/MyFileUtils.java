@@ -121,15 +121,7 @@ public class MyFileUtils
             viewIntent.setAction(Intent.ACTION_VIEW);
             viewIntent.setDataAndType(toUri, mimeType);
             viewIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            List<ResolveInfo> resolved=_context.getPackageManager().queryIntentActivities(viewIntent, 0);
-            if(resolved != null && resolved.size() > 0)
-            {
-                _context.startActivity(viewIntent);
-            } else
-            {
-                myMessages().ShowMessageWithOk("Unable to open file", aFile, null);
-                return (false);
-            }
+            _context.startActivity(viewIntent);
             return (true);
         }
         catch(Exception e)

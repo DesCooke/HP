@@ -2,18 +2,36 @@ package com.example.des.hp.myutils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.Settings;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 public class MyPermissions
 {
-    public static boolean AllowedToUseManageStored(Activity activity)
+    public static boolean AccessAllowed()
     {
-        int permission = ContextCompat.checkSelfPermission(activity, Manifest.permission.MANAGE_EXTERNAL_STORAGE);
-        if (permission == PackageManager.PERMISSION_GRANTED)
-        {
-            return(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return (Environment.isExternalStorageManager());
+        }
+        return false;
+    }
+
+    public static boolean EnsureAccessToExternalDrive(Activity activity)
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if(!Environment.isExternalStorageManager()) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                activity.startActivity(intent);
+            }
+            else
+            {
+                return(true);
+            }
         }
         return(false);
     }
