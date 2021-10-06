@@ -38,7 +38,9 @@ public class MyLog
     {
         try
         {
-            String logfilename=res.getString(R.string.log_filename);
+            String logfilename=MyFileUtils.MyDocuments() + "/" +
+                    res.getString(R.string.application_file_path) + "/" +
+                    res.getString(R.string.log_filename);
 
             // create a File object from it
             File file=new File(logfilename);
@@ -63,7 +65,9 @@ public class MyLog
     {
         try
         {
-            String logfilename=res.getString(R.string.log_filename);
+            String logfilename=MyFileUtils.MyDocuments() + "/" +
+                    res.getString(R.string.application_file_path) + "/" +
+                    res.getString(R.string.log_filename);
 
             // create a File object from it
             File file=new File(logfilename);

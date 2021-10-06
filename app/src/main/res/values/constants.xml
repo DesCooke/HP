@@ -2,13 +2,13 @@
 <resources>
     <string name="program_version">7.04.000</string>
     <string name="program_date">23-09-2017 12:00:00</string>
-    <string name="application_file_path">/storage/emulated/0/HP</string>
-    <string name="database_filename">/storage/emulated/0/HP/hp.db</string>
-    <string name="picture_path">/storage/emulated/0/HP/pictures</string>
-    <string name="files_path">/storage/emulated/0/HP/files</string>
-    <string name="archive_path">/storage/emulated/0/HPArchive</string>
-    <string name="log_filename">/storage/emulated/0/HP/hp.txt</string>
-    <string name="tmp_path">/storage/emulated/0/HPTmp</string>
+    <string name="application_file_path">HP</string>
+    <string name="database_filename">hp.db</string>
+    <string name="picture_path">pictures</string>
+    <string name="files_path">files</string>
+    <string name="archive_path">HPArchive</string>
+    <string name="log_filename">hp.txt</string>
+    <string name="tmp_path">HPTmp</string>
     <string name="rusureDialogTag">rusureDialogTag</string>
     <string name="reallysureDialogTag">reallysureDialogTag</string>
     <string name="dwetDialogTag">dwetDialogTag</string>

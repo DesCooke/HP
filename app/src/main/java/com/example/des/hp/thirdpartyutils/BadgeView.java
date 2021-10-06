@@ -26,7 +26,7 @@ import android.widget.TabWidget;
  * 
  * @author Jeff Gilfelt
  */
-public class BadgeView extends android.support.v7.widget.AppCompatTextView {
+public class BadgeView extends androidx.appcompat.widget.AppCompatTextView {
 
 	public static final int POSITION_TOP_LEFT = 1;
 	public static final int POSITION_TOP_RIGHT = 2;

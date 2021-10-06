@@ -2,6 +2,7 @@ package com.example.des.hp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -52,13 +53,17 @@ public class MainActivity extends BaseActivity
             layoutName = "activity_main";
             setContentView(R.layout.activity_main);
 
-            archiveRestore = new ArchiveRestore(this);
-            
-            myMessages().ClearLog();
-            
-            afterCreate();
-            
-            showForm();
+            MyPermissions.EnsureAccessToExternalDrive(this);
+            if(MyPermissions.AccessAllowed())
+            {
+                archiveRestore = new ArchiveRestore(this);
+
+                myMessages().ClearLog();
+
+                afterCreate();
+
+                showForm();
+            }
         }
         catch (Exception e)
         {
@@ -93,26 +98,27 @@ public class MainActivity extends BaseActivity
         
         try
         {
-            switch (item.getItemId())
-            {
-                case R.id.action_backup:
-                    // don't care about return code
-                    backup();
-                    // consume click here
-                    lv_result = true;
-                    break;
-                case R.id.action_add_holiday:
-                    showHolidayAdd(null);
-                    // consume click here
-                    lv_result = true;
-                    break;
-                case R.id.action_orphaned_images:
-                    handleOrphanedImages();
-                    // consume click here
-                    lv_result = true;
-                    break;
-                default:
-                    lv_result = super.onOptionsItemSelected(item);
+            if(MyPermissions.AccessAllowed()) {
+                switch (item.getItemId()) {
+                    case R.id.action_backup:
+                        // don't care about return code
+                        backup();
+                        // consume click here
+                        lv_result = true;
+                        break;
+                    case R.id.action_add_holiday:
+                        showHolidayAdd(null);
+                        // consume click here
+                        lv_result = true;
+                        break;
+                    case R.id.action_orphaned_images:
+                        handleOrphanedImages();
+                        // consume click here
+                        lv_result = true;
+                        break;
+                    default:
+                        lv_result = super.onOptionsItemSelected(item);
+                }
             }
         }
         catch (Exception e)
@@ -125,44 +131,40 @@ public class MainActivity extends BaseActivity
     public void handleOrphanedImages()
     {
         try{
-        int lCount=0;
-        //myMessages().LogMessage("Identifying orphaned images....");
-        
-        ArrayList<InternalImageItem>internalImageList=imageUtils().listInternalImages();
-        if(internalImageList!=null)
-        {
-            for(InternalImageItem item : internalImageList)
-            {
-                if(databaseAccess().pictureUsageCount(item.internalImageFilename) == 0)
-                {
-                    //myMessages().LogMessage("Picture " + item.internalImageFilename + ", is not linked to anything - removing");
-                    databaseAccess().removePicture(item.internalImageFilename);
-                    lCount++;
+            if(MyPermissions.AccessAllowed()) {
+                int lCount = 0;
+                //myMessages().LogMessage("Identifying orphaned images....");
+
+                ArrayList<InternalImageItem> internalImageList = imageUtils().listInternalImages();
+                if (internalImageList != null) {
+                    for (InternalImageItem item : internalImageList) {
+                        if (databaseAccess().pictureUsageCount(item.internalImageFilename) == 0) {
+                            //myMessages().LogMessage("Picture " + item.internalImageFilename + ", is not linked to anything - removing");
+                            databaseAccess().removePicture(item.internalImageFilename);
+                            lCount++;
+                        }
+                    }
+                    //myMessages().LogMessage("There are a total of " + String.valueOf(internalImageList.size()) + " and " + String.valueOf(lCount) + " were orphaned");
+                }
+
+                //myMessages().LogMessage("Identifying orphaned files....");
+
+                int lCount2 = 0;
+                ArrayList<InternalFileItem> internalFileList = imageUtils().listInternalFiles();
+                if (internalFileList != null) {
+                    for (InternalFileItem item : internalFileList) {
+                        if (databaseAccess().fileUsageCount(item.filename) == 0) {
+                            //myMessages().LogMessage("File " + item.filename + ", is not linked to anything - removing");
+                            databaseAccess().removeExtraFile(item.filename);
+                            lCount2++;
+                        }
+                    }
+                    //myMessages().LogMessage("There are a total of " + String.valueOf(internalFileList.size()) + " and " + String.valueOf(lCount2) + " were orphaned");
+
+                    if (internalImageList != null)
+                        myMessages().ShowMessageLong("Images: Orphaned " + String.valueOf(lCount) + ", " + "Total " + String.valueOf(internalImageList.size()) + ", " + "Files: Orphaned " + String.valueOf(lCount2) + ", " + "Total " + String.valueOf(internalFileList.size()) + " ");
                 }
             }
-            //myMessages().LogMessage("There are a total of " + String.valueOf(internalImageList.size()) + " and " + String.valueOf(lCount) + " were orphaned");
-        }
-
-        //myMessages().LogMessage("Identifying orphaned files....");
-
-        int lCount2=0;
-        ArrayList<InternalFileItem>internalFileList=imageUtils().listInternalFiles();
-        if(internalFileList!=null)
-        {
-            for(InternalFileItem item : internalFileList)
-            {
-                if(databaseAccess().fileUsageCount(item.filename) == 0)
-                {
-                    //myMessages().LogMessage("File " + item.filename + ", is not linked to anything - removing");
-                    databaseAccess().removeExtraFile(item.filename);
-                    lCount2++;
-                }
-            }
-            //myMessages().LogMessage("There are a total of " + String.valueOf(internalFileList.size()) + " and " + String.valueOf(lCount2) + " were orphaned");
-
-            if(internalImageList!=null)
-                myMessages().ShowMessageLong("Images: Orphaned " + String.valueOf(lCount) + ", " + "Total " + String.valueOf(internalImageList.size()) + ", " + "Files: Orphaned " + String.valueOf(lCount2) + ", " + "Total " + String.valueOf(internalFileList.size()) + " ");
-        }
         }
         catch(Exception e)
         {
@@ -181,23 +183,20 @@ public class MainActivity extends BaseActivity
         {
             SetTitles(getResources().getString(R.string.title_planner), "");
 
-            File f = new File(getResources().getString(R.string.database_filename));
-            boolean needToCreateSampleDatabase=false;
-            if(!f.exists())
-                needToCreateSampleDatabase=true;
-                
-            if (!MyPermissions.checkIfAlreadyhavePermission(this))
-            {
-                setTitle(getResources().getString(R.string.title_waitingforpermission));
-                MyPermissions.requestForSpecificPermission(this);
-            } else
-            {
+            if(MyPermissions.AccessAllowed()) {
+                File f = new File(MyFileUtils.MyDocuments() + "/" +
+                        getResources().getString(R.string.application_file_path) + "/" +
+                        getResources().getString(R.string.database_filename));
+                boolean needToCreateSampleDatabase = false;
+                if (!f.exists())
+                    needToCreateSampleDatabase = true;
+
                 accessGranted = true;
                 invalidateOptionsMenu();
-                
-                if(needToCreateSampleDatabase)
+
+                if (needToCreateSampleDatabase)
                     databaseAccess().createSampleDatabase();
-                
+
                 holidayList = new ArrayList<>();
                 if (!databaseAccess().getHolidayList(holidayList))
                     return;
@@ -205,22 +204,20 @@ public class MainActivity extends BaseActivity
                 HolidayAdapter adapter = new HolidayAdapter(this, R.layout.holidaylistitemrow, holidayList);
                 ListView listView1 = (ListView) findViewById(R.id.holidayListView);
                 listView1.setOnItemClickListener
-                    (
-                        new AdapterView.OnItemClickListener()
-                        {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-                            {
-                                Intent intent = new Intent(getApplicationContext(), HolidayDetailsView.class);
-                                intent.putExtra("ACTION", "view");
-                                intent.putExtra("HOLIDAYID", holidayList.get(position).holidayId);
-                                startActivity(intent);
-                            }
-                        }
-                    );
+                        (
+                                new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        Intent intent = new Intent(getApplicationContext(), HolidayDetailsView.class);
+                                        intent.putExtra("ACTION", "view");
+                                        intent.putExtra("HOLIDAYID", holidayList.get(position).holidayId);
+                                        startActivity(intent);
+                                    }
+                                }
+                        );
                 listView1.setDivider(null);
                 listView1.setAdapter(adapter);
-                
+
                 afterShow();
             }
         }
@@ -251,9 +248,11 @@ public class MainActivity extends BaseActivity
     {
         try
         {
-            Intent intent = new Intent(getApplicationContext(), HolidayDetailsEdit.class);
-            intent.putExtra("ACTION", "add");
-            startActivity(intent);
+            if(MyPermissions.AccessAllowed()) {
+                Intent intent = new Intent(getApplicationContext(), HolidayDetailsEdit.class);
+                intent.putExtra("ACTION", "add");
+                startActivity(intent);
+            }
         }
         catch (Exception e)
         {
@@ -266,7 +265,9 @@ public class MainActivity extends BaseActivity
         boolean lv_result = false;
         try
         {
-            lv_result = archiveRestore.Archive();
+            if(MyPermissions.AccessAllowed()) {
+                lv_result = archiveRestore.Archive();
+            }
         }
         catch (Exception e)
         {

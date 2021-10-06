@@ -35,6 +35,12 @@ public class MyFileUtils
     private MyUri myUri;
     private static MyFileUtils fileUtils=null;
 
+    public static String MyDocuments()
+    {
+        return("/storage/emulated/0");
+        //return(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath());
+    }
+
     public static MyFileUtils myFileUtils()
     {
         if(fileUtils == null)
@@ -115,15 +121,7 @@ public class MyFileUtils
             viewIntent.setAction(Intent.ACTION_VIEW);
             viewIntent.setDataAndType(toUri, mimeType);
             viewIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            List<ResolveInfo> resolved=_context.getPackageManager().queryIntentActivities(viewIntent, 0);
-            if(resolved != null && resolved.size() > 0)
-            {
-                _context.startActivity(viewIntent);
-            } else
-            {
-                myMessages().ShowMessageWithOk("Unable to open file", aFile, null);
-                return (false);
-            }
+            _context.startActivity(viewIntent);
             return (true);
         }
         catch(Exception e)
@@ -266,7 +264,9 @@ public class MyFileUtils
             String ffromPath=argFromUri.getPath();
             File f=new File(ffromPath);
 
-            File f99=new File(res.getString(R.string.files_path));
+            File f99=new File(MyFileUtils.MyDocuments() + "/" +
+                    res.getString(R.string.application_file_path) + "/" +
+                    res.getString(R.string.files_path));
             if(!f99.exists())
             {
                 if(!f99.mkdir())
@@ -275,7 +275,9 @@ public class MyFileUtils
                 }
             }
 
-            File tof=new File(res.getString(R.string.files_path) + "/" + newFilename);
+            File tof=new File(MyFileUtils.MyDocuments() + "/" +
+                    res.getString(R.string.application_file_path) + "/" +
+                    res.getString(R.string.files_path) + "/" + newFilename);
             if(tof.exists())
                 return (false);
 
@@ -311,7 +313,9 @@ public class MyFileUtils
     {
         try
         {
-            File f99=new File(res.getString(R.string.files_path));
+            File f99=new File(MyFileUtils.MyDocuments() + "/" +
+                    res.getString(R.string.application_file_path) + "/" +
+                    res.getString(R.string.files_path));
             if(!f99.exists())
             {
                 if(!f99.mkdir())
@@ -321,7 +325,9 @@ public class MyFileUtils
             }
 
             //myMessages().LogMessage("createSample with filename " + newFilename);
-            File tof=new File(res.getString(R.string.files_path) + "/" + newFilename);
+            File tof=new File(MyFileUtils.MyDocuments() + "/" +
+                    res.getString(R.string.application_file_path) + "/" +
+                    res.getString(R.string.files_path) + "/" + newFilename);
             if(tof.exists())
                 return (false);
 

@@ -42,8 +42,9 @@ public class ArchiveRestore
 
             myMessages().ShowMessageLong("Archiving...");
 
-            String srcDir=_context.getString(R.string.application_file_path);
-            String destDir=_context.getString(R.string.archive_path);
+            String srcDir= MyFileUtils.MyDocuments() + "/" + _context.getString(R.string.application_file_path);
+            String destDir=MyFileUtils.MyDocuments() + "/" +
+                    _context.getString(R.string.archive_path);
 
             SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH);
             String currentDateandTime=sdf.format(new Date());
@@ -86,7 +87,8 @@ public class ArchiveRestore
         {
             myMessages().ShowMessageLong("Restoring...");
 
-            String destDir=_context.getString(R.string.tmp_path);
+            String destDir=MyFileUtils.MyDocuments() + "/" +
+                    _context.getResources().getString(R.string.tmp_path);
 
             File f=new File(destDir);
             if(!f.exists())

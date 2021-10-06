@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tipGroupListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -20,6 +20,6 @@
         android:cacheColorHint="#0000"
         android:scrollbars="vertical"
         android:scrollingCache="false">
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

@@ -194,7 +194,9 @@ public class TableBase
             int lUsageCount=totalUsageCount(argFilename);
             //myMessages().LogMessage("  Total Usage Count " + String.valueOf(lUsageCount));
 
-            File file=new File(_resources.getString(R.string.picture_path) + "/" + argFilename);
+            File file=new File(MyFileUtils.MyDocuments() + "/" +
+                    _resources.getString(R.string.application_file_path) + "/" +
+                    _resources.getString(R.string.picture_path) + "/" + argFilename);
             if(lUsageCount < 2)
             {
                 if(file.exists())
@@ -317,7 +319,9 @@ public class TableBase
 
             if(fileUsageCount(argFilename) < 2)
             {
-                File file=new File(_resources.getString(R.string.files_path) + "/" + argFilename);
+                File file=new File(MyFileUtils.MyDocuments() + "/" +
+                        _resources.getString(R.string.application_file_path) + "/" +
+                        _resources.getString(R.string.files_path) + "/" + argFilename);
                 if(file.exists())
                     if(!file.delete())
                         throw new Exception("unable to delete " + file.getAbsolutePath());
@@ -337,7 +341,9 @@ public class TableBase
         FileOutputStream out;
         try
         {
-            out=new FileOutputStream(_resources.getString(R.string.picture_path) + "/" + argFilename);
+            out=new FileOutputStream(MyFileUtils.MyDocuments() + "/" +
+                    _resources.getString(R.string.application_file_path) + "/" +
+                    _resources.getString(R.string.picture_path) + "/" + argFilename);
             image.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
         }
         catch(Exception e)
