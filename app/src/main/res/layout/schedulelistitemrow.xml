@@ -24,11 +24,12 @@
             android:layout_weight="1">
 
             <ImageView
-                app:srcCompat="@drawable/imagemissing"
                 android:id="@+id/imgScheduleType"
-                android:textAlignment="center"
                 android:layout_width="50dp"
-                android:layout_height="50dp" />
+                android:layout_height="50dp"
+                android:textAlignment="center"
+                android:visibility="gone"
+                app:srcCompat="@drawable/imagemissing" />
 
             <ImageView
                 app:srcCompat="@drawable/imagemissing"
