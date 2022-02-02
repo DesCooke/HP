@@ -4,18 +4,20 @@
     android:id="@+id/activity_holiday_details_form"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
     android:orientation="vertical">
 
 
     <include
         layout="@layout/included_program_info"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <include
         layout="@layout/included_schedule_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:id="@+id/grpBudgetDescription"
@@ -30,7 +32,7 @@
             android:layout_weight="2"
             android:gravity="center_vertical"
             android:text="@string/description"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/txtBudgetDescription"
@@ -39,7 +41,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="@android:string/unknownName"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
     </LinearLayout>
 
@@ -55,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:text="@string/caption_budget_total"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/txtBudgetTotal"
@@ -64,7 +66,7 @@
             android:layout_weight="1"
             android:text="@string/caption_zero"
             android:textAlignment="textEnd"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
     </LinearLayout>
 
@@ -80,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:text="@string/caption_budget_paid"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/txtBudgetPaid"
@@ -89,7 +91,7 @@
             android:layout_weight="1"
             android:text="@string/caption_zero"
             android:textAlignment="textEnd"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -104,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:text="@string/caption_budget_unpaid"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/txtBudgetUnpaid"
@@ -113,14 +115,14 @@
             android:layout_weight="1"
             android:text="@string/caption_zero"
             android:textAlignment="textEnd"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/grpMenuFile">
+        android:id="@+id/grpMenuFile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/btnShowInfo"
@@ -132,11 +134,11 @@
             android:onClick="showInfo"
             android:scaleType="centerInside"
             android:tint="@color/colorDisabled"
-            app:srcCompat="@android:drawable/ic_menu_info_details"/>
+            app:srcCompat="@android:drawable/ic_menu_info_details" />
 
-            <Space
-                android:layout_width="20dp"
-                android:layout_height="match_parent" />
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="match_parent" />
 
         <ImageButton
             android:id="@+id/btnShowNotes"
@@ -147,16 +149,17 @@
             android:onClick="showNotes"
             android:scaleType="centerInside"
             android:tint="@color/colorDisabled"
-            app:srcCompat="@drawable/notepad"/>
-            <Space
-                android:layout_width="20dp"
-                android:layout_height="match_parent" />
-        </LinearLayout>
+            app:srcCompat="@drawable/notepad" />
+
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
     <include
         layout="@layout/included_schedule_footer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
 
 </LinearLayout>

@@ -83,7 +83,7 @@ public class MyKeyboard
         {
             editText.setInputType(InputType.TYPE_CLASS_PHONE);
 
-            KeyListener keyListener=DigitsKeyListener.getInstance("1234567890");
+            KeyListener keyListener=DigitsKeyListener.getInstance("1234567890-");
             editText.setKeyListener(keyListener);
 
             return (show(dialog));
