@@ -60,18 +60,16 @@ public class ImageUtils
     // if no image - default 'imagemissing' is used
     // Returns: true(worked)/false(failed)
     //
-    public boolean getListIcon(Context context, String argFilename, ImageView destImageView)
+    public boolean getListIcon(int holidayId, Context context, String argFilename, ImageView destImageView)
     {
         MyBoolean lValid = new MyBoolean();
-        if (validFilename(argFilename, lValid) == false)
+        if (validFilename(holidayId, argFilename, lValid) == false)
             return (false);
         try
         {
             if (lValid.Value == true)
             {
-                Uri uri = Uri.fromFile(new File(MyFileUtils.MyDocuments() + "/" +
-                        res.getString(R.string.application_file_path) + "/" +
-                        res.getString(R.string.picture_path) + "/" + argFilename));
+                Uri uri = Uri.fromFile(new File(GetHolidayImageDir(holidayId) + "/" + argFilename));
                 
                 Picasso.with(context).load(uri).resize(100, 100).transform(new CircleTransform()).into(destImageView);
             } else
@@ -88,18 +86,16 @@ public class ImageUtils
         
     }
     
-    public boolean getGridIcon(Context context, String argFilename, ImageView destImageView)
+    public boolean getGridIcon(int holidayId, Context context, String argFilename, ImageView destImageView)
     {
         MyBoolean lValid = new MyBoolean();
-        if (validFilename(argFilename, lValid) == false)
+        if (validFilename(holidayId, argFilename, lValid) == false)
             return (false);
         try
         {
             if (lValid.Value == true)
             {
-                Uri uri = Uri.fromFile(new File(MyFileUtils.MyDocuments() + "/" +
-                        res.getString(R.string.application_file_path) + "/" +
-                        res.getString(R.string.picture_path) + "/" + argFilename));
+                Uri uri = Uri.fromFile(new File(GetHolidayImageDir(holidayId) + "/" + argFilename));
                 
                 Picasso.with(context).load(uri).resize(150, 150)
                     //.transform(new CircleTransform())
@@ -119,16 +115,66 @@ public class ImageUtils
         return (false);
         
     }
-    
-    public ArrayList<InternalImageItem> listInternalImages()
+
+    public String GetHolidayDir(int holidayId)
+    {
+        String lDirName = MyFileUtils.MyDocuments();
+        File lFile = new File(lDirName);
+        if (!lFile.isDirectory())
+            lFile.mkdir();
+
+        lDirName = MyFileUtils.MyDocuments() + "/" +
+                res.getString(R.string.application_file_path);
+        lFile = new File(lDirName);
+        if (!lFile.isDirectory())
+            lFile.mkdir();
+
+        lDirName = MyFileUtils.MyDocuments() + "/" +
+                res.getString(R.string.application_file_path) + "/" +
+                holidayId;
+        lFile = new File(lDirName);
+        if (!lFile.isDirectory())
+            lFile.mkdir();
+
+        return(lDirName);
+    }
+
+    public String GetHolidayImageDir(int holidayId)
+    {
+        String lDirName = GetHolidayDir(holidayId) + "/" +
+                res.getString(R.string.picture_path);
+        File lFile = new File(lDirName);
+        if (!lFile.isDirectory())
+            lFile.mkdir();
+
+        return(lDirName);
+    }
+
+    public String GetHolidayFileDir(int holidayId)
+    {
+        String lDirName = GetHolidayDir(holidayId) + "/" +
+                res.getString(R.string.files_path);
+        File lFile = new File(lDirName);
+        if (!lFile.isDirectory())
+            lFile.mkdir();
+
+        return(lDirName);
+    }
+
+
+    public ArrayList<InternalImageItem> listInternalImages(int holidayId)
     {
         try
         {
+
             ArrayList<InternalImageItem> l_array = new ArrayList<>();
-            
-            File directory = new File(MyFileUtils.MyDocuments() + "/" +
-                    res.getString(R.string.application_file_path) + "/" +
-                    res.getString(R.string.picture_path));
+
+            if(holidayId==0)
+                return l_array;
+
+            String imageDir = GetHolidayImageDir(holidayId);
+
+            File directory = new File(imageDir);
             File[] files = directory.listFiles();
             
             if (files == null)
@@ -163,7 +209,7 @@ public class ImageUtils
             
             for (File file : files)
             {
-                l_array.add(new InternalImageItem(file.getName(), 0));
+                l_array.add(new InternalImageItem(file.getName(), 0, holidayId));
             }
             return (l_array);
         }
@@ -174,15 +220,13 @@ public class ImageUtils
         return (null);
     }
     
-    public ArrayList<InternalFileItem> listInternalFiles()
+    public ArrayList<InternalFileItem> listInternalFiles(int holidayId)
     {
         try
         {
             ArrayList<InternalFileItem> l_array = new ArrayList<>();
             
-            File directory = new File(MyFileUtils.MyDocuments() + "/" +
-                    res.getString(R.string.application_file_path) + "/" +
-                    res.getString(R.string.files_path));
+            File directory = new File(GetHolidayFileDir(holidayId));
             File[] files = directory.listFiles();
             
             if (files == null)
@@ -195,7 +239,7 @@ public class ImageUtils
             
             for (File file : files)
             {
-                l_array.add(new InternalFileItem(file.getName()));
+                l_array.add(new InternalFileItem(holidayId, file.getName()));
             }
             return (l_array);
         }
@@ -206,40 +250,18 @@ public class ImageUtils
         return (null);
     }
     
-    public int countInternalFiles()
-    {
-        try
-        {
-            File directory = new File(MyFileUtils.MyDocuments() + "/" +
-                    res.getString(R.string.application_file_path) + "/" +
-                    res.getString(R.string.files_path));
-            File[] files = directory.listFiles();
-            
-            if (files == null)
-                return (0);
-            
-            return (files.length);
-        }
-        catch (Exception e)
-        {
-            ShowError("listInternalFiles", e.getMessage());
-        }
-        return (0);
-    }
-    
+
     //
     // Checks to make sure a filename exists
     // Returns: true(worked)/false(failed)
     //
-    private boolean validFilename(String filename, MyBoolean retBoolean)
+    private boolean validFilename(int holidayId, String filename, MyBoolean retBoolean)
     {
         try
         {
             if (filename.length() == 0)
                 return (false);
-            File f = new File(MyFileUtils.MyDocuments() + "/" +
-                    res.getString(R.string.application_file_path) + "/" +
-                    res.getString(R.string.picture_path) + "/" + filename);
+            File f = new File(GetHolidayImageDir(holidayId) + "/" + filename);
             retBoolean.Value = f.exists();
             return (true);
         }
@@ -257,20 +279,18 @@ public class ImageUtils
     ** if no image - default 'imagemissing' is used
     ** Returns: true(worked)/false(failed)
     */
-    public boolean getLargeListIcon(Context context, String argFilename, ImageView destImageView)
+    public boolean getLargeListIcon(int holidayId, Context context, String argFilename, ImageView destImageView)
     {
         MyBoolean lValid = new MyBoolean();
         
-        if (validFilename(argFilename, lValid) == false)
+        if (validFilename(holidayId, argFilename, lValid) == false)
             return (false);
         
         try
         {
             if (lValid.Value == true)
             {
-                Uri uri = Uri.fromFile(new File(MyFileUtils.MyDocuments() + "/" +
-                        res.getString(R.string.application_file_path) + "/" +
-                        res.getString(R.string.picture_path) + "/" + argFilename));
+                Uri uri = Uri.fromFile(new File(GetHolidayImageDir(holidayId) + "/" + argFilename));
                 
                 Picasso.with(context).load(uri).resize(256, 256).into(destImageView);
             } else
@@ -292,23 +312,21 @@ public class ImageUtils
     ** if no image - default 'imagemissing' is used
     ** Returns: true(worked)/false(failed)
     */
-    public boolean getPageHeaderImage(Context context, String argFilename, ImageView destImageView)
+    public boolean getPageHeaderImage(int holidayId, Context context, String argFilename, ImageView destImageView)
     {
         MyBoolean lValid = new MyBoolean();
         
         if (argFilename.length() == 0)
             return (true);
         
-        if (validFilename(argFilename, lValid) == false)
+        if (validFilename(holidayId, argFilename, lValid) == false)
             return (false);
         
         try
         {
             if (lValid.Value == true)
             {
-                Uri uri = Uri.fromFile(new File(MyFileUtils.MyDocuments() + "/" +
-                        res.getString(R.string.application_file_path) + "/" +
-                        res.getString(R.string.picture_path) + "/" + argFilename));
+                Uri uri = Uri.fromFile(new File(GetHolidayImageDir(holidayId) + "/" + argFilename));
                 
                 MyBitmap myBitmap = new MyBitmap();
                 if (!ScaleBitmapFromUrl(uri, _context.getContentResolver(), myBitmap))
@@ -399,13 +417,11 @@ public class ImageUtils
         return (false);
     }
     
-    public boolean ScaleBitmapFromFile(String lfile, ContentResolver cr, MyBitmap retBitmap)
+    public boolean ScaleBitmapFromFile(int holidayId, String lfile, ContentResolver cr, MyBitmap retBitmap)
     {
         try
         {
-            Uri uri = Uri.fromFile(new File(MyFileUtils.MyDocuments() + "/" +
-                    res.getString(R.string.application_file_path) + "/" +
-                    res.getString(R.string.picture_path) + "/" + lfile));
+            Uri uri = Uri.fromFile(new File(GetHolidayImageDir(holidayId) + "/" + lfile));
             
             return(ScaleBitmapFromUrl(uri, cr, retBitmap));
         }

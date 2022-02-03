@@ -108,7 +108,7 @@ class TableBudget extends TableBase
                     {
                         //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
-                        if(savePicture(budgetItem.fileBitmap, myString) == false)
+                        if(savePicture(budgetItem.holidayId, budgetItem.fileBitmap, myString) == false)
                             return (false);
                         budgetItem.budgetPicture=myString.Value;
                         //myMessages().LogMessage("  - New filename " + budgetItem.budgetPicture);
@@ -183,7 +183,7 @@ class TableBudget extends TableBase
                     if(budgetItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(removePicture(budgetItem.origBudgetPicture) == false)
+                        if(removePicture(budgetItem.holidayId, budgetItem.origBudgetPicture) == false)
                             return (false);
                     }
             
@@ -195,7 +195,7 @@ class TableBudget extends TableBase
                         {
                             //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
-                            if(savePicture(budgetItem.fileBitmap, myString) == false)
+                            if(savePicture(budgetItem.holidayId, budgetItem.fileBitmap, myString) == false)
                                 return (false);
                             budgetItem.budgetPicture=myString.Value;
                             //myMessages().LogMessage("  - New filename " + budgetItem.budgetPicture);
@@ -236,7 +236,7 @@ class TableBudget extends TableBase
             String lSQL="DELETE FROM Budget " + "WHERE holidayId = " + budgetItem.holidayId + " " + "AND budgetId = " + budgetItem.budgetId;
 
             if(budgetItem.budgetPicture.length() > 0)
-                if(removePicture(budgetItem.budgetPicture) == false)
+                if(removePicture(budgetItem.holidayId, budgetItem.budgetPicture) == false)
                     return (false);
 
             if(executeSQL("deleteBudgetItem", lSQL) == false)
@@ -484,69 +484,6 @@ class TableBudget extends TableBase
 
     }
 
-    boolean createSample(int lHolidayId,  boolean info, boolean notes, boolean picture)
-    {
-        try
-        {
-            int noteId=0;
-            Random random = new Random();
-            MyInt noteMyInt=new MyInt();
-            MyInt seqNoMyInt=new MyInt();
-            MyInt budgetIdMyInt = new MyInt();
-
-            BudgetItem item=new BudgetItem();
-
-            if(!getNextBudgetId(lHolidayId, budgetIdMyInt))
-                return (false);
-            item.holidayId=lHolidayId;
-            item.budgetId=budgetIdMyInt.Value;
-            if(!getNextBudgetSequenceNo(lHolidayId, seqNoMyInt))
-                return(false);
-            item.sequenceNo= seqNoMyInt.Value;
-            item.budgetDescription=randomBudgetDescription();
-
-            item.infoId=0;
-            if(info)
-            {
-                MyInt infoIdMyInt=new MyInt();
-                if(!databaseAccess().createSampleExtraFileGroup(infoIdMyInt))
-                    return (false);
-                item.infoId=infoIdMyInt.Value;
-            }
-
-            if(notes)
-            {
-                if(!databaseAccess().createSampleNote(item.holidayId, noteMyInt))
-                    return (false);
-                item.noteId=noteMyInt.Value;
-            }
-            item.galleryId=0;
-            item.sygicId=0;
-            item.budgetPicture="";
-            item.fileBitmap=null;
-            item.pictureAssigned=false;
-            if(picture)
-            {
-                item.fileBitmap=null;
-                item.budgetPicture=randomPictureName();
-                item.pictureAssigned=true;
-            }
-            
-            item.budgetPaid = random.nextInt(250);
-            item.budgetUnpaid = random.nextInt(250);
-            item.budgetTotal = item.budgetPaid + item.budgetUnpaid;
-
-            if(!addBudgetItem(item))
-                return (false);
-
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("createSample", e.getMessage());
-        }
-        return (false);
-    }
     private String randomBudgetDescription()
     {
         try

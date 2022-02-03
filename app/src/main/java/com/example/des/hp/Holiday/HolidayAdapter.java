@@ -75,7 +75,7 @@ public class HolidayAdapter extends ArrayAdapter<HolidayItem>
 
 
         if(holidayItem.holidayPicture.length() > 0)
-            if(imageUtils.getLargeListIcon(context, holidayItem.holidayPicture, holder.holidayImage) == false)
+            if(imageUtils.getLargeListIcon(holidayItem.holidayId, context, holidayItem.holidayPicture, holder.holidayImage) == false)
                 return (row);
 
         return row;

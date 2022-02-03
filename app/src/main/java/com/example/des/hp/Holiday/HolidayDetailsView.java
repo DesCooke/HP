@@ -251,6 +251,7 @@ public class HolidayDetailsView extends BaseActivity
                     return;
             }
             intent2.putExtra("FILEGROUPID", holidayItem.mapFileGroupId);
+            intent2.putExtra("HOLIDAYID", holidayItem.holidayId);
             intent2.putExtra("TITLE", holidayItem.holidayName);
             intent2.putExtra("SUBTITLE", "Maps");
             startActivity(intent2);
@@ -260,6 +261,8 @@ public class HolidayDetailsView extends BaseActivity
             ShowError("showMaps", e.getMessage());
         }
     }
+
+
 
     @Override
     public void showForm()

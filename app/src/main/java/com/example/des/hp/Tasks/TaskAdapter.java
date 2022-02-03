@@ -96,7 +96,7 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>
         if(c.pictureAssigned)
         {
             holder.taskImage.setVisibility(View.VISIBLE);
-            if(imageUtils.getListIcon(context, c.taskPicture, holder.taskImage) == false)
+            if(imageUtils.getListIcon(c.holidayId, context, c.taskPicture, holder.taskImage) == false)
                 return;
         } else
         {

@@ -85,7 +85,7 @@ class TipGroupAdapter extends RecyclerView.Adapter<TipGroupAdapter.ViewHolder>
         if(c.pictureAssigned)
         {
             holder.tipGroupImage.setVisibility(View.VISIBLE);
-            if(imageUtils.getListIcon(context, c.tipGroupPicture, holder.tipGroupImage) == false)
+            if(imageUtils.getListIcon(c.holidayId, context, c.tipGroupPicture, holder.tipGroupImage) == false)
                 return;
         } else
         {

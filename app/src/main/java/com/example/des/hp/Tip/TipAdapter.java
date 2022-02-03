@@ -84,7 +84,7 @@ class TipAdapter extends RecyclerView.Adapter<TipAdapter.ViewHolder>
         if(c.pictureAssigned)
         {
             holder.tipImage.setVisibility(View.VISIBLE);
-            if(imageUtils.getListIcon(context, c.tipPicture, holder.tipImage) == false)
+            if(imageUtils.getListIcon(c.holidayId, context, c.tipPicture, holder.tipImage) == false)
                 return;
         } else
         {

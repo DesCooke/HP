@@ -239,7 +239,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         }
 
         if(c.schedPicture.length() > 0) {
-            if (imageUtils.getListIcon(context, c.schedPicture, holder.scheduleImage) == false)
+            if (imageUtils.getListIcon(c.holidayId, context, c.schedPicture, holder.scheduleImage) == false)
                 return;
             holder.scheduleImage.setVisibility(View.VISIBLE);
         }

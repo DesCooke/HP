@@ -44,13 +44,16 @@ package com.example.des.hp.Dialog;
 **       the badge if needed
 */
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -63,9 +66,11 @@ import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
+import com.example.des.hp.ExtraFiles.ExtraFilesItem;
 import com.example.des.hp.InternalFiles.InternalFileItem;
 import com.example.des.hp.InternalImages.InternalImageItem;
 import com.example.des.hp.InternalImages.InternalImageList;
+import com.example.des.hp.MainActivity;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.Notes.NoteView;
 import com.example.des.hp.R;
@@ -193,11 +198,28 @@ public class BaseActivity extends AppCompatActivity
         }
     }
 
+    public void selectFileFromDevice(View view)
+    {
+        try
+        {
+            Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*");
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), SELECT_DEVICE_FILE);
+        }
+        catch(Exception e)
+        {
+            // Potentially direct the user to the Market with a Dialog
+            ShowError("pickDevicePDF", e.getMessage());
+        }
+    }
+
     public void selectFromApplication(View view)
     {
         try
         {
             Intent intent=new Intent(getApplicationContext(), InternalImageList.class);
+            intent.putExtra("HOLIDAYID", holidayId);
             startActivityForResult(intent, SELECT_INTERNAL_PHOTO);
         }
         catch(Exception e)
@@ -206,42 +228,72 @@ public class BaseActivity extends AppCompatActivity
         }
     }
 
+    public void selectFileFromApplication(View view)
+    {
+/*        try
+        {
+            Intent intent=new Intent(getApplicationContext(), InternalImageList.class);
+            intent.putExtra("HOLIDAYID", holidayId);
+            startActivityForResult(intent, SELECT_INTERNAL_PHOTO);
+        }
+        catch(Exception e)
+        {
+            ShowError("showDayAdd", e.getMessage());
+        }
+  */  }
     public void pickImage(View view)
+
     {
         if(!imagePresent)
             return;
 
         try
         {
-            ArrayList<InternalImageItem> internalImageList=imageUtils().listInternalImages();
+            ArrayList<InternalImageItem> internalImageList=imageUtils().listInternalImages(holidayId);
             if(internalImageList == null)
             {
                 selectFromDevice(view);
                 return;
             }
 
-            dialogWithYesNoFragment=DialogWithYesNoFragment.newInstance(getFragmentManager(),     // for the transaction bit
-                "SELECTPICTURELOCATION2",        // unique name for this dialog type
-                "Select Picture Location",            // unique name for this dialog type
-                "Yes=Device, No=Images already stored", // form message
-                R.drawable.attachment, new View.OnClickListener()
-                {
-                    public void onClick(View view)
-                    {
-                        dialogWithYesNoFragment.dismiss();
-                        selectFromDevice(view);
-                    }
-                }, new View.OnClickListener()
-                {
-                    public void onClick(View view)
-                    {
-                        dialogWithYesNoFragment.dismiss();
-                        selectFromApplication(view);
-                    }
-                }, this
-            );
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Choose an Option");
+            String[] options = {"Search phone for a new image", "Use an image already picked"};
 
-            dialogWithYesNoFragment.showIt();
+            builder.setItems(options, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case 0:
+                        {
+                            dialog.dismiss();
+                            selectFromDevice(view);
+                            break;
+                        }
+                        case 1:
+                        {
+                            dialog.dismiss();
+                            selectFromApplication(view);
+                            break;
+                        }
+                    }
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+        }
+        catch(Exception e)
+        {
+            ShowError("pickImage", e.getMessage());
+        }
+    }
+
+    public void pickFile(View view)
+    {
+        try
+        {
+            selectFileFromDevice(view);
         }
         catch(Exception e)
         {
@@ -291,7 +343,7 @@ public class BaseActivity extends AppCompatActivity
                         {
                             MyBitmap myBitmap=new MyBitmap();
                             String lfile=imageReturnedIntent.getStringExtra("selectedfile");
-                            Boolean lRetCode=imageUtils().ScaleBitmapFromFile(lfile, getContentResolver(), myBitmap);
+                            Boolean lRetCode=imageUtils().ScaleBitmapFromFile(holidayId, lfile, getContentResolver(), myBitmap);
                             if(!lRetCode)
                                 return;
 
@@ -334,6 +386,36 @@ public class BaseActivity extends AppCompatActivity
                         internalFilename="";
                         if(txtFilename != null)
                             txtFilename.setText(mySelectedFileNameOnly);
+
+                        ExtraFilesItem extraFilesItem = new ExtraFilesItem();
+                        extraFilesItem.fileDescription=mySelectedFileNameOnly;
+                        extraFilesItem.fileChanged=true;
+                        extraFilesItem.fileName=mySelectedFileNameOnly;
+                        extraFilesItem.fileBitmap=null;
+                        extraFilesItem.filePicture="";
+                        extraFilesItem.internalFilename="";
+                        extraFilesItem.pictureAssigned=false;
+                        extraFilesItem.pictureChanged=false;
+                        extraFilesItem.fileGroupId=fileGroupId;
+                        extraFilesItem.holidayId = holidayId;
+                        extraFilesItem.fileUri = mySelectedFileUri;
+                        if(action.equals("add"))
+                        {
+                            MyInt myInt=new MyInt();
+
+                            if(!databaseAccess().getNextExtraFilesId(fileGroupId, myInt))
+                                return;
+                            extraFilesItem.fileId=myInt.Value;
+
+                            if(!databaseAccess().getNextExtraFilesSequenceNo(fileGroupId, myInt))
+                                return;
+                            extraFilesItem.sequenceNo=myInt.Value;
+
+                            if(!databaseAccess().addExtraFilesItem(extraFilesItem))
+                                return;
+                        }
+
+
                     }
                     break;
                 case SELECT_INTERNAL_FILE:
@@ -378,7 +460,7 @@ public class BaseActivity extends AppCompatActivity
             {
                 if(txtPicture != null)
                     txtPicture.setText(picture);
-                if(!imageUtils().getPageHeaderImage(this, picture, imageView))
+                if(!imageUtils().getPageHeaderImage(holidayId, this, picture, imageView))
                     return;
                 imageSet=true;
             }
@@ -467,6 +549,7 @@ public class BaseActivity extends AppCompatActivity
             intent2.putExtra("FILEGROUPID", lInfoId);
             intent2.putExtra("TITLE", subTitle);
             intent2.putExtra("SUBTITLE", "Info");
+            intent2.putExtra("HOLIDAYID", holidayId);
             startActivity(intent2);
         }
         catch(Exception e)
@@ -575,12 +658,12 @@ public class BaseActivity extends AppCompatActivity
             if(txtProgramInfo != null)
             {
                 int imageListCount=0;
-                ArrayList<InternalImageItem> internalImageList=imageUtils().listInternalImages();
+                ArrayList<InternalImageItem> internalImageList=imageUtils().listInternalImages(holidayId);
                 if(internalImageList != null)
                     imageListCount=internalImageList.size();
 
                 int fileListCount=0;
-                ArrayList<InternalFileItem> internalFileList=imageUtils().listInternalFiles();
+                ArrayList<InternalFileItem> internalFileList=imageUtils().listInternalFiles(holidayId);
                 if(internalFileList != null)
                     fileListCount=internalFileList.size();
 

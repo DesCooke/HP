@@ -11,6 +11,7 @@ import android.net.Uri;
 
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.DateUtils;
+import com.example.des.hp.myutils.ImageUtils;
 import com.example.des.hp.myutils.MyFileUtils;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyLong;
@@ -183,7 +184,7 @@ public class TableBase
 
 
     // returns true/false
-    public boolean removePicture(String argFilename)
+    public boolean removePicture(int holidayId, String argFilename)
     {
         try
         {
@@ -194,9 +195,7 @@ public class TableBase
             int lUsageCount=totalUsageCount(argFilename);
             //myMessages().LogMessage("  Total Usage Count " + String.valueOf(lUsageCount));
 
-            File file=new File(MyFileUtils.MyDocuments() + "/" +
-                    _resources.getString(R.string.application_file_path) + "/" +
-                    _resources.getString(R.string.picture_path) + "/" + argFilename);
+            File file=new File(ImageUtils.imageUtils().GetHolidayImageDir(holidayId) + "/" + argFilename);
             if(lUsageCount < 2)
             {
                 if(file.exists())
@@ -336,14 +335,12 @@ public class TableBase
     }
 
     // returns true/false
-    private boolean saveImageToInternalStorage(Bitmap image, String argFilename)
+    private boolean saveImageToInternalStorage(int holidayId, Bitmap image, String argFilename)
     {
         FileOutputStream out;
         try
         {
-            out=new FileOutputStream(MyFileUtils.MyDocuments() + "/" +
-                    _resources.getString(R.string.application_file_path) + "/" +
-                    _resources.getString(R.string.picture_path) + "/" + argFilename);
+            out=new FileOutputStream(ImageUtils.imageUtils().GetHolidayImageDir(holidayId) + "/" + argFilename);
             image.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
         }
         catch(Exception e)
@@ -364,11 +361,11 @@ public class TableBase
         return (false);
     }
 
-    boolean saveExtraFile(Uri uri, String newName)
+    boolean saveExtraFile(int holidayId, Uri uri, String newName)
     {
         try
         {
-            return (_myFileUtils.CopyFileToLocalDir(uri, newName));
+            return (_myFileUtils.CopyFileToLocalDir(holidayId, uri, newName));
         }
         catch(Exception e)
         {
@@ -392,7 +389,7 @@ public class TableBase
     }
 
     // returns true/false
-    public boolean savePicture(Bitmap bm, MyString retString)
+    public boolean savePicture(int holidayId, Bitmap bm, MyString retString)
     {
         try
         {
@@ -406,7 +403,7 @@ public class TableBase
 
             lFilename="pic_" + myInt.Value + ".png";
 
-            if(saveImageToInternalStorage(bm, lFilename) == false)
+            if(saveImageToInternalStorage(holidayId, bm, lFilename) == false)
                 return (false);
 
             retString.Value=lFilename;

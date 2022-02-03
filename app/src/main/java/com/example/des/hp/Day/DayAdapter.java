@@ -182,7 +182,7 @@ class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
         }
 
         if(c.dayPicture.length() > 0)
-            if(imageUtils.getListIcon(context, c.dayPicture, holder.dayImage) == false)
+            if(imageUtils.getListIcon(c.holidayId, context, c.dayPicture, holder.dayImage) == false)
                 return;
 
         holder.dayItemCell.setOnClickListener(new View.OnClickListener()

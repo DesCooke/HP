@@ -84,7 +84,7 @@ class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder>
         if (c.pictureAssigned)
         {
             holder.contactImage.setVisibility(View.VISIBLE);
-            if (!imageUtils.getListIcon(context, c.contactPicture, holder.contactImage))
+            if (!imageUtils.getListIcon(c.holidayId, context, c.contactPicture, holder.contactImage))
                 return;
         } else
         {

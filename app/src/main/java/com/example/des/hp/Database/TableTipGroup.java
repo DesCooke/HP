@@ -87,7 +87,7 @@ class TableTipGroup extends TableBase
                     {
                         //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
-                        if(savePicture(tipGroupItem.fileBitmap, myString) == false)
+                        if(savePicture(tipGroupItem.holidayId, tipGroupItem.fileBitmap, myString) == false)
                             return (false);
                         tipGroupItem.tipGroupPicture=myString.Value;
                         //myMessages().LogMessage("  - New filename " + tipGroupItem.tipGroupPicture);
@@ -162,7 +162,7 @@ class TableTipGroup extends TableBase
                     if(tipGroupItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(removePicture(tipGroupItem.origTipGroupPicture) == false)
+                        if(removePicture(tipGroupItem.holidayId, tipGroupItem.origTipGroupPicture) == false)
                             return (false);
                     }
             
@@ -174,7 +174,7 @@ class TableTipGroup extends TableBase
                         {
                             //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
-                            if(savePicture(tipGroupItem.fileBitmap, myString) == false)
+                            if(savePicture(tipGroupItem.holidayId, tipGroupItem.fileBitmap, myString) == false)
                                 return (false);
                             tipGroupItem.tipGroupPicture=myString.Value;
                             //myMessages().LogMessage("  - New filename " + tipGroupItem.tipGroupPicture);
@@ -215,7 +215,7 @@ class TableTipGroup extends TableBase
             String lSQL="DELETE FROM TipGroup " + "WHERE holidayId = " + tipGroupItem.holidayId + " " + "AND tipGroupId = " + tipGroupItem.tipGroupId;
 
             if(tipGroupItem.tipGroupPicture.length() > 0)
-                if(removePicture(tipGroupItem.tipGroupPicture) == false)
+                if(removePicture(tipGroupItem.holidayId, tipGroupItem.tipGroupPicture) == false)
                     return (false);
 
             if(executeSQL("deleteTipGroupItem", lSQL) == false)
@@ -412,94 +412,4 @@ class TableTipGroup extends TableBase
         return (false);
     }
 
-    boolean createSample(int lHolidayId, MyInt myInt, boolean info, boolean notes, boolean picture)
-    {
-        try
-        {
-            int noteId=0;
-            MyInt noteMyInt=new MyInt();
-            MyInt seqNoMyInt=new MyInt();
-
-            TipGroupItem item=new TipGroupItem();
-
-            if(!getNextTipGroupId(lHolidayId, myInt))
-                return (false);
-            item.holidayId=lHolidayId;
-            item.tipGroupId=myInt.Value;
-            if(!getNextTipGroupSequenceNo(lHolidayId, seqNoMyInt))
-                return(false);
-            item.sequenceNo= seqNoMyInt.Value;
-            item.tipGroupDescription=randomTipGroupDescription();
-            item.tipGroupNotes="";
-
-            item.infoId=0;
-            if(info)
-            {
-                MyInt infoIdMyInt=new MyInt();
-                if(!databaseAccess().createSampleExtraFileGroup(infoIdMyInt))
-                    return (false);
-                item.infoId=infoIdMyInt.Value;
-            }
-
-            if(notes)
-            {
-                if(!databaseAccess().createSampleNote(item.holidayId, noteMyInt))
-                    return (false);
-                item.noteId=noteMyInt.Value;
-            }
-            item.galleryId=0;
-            item.sygicId=0;
-            item.tipGroupPicture="";
-            item.fileBitmap=null;
-            item.pictureAssigned=false;
-            if(picture)
-            {
-                item.fileBitmap=null;
-                item.tipGroupPicture=randomPictureName();
-                item.pictureAssigned=true;
-            }
-
-            if(!addTipGroupItem(item))
-                return (false);
-
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("createSample", e.getMessage());
-        }
-        return (false);
-    }
-
-    private String randomTipGroupDescription()
-    {
-        try
-        {
-            Random random=new Random();
-            int i=random.nextInt(6);
-            switch(i)
-            {
-                case 0:
-                    return ("Car Tips");
-                case 1:
-                    return ("Villa Tips");
-                case 2:
-                    return ("General Tips");
-                case 3:
-                    return ("Food Tips");
-                case 4:
-                    return ("Money Tips");
-                case 5:
-                    return ("Ticket Tips");
-            }
-            return ("Packing Tips");
-        }
-        catch(Exception e)
-        {
-            ShowError("randomTipGroupDescription", e.getMessage());
-        }
-        return ("Packing Tips");
-
-    }
-    
 }
