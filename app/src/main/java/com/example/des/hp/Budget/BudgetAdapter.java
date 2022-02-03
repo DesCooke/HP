@@ -90,7 +90,7 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
         if (c.pictureAssigned)
         {
             holder.budgetImage.setVisibility(View.VISIBLE);
-            if (!imageUtils.getListIcon(context, c.budgetPicture, holder.budgetImage))
+            if (!imageUtils.getListIcon(c.holidayId, context, c.budgetPicture, holder.budgetImage))
                 return;
         } else
         {

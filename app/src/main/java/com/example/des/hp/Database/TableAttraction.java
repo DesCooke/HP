@@ -107,7 +107,7 @@ class TableAttraction extends TableBase
                     {
                         //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
-                        if(savePicture(attractionItem.fileBitmap, myString) == false)
+                        if(savePicture(attractionItem.holidayId, attractionItem.fileBitmap, myString) == false)
                             return (false);
                         attractionItem.attractionPicture=myString.Value;
                         //myMessages().LogMessage("  - New filename " + attractionItem.attractionPicture);
@@ -183,7 +183,7 @@ class TableAttraction extends TableBase
                     if(attractionItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(removePicture(attractionItem.origAttractionPicture) == false)
+                        if(removePicture(attractionItem.holidayId, attractionItem.origAttractionPicture) == false)
                             return (false);
                     }
             
@@ -195,7 +195,7 @@ class TableAttraction extends TableBase
                         {
                             //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
-                            if(savePicture(attractionItem.fileBitmap, myString) == false)
+                            if(savePicture(attractionItem.holidayId, attractionItem.fileBitmap, myString) == false)
                                 return (false);
                             attractionItem.attractionPicture=myString.Value;
                             //myMessages().LogMessage("  - New filename " + attractionItem.attractionPicture);
@@ -237,7 +237,7 @@ class TableAttraction extends TableBase
             String lSQL="DELETE FROM Attraction " + "WHERE holidayId = " + attractionItem.holidayId + " " + "AND attractionId = " + attractionItem.attractionId;
 
             if(attractionItem.attractionPicture.length() > 0)
-                if(removePicture(attractionItem.attractionPicture) == false)
+                if(removePicture(attractionItem.holidayId, attractionItem.attractionPicture) == false)
                     return (false);
 
             if(executeSQL("deleteAttractionItem", lSQL) == false)
@@ -407,99 +407,4 @@ class TableAttraction extends TableBase
 
     }
 
-    boolean createSample(int lHolidayId, MyInt myInt, boolean info, boolean notes, boolean picture)
-    {
-        try
-        {
-            int noteId=0;
-            MyInt noteMyInt=new MyInt();
-            MyInt seqNoMyInt=new MyInt();
-
-            AttractionItem item=new AttractionItem();
-
-            if(!getNextAttractionId(lHolidayId, myInt))
-                return (false);
-            item.holidayId=lHolidayId;
-            item.attractionId=myInt.Value;
-            if(!getNextAttractionSequenceNo(lHolidayId, seqNoMyInt))
-                return(false);
-            item.sequenceNo= seqNoMyInt.Value;
-            item.attractionDescription=randomAttractionDescription();
-
-            item.infoId=0;
-            if(info)
-            {
-                MyInt infoIdMyInt=new MyInt();
-                if(!databaseAccess().createSampleExtraFileGroup(infoIdMyInt))
-                    return (false);
-                item.infoId=infoIdMyInt.Value;
-            }
-
-            if(notes)
-            {
-                if(!databaseAccess().createSampleNote(item.holidayId, noteMyInt))
-                    return (false);
-                item.noteId=noteMyInt.Value;
-            }
-            item.galleryId=0;
-            item.sygicId=0;
-            item.attractionPicture="";
-            item.fileBitmap=null;
-            item.pictureAssigned=false;
-            if(picture)
-            {
-                item.fileBitmap=null;
-                item.attractionPicture=randomPictureName();
-                item.pictureAssigned=true;
-            }
-
-            if(!addAttractionItem(item))
-                return (false);
-
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("createSample", e.getMessage());
-        }
-        return (false);
-    }
-
-    private String randomAttractionDescription()
-    {
-        try
-        {
-            Random random=new Random();
-            int i=random.nextInt(10);
-            switch(i)
-            {
-                case 0:
-                    return ("Magic Kingdom");
-                case 1:
-                    return ("Universal Studios");
-                case 2:
-                    return ("Islands of Adventure");
-                case 3:
-                    return ("Animal Kingdom");
-                case 4:
-                    return ("Shopping Mall");
-                case 5:
-                    return ("Seaworld");
-                case 6:
-                    return ("NASA");
-                case 7:
-                    return ("Busch Gardens");
-                case 8:
-                    return ("Coco Beach");
-            }
-            return ("Spare Day");
-        }
-        catch(Exception e)
-        {
-            ShowError("randomAttractionDescription", e.getMessage());
-        }
-        return ("Spare Day");
-
-    }
-    
 }

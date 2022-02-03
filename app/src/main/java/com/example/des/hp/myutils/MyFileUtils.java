@@ -250,7 +250,7 @@ public class MyFileUtils
     }
 
     // Returns: true(worked)/false(failed)
-    public boolean CopyFileToLocalDir(Uri argFromUri, String newFilename)
+    public boolean CopyFileToLocalDir(int holidayId, Uri argFromUri, String newFilename)
     {
         try
         {
@@ -264,9 +264,8 @@ public class MyFileUtils
             String ffromPath=argFromUri.getPath();
             File f=new File(ffromPath);
 
-            File f99=new File(MyFileUtils.MyDocuments() + "/" +
-                    res.getString(R.string.application_file_path) + "/" +
-                    res.getString(R.string.files_path));
+            String holidayFileDir = ImageUtils.imageUtils().GetHolidayFileDir(holidayId);
+            File f99=new File(holidayFileDir);
             if(!f99.exists())
             {
                 if(!f99.mkdir())
@@ -275,9 +274,7 @@ public class MyFileUtils
                 }
             }
 
-            File tof=new File(MyFileUtils.MyDocuments() + "/" +
-                    res.getString(R.string.application_file_path) + "/" +
-                    res.getString(R.string.files_path) + "/" + newFilename);
+            File tof=new File(holidayFileDir + "/" + newFilename);
             if(tof.exists())
                 return (false);
 

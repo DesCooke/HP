@@ -135,12 +135,12 @@ public class MainActivity extends BaseActivity
                 int lCount = 0;
                 //myMessages().LogMessage("Identifying orphaned images....");
 
-                ArrayList<InternalImageItem> internalImageList = imageUtils().listInternalImages();
+                ArrayList<InternalImageItem> internalImageList = imageUtils().listInternalImages(holidayId);
                 if (internalImageList != null) {
                     for (InternalImageItem item : internalImageList) {
                         if (databaseAccess().pictureUsageCount(item.internalImageFilename) == 0) {
                             //myMessages().LogMessage("Picture " + item.internalImageFilename + ", is not linked to anything - removing");
-                            databaseAccess().removePicture(item.internalImageFilename);
+                            databaseAccess().removePicture(holidayId, item.internalImageFilename);
                             lCount++;
                         }
                     }
@@ -150,7 +150,7 @@ public class MainActivity extends BaseActivity
                 //myMessages().LogMessage("Identifying orphaned files....");
 
                 int lCount2 = 0;
-                ArrayList<InternalFileItem> internalFileList = imageUtils().listInternalFiles();
+                ArrayList<InternalFileItem> internalFileList = imageUtils().listInternalFiles(holidayId);
                 if (internalFileList != null) {
                     for (InternalFileItem item : internalFileList) {
                         if (databaseAccess().fileUsageCount(item.filename) == 0) {
@@ -193,9 +193,6 @@ public class MainActivity extends BaseActivity
 
                 accessGranted = true;
                 invalidateOptionsMenu();
-
-                if (needToCreateSampleDatabase)
-                    databaseAccess().createSampleDatabase();
 
                 holidayList = new ArrayList<>();
                 if (!databaseAccess().getHolidayList(holidayList))

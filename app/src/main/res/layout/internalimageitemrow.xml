@@ -17,7 +17,8 @@
             android:layout_alignBottom="@+id/internalImage"
             android:background="@android:color/background_light"
             android:elevation="1dp"
-            android:text="TextView"/>
+            android:text="TextView"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/internalImage"
@@ -26,7 +27,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="0.2"
             android:textAlignment="center"
-            app:srcCompat="@drawable/imagemissing"/>
+            app:srcCompat="@drawable/imagemissing" />
     </RelativeLayout>
 
 </LinearLayout>

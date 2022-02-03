@@ -81,7 +81,7 @@ class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.ViewHolde
         if (c.pictureAssigned)
         {
             holder.attractionImage.setVisibility(View.VISIBLE);
-            if (!imageUtils.getListIcon(context, c.attractionPicture, holder.attractionImage))
+            if (!imageUtils.getListIcon(c.holidayId, context, c.attractionPicture, holder.attractionImage))
                 return;
         } else
         {

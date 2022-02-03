@@ -130,7 +130,7 @@ class TableHoliday extends TableBase
                     {
                         //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
-                        if(savePicture(holidayItem.holidayBitmap, myString) == false)
+                        if(savePicture(holidayItem.holidayId, holidayItem.holidayBitmap, myString) == false)
                             return (false);
                         holidayItem.holidayPicture=myString.Value;
                         //myMessages().LogMessage("  - New filename " + holidayItem.holidayPicture);
@@ -226,70 +226,6 @@ class TableHoliday extends TableBase
 
     }
 
-    boolean createSample(MyInt myInt, boolean info, boolean datesKnown, boolean notes, boolean picture)
-    {
-        try
-        {
-            int noteId=0;
-            MyInt noteMyInt=new MyInt();
-
-            HolidayItem item=new HolidayItem();
-
-            if(!getNextHolidayId(myInt))
-                return (false);
-            item.holidayId=myInt.Value;
-            item.holidayName=randomHolidayName();
-            item.startDateInt=DateUtils.unknownDate;
-            if(datesKnown)
-                item.startDateInt=randomDateInt();
-
-            item.infoId=0;
-            if(info)
-            {
-                MyInt infoIdMyInt=new MyInt();
-                if(!databaseAccess().createSampleExtraFileGroup(infoIdMyInt))
-                    return (false);
-                item.infoId=infoIdMyInt.Value;
-            }
-
-            if(notes)
-            {
-                if(!databaseAccess().createSampleNote(item.holidayId, noteMyInt))
-                    return (false);
-                item.noteId=noteMyInt.Value;
-            }
-            item.galleryId=0;
-            item.sygicId=0;
-            item.holidayPicture="";
-            item.holidayBitmap=null;
-            item.pictureAssigned=false;
-            item.buttonDays=true;
-            item.buttonDay=true;
-            item.buttonMaps=true;
-            item.buttonTasks=true;
-            item.buttonTips=true;
-            item.buttonBudget = true;
-            item.buttonAttractions = true;
-            item.buttonContacts = true;
-            if(picture)
-            {
-                item.holidayBitmap=null;
-                item.holidayPicture=randomPictureName();
-                item.pictureAssigned=true;
-            }
-
-            if(!addHolidayItem(item))
-                return (false);
-
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("createSample", e.getMessage());
-        }
-        return (false);
-    }
-
     boolean updateHolidayItem(HolidayItem holidayItem)
     {
         try
@@ -308,7 +244,7 @@ class TableHoliday extends TableBase
                     if(holidayItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(removePicture(holidayItem.origHolidayPicture) == false)
+                        if(removePicture(holidayItem.holidayId, holidayItem.origHolidayPicture) == false)
                             return (false);
                     }
             
@@ -320,7 +256,7 @@ class TableHoliday extends TableBase
                         {
                             //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
-                            if(savePicture(holidayItem.holidayBitmap, myString) == false)
+                            if(savePicture(holidayItem.holidayId, holidayItem.holidayBitmap, myString) == false)
                                 return (false);
                             holidayItem.holidayPicture=myString.Value;
                             //myMessages().LogMessage("  - New filename " + holidayItem.holidayPicture);
@@ -378,7 +314,7 @@ class TableHoliday extends TableBase
             String l_SQL="DELETE FROM holiday WHERE holidayId = " + holidayItem.holidayId;
 
             if(holidayItem.holidayPicture.length() > 0)
-                if(removePicture(holidayItem.holidayPicture) == false)
+                if(removePicture(holidayItem.holidayId, holidayItem.holidayPicture) == false)
                     return (false);
 
             if(executeSQL("deleteHolidayItem", l_SQL) == false)

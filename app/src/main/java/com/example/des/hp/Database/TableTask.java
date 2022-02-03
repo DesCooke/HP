@@ -107,7 +107,7 @@ class TableTask extends TableBase
                     {
                         //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
-                        if(savePicture(taskItem.fileBitmap, myString) == false)
+                        if(savePicture(taskItem.holidayId, taskItem.fileBitmap, myString) == false)
                             return (false);
                         taskItem.taskPicture=myString.Value;
                         //myMessages().LogMessage("  - New filename " + taskItem.taskPicture);
@@ -190,7 +190,7 @@ class TableTask extends TableBase
                     if(taskItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(removePicture(taskItem.origTaskPicture) == false)
+                        if(removePicture(taskItem.holidayId, taskItem.origTaskPicture) == false)
                             return (false);
                     }
             
@@ -202,7 +202,7 @@ class TableTask extends TableBase
                         {
                             //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
-                            if(savePicture(taskItem.fileBitmap, myString) == false)
+                            if(savePicture(taskItem.holidayId, taskItem.fileBitmap, myString) == false)
                                 return (false);
                             taskItem.taskPicture=myString.Value;
                             //myMessages().LogMessage("  - New filename " + taskItem.taskPicture);
@@ -273,7 +273,7 @@ class TableTask extends TableBase
             String lSQL="DELETE FROM Tasks " + "WHERE holidayId = " + taskItem.holidayId + " " + "AND taskId = " + taskItem.taskId;
 
             if(taskItem.taskPicture.length() > 0)
-                if(removePicture(taskItem.taskPicture) == false)
+                if(removePicture(taskItem.holidayId, taskItem.taskPicture) == false)
                     return (false);
 
             if(executeSQL("deleteTaskItem", lSQL) == false)
@@ -473,74 +473,6 @@ class TableTask extends TableBase
         return (false);
     }
 
-    boolean createSample(int lHolidayId,  boolean info, boolean notes, boolean picture, boolean dateKnown, boolean complete)
-    {
-        try
-        {
-            int noteId=0;
-            MyInt noteMyInt=new MyInt();
-            MyInt seqNoMyInt=new MyInt();
-            MyInt taskIdMyInt = new MyInt();
-
-            TaskItem item=new TaskItem();
-
-            if(!getNextTaskId(lHolidayId, taskIdMyInt))
-                return (false);
-            item.holidayId=lHolidayId;
-            item.taskId=taskIdMyInt.Value;
-            if(!getNextSequenceNo(lHolidayId, seqNoMyInt))
-                return(false);
-            item.sequenceNo= seqNoMyInt.Value;
-            item.taskDescription=randomTaskDescription();
-
-            item.infoId=0;
-            if(info)
-            {
-                MyInt infoIdMyInt=new MyInt();
-                if(!databaseAccess().createSampleExtraFileGroup(infoIdMyInt))
-                    return (false);
-                item.infoId=infoIdMyInt.Value;
-            }
-
-            if(notes)
-            {
-                if(!databaseAccess().createSampleNote(item.holidayId, noteMyInt))
-                    return (false);
-                item.noteId=noteMyInt.Value;
-            }
-            item.galleryId=0;
-            item.sygicId=0;
-            item.taskPicture="";
-            item.fileBitmap=null;
-            item.pictureAssigned=false;
-            if(picture)
-            {
-                item.fileBitmap=null;
-                item.taskPicture=randomPictureName();
-                item.pictureAssigned=true;
-            }
-            item.taskDateKnown=dateKnown;
-            if(dateKnown)
-            {
-                item.taskDateInt=randomDateInt();
-            }
-            else
-            {
-                item.taskDateInt=DateUtils.unknownDate;
-            }
-            item.taskComplete = complete;
-            
-            if(!addTaskItem(item))
-                return (false);
-
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("createSample", e.getMessage());
-        }
-        return (false);
-    }
     private String randomTaskDescription()
     {
         try

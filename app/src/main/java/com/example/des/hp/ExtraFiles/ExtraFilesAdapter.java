@@ -81,10 +81,6 @@ class ExtraFilesAdapter extends RecyclerView.Adapter<ExtraFilesAdapter.ViewHolde
         final ExtraFilesItem c=data.get(position);
         holder.txtFileDescription.setText(c.fileDescription);
 
-        if(c.filePicture.length() > 0)
-            if(imageUtils.getListIcon(context, c.filePicture, holder.fileImage) == false)
-                return;
-
         holder.fileItemCell.setOnClickListener(new View.OnClickListener()
         {
             @Override

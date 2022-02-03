@@ -86,7 +86,7 @@ class TableTip extends TableBase
                     {
                         //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
-                        if(savePicture(tipItem.fileBitmap, myString) == false)
+                        if(savePicture(tipItem.holidayId, tipItem.fileBitmap, myString) == false)
                             return (false);
                         tipItem.tipPicture=myString.Value;
                         //myMessages().LogMessage("  - New filename " + tipItem.tipPicture);
@@ -161,7 +161,7 @@ class TableTip extends TableBase
                     if(tipItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(removePicture(tipItem.origTipPicture) == false)
+                        if(removePicture(tipItem.holidayId, tipItem.origTipPicture) == false)
                             return (false);
                     }
             
@@ -173,7 +173,7 @@ class TableTip extends TableBase
                         {
                             //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
-                            if(savePicture(tipItem.fileBitmap, myString) == false)
+                            if(savePicture(tipItem.holidayId, tipItem.fileBitmap, myString) == false)
                                 return (false);
                             tipItem.tipPicture=myString.Value;
                             //myMessages().LogMessage("  - New filename " + tipItem.tipPicture);
@@ -215,7 +215,7 @@ class TableTip extends TableBase
             String lSQL="DELETE FROM Tip " + "WHERE holidayId = " + tipItem.holidayId + " " + "AND tipGroupId = " + tipItem.tipGroupId + " " + "AND tipId = " + tipItem.tipId;
 
             if(tipItem.tipPicture.length() > 0)
-                if(removePicture(tipItem.tipPicture) == false)
+                if(removePicture(tipItem.holidayId, tipItem.tipPicture) == false)
                     return (false);
 
             if(executeSQL("deleteTipItem", lSQL) == false)
@@ -435,65 +435,5 @@ class TableTip extends TableBase
         return (false);
     }
 
-    boolean createSample(int lHolidayId, int lTipGroupId, boolean info, boolean notes, boolean picture)
-    {
-        try
-        {
-            int noteId=0;
-            MyInt noteMyInt=new MyInt();
-            MyInt seqNoMyInt=new MyInt();
-            MyInt tipIdMyInt = new MyInt();
-
-            TipItem item=new TipItem();
-
-            if(!getNextTipId(lHolidayId, lTipGroupId, tipIdMyInt))
-                return (false);
-            item.holidayId=lHolidayId;
-            item.tipGroupId=lTipGroupId;
-            item.tipId = tipIdMyInt.Value;
-            if(!getNextTipSequenceNo(lHolidayId, lTipGroupId, seqNoMyInt))
-                return(false);
-            item.sequenceNo= seqNoMyInt.Value;
-            item.tipDescription="Test Tip";
-            item.tipNotes="";
-
-            item.infoId=0;
-            if(info)
-            {
-                MyInt infoIdMyInt=new MyInt();
-                if(!databaseAccess().createSampleExtraFileGroup(infoIdMyInt))
-                    return (false);
-                item.infoId=infoIdMyInt.Value;
-            }
-
-            if(notes)
-            {
-                if(!databaseAccess().createSampleNote(item.holidayId, noteMyInt))
-                    return (false);
-                item.noteId=noteMyInt.Value;
-            }
-            item.galleryId=0;
-            item.sygicId=0;
-            item.tipPicture="";
-            item.fileBitmap=null;
-            item.pictureAssigned=false;
-            if(picture)
-            {
-                item.fileBitmap=null;
-                item.tipPicture=randomPictureName();
-                item.pictureAssigned=true;
-            }
-
-            if(!addTipItem(item))
-                return (false);
-
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("createSample", e.getMessage());
-        }
-        return (false);
-    }
 
 }

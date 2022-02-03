@@ -9,11 +9,13 @@ import android.view.View;
 
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
+import com.example.des.hp.myutils.ImageUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+import static com.example.des.hp.myutils.MyFileUtils.myFileUtils;
 
 /**
  * * Created by Des on 02/11/2016.
@@ -29,10 +31,8 @@ public class ExtraFilesDetailsList extends BaseActivity
     {
         try
         {
-            Intent intent=new Intent(getApplicationContext(), ExtraFilesDetailsEdit.class);
-            intent.putExtra("ACTION", "add");
-            intent.putExtra("FILEGROUPID", fileGroupId);
-            startActivity(intent);
+            action="add";
+            pickFile(view);
         }
         catch(Exception e)
         {
@@ -67,13 +67,11 @@ public class ExtraFilesDetailsList extends BaseActivity
                 @Override
                 public void onItemClick(View view, ExtraFilesItem obj)
                 {
-                    Intent intent=new Intent(getApplicationContext(), ExtraFilesDetailsView.class);
-                    intent.putExtra("ACTION", "view");
-                    intent.putExtra("FILEGROUPID", obj.fileGroupId);
-                    intent.putExtra("FILEID", obj.fileId);
-                    intent.putExtra("TITLE", title + "/" + subTitle);
-                    intent.putExtra("SUBTITLE", obj.fileDescription);
-                    startActivity(intent);
+                    if(obj.fileName.length() > 0)
+                    {
+                        String lDir = ImageUtils.imageUtils().GetHolidayFileDir(holidayId);
+                        myFileUtils().OpenAFile(lDir + "/" + obj.fileName);
+                    }
                 }
             });
 

@@ -106,7 +106,7 @@ class TableDay extends TableBase
                     {
                         //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
-                        if(savePicture(dayItem.dayBitmap, myString) == false)
+                        if(savePicture(dayItem.holidayId, dayItem.dayBitmap, myString) == false)
                             return (false);
                         dayItem.dayPicture=myString.Value;
                         //myMessages().LogMessage("  - New filename " + dayItem.dayPicture);
@@ -181,7 +181,7 @@ class TableDay extends TableBase
                     if(dayItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(removePicture(dayItem.origDayPicture) == false)
+                        if(removePicture(dayItem.holidayId, dayItem.origDayPicture) == false)
                             return (false);
                     }
             
@@ -193,7 +193,7 @@ class TableDay extends TableBase
                         {
                             //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
-                            if(savePicture(dayItem.dayBitmap, myString) == false)
+                            if(savePicture(dayItem.holidayId, dayItem.dayBitmap, myString) == false)
                                 return (false);
                             dayItem.dayPicture=myString.Value;
                             //myMessages().LogMessage("  - New filename " + dayItem.dayPicture);
@@ -256,7 +256,7 @@ class TableDay extends TableBase
             String lSQL="DELETE FROM day " + "WHERE holidayId = " + dayItem.holidayId + " " + "AND dayId = " + dayItem.dayId;
 
             if(dayItem.dayPicture.length() > 0)
-                if(removePicture(dayItem.dayPicture) == false)
+                if(removePicture(dayItem.holidayId, dayItem.dayPicture) == false)
                     return (false);
 
             if(executeSQL("deleteDayItem", lSQL) == false)
@@ -333,6 +333,16 @@ class TableDay extends TableBase
             dayItem.origSygicId=dayItem.sygicId;
 
             dayItem.pictureChanged=false;
+
+            if(dayItem.dayPicture.length() > 0)
+            {
+                dayItem.pictureAssigned=true;
+                dayItem.origPictureAssigned=true;
+            } else
+            {
+                dayItem.pictureAssigned=false;
+                dayItem.origPictureAssigned=false;
+            }
 
             return (true);
         }
@@ -550,105 +560,5 @@ class TableDay extends TableBase
         return (false);
 
     }
-
-    boolean createSample(int lHolidayId, MyInt myInt, boolean info, boolean notes, boolean picture)
-    {
-        try
-        {
-            int noteId=0;
-            MyInt noteMyInt=new MyInt();
-            MyInt seqNoMyInt=new MyInt();
-
-            DayItem item=new DayItem();
-
-            if(!getNextDayId(lHolidayId, myInt))
-                return (false);
-            item.holidayId=lHolidayId;
-            item.dayId=myInt.Value;
-            if(!getNextSequenceNo(lHolidayId, seqNoMyInt))
-                return(false);
-            item.sequenceNo= seqNoMyInt.Value;
-            item.dayName=randomDayName();
-
-            Random random=new Random();
-            item.dayCat = random.nextInt(4);
-
-            item.infoId=0;
-            if(info)
-            {
-                MyInt infoIdMyInt=new MyInt();
-                if(!databaseAccess().createSampleExtraFileGroup(infoIdMyInt))
-                    return (false);
-                item.infoId=infoIdMyInt.Value;
-            }
-
-            if(notes)
-            {
-                if(!databaseAccess().createSampleNote(item.holidayId, noteMyInt))
-                    return (false);
-                item.noteId=noteMyInt.Value;
-            }
-            item.galleryId=0;
-            item.sygicId=0;
-            item.dayPicture="";
-            item.dayBitmap=null;
-            item.pictureAssigned=false;
-            if(picture)
-            {
-                item.dayBitmap=null;
-                item.dayPicture=randomPictureName();
-                item.pictureAssigned=true;
-            }
-
-            if(!addDayItem(item))
-                return (false);
-
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("createSample", e.getMessage());
-        }
-        return (false);
-    }
-
-    private String randomDayName()
-    {
-        try
-        {
-            Random random=new Random();
-            int i=random.nextInt(10);
-            switch(i)
-            {
-                case 0:
-                    return ("Magic Kingdom");
-                case 1:
-                    return ("Universal Studios");
-                case 2:
-                    return ("Islands of Adventure");
-                case 3:
-                    return ("Animal Kingdom");
-                case 4:
-                    return ("Shopping Mall");
-                case 5:
-                    return ("Seaworld");
-                case 6:
-                    return ("NASA");
-                case 7:
-                    return ("Busch Gardens");
-                case 8:
-                    return ("Coco Beach");
-            }
-            return ("Spare Day");
-        }
-        catch(Exception e)
-        {
-            ShowError("randomDayName", e.getMessage());
-        }
-        return ("Spare Day");
-
-    }
-
-
 
 }

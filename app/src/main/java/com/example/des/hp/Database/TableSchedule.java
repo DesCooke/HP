@@ -86,7 +86,7 @@ class TableSchedule extends TableBase
                     {
                         //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
-                        if(savePicture(scheduleItem.scheduleBitmap, myString) == false)
+                        if(savePicture(scheduleItem.holidayId, scheduleItem.scheduleBitmap, myString) == false)
                             return (false);
                         scheduleItem.schedPicture=myString.Value;
                         //myMessages().LogMessage("  - New filename " + scheduleItem.schedPicture);
@@ -238,7 +238,7 @@ class TableSchedule extends TableBase
                     if(scheduleItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(removePicture(scheduleItem.origSchedPicture) == false)
+                        if(removePicture(scheduleItem.holidayId, scheduleItem.origSchedPicture) == false)
                             return (false);
                     }
             
@@ -250,7 +250,7 @@ class TableSchedule extends TableBase
                         {
                             //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
-                            if(savePicture(scheduleItem.scheduleBitmap, myString) == false)
+                            if(savePicture(scheduleItem.holidayId, scheduleItem.scheduleBitmap, myString) == false)
                                 return (false);
                             scheduleItem.schedPicture=myString.Value;
                             //myMessages().LogMessage("  - New filename " + scheduleItem.schedPicture);
@@ -405,7 +405,7 @@ class TableSchedule extends TableBase
             String lSQL="DELETE FROM schedule " + "WHERE holidayId = " + scheduleItem.holidayId + " " + "AND dayId = " + scheduleItem.dayId + " " + "AND attractionId = " + scheduleItem.attractionId + " " + "AND attractionAreaId = " + scheduleItem.attractionAreaId + " " + "AND scheduleId = " + scheduleItem.scheduleId;
 
             if(scheduleItem.schedPicture.length() > 0)
-                if(removePicture(scheduleItem.schedPicture) == false)
+                if(removePicture(scheduleItem.holidayId, scheduleItem.schedPicture) == false)
                     return (false);
 
             if(executeSQL("deleteScheduleItem", lSQL) == false)
@@ -603,124 +603,5 @@ class TableSchedule extends TableBase
         }
         return (false);
     }
-
-    boolean createSample(int lHolidayId, int lDayId, int lAttractionId, int lAttractionAreaId,
-        MyInt myInt, int lSchedType, boolean lStartTimeKnown, boolean lEndTimeKnown, boolean info, boolean notes, boolean picture)
-    {
-        try
-        {
-            int noteId=0;
-            MyInt noteMyInt=new MyInt();
-            MyInt seqNoMyInt=new MyInt();
-
-            ScheduleItem item=new ScheduleItem();
-
-            if(!getNextScheduleId(lHolidayId, lDayId, lAttractionId, lAttractionAreaId, myInt))
-                return (false);
-            item.holidayId=lHolidayId;
-            item.dayId=lDayId;
-            item.attractionId=lAttractionId;
-            item.attractionAreaId=lAttractionAreaId;
-            item.scheduleId=myInt.Value;
-            item.schedType = lSchedType;
-
-            if(!getNextScheduleSequenceNo(lHolidayId, lDayId, lAttractionId, lAttractionAreaId, seqNoMyInt))
-                return(false);
-            item.sequenceNo= seqNoMyInt.Value;
-            item.schedName=randomSchedName();
-
-            Random random=new Random();
-            item.startHour=0;
-            item.startMin=0;
-            if(lStartTimeKnown)
-            {
-                item.startTimeKnown=true;
-                item.startHour=random.nextInt(21);
-                item.startMin=random.nextInt(45);
-            }
-            item.endHour=0;
-            item.endMin=0;
-            if(lEndTimeKnown)
-            {
-                item.endTimeKnown=true;
-                item.endHour=random.nextInt(23-item.startHour)+item.startHour;
-                item.endMin=random.nextInt(60-item.startMin)+item.startMin;
-            }
-            item.infoId=0;
-            if(info)
-            {
-                MyInt infoIdMyInt=new MyInt();
-                if(!databaseAccess().createSampleExtraFileGroup(infoIdMyInt))
-                    return (false);
-                item.infoId=infoIdMyInt.Value;
-            }
-
-            if(notes)
-            {
-                if(!databaseAccess().createSampleNote(item.holidayId, noteMyInt))
-                    return (false);
-                item.noteId=noteMyInt.Value;
-            }
-            item.galleryId=0;
-            item.sygicId=0;
-            item.schedPicture="";
-            item.scheduleBitmap=null;
-            item.pictureAssigned=false;
-            if(picture)
-            {
-                item.scheduleBitmap=null;
-                item.schedPicture=randomPictureName();
-                item.pictureAssigned=true;
-            }
-
-            if(!addScheduleItem(item))
-                return (false);
-
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("createSample", e.getMessage());
-        }
-        return (false);
-    }
-
-    private String randomSchedName()
-    {
-        try
-        {
-            Random random=new Random();
-            int i=random.nextInt(10);
-            switch(i)
-            {
-                case 0:
-                    return ("Day Parade");
-                case 1:
-                    return ("Dragons Challenge");
-                case 2:
-                    return ("Night Fireworks");
-                case 3:
-                    return ("Safari");
-                case 4:
-                    return ("Haunted House");
-                case 5:
-                    return ("Dolphin Swim");
-                case 6:
-                    return ("Minions Mayhem");
-                case 7:
-                    return ("Men in Black");
-                case 8:
-                    return ("Horror Makeup Show");
-            }
-            return ("Barber Quartet");
-        }
-        catch(Exception e)
-        {
-            ShowError("randomSchedName", e.getMessage());
-        }
-        return ("Barber Quartet");
-
-    }
-
 
 }

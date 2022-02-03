@@ -25,7 +25,7 @@ public class InternalFileList extends BaseActivity
         {
             SetTitles("Internal Files", "please select one");
 
-            internalFileList=imageUtils().listInternalFiles();
+            internalFileList=imageUtils().listInternalFiles(holidayId);
 
             internalFileAdapter=new InternalFileAdapter(this, internalFileList);
 

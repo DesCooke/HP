@@ -25,7 +25,12 @@ public class InternalImageList extends BaseActivity
         {
             SetTitles("Internal Images", "please select one");
 
-            internalImageList=imageUtils().listInternalImages();
+            Bundle extras=getIntent().getExtras();
+            if(extras != null) {
+                holidayId = extras.getInt("HOLIDAYID", 0);
+            }
+
+            internalImageList=imageUtils().listInternalImages(holidayId);
 
             internalImageAdapter=new InternalImageAdapter(this, internalImageList);
 

@@ -13,6 +13,7 @@ public class ExtraFilesItem
     public int fileGroupId;
     public int fileId;
     public int sequenceNo;
+    public int holidayId;
     public String fileDescription;
     public String fileName;
     public String filePicture;
