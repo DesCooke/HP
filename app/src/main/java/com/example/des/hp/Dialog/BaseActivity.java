@@ -48,6 +48,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -151,10 +152,16 @@ public class BaseActivity extends AppCompatActivity
     public boolean recyclerViewEnabled=false;
     public boolean allowCellMove=false;
     public boolean allowCellSwipe=false;
+    public boolean allowDelete=false;
+    public boolean allowEdit=false;
     public boolean gridLayout=false; // ie. vertical list
     public RecyclerView recyclerView;
     private final String KEY_RECYCLER_STATE="recycler_state";
     private Bundle mBundleRecyclerViewState;
+
+    public SwipeController swipeController;
+    public ItemTouchHelper itemTouchHelper;
+
 
     public void showNotes(View view)
     {
@@ -241,8 +248,8 @@ public class BaseActivity extends AppCompatActivity
             ShowError("showDayAdd", e.getMessage());
         }
   */  }
-    public void pickImage(View view)
 
+    public void pickImage(View view)
     {
         if(!imagePresent)
             return;
@@ -676,7 +683,6 @@ public class BaseActivity extends AppCompatActivity
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -792,7 +798,6 @@ public class BaseActivity extends AppCompatActivity
 
     }
 
-
     @Override
     protected void onResume()
     {
@@ -844,7 +849,16 @@ public class BaseActivity extends AppCompatActivity
             //listView1.setDivider(null);
             recyclerView.setAdapter(adapter);
 
-            itemTouchHelper.attachToRecyclerView(recyclerView);
+            if(allowCellSwipe)
+            {
+                swipeController = new SwipeController(this) {};
+                itemTouchHelper = new ItemTouchHelper(swipeController);
+                itemTouchHelper.attachToRecyclerView(recyclerView);
+            }
+            else
+            {
+                swapItemTouchHelper.attachToRecyclerView(recyclerView);
+            }
             recyclerViewEnabled=true;
         }
         catch(Exception e)
@@ -854,6 +868,27 @@ public class BaseActivity extends AppCompatActivity
 
     }
 
+    /*
+    ** this needs to be outside the class and declared like this otherwise the cells do not
+    ** move when you swap records around!!!
+     */
+    ItemTouchHelper swapItemTouchHelper=new ItemTouchHelper(new SwapController(this, 0, ItemTouchHelper.LEFT));
+
+
+    public void EditItemAtPos(int pos)
+    {
+
+    }
+
+    public void DeleteItemAtPos(int pos)
+    {
+
+    }
+
+    public void NotifyDataSetChanged()
+    {
+
+    }
 
     public void OnItemMove(int from, int to)
     {
@@ -868,92 +903,6 @@ public class BaseActivity extends AppCompatActivity
     {
 
     }
-
-    // handle swipe to delete, and draggable
-    ItemTouchHelper itemTouchHelper=new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)
-    {
-        int dragFrom=-1;
-        int dragTo=-1;
-
-        @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
-        {
-            int fromPosition=viewHolder.getAdapterPosition();
-            int toPosition=target.getAdapterPosition();
-
-            try
-            {
-                if(dragFrom == -1)
-                {
-                    dragFrom=fromPosition;
-                }
-                dragTo=toPosition;
-
-                if(fromPosition < toPosition)
-                {
-                    for(int i=fromPosition; i < toPosition; i++)
-                    {
-                        SwapItems(i, i + 1);
-                    }
-                } else
-                {
-                    for(int i=fromPosition; i > toPosition; i--)
-                    {
-                        SwapItems(i, i - 1);
-                    }
-                }
-                NotifyItemMoved(fromPosition, toPosition);
-            }
-            catch(Exception e)
-            {
-                ShowError("onMove", e.getMessage());
-            }
-
-            return true;
-        }
-
-        @Override
-        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
-        {
-            int dragFlags=0;
-            int swipeFlags=0;
-
-            if(allowCellMove)
-                dragFlags=ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-
-            if(allowCellSwipe)
-                swipeFlags=ItemTouchHelper.START | ItemTouchHelper.END;
-
-            return makeMovementFlags(dragFlags, swipeFlags);
-        }
-
-        @Override
-        public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction)
-        {
-        }
-
-        @Override
-        public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
-        {
-            super.clearView(recyclerView, viewHolder);
-
-            try
-            {
-                if(dragFrom != -1 && dragTo != -1 && dragFrom != dragTo)
-                {
-                    OnItemMove(dragFrom, dragTo);
-                }
-
-                dragFrom=dragTo=-1;
-            }
-            catch(Exception e)
-            {
-                ShowError("clearView", e.getMessage());
-            }
-
-        }
-
-    });
 
     @Override
     protected void onPause()

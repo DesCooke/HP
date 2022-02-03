@@ -11,12 +11,12 @@ import java.io.File;
 
 import static com.example.des.hp.myutils.MyLog.myLog;
 
-class MyUri
+public class MyUri
 {
     private Context _context;
     public Resources res;
 
-    MyUri(Context context)
+    public MyUri(Context context)
     {
         _context=context;
         res=_context.getResources();
@@ -27,15 +27,10 @@ class MyUri
         myLog().WriteLogMessage(argMessage);
     }
 
-    Uri getUri(String filename)
+    public Uri getUri(String filename)
     {
-        // get the full path, "/storage/emulated/0/HP/files" "/" "fred.jpg"
-        String originalfullurl=MyFileUtils.MyDocuments() + "/" +
-                res.getString(R.string.application_file_path) + "/" +
-                res.getString(R.string.files_path) + "/" + filename;
-
         // create a File object from it
-        File originalFile=new File(originalfullurl);
+        File originalFile=new File(filename);
 
         // content://com.example.des.hp.provider/my_files/files/Epcot-map.pdf
         // my_files is decoded as

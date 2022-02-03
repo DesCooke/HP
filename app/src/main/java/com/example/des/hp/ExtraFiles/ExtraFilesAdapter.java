@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -79,7 +80,7 @@ class ExtraFilesAdapter extends RecyclerView.Adapter<ExtraFilesAdapter.ViewHolde
     public void onBindViewHolder(ViewHolder holder, int position)
     {
         final ExtraFilesItem c=data.get(position);
-        holder.txtFileDescription.setText(c.fileDescription);
+        holder.txtFileDescription.setText(c.fileDescription + " (" + c.fileName + ")");
 
         holder.fileItemCell.setOnClickListener(new View.OnClickListener()
         {
@@ -100,9 +101,22 @@ class ExtraFilesAdapter extends RecyclerView.Adapter<ExtraFilesAdapter.ViewHolde
         return data.get(position);
     }
 
+    public void DeleteItemAtPos(int position)
+    {
+        ExtraFilesItem item=getItem(position);
+        DatabaseAccess.databaseAccess().deleteExtraFilesItem(item);
+        data.remove(position);
+        notifyDataSetChanged();
+    }
+
     public void add(int position, ExtraFilesItem mail)
     {
         data.add(position, mail);
+        notifyDataSetChanged();
+    }
+
+    public void NotifyDataSetChanged()
+    {
         notifyDataSetChanged();
     }
 

@@ -277,7 +277,7 @@ public class TableBase
 
     }
 
-    int fileUsageCount(String argFilename)
+    int fileUsageCount(int holidayId, String argFilename)
     {
         try
         {
@@ -285,7 +285,9 @@ public class TableBase
             String lSQL;
 
 
-            lSQL="SELECT COUNT(*) " + "FROM extraFiles " + "WHERE fileName = " + MyQuotedString(argFilename) + " ";
+            lSQL="SELECT COUNT(*) " + "FROM extraFiles " +
+                    "WHERE holidayId = " + holidayId + " " +
+                    "AND fileName = " + MyQuotedString(argFilename) + " ";
 
             Cursor cursor=executeSQLOpenCursor("fileUsageCount", lSQL);
             if(cursor != null)
@@ -309,18 +311,16 @@ public class TableBase
 
 
     // returns true/false
-    boolean removeExtraFile(String argFilename)
+    boolean removeExtraFile(int holidayId, String argFilename)
     {
         try
         {
             if(argFilename.length() == 0)
                 return (true);
 
-            if(fileUsageCount(argFilename) < 2)
+            if(fileUsageCount(holidayId, argFilename) < 2)
             {
-                File file=new File(MyFileUtils.MyDocuments() + "/" +
-                        _resources.getString(R.string.application_file_path) + "/" +
-                        _resources.getString(R.string.files_path) + "/" + argFilename);
+                File file=new File(ImageUtils.imageUtils().GetHolidayFileDir(holidayId) + "/" + argFilename);
                 if(file.exists())
                     if(!file.delete())
                         throw new Exception("unable to delete " + file.getAbsolutePath());

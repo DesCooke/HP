@@ -1,5 +1,6 @@
 package com.example.des.hp.myutils;
 
+import android.content.ActivityNotFoundException;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.webkit.MimeTypeMap;
+import android.widget.Toast;
 
 import com.example.des.hp.MainActivity;
 import com.example.des.hp.R;
@@ -84,27 +86,16 @@ public class MyFileUtils
         return (false);
     }
 
-    public Uri StringToUri(String path)
-    {
-        Uri toUri=Uri.fromFile(new File(path));
-
-        return toUri;
-    }
-
     // Returns: true(worked)/false(failed)
     public boolean OpenAFile(String aFile)
     {
         try
         {
-            String mimeType;
-
-            Uri toUri=myUri.getUri(aFile);
-
-            // put back into a string
-            String theString=toUri.toString();
+            MyUri myUri = new MyUri(_context);
+            Uri uri = myUri.getUri(aFile);
 
             //get the extension - pdf etc
-            String extension=MimeTypeMap.getFileExtensionFromUrl(theString);
+            String extension=MimeTypeMap.getFileExtensionFromUrl(aFile);
             if(extension == null)
                 return (false);
 
@@ -112,14 +103,15 @@ public class MyFileUtils
             MimeTypeMap mime=MimeTypeMap.getSingleton();
 
             // get the mimetype from extension
-            mimeType=mime.getMimeTypeFromExtension(extension);
+            String mimeType=mime.getMimeTypeFromExtension(extension);
 
             if(mimeType == null)
                 return (false);
 
             Intent viewIntent=new Intent();
             viewIntent.setAction(Intent.ACTION_VIEW);
-            viewIntent.setDataAndType(toUri, mimeType);
+            viewIntent.setDataAndType(uri, mimeType);
+            viewIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             viewIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             _context.startActivity(viewIntent);
             return (true);

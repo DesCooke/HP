@@ -51,7 +51,7 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 public class DatabaseAccess extends SQLiteOpenHelper
 {
     //region MEMBERVARIABLES
-    public static final int DATABASE_VERSION = 45;
+    public static final int DATABASE_VERSION = 46;
     public static Date currentStartDate;
     public static DatabaseAccess database = null;
     
@@ -340,11 +340,11 @@ public class DatabaseAccess extends SQLiteOpenHelper
         return (false);
     }
     
-    public boolean removeExtraFile(String file)
+    public boolean removeExtraFile(int holidayId, String file)
     {
         try
         {
-            return (tableNotes.removeExtraFile(file));
+            return (tableNotes.removeExtraFile(holidayId, file));
         }
         catch (Exception e)
         {
@@ -392,12 +392,12 @@ public class DatabaseAccess extends SQLiteOpenHelper
         return (0);
     }
     
-    public int fileUsageCount(String argFilename)
+    public int fileUsageCount(int holidayId, String argFilename)
     {
         try
         {
             // can use any of the tables actually - they all do the same thing
-            return (tableAttraction.fileUsageCount(argFilename));
+            return (tableAttraction.fileUsageCount(holidayId, argFilename));
         }
         catch (Exception e)
         {
