@@ -4,11 +4,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.webkit.MimeTypeMap;
 
 import com.example.des.hp.ExtraFiles.ExtraFilesItem;
+import com.example.des.hp.myutils.ImageUtils;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
+import com.example.des.hp.myutils.MyUri;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import static com.example.des.hp.myutils.MyMessages.myMessages;
@@ -105,7 +110,28 @@ class TableExtraFiles extends TableBase
 
             if(extraFilesItem.fileName.length() > 0)
             {
-                extraFilesItem.fileName=extraFilesItem.fileName.replace("'", "");
+                String lFilename;
+                MyInt myInt=new MyInt();
+                if(getNextFileId("file", myInt) == false)
+                    return (false);
+
+                if(setNextFileId("file", myInt.Value + 1) == false)
+                    return (false);
+
+                MyUri myUri = new MyUri(_context);
+                Uri toUri=myUri.getUri(ImageUtils.imageUtils().GetHolidayFileDir(extraFilesItem.holidayId) + "/" + extraFilesItem.fileName);
+
+                // put back into a string
+                String theString=toUri.toString();
+
+                //get the extension - pdf etc
+                String extension=MimeTypeMap.getFileExtensionFromUrl(theString);
+                if(extension == null)
+                    return (false);
+                lFilename="file_" + myInt.Value + "." + extension;
+
+
+                extraFilesItem.fileName=lFilename;
                 if(extraFilesItem.internalFilename.length() == 0)
                     if(saveExtraFile(extraFilesItem.holidayId, extraFilesItem.fileUri, extraFilesItem.fileName) == false)
                         return (false);
@@ -164,51 +190,10 @@ class TableExtraFiles extends TableBase
             if(IsValid() == false)
                 return (false);
 
-            //myMessages().LogMessage("updateExtraFilesItem:Handling Image");
-            if(extraFilesItem.pictureChanged)
-            {
-                if(extraFilesItem.origPictureAssigned && extraFilesItem.filePicture.length() > 0 && extraFilesItem.filePicture.compareTo(extraFilesItem.origFilePicture) == 0)
-                {
-                    //myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
-                } else
-                {
-                    if(extraFilesItem.origPictureAssigned)
-                    {
-                        //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(removePicture(/*holidayid*/ 0, extraFilesItem.origFilePicture) == false)
-                            return (false);
-                    }
-            
-                /* if picture name has something in it - it means it came from internal folder */
-                    if(extraFilesItem.filePicture.length() == 0)
-                    {
-                        //myMessages().LogMessage("  - New Image was not from internal folder...");
-                        if(extraFilesItem.pictureAssigned)
-                        {
-                            //myMessages().LogMessage("  - Save new image and get a filename...");
-                            MyString myString=new MyString();
-                            if(savePicture(/*holidayid*/ 0, extraFilesItem.fileBitmap, myString) == false)
-                                return (false);
-                            extraFilesItem.filePicture=myString.Value;
-                            //myMessages().LogMessage("  - New filename " + extraFilesItem.filePicture);
-                        } else
-                        {
-                            //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
-                        }
-                    } else
-                    {
-                        //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + extraFilesItem.filePicture + ")");
-                    }
-                }
-            } else
-            {
-                //myMessages().LogMessage("  - Image not changed - do nothing");
-            }
-
             if(extraFilesItem.fileChanged)
             {
                 if(extraFilesItem.origFileName.length() > 0 && extraFilesItem.origFileName.compareTo(extraFilesItem.internalFilename) != 0)
-                    if(removeExtraFile(extraFilesItem.origFileName) == false)
+                    if(removeExtraFile(extraFilesItem.holidayId, extraFilesItem.origFileName) == false)
                         return (false);
                 if(extraFilesItem.internalFilename.length() == 0 && extraFilesItem.fileName.length() > 0)
                 {
@@ -240,12 +225,8 @@ class TableExtraFiles extends TableBase
 
             String lSQL="DELETE FROM ExtraFiles " + "WHERE fileGroupId = " + extraFilesItem.fileGroupId + " " + "AND fileId = " + extraFilesItem.fileId;
 
-            if(extraFilesItem.filePicture.length() > 0)
-                if(removePicture(/*holidayid*/0 , extraFilesItem.filePicture) == false)
-                    return (false);
-
             if(extraFilesItem.fileName.length() > 0)
-                if(removeExtraFile(extraFilesItem.fileName) == false)
+                if(removeExtraFile(extraFilesItem.holidayId, extraFilesItem.fileName) == false)
                     return (false);
 
             if(executeSQL("deleteExtraFilesItem", lSQL) == false)

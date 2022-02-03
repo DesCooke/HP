@@ -45,7 +45,8 @@ public class ExtraFilesDetailsList extends BaseActivity
         super.showForm();
         try
         {
-            allowCellMove=true;
+            allowCellSwipe=true;
+            allowDelete=true;
 
             if(title.length() > 0)
             {
@@ -115,6 +116,20 @@ public class ExtraFilesDetailsList extends BaseActivity
     }
 
     @Override
+    public void DeleteItemAtPos(int pos)
+    {
+        try
+        {
+            extraFilesAdapter.DeleteItemAtPos(pos);
+        }
+        catch(Exception e)
+        {
+            ShowError("DeleteItemAtPos", e.getMessage());
+        }
+    }
+
+
+    @Override
     public void OnItemMove(int from, int to)
     {
         try
@@ -126,6 +141,19 @@ public class ExtraFilesDetailsList extends BaseActivity
             ShowError("OnItemMove", e.getMessage());
         }
 
+    }
+
+    @Override
+    public void NotifyDataSetChanged()
+    {
+        try
+        {
+            extraFilesAdapter.NotifyDataSetChanged();
+        }
+        catch(Exception e)
+        {
+            ShowError("NotifyDataSetChanged", e.getMessage());
+        }
     }
 
     @Override

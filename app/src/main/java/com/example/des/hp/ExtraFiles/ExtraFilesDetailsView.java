@@ -183,7 +183,7 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
         {
             if(txtFilename.getText().toString().length() > 0)
             {
-                myFileUtils().OpenAFile(txtFilename.getText().toString());
+                //myFileUtils().OpenAFile(txtFilename.getText().toString());
             }
         }
         catch(Exception e)

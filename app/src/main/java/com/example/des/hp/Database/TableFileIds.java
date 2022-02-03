@@ -42,6 +42,11 @@ class TableFileIds extends TableBase
     {
         try
         {
+            if(oldVersion==45 && newVersion==46)
+            {
+                String lSQL="INSERT INTO fileIds " + " (fileType, nextId) " + "VALUES ('file',1) ";
+                db.execSQL(lSQL);
+            }
             return (true);
         }
         catch(Exception e)

@@ -153,9 +153,9 @@ public class MainActivity extends BaseActivity
                 ArrayList<InternalFileItem> internalFileList = imageUtils().listInternalFiles(holidayId);
                 if (internalFileList != null) {
                     for (InternalFileItem item : internalFileList) {
-                        if (databaseAccess().fileUsageCount(item.filename) == 0) {
+                        if (databaseAccess().fileUsageCount(holidayId, item.filename) == 0) {
                             //myMessages().LogMessage("File " + item.filename + ", is not linked to anything - removing");
-                            databaseAccess().removeExtraFile(item.filename);
+                            databaseAccess().removeExtraFile(holidayId, item.filename);
                             lCount2++;
                         }
                     }
