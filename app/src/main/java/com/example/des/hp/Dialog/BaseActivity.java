@@ -159,10 +159,6 @@ public class BaseActivity extends AppCompatActivity
     private final String KEY_RECYCLER_STATE="recycler_state";
     private Bundle mBundleRecyclerViewState;
 
-    public SwipeController swipeController;
-    public ItemTouchHelper itemTouchHelper;
-
-
     public void showNotes(View view)
     {
         try
@@ -851,8 +847,6 @@ public class BaseActivity extends AppCompatActivity
 
             if(allowCellSwipe)
             {
-                swipeController = new SwipeController(this) {};
-                itemTouchHelper = new ItemTouchHelper(swipeController);
                 itemTouchHelper.attachToRecyclerView(recyclerView);
             }
             else
@@ -873,6 +867,7 @@ public class BaseActivity extends AppCompatActivity
     ** move when you swap records around!!!
      */
     ItemTouchHelper swapItemTouchHelper=new ItemTouchHelper(new SwapController(this, 0, ItemTouchHelper.LEFT));
+    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeController(this));
 
 
     public void EditItemAtPos(int pos)
