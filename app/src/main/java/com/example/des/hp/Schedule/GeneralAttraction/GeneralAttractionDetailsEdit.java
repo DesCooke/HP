@@ -4,6 +4,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.TextView;
 
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
@@ -43,7 +45,23 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
             }
 
             grpSchedName.setOnClickListener(this);
+            grpAttractionType.setOnClickListener(this);
+            grpBookingReference.setOnClickListener(this);
+            grpFlightNo.setOnClickListener(this);
+            grpTerminal.setOnClickListener(this);
+            grpDeparts.setOnClickListener(this);
+            grpShow.setOnClickListener(this);
+            grpPickUp.setOnClickListener(this);
+            grpDropOff.setOnClickListener(this);
+            grpCheckIn.setOnClickListener(this);
+            grpArrival.setOnClickListener(this);
             imageView.setOnClickListener(this);
+            radUnknown.setOnClickListener(this);
+            radWalkIn.setOnClickListener(this);
+            radOnTheDay.setOnClickListener(this);
+            rad180Days.setOnClickListener(this);
+            radBooked.setOnClickListener(this);
+
         }
         catch(Exception e)
         {
@@ -71,9 +89,53 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
                 case R.id.grpSchedName:
                     pickSchedName(view);
                     break;
-
+                case R.id.grpAttractionType:
+                    EnterString("Attraction Type", "Enter Attraction Type", txtAttractionType);
+                    break;
+                case R.id.grpBookingReference:
+                    EnterString("Booking Reference", "Enter Booking Reference", txtBookingReference);
+                    break;
+                case R.id.grpFlightNo:
+                    EnterString("Flight NO", "Enter Flight No", txtFlightNo);
+                    break;
+                case R.id.grpTerminal:
+                    EnterString("Terminal", "Enter Terminal", txtTerminal);
+                    break;
+                case R.id.grpDeparts:
+                    handleTime(txtDeparts, chkDepartsKnown, "Select Departure Time");
+                    break;
+                case R.id.grpShow:
+                    handleTime(txtShow, chkShowKnown, "Select Show Time");
+                    break;
+                case R.id.grpPickUp:
+                    handleTime(txtPickUp, chkPickUpKnown, "Select PickUp Time");
+                    break;
+                case R.id.grpDropOff:
+                    handleTime(txtDropOff, chkDropOffKnown, "Select DropOff Time");
+                    break;
+                case R.id.grpCheckIn:
+                    handleTime(txtCheckIn, chkCheckInKnown, "Select CheckIn Time");
+                    break;
+                case R.id.grpArrival:
+                    handleTime(txtArrival, chkArrivalKnown, "Select Arrival Time");
+                    break;
                 case R.id.imageViewSmall:
                     pickImage(view);
+                    break;
+                case R.id.radUnknown:
+                    selectReservationType(view);
+                    break;
+                case R.id.radWalkIn:
+                    selectReservationType(view);
+                    break;
+                case R.id.radOnTheDay:
+                    selectReservationType(view);
+                    break;
+                case R.id.rad180Days:
+                    selectReservationType(view);
+                    break;
+                case R.id.radBooked:
+                    selectReservationType(view);
                     break;
             }
         }
@@ -82,6 +144,47 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
             ShowError("onClick", e.getMessage());
         }
 
+    }
+
+    public void selectReservationType(View view)
+    {
+        try
+        {
+            radUnknown.setChecked(false);
+            radWalkIn.setChecked(false);
+            radOnTheDay.setChecked(false);
+            rad180Days.setChecked(false);
+            radBooked.setChecked(false);
+            ((RadioButton) view).setChecked(true);
+        }
+        catch(Exception e)
+        {
+            ShowError("selectReservationType", e.getMessage());
+        }
+    }
+
+    public void EnterString(String formCaption, String formMessage, TextView textView)
+    {
+        dialogWithEditTextFragment=
+                DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+                        "hihi1",            // unique name for this dialog type
+                        formCaption,    // form caption
+                        formMessage,             // form message
+                        R.drawable.attachment,
+                        textView.getText().toString(), // initial text
+                        new View.OnClickListener()
+                        {
+                            public void onClick(View view)
+                            {
+                                textView.setText(dialogWithEditTextFragment.getFinalText());
+                                dialogWithEditTextFragment.dismiss();
+                            }
+                        },
+                        this,
+                        false
+                );
+
+        dialogWithEditTextFragment.showIt();
     }
     //endregion
 
@@ -105,6 +208,16 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
             if(imageSet)
                 scheduleItem.scheduleBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
+            scheduleItem.generalAttractionItem.ReservationType=0;
+            if(radWalkIn.isChecked())
+                scheduleItem.generalAttractionItem.ReservationType=1;
+            if(radOnTheDay.isChecked())
+                scheduleItem.generalAttractionItem.ReservationType=2;
+            if(rad180Days.isChecked())
+                scheduleItem.generalAttractionItem.ReservationType=3;
+            if(radBooked.isChecked())
+                scheduleItem.generalAttractionItem.ReservationType=4;
+
             scheduleItem.startTimeKnown=false;
             scheduleItem.startHour=0;
             scheduleItem.startMin=0;
@@ -114,6 +227,28 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
             scheduleItem.generalAttractionItem.heartRating=heartRating.getRating();
             scheduleItem.generalAttractionItem.scenicRating=scenicRating.getRating();
             scheduleItem.generalAttractionItem.thrillRating=thrillRating.getRating();
+            scheduleItem.generalAttractionItem.AttractionType=txtAttractionType.getText().toString();
+            scheduleItem.generalAttractionItem.BookingReference=txtBookingReference.getText().toString();
+            scheduleItem.generalAttractionItem.FlightNo=txtFlightNo.getText().toString();
+            scheduleItem.generalAttractionItem.Terminal=txtTerminal.getText().toString();
+            scheduleItem.generalAttractionItem.DepartsKnown = chkDepartsKnown.isChecked();
+            scheduleItem.generalAttractionItem.DepartsHour = getHour(txtDeparts);
+            scheduleItem.generalAttractionItem.DepartsMin = getMinute(txtDeparts);
+            scheduleItem.generalAttractionItem.ShowKnown = chkShowKnown.isChecked();
+            scheduleItem.generalAttractionItem.ShowHour = getHour(txtShow);
+            scheduleItem.generalAttractionItem.ShowMin = getMinute(txtShow);
+            scheduleItem.generalAttractionItem.PickUpKnown = chkPickUpKnown.isChecked();
+            scheduleItem.generalAttractionItem.PickUpHour = getHour(txtPickUp);
+            scheduleItem.generalAttractionItem.PickUpMin = getMinute(txtPickUp);
+            scheduleItem.generalAttractionItem.DropOffKnown = chkDropOffKnown.isChecked();
+            scheduleItem.generalAttractionItem.DropOffHour = getHour(txtDropOff);
+            scheduleItem.generalAttractionItem.DropOffMin = getMinute(txtDropOff);
+            scheduleItem.generalAttractionItem.CheckInKnown = chkCheckInKnown.isChecked();
+            scheduleItem.generalAttractionItem.CheckInHour = getHour(txtCheckIn);
+            scheduleItem.generalAttractionItem.CheckInMin = getMinute(txtCheckIn);
+            scheduleItem.generalAttractionItem.ArrivalKnown = chkArrivalKnown.isChecked();
+            scheduleItem.generalAttractionItem.ArrivalHour = getHour(txtArrival);
+            scheduleItem.generalAttractionItem.ArrivalMin = getMinute(txtArrival);
 
             if(action.equals("add"))
             {
