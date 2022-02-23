@@ -51,7 +51,7 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 public class DatabaseAccess extends SQLiteOpenHelper
 {
     //region MEMBERVARIABLES
-    public static final int DATABASE_VERSION = 46;
+    public static final int DATABASE_VERSION = 50;
     public static Date currentStartDate;
     public static DatabaseAccess database = null;
     
