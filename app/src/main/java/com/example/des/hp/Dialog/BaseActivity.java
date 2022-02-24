@@ -143,6 +143,7 @@ public class BaseActivity extends AppCompatActivity
     public ImageView imageView;
     public boolean imageSet=false;
     public boolean imageChanged=false;
+    public boolean origImageChanged=false;
     public Bitmap imageDefault;
     public DialogWithYesNoFragment dialogWithYesNoFragment;
     public String internalImageFilename="";
@@ -457,7 +458,7 @@ public class BaseActivity extends AppCompatActivity
 
         try
         {
-            btnClearImage(null);
+            clearImage(null);
 
             if(picture != null && picture.length() > 0)
             {
@@ -477,6 +478,12 @@ public class BaseActivity extends AppCompatActivity
 
     public void btnClearImage(View view)
     {
+        clearImage(view);
+        imageChanged=true;
+    }
+
+    public void clearImage(View view)
+    {
         if(txtPicture != null)
             txtPicture.setText("");
 
@@ -486,7 +493,6 @@ public class BaseActivity extends AppCompatActivity
         {
             imageView.setImageBitmap(imageDefault);
             imageSet=false;
-            imageChanged=true;
         }
         catch(Exception e)
         {
@@ -686,6 +692,7 @@ public class BaseActivity extends AppCompatActivity
         ErrorDialog.SetContext(this);
         MessageDialog.SetContext(this);
         MyMessages.SetContext(this);
+        imageChanged=false;
 
         Bundle extras=getIntent().getExtras();
         if(extras != null)
@@ -734,7 +741,7 @@ public class BaseActivity extends AppCompatActivity
     {
         try
         {
-            btnClearImage(null);
+            clearImage(null);
             SetTitles(title, subTitle);
         }
         catch(Exception e)
