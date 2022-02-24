@@ -203,6 +203,7 @@ public class BaseScheduleView extends BaseActivity
                 txtSchedName.setText(scheduleItem.schedName);
 
                 SetImage(scheduleItem.schedPicture);
+                imageChanged=false;
             }
         }
         catch(Exception e)
