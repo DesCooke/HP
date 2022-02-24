@@ -158,6 +158,10 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     {
         final ScheduleItem c=data.get(position);
 
+        holder.txtSchedName.setText("");
+        holder.txtReservationType.setText("");
+        holder.txtTimeRange.setText("");
+
         holder.scenicRatingView.setVisibility(View.VISIBLE);
         holder.heartRatingView.setVisibility(View.VISIBLE);
         holder.thrillRatingView.setVisibility(View.VISIBLE);
@@ -198,18 +202,48 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
                                 formatTime(g.ArrivalHour, g.ArrivalMin) ;
                         holder.txtTimeRange.setText(lString);
                     }
-                    else {
-                        if (g.ShowKnown) {
+                    else
+                    {
+                        if (g.ShowKnown)
+                        {
                             lString = formatTime(g.ShowHour, g.ShowMin);
                             holder.txtTimeRange.setText(lString);
-                        } else {
-                            if (g.CheckInKnown) {
+                        } else
+                        {
+                            if (g.CheckInKnown)
+                            {
                                 lString = formatTime(g.CheckInHour, g.CheckInMin) + " -> ";
                                 holder.txtTimeRange.setText(lString);
-                            } else {
-                                if (g.DepartsKnown) {
+                            } else
+                            {
+                                if (g.DepartsKnown)
+                                {
                                     lString = " -> " + formatTime(g.DepartsHour, g.DepartsMin);
                                     holder.txtTimeRange.setText(lString);
+                                }
+                                else
+                                {
+                                    if (c.startTimeKnown && c.endTimeKnown)
+                                    {
+                                        lString = formatTime(c.startHour, c.startMin) + " -> " +
+                                          formatTime(c.endHour, c.endMin);
+                                        holder.txtTimeRange.setText(lString);
+                                    } else
+                                    {
+                                        if (c.startTimeKnown)
+                                        {
+                                            lString = formatTime(c.startHour, c.startMin);
+                                            holder.txtTimeRange.setText(lString);
+                                        }
+                                        else
+                                        {
+                                            if (c.endTimeKnown)
+                                            {
+                                                lString = formatTime(c.endHour, c.endMin);
+                                                holder.txtTimeRange.setText(lString);
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

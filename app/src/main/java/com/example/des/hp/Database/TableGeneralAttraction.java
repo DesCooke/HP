@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.des.hp.R;
 import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionItem;
 import com.example.des.hp.Schedule.ScheduleItem;
 import com.example.des.hp.myutils.MyInt;
@@ -131,6 +132,146 @@ class TableGeneralAttraction extends TableBase
                 db.execSQL("ALTER TABLE generalattraction ADD COLUMN DropOffKnown VARCHAR DEFAULT '0'");
                 db.execSQL("ALTER TABLE generalattraction ADD COLUMN CheckInKnown VARCHAR DEFAULT '0'");
                 db.execSQL("ALTER TABLE generalattraction ADD COLUMN ArrivalKnown VARCHAR DEFAULT '0'");
+            }
+            if(oldVersion == 50 && newVersion == 51) {
+                String lSQL=
+                        "INSERT INTO generalattraction " +
+                                " (AttractionType, holidayId, dayId, attractionId, attractionAreaId," +
+                                "  scheduleId, bookingReference) " +
+                                " SELECT 'Bus', holidayId, dayId, attractionId, attractionAreaId, " +
+                                "       scheduleId, bookingReference " +
+                                "FROM Bus ";
+                db.execSQL(lSQL);
+                db.execSQL("UPDATE schedule SET schedType = " + _context.getResources().getInteger(R.integer.schedule_type_generalattraction) + " " +
+                        "WHERE schedType = " + _context.getResources().getInteger(R.integer.schedule_type_bus));
+                db.execSQL("DELETE FROM Bus");
+            }
+            if(oldVersion == 51 && newVersion == 52) {
+                String lSQL=
+                        "INSERT INTO generalattraction " +
+                                " (AttractionType, holidayId, dayId, attractionId, attractionAreaId," +
+                                "  scheduleId, name, bookingReference) " +
+                                " SELECT 'Cinema', holidayId, dayId, attractionId, attractionAreaId, " +
+                                "  scheduleId, cinemaName, bookingReference " +
+                                "FROM Cinema ";
+                db.execSQL(lSQL);
+                db.execSQL("UPDATE schedule SET schedType = " + _context.getResources().getInteger(R.integer.schedule_type_generalattraction) + " " +
+                        "WHERE schedType = " + _context.getResources().getInteger(R.integer.schedule_type_cinema));
+                db.execSQL("DELETE FROM Cinema");
+            }
+            if(oldVersion == 52 && newVersion == 53)
+            {
+                String lSQL=
+                        "INSERT INTO generalattraction " +
+                                " (AttractionType, holidayId, dayId, attractionId, attractionAreaId," +
+                                "  scheduleId, FlightNo, DepartsKnown, DepartsHour, DepartsMin, Terminal, bookingReference) " +
+                                " SELECT 'Flight', holidayId, dayId, attractionId, attractionAreaId, " +
+                                "  scheduleId, flightNo, '1', departsHour, departsMin, terminal, bookingReference " +
+                                "FROM Flight ";
+                db.execSQL(lSQL);
+                db.execSQL("UPDATE schedule SET schedType = " + _context.getResources().getInteger(R.integer.schedule_type_generalattraction) + " " +
+                        "WHERE schedType = " + _context.getResources().getInteger(R.integer.schedule_type_flight));
+                db.execSQL("DELETE FROM Flight");
+            }
+            if(oldVersion == 53 && newVersion == 54)
+            {
+                String lSQL=
+                        "INSERT INTO generalattraction " +
+                                " (AttractionType, holidayId, dayId, attractionId, attractionAreaId," +
+                                "  scheduleId, Name, bookingReference) " +
+                                " SELECT 'Hotel', holidayId, dayId, attractionId, attractionAreaId, " +
+                                "  scheduleId, hotelName, bookingReference " +
+                                "FROM Hotel ";
+                db.execSQL(lSQL);
+                db.execSQL("UPDATE schedule SET schedType = " + _context.getResources().getInteger(R.integer.schedule_type_generalattraction) + " " +
+                        "WHERE schedType = " + _context.getResources().getInteger(R.integer.schedule_type_hotel));
+                db.execSQL("DELETE FROM Hotel");
+            }
+            if(oldVersion == 54 && newVersion == 55)
+            {
+                String lSQL=
+                        "INSERT INTO generalattraction " +
+                                " (AttractionType, holidayId, dayId, attractionId, attractionAreaId," +
+                                "  scheduleId, Name, bookingReference) " +
+                                " SELECT 'Other', holidayId, dayId, attractionId, attractionAreaId, " +
+                                "  scheduleId, otherName, bookingReference " +
+                                "FROM Other ";
+                db.execSQL(lSQL);
+                db.execSQL("UPDATE schedule SET schedType = " + _context.getResources().getInteger(R.integer.schedule_type_generalattraction) + " " +
+                        "WHERE schedType = " + _context.getResources().getInteger(R.integer.schedule_type_other));
+                db.execSQL("DELETE FROM Other");
+            }
+            if(oldVersion == 55 && newVersion == 56)
+            {
+                String lSQL=
+                        "INSERT INTO generalattraction " +
+                                " (AttractionType, holidayId, dayId, attractionId, attractionAreaId," +
+                                "  scheduleId, Name, bookingReference) " +
+                                " SELECT 'Parade', holidayId, dayId, attractionId, attractionAreaId, " +
+                                "  scheduleId, paradeName, bookingReference " +
+                                "FROM Parade ";
+                db.execSQL(lSQL);
+                db.execSQL("UPDATE schedule SET schedType = " + _context.getResources().getInteger(R.integer.schedule_type_generalattraction) + " " +
+                        "WHERE schedType = " + _context.getResources().getInteger(R.integer.schedule_type_parade));
+                db.execSQL("DELETE FROM Parade");
+            }
+            if(oldVersion == 56 && newVersion == 57)
+            {
+                String lSQL=
+                        "INSERT INTO generalattraction " +
+                                " (AttractionType, holidayId, dayId, attractionId, attractionAreaId," +
+                                "  scheduleId, Name, bookingReference) " +
+                                " SELECT 'Park', holidayId, dayId, attractionId, attractionAreaId, " +
+                                "  scheduleId, parkName, bookingReference " +
+                                "FROM Park ";
+                db.execSQL(lSQL);
+                db.execSQL("UPDATE schedule SET schedType = " + _context.getResources().getInteger(R.integer.schedule_type_generalattraction) + " " +
+                        "WHERE schedType = " + _context.getResources().getInteger(R.integer.schedule_type_park));
+                db.execSQL("DELETE FROM Park");
+            }
+            if(oldVersion == 57 && newVersion == 58)
+            {
+                String lSQL=
+                        "INSERT INTO generalattraction " +
+                                " (AttractionType, holidayId, dayId, attractionId, attractionAreaId," +
+                                "  scheduleId, Name, bookingReference, RestaurantFullId, ReservationType) " +
+                                " SELECT 'Restaurant', holidayId, dayId, attractionId, attractionAreaId, " +
+                                "  scheduleId, restaurantName, bookingReference, restaurantFullId, reservationType " +
+                                "FROM Restaurant ";
+                db.execSQL(lSQL);
+                db.execSQL("UPDATE schedule SET schedType = " + _context.getResources().getInteger(R.integer.schedule_type_generalattraction) + " " +
+                        "WHERE schedType = " + _context.getResources().getInteger(R.integer.schedule_type_restaurant));
+                db.execSQL("DELETE FROM Restaurant");
+            }
+            if(oldVersion == 58 && newVersion == 59)
+            {
+                String lSQL=
+                        "INSERT INTO generalattraction " +
+                                " (AttractionType, holidayId, dayId, attractionId, attractionAreaId," +
+                                "  scheduleId, Name, HeartRating, ScenicRating, ThrillRating) " +
+                                " SELECT 'Ride', holidayId, dayId, attractionId, attractionAreaId, " +
+                                "  scheduleId, rideName, heartRating, scenicRating, thrillRating " +
+                                "FROM Ride ";
+                db.execSQL(lSQL);
+                db.execSQL("UPDATE schedule SET schedType = " + _context.getResources().getInteger(R.integer.schedule_type_generalattraction) + " " +
+                        "WHERE schedType = " + _context.getResources().getInteger(R.integer.schedule_type_ride));
+                db.execSQL("DELETE FROM Ride");
+            }
+            if(oldVersion == 59 && newVersion == 60)
+            {
+                String lSQL=
+                        "INSERT INTO generalattraction " +
+                                " (AttractionType, holidayId, dayId, attractionId, attractionAreaId," +
+                                "  scheduleId, Name, ShowKnown, ShowHour, ShowMin, BookingReference, " +
+                                "    HeartRating, ScenicRating, ThrillRating) " +
+                                " SELECT 'Show', holidayId, dayId, attractionId, attractionAreaId, " +
+                                "    scheduleId, showName, '1', showHour, showMin, bookingReference, " +
+                                "    heartRating, scenicRating, thrillRating " +
+                                "FROM Show ";
+                db.execSQL(lSQL);
+                db.execSQL("UPDATE schedule SET schedType = " + _context.getResources().getInteger(R.integer.schedule_type_generalattraction) + " " +
+                        "WHERE schedType = " + _context.getResources().getInteger(R.integer.schedule_type_show));
+                db.execSQL("DELETE FROM Show");
             }
             return (true);
         }
