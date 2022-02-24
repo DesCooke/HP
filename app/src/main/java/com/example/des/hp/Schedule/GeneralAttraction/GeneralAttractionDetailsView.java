@@ -39,6 +39,10 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
     public TextView txtDropOff;
     public TextView txtCheckIn;
     public TextView txtArrival;
+    public TextView txtStart;
+    public TextView txtEnd;
+    public CheckBox chkStartKnown;
+    public CheckBox chkEndKnown;
     public LinearLayout grpAttractionType;
     public LinearLayout grpBookingReference;
     public LinearLayout grpFlightNo;
@@ -56,6 +60,8 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
     public LinearLayout grpCheckIn;
     public LinearLayout grpArrival;
     public LinearLayout grpReservationTypeId;
+    public LinearLayout grpStartTime;
+    public LinearLayout grpEndTime;
 
     public ImageButton btnClear;
     public Button btnSave;
@@ -84,6 +90,8 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
             grpDropOff = (LinearLayout) findViewById(R.id.grpDropOff);
             grpCheckIn = (LinearLayout) findViewById(R.id.grpCheckIn);
             grpArrival = (LinearLayout) findViewById(R.id.grpArrival);
+            grpStartTime = (LinearLayout) findViewById(R.id.grpStartTime);
+            grpEndTime = (LinearLayout) findViewById(R.id.grpEndTime);
             grpReservationTypeId = (LinearLayout) findViewById(R.id.grpReservationTypeId);
 
             txtSchedName = (TextView) findViewById(R.id.txtSchedName);
@@ -93,6 +101,8 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
             txtAttractionType = (TextView) findViewById(R.id.txtAttractionType);
             txtBookingReference = (TextView) findViewById(R.id.txtBookingReference);
             txtFlightNo = (TextView) findViewById(R.id.txtFlightNo);
+            txtStart = (TextView) findViewById(R.id.txtStart);
+            txtEnd = (TextView) findViewById(R.id.txtEnd);
             txtDeparts = (TextView) findViewById(R.id.txtDeparts);
             txtTerminal = (TextView) findViewById(R.id.txtTerminal);
             radUnknown = (RadioButton) findViewById(R.id.radUnknown);
@@ -111,6 +121,8 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
             chkDropOffKnown = (CheckBox) findViewById(R.id.chkDropOffKnown);
             chkCheckInKnown = (CheckBox) findViewById(R.id.chkCheckInKnown);
             chkArrivalKnown = (CheckBox) findViewById(R.id.chkArrivalKnown);
+            chkStartKnown = (CheckBox) findViewById(R.id.chkStartKnown);
+            chkEndKnown = (CheckBox) findViewById(R.id.chkEndKnown);
 
             btnClear=(ImageButton) findViewById(R.id.btnClear);
             btnSave=(Button) findViewById(R.id.btnSave);
@@ -226,6 +238,18 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
             grpDeparts.setVisibility(View.VISIBLE);
             if(viewOnlyForm && scheduleItem.generalAttractionItem.DepartsKnown==false)
                 grpDeparts.setVisibility(View.GONE);
+
+            chkStartKnown.setChecked(scheduleItem.startTimeKnown);
+            setTimeText(txtStart, scheduleItem.startHour, scheduleItem.startMin);
+            grpStartTime.setVisibility(View.VISIBLE);
+            if(viewOnlyForm && scheduleItem.startTimeKnown==false)
+                grpStartTime.setVisibility(View.GONE);
+
+            chkEndKnown.setChecked(scheduleItem.endTimeKnown);
+            setTimeText(txtEnd, scheduleItem.endHour, scheduleItem.endMin);
+            grpEndTime.setVisibility(View.VISIBLE);
+            if(viewOnlyForm && scheduleItem.endTimeKnown==false)
+                grpEndTime.setVisibility(View.GONE);
 
             chkShowKnown.setChecked(scheduleItem.generalAttractionItem.ShowKnown);
             setTimeText(txtShow, scheduleItem.generalAttractionItem.ShowHour, scheduleItem.generalAttractionItem.ShowMin);

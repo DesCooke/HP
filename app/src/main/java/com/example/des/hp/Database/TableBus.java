@@ -23,7 +23,13 @@ class TableBus extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS bus " + "( " + "  holidayId         INT(5),  " + "  dayId             INT(5),  " + "  attractionId      INT(5),  " + "  attractionAreaId  INT(5),  " + "  scheduleId        INT(5),  " + "  bookingReference  VARCHAR  " + ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS bus " +
+                    "( " + "  holidayId         INT(5),  " +
+                    "  dayId             INT(5),  " +
+                    "  attractionId      INT(5),  " +
+                    "  attractionAreaId  INT(5),  " +
+                    "  scheduleId        INT(5),  " +
+                    "  bookingReference  VARCHAR  " + ") ";
 
             db.execSQL(lSQL);
 

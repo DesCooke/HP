@@ -51,6 +51,8 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
             grpTerminal.setOnClickListener(this);
             grpDeparts.setOnClickListener(this);
             grpShow.setOnClickListener(this);
+            grpStartTime.setOnClickListener(this);
+            grpEndTime.setOnClickListener(this);
             grpPickUp.setOnClickListener(this);
             grpDropOff.setOnClickListener(this);
             grpCheckIn.setOnClickListener(this);
@@ -106,6 +108,12 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
                     break;
                 case R.id.grpShow:
                     handleTime(txtShow, chkShowKnown, "Select Show Time");
+                    break;
+                case R.id.grpStartTime:
+                    handleTime(txtStart, chkStartKnown, "Select Start Time");
+                    break;
+                case R.id.grpEndTime:
+                    handleTime(txtEnd, chkEndKnown, "Select End Time");
                     break;
                 case R.id.grpPickUp:
                     handleTime(txtPickUp, chkPickUpKnown, "Select PickUp Time");
@@ -249,6 +257,12 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
             scheduleItem.generalAttractionItem.ArrivalKnown = chkArrivalKnown.isChecked();
             scheduleItem.generalAttractionItem.ArrivalHour = getHour(txtArrival);
             scheduleItem.generalAttractionItem.ArrivalMin = getMinute(txtArrival);
+            scheduleItem.startTimeKnown = chkStartKnown.isChecked();
+            scheduleItem.startHour = getHour(txtStart);
+            scheduleItem.startMin = getMinute(txtStart);
+            scheduleItem.endTimeKnown = chkEndKnown.isChecked();
+            scheduleItem.endHour = getHour(txtEnd);
+            scheduleItem.endMin = getMinute(txtEnd);
 
             if(action.equals("add"))
             {

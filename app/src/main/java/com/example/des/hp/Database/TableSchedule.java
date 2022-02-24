@@ -33,7 +33,27 @@ class TableSchedule extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS schedule " + "( " + "  holidayId        INT(5),  " + "  dayId            INT(5),  " + "  attractionId     INT(5),  " + "  attractionAreaId INT(5),  " + "  scheduleId       INT(5),  " + "  sequenceNo       INT(5),  " + "  schedType        INT(5),  " + "  schedName        VARCHAR, " + "  schedPicture     VARCHAR, " + "  startTimeKnown   INT(1),  " + "  startHour        INT(2),  " + "  startMin         INT(2),  " + "  endTimeKnown     INT(1),  " + "  endHour          INT(2),  " + "  endMin           INT(2),  " + "  infoId           INT(5),  " + "  noteId           INT(5),  " + "  galleryId        INT(5),  " + "  sygicId          INT(5)   " + ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS schedule " +
+                    "( " + "  holidayId        INT(5),  " +
+                    "  dayId            INT(5),  " +
+                    "  attractionId     INT(5),  " +
+                    "  attractionAreaId INT(5),  " +
+                    "  scheduleId       INT(5),  " +
+                    "  sequenceNo       INT(5),  " +
+                    "  schedType        INT(5),  " +
+                    "  schedName        VARCHAR, " +
+                    "  schedPicture     VARCHAR, " +
+                    "  startTimeKnown   INT(1),  " +
+                    "  startHour        INT(2),  " +
+                    "  startMin         INT(2),  " +
+                    "  endTimeKnown     INT(1),  " +
+                    "  endHour          INT(2),  " +
+                    "  endMin           INT(2),  " +
+                    "  infoId           INT(5),  " +
+                    "  noteId           INT(5),  " +
+                    "  galleryId        INT(5),  " +
+                    "  sygicId          INT(5)   " +
+                    ") ";
 
             db.execSQL(lSQL);
 

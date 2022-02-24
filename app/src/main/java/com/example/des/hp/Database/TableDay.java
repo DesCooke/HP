@@ -435,7 +435,12 @@ class TableDay extends TableBase
         try
         {
             dayItem.start_at="";
-            String lSQL="SELECT schedName " + "FROM schedule " + "WHERE holidayId = " + dayItem.holidayId + " " + "AND dayId = " + dayItem.dayId + " " + "AND schedType = " + _resources.getInteger(R.integer.schedule_type_hotel) + " " + "AND startHour < 12";
+            String lSQL=
+                    "SELECT schedName " +
+                            "FROM schedule " +
+                            "WHERE holidayId = " + dayItem.holidayId + " " +
+                            "AND dayId = " + dayItem.dayId + " " +
+                            "ORDER BY SequenceNo";
 
             Cursor cursor=executeSQLOpenCursor("getStartEndAt", lSQL);
             if(cursor == null)
@@ -449,7 +454,13 @@ class TableDay extends TableBase
 
 
             dayItem.end_at="";
-            lSQL="SELECT schedName " + "FROM schedule " + "WHERE holidayId = " + dayItem.holidayId + " " + "AND dayId = " + dayItem.dayId + " " + "AND schedType = " + _resources.getInteger(R.integer.schedule_type_hotel) + " " + "AND startHour > 12";
+            lSQL=
+                    "SELECT schedName " +
+                            "FROM schedule " +
+                            "WHERE holidayId = " + dayItem.holidayId + " " +
+                            "AND dayId = " + dayItem.dayId + " " +
+                            "ORDER BY SequenceNo DESC";
+
 
             cursor=executeSQLOpenCursor("getStartEndAt", lSQL);
             if(cursor == null)

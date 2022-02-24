@@ -432,6 +432,50 @@
                 android:textSize="14sp"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/grpStartTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txtStartTimeCaption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Start Time"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/txtStart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/grpEndTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txtEndTimeCaption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="End Time"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/txtEnd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
         <RatingBar
             android:id="@+id/rbHeartRatingView"
             style="@style/like48RatingBar"
@@ -560,6 +604,19 @@
             android:text="CheckBox"
             android:visibility="gone"/>
 
+        <CheckBox
+            android:id="@+id/chkStartKnown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CheckBox"
+            android:visibility="gone"/>
+
+        <CheckBox
+            android:id="@+id/chkEndKnown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CheckBox"
+            android:visibility="gone"/>
     </LinearLayout>
 
 
