@@ -72,6 +72,7 @@ import com.example.des.hp.InternalFiles.InternalFileItem;
 import com.example.des.hp.InternalImages.InternalImageItem;
 import com.example.des.hp.InternalImages.InternalImageList;
 import com.example.des.hp.MainActivity;
+import com.example.des.hp.Notes.NoteEdit;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.Notes.NoteView;
 import com.example.des.hp.R;
@@ -164,8 +165,8 @@ public class BaseActivity extends AppCompatActivity
     {
         try
         {
-            reloadOnShow=false;
-            Intent intent2=new Intent(getApplicationContext(), NoteView.class);
+            reloadOnShow=true;
+            Intent intent2=new Intent(getApplicationContext(), NoteEdit.class);
             int lNoteId=getNoteId();
             if(lNoteId == 0)
             {
@@ -175,7 +176,7 @@ public class BaseActivity extends AppCompatActivity
                 lNoteId=myInt.Value;
                 setNoteId(lNoteId);
             }
-            intent2.putExtra("ACTION", "view");
+            intent2.putExtra("ACTION", "modify");
             intent2.putExtra("HOLIDAYID", holidayId);
             intent2.putExtra("NOTEID", lNoteId);
             intent2.putExtra("TITLE", subTitle);

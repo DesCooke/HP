@@ -204,6 +204,7 @@ public class BaseScheduleView extends BaseActivity
 
                 SetImage(scheduleItem.schedPicture);
                 imageChanged=false;
+
             }
         }
         catch(Exception e)
