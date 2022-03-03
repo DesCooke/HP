@@ -1,5 +1,7 @@
 package com.example.des.hp.Schedule.GeneralAttraction;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.R;
 import com.example.des.hp.Schedule.*;
 
@@ -41,6 +45,7 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
     public TextView txtArrival;
     public TextView txtStart;
     public TextView txtEnd;
+    public TextView txtNotes;
     public CheckBox chkStartKnown;
     public CheckBox chkEndKnown;
     public LinearLayout grpAttractionType;
@@ -65,6 +70,8 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
 
     public ImageButton btnClear;
     public Button btnSave;
+
+    public NoteItem noteItem;
     //endregion
 
     //region Constructors/Destructors
@@ -79,6 +86,8 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
         {
             layoutName="activity_generalattraction_details_view";
             setContentView(R.layout.activity_generalattraction_details_view);
+
+            noteItem = new NoteItem();
 
             grpAttractionType = (LinearLayout) findViewById(R.id.grpAttractionType);
             grpBookingReference = (LinearLayout) findViewById(R.id.grpBookingReference);
@@ -105,6 +114,7 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
             txtEnd = (TextView) findViewById(R.id.txtEnd);
             txtDeparts = (TextView) findViewById(R.id.txtDeparts);
             txtTerminal = (TextView) findViewById(R.id.txtTerminal);
+            txtNotes = (TextView) findViewById(R.id.txtNotes);
             radUnknown = (RadioButton) findViewById(R.id.radUnknown);
             radWalkIn = (RadioButton) findViewById(R.id.radWalkIn);
             radOnTheDay = (RadioButton) findViewById(R.id.radOnTheDay);
@@ -177,6 +187,23 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
                 }
             }
 
+            int lNoteId = scheduleItem.noteId;
+            if(lNoteId != 0)
+            {
+                if(databaseAccess().getNoteItem(holidayId, lNoteId, noteItem))
+                {
+                    txtNotes.setText(noteItem.notes);
+                    txtNotes.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    txtNotes.setVisibility(View.GONE);
+                }
+            }
+            else
+            {
+                txtNotes.setVisibility(View.GONE);
+            }
             heartRating.setVisibility(View.VISIBLE);
             if(viewOnlyForm && scheduleItem.generalAttractionItem.heartRating < 0.25)
                 heartRating.setVisibility(View.GONE);

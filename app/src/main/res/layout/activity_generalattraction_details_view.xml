@@ -511,6 +511,12 @@
             android:progressDrawable="@drawable/thrill48ratingstyle"
             android:rating="3.5"
             android:stepSize="0.1"/>
+        <TextView
+            android:id="@+id/txtNotes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="14sp"/>
 
         <LinearLayout
             android:id="@+id/grpMenuFile"
