@@ -486,7 +486,48 @@ class TableDay extends TableBase
     {
         try
         {
-            String lSQL="SELECT StartTimeKnown, StartHour, StartMin, EndTimeKnown, EndHour, EndMin " + "FROM schedule " + "WHERE holidayId = " + dayItem.holidayId + " " + "AND dayId = " + dayItem.dayId;
+            String lSQL="SELECT " +
+
+                    "CheckInKnown, " +
+                    "CheckInHour, " +
+                    "CheckInMin, " +
+
+                    "DepartsKnown, " +
+                    "DepartsHour, " +
+                    "DepartsMin, " +
+
+                    "ArrivalKnown, " +
+                    "ArrivalHour, " +
+                    "ArrivalMin, " +
+
+                    "PickupKnown, " +
+                    "PickupHour, " +
+                    "PickupMin, " +
+
+                    "DropOffKnown, " +
+                    "DropOffHour, " +
+                    "DropOffMin, " +
+
+                    "ShowKnown, " +
+                    "ShowHour, " +
+                    "ShowMin, " +
+
+                "StartTimeKnown, " +
+                "StartHour, " +
+                "StartMin, " +
+
+                "EndTimeKnown, " +
+                "EndHour, " +
+                "EndMin " +
+
+                "FROM schedule a, generalattraction b " +
+                "WHERE a.holidayId = " + dayItem.holidayId + " " +
+                "AND a.dayId = " + dayItem.dayId + " " +
+                "AND a.holidayId = b.holidayId " +
+                "AND a.dayId = b.dayId " +
+                "AND a.attractionId = b.attractionId " +
+                "AND a.attractionAreaId = b.attractionAreaId " +
+                "AND a.scheduleId = b.scheduleId ";
 
             Cursor cursor=executeSQLOpenCursor("getScheduledTimes", lSQL);
             if(cursor == null)
@@ -496,26 +537,115 @@ class TableDay extends TableBase
             int lMaxMinutes=0;
             while(cursor.moveToNext())
             {
-                int lStartTimeKnown=Integer.parseInt(cursor.getString(0));
-                int lStartHour=Integer.parseInt(cursor.getString(1));
-                int lStartMin=Integer.parseInt(cursor.getString(2));
-                int lEndTimeKnown=Integer.parseInt(cursor.getString(3));
-                int lEndHour=Integer.parseInt(cursor.getString(4));
-                int lEndMin=Integer.parseInt(cursor.getString(5));
+                boolean lCheckInKnown=stringToBoolean(cursor.getString(0));
+                int lCheckInHour=Integer.parseInt(cursor.getString(1));
+                int lCheckInMin=Integer.parseInt(cursor.getString(2));
 
-                if(lStartTimeKnown == 1)
+                boolean lDepartsKnown=stringToBoolean(cursor.getString(3));
+                int lDepartsHour=Integer.parseInt(cursor.getString(4));
+                int lDepartsMin=Integer.parseInt(cursor.getString(5));
+
+                boolean lArrivalKnown=stringToBoolean(cursor.getString(6));
+                int lArrivalHour=Integer.parseInt(cursor.getString(7));
+                int lArrivalMin=Integer.parseInt(cursor.getString(8));
+
+                boolean lPickupKnown=stringToBoolean(cursor.getString(9));
+                int lPickupHour=Integer.parseInt(cursor.getString(10));
+                int lPickupMin=Integer.parseInt(cursor.getString(11));
+
+                boolean lDropOffKnown=stringToBoolean(cursor.getString(12));
+                int lDropOffHour=Integer.parseInt(cursor.getString(13));
+                int lDropOffMin=Integer.parseInt(cursor.getString(14));
+
+                boolean lShowKnown=stringToBoolean(cursor.getString(15));
+                int lShowHour=Integer.parseInt(cursor.getString(16));
+                int lShowMin=Integer.parseInt(cursor.getString(17));
+
+                boolean lStartTimeKnown=stringToBoolean(cursor.getString(18));
+                int lStartHour=Integer.parseInt(cursor.getString(19));
+                int lStartMin=Integer.parseInt(cursor.getString(20));
+
+                boolean lEndTimeKnown=stringToBoolean(cursor.getString(21));
+                int lEndHour=Integer.parseInt(cursor.getString(22));
+                int lEndMin=Integer.parseInt(cursor.getString(23));
+
+                if(lCheckInKnown && lDepartsKnown && lArrivalKnown)
+                {
+                    lStartTimeKnown=lCheckInKnown;
+                    lStartHour=lCheckInHour;
+                    lStartMin=lCheckInMin;
+                    lEndTimeKnown=lArrivalKnown;
+                    lEndHour=lArrivalHour;
+                    lEndMin=lArrivalMin;
+                }
+                else
+                {
+                    if(lPickupKnown && lDropOffKnown)
+                    {
+                        lStartTimeKnown=lPickupKnown;
+                        lStartHour=lPickupHour;
+                        lStartMin=lPickupMin;
+                        lEndTimeKnown=lDropOffKnown;
+                        lEndHour=lDropOffHour;
+                        lEndMin=lDropOffMin;
+                    }
+                    else
+                    {
+                        if(lDepartsKnown && lArrivalKnown)
+                        {
+                            lStartTimeKnown=lDepartsKnown;
+                            lStartHour=lDepartsHour;
+                            lStartMin=lDepartsMin;
+                            lEndTimeKnown=lArrivalKnown;
+                            lEndHour=lArrivalHour;
+                            lEndMin=lArrivalMin;
+                        }
+                        else
+                        {
+                            if (lShowKnown)
+                            {
+                                lStartTimeKnown=lShowKnown;
+                                lStartHour=lShowHour;
+                                lStartMin=lShowMin;
+                                lEndTimeKnown=lShowKnown;
+                                lEndHour=lShowHour;
+                                lEndMin=lShowMin;
+                            } else
+                            {
+                                if (lCheckInKnown)
+                                {
+                                    lStartTimeKnown=lCheckInKnown;
+                                    lStartHour=lCheckInHour;
+                                    lStartMin=lCheckInMin;
+                                    lEndTimeKnown=lCheckInKnown;
+                                    lEndHour=lCheckInHour;
+                                    lEndMin=lCheckInMin;
+                                } else
+                                {
+                                    if (lDepartsKnown)
+                                    {
+                                        lStartTimeKnown=lDepartsKnown;
+                                        lStartHour=lDepartsHour;
+                                        lStartMin=lDepartsMin;
+                                        lEndTimeKnown=lDepartsKnown;
+                                        lEndHour=lDepartsHour;
+                                        lEndMin=lDepartsMin;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if(lStartTimeKnown)
                 {
                     int lMinutes=(lStartHour * 60) + lStartMin;
                     if(lMinutes < lMinMinutes)
                         lMinMinutes=lMinutes;
-                    if(lMinutes > lMaxMinutes)
-                        lMaxMinutes=lMinutes;
                 }
-                if(lEndTimeKnown == 1)
+                if(lEndTimeKnown)
                 {
                     int lMinutes=(lEndHour * 60) + lEndMin;
-                    if(lMinutes < lMinMinutes)
-                        lMinMinutes=lMinutes;
                     if(lMinutes > lMaxMinutes)
                         lMaxMinutes=lMinutes;
                 }
@@ -548,6 +678,13 @@ class TableDay extends TableBase
             ShowError("GetDayItemFromQuery", e.getMessage());
         }
         return (false);
+    }
+
+    private boolean stringToBoolean(String value)
+    {
+        if(value.compareTo("1")==0)
+            return(true);
+        return(false);
     }
 
     boolean clearNote(int holidayId, int noteId)
