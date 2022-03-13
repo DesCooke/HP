@@ -144,7 +144,10 @@ class TableSchedule extends TableBase
     {
         try
         {
-            String lSQL="SELECT StartTimeKnown, StartHour, StartMin, EndTimeKnown, EndHour, EndMin " + "FROM schedule " + "WHERE holidayId = " + dayItem.holidayId + " " + "AND dayId = " + dayItem.dayId;
+            String lSQL="SELECT StartTimeKnown, StartHour, StartMin, EndTimeKnown, EndHour, EndMin " +
+                    "FROM schedule " +
+                    "WHERE holidayId = " + dayItem.holidayId + " " +
+                    "AND dayId = " + dayItem.dayId;
             Cursor cursor=executeSQLOpenCursor("getScheduledTimes", lSQL);
             if(cursor == null)
                 return (false);
@@ -157,6 +160,7 @@ class TableSchedule extends TableBase
 
             while(cursor.moveToNext())
             {
+
                 int lStartTimeKnown=Integer.parseInt(cursor.getString(0));
                 int lStartHour=Integer.parseInt(cursor.getString(1));
                 int lStartMin=Integer.parseInt(cursor.getString(2));
@@ -601,6 +605,13 @@ class TableSchedule extends TableBase
             ShowError("getScheduleList", e.getMessage());
         }
         return (false);
+    }
+
+    private boolean stringToBoolean(String value)
+    {
+        if(value.compareTo("1")==0)
+            return(true);
+        return(false);
     }
 
     boolean clearNote(int holidayId, int noteId)
