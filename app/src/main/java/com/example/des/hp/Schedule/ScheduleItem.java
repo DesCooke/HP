@@ -79,6 +79,60 @@ public class ScheduleItem
     public RideItem rideItem;
     public GeneralAttractionItem generalAttractionItem;
 
+    public int GetEndTimeAsMinutes()
+    {
+        if(generalAttractionItem!=null)
+        {
+            if (generalAttractionItem.CheckInKnown && generalAttractionItem.DepartsKnown && generalAttractionItem.ArrivalKnown)
+                return ((generalAttractionItem.ArrivalHour * 60) + generalAttractionItem.ArrivalMin);
+
+            if (generalAttractionItem.PickUpKnown && generalAttractionItem.DropOffKnown)
+                return ((generalAttractionItem.DropOffHour * 60) + generalAttractionItem.DropOffMin);
+
+            if (generalAttractionItem.DepartsKnown && generalAttractionItem.ArrivalKnown)
+                return ((generalAttractionItem.ArrivalHour * 60) + generalAttractionItem.ArrivalMin);
+
+            if (generalAttractionItem.ShowKnown)
+                return ((generalAttractionItem.ShowHour * 60) + generalAttractionItem.ShowMin);
+
+            if (generalAttractionItem.CheckInKnown)
+                return ((generalAttractionItem.CheckInHour * 60) + generalAttractionItem.CheckInMin);
+
+            if (generalAttractionItem.DepartsKnown)
+                return ((generalAttractionItem.DepartsHour * 60) + generalAttractionItem.DepartsMin);
+        }
+        if(endTimeKnown)
+            return((endHour*60)+endMin);
+        return(0);
+    }
+
+    public int GetStartTimeAsMinutes()
+    {
+        if(generalAttractionItem!=null)
+        {
+            if (generalAttractionItem.CheckInKnown && generalAttractionItem.DepartsKnown && generalAttractionItem.ArrivalKnown)
+                return ((generalAttractionItem.CheckInHour * 60) + generalAttractionItem.CheckInMin);
+
+            if (generalAttractionItem.PickUpKnown && generalAttractionItem.DropOffKnown)
+                return ((generalAttractionItem.PickUpHour * 60) + generalAttractionItem.PickUpMin);
+
+            if (generalAttractionItem.DepartsKnown && generalAttractionItem.ArrivalKnown)
+                return ((generalAttractionItem.DepartsHour * 60) + generalAttractionItem.DepartsMin);
+
+            if (generalAttractionItem.ShowKnown)
+                return ((generalAttractionItem.ShowHour * 60) + generalAttractionItem.ShowMin);
+
+            if (generalAttractionItem.CheckInKnown)
+                return ((generalAttractionItem.CheckInHour * 60) + generalAttractionItem.CheckInMin);
+
+            if (generalAttractionItem.DepartsKnown)
+                return ((generalAttractionItem.DepartsHour * 60) + generalAttractionItem.DepartsMin);
+        }
+        if(startTimeKnown)
+            return((startHour*60)+startMin);
+        return(86400);
+    }
+
     public ScheduleItem()
     {
         holidayId=0;

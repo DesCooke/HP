@@ -188,59 +188,55 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             }
             else
             {
-                if(g.PickUpKnown && g.DropOffKnown)
+                if(g.CheckInKnown && g.DepartsKnown && !g.ArrivalKnown)
                 {
-                    lString=formatTime(g.PickUpHour, g.PickUpMin) + " -> " +
-                            formatTime(g.DropOffHour, g.DropOffMin);
+                    lString=formatTime(g.CheckInHour, g.CheckInMin) + " -> " +
+                            formatTime(g.DepartsHour, g.DepartsMin) + " -> ";
                     holder.txtTimeRange.setText(lString);
                 }
-                else
-                {
-                    if(g.DepartsKnown && g.ArrivalKnown)
+                else {
+                    if(!g.CheckInKnown && !g.DepartsKnown && g.ArrivalKnown)
                     {
-                        lString=formatTime(g.DepartsHour, g.DepartsMin) + " -> " +
-                                formatTime(g.ArrivalHour, g.ArrivalMin) ;
+                        lString= " -> " + formatTime(g.ArrivalHour, g.ArrivalMin);
                         holder.txtTimeRange.setText(lString);
                     }
-                    else
-                    {
-                        if (g.ShowKnown)
-                        {
-                            lString = formatTime(g.ShowHour, g.ShowMin);
+                    else {
+                        if (g.PickUpKnown && g.DropOffKnown) {
+                            lString = formatTime(g.PickUpHour, g.PickUpMin) + " -> " +
+                                    formatTime(g.DropOffHour, g.DropOffMin);
                             holder.txtTimeRange.setText(lString);
-                        } else
-                        {
-                            if (g.CheckInKnown)
-                            {
-                                lString = formatTime(g.CheckInHour, g.CheckInMin) + " -> ";
+                        } else {
+                            if (g.DepartsKnown && g.ArrivalKnown) {
+                                lString = formatTime(g.DepartsHour, g.DepartsMin) + " -> " +
+                                        formatTime(g.ArrivalHour, g.ArrivalMin);
                                 holder.txtTimeRange.setText(lString);
-                            } else
-                            {
-                                if (g.DepartsKnown)
-                                {
-                                    lString = " -> " + formatTime(g.DepartsHour, g.DepartsMin);
+                            } else {
+                                if (g.ShowKnown) {
+                                    lString = formatTime(g.ShowHour, g.ShowMin);
                                     holder.txtTimeRange.setText(lString);
-                                }
-                                else
-                                {
-                                    if (c.startTimeKnown && c.endTimeKnown)
-                                    {
-                                        lString = formatTime(c.startHour, c.startMin) + " -> " +
-                                          formatTime(c.endHour, c.endMin);
+                                } else {
+                                    if (g.CheckInKnown) {
+                                        lString = formatTime(g.CheckInHour, g.CheckInMin) + " -> ";
                                         holder.txtTimeRange.setText(lString);
-                                    } else
-                                    {
-                                        if (c.startTimeKnown)
-                                        {
-                                            lString = formatTime(c.startHour, c.startMin);
+                                    } else {
+                                        if (g.DepartsKnown) {
+                                            lString = " -> " + formatTime(g.DepartsHour, g.DepartsMin);
                                             holder.txtTimeRange.setText(lString);
-                                        }
-                                        else
-                                        {
-                                            if (c.endTimeKnown)
-                                            {
-                                                lString = formatTime(c.endHour, c.endMin);
+                                        } else {
+                                            if (c.startTimeKnown && c.endTimeKnown) {
+                                                lString = formatTime(c.startHour, c.startMin) + " -> " +
+                                                        formatTime(c.endHour, c.endMin);
                                                 holder.txtTimeRange.setText(lString);
+                                            } else {
+                                                if (c.startTimeKnown) {
+                                                    lString = formatTime(c.startHour, c.startMin);
+                                                    holder.txtTimeRange.setText(lString);
+                                                } else {
+                                                    if (c.endTimeKnown) {
+                                                        lString = formatTime(c.endHour, c.endMin);
+                                                        holder.txtTimeRange.setText(lString);
+                                                    }
+                                                }
                                             }
                                         }
                                     }

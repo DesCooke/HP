@@ -7,12 +7,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Day.DayItem;
 import com.example.des.hp.R;
+import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionItem;
+import com.example.des.hp.Schedule.ScheduleItem;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
 import java.util.Random;
 
+import static com.example.des.hp.Database.DatabaseAccess.database;
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 import static java.lang.Math.abs;
@@ -486,171 +489,34 @@ class TableDay extends TableBase
     {
         try
         {
-            String lSQL="SELECT " +
-
-                    "CheckInKnown, " +
-                    "CheckInHour, " +
-                    "CheckInMin, " +
-
-                    "DepartsKnown, " +
-                    "DepartsHour, " +
-                    "DepartsMin, " +
-
-                    "ArrivalKnown, " +
-                    "ArrivalHour, " +
-                    "ArrivalMin, " +
-
-                    "PickupKnown, " +
-                    "PickupHour, " +
-                    "PickupMin, " +
-
-                    "DropOffKnown, " +
-                    "DropOffHour, " +
-                    "DropOffMin, " +
-
-                    "ShowKnown, " +
-                    "ShowHour, " +
-                    "ShowMin, " +
-
-                "StartTimeKnown, " +
-                "StartHour, " +
-                "StartMin, " +
-
-                "EndTimeKnown, " +
-                "EndHour, " +
-                "EndMin " +
-
-                "FROM schedule a, generalattraction b " +
-                "WHERE a.holidayId = " + dayItem.holidayId + " " +
-                "AND a.dayId = " + dayItem.dayId + " " +
-                "AND a.holidayId = b.holidayId " +
-                "AND a.dayId = b.dayId " +
-                "AND a.attractionId = b.attractionId " +
-                "AND a.attractionAreaId = b.attractionAreaId " +
-                "AND a.scheduleId = b.scheduleId ";
-
-            Cursor cursor=executeSQLOpenCursor("getScheduledTimes", lSQL);
-            if(cursor == null)
-                return (false);
+            ArrayList<ScheduleItem> al = new ArrayList<>();
+            database.getScheduleList(dayItem.holidayId, dayItem.dayId, 0,0,al);
 
             int lMinMinutes=86400;
             int lMaxMinutes=0;
-            while(cursor.moveToNext())
+            for (int i=0; i<al.size(); i++)
             {
-                boolean lCheckInKnown=stringToBoolean(cursor.getString(0));
-                int lCheckInHour=Integer.parseInt(cursor.getString(1));
-                int lCheckInMin=Integer.parseInt(cursor.getString(2));
-
-                boolean lDepartsKnown=stringToBoolean(cursor.getString(3));
-                int lDepartsHour=Integer.parseInt(cursor.getString(4));
-                int lDepartsMin=Integer.parseInt(cursor.getString(5));
-
-                boolean lArrivalKnown=stringToBoolean(cursor.getString(6));
-                int lArrivalHour=Integer.parseInt(cursor.getString(7));
-                int lArrivalMin=Integer.parseInt(cursor.getString(8));
-
-                boolean lPickupKnown=stringToBoolean(cursor.getString(9));
-                int lPickupHour=Integer.parseInt(cursor.getString(10));
-                int lPickupMin=Integer.parseInt(cursor.getString(11));
-
-                boolean lDropOffKnown=stringToBoolean(cursor.getString(12));
-                int lDropOffHour=Integer.parseInt(cursor.getString(13));
-                int lDropOffMin=Integer.parseInt(cursor.getString(14));
-
-                boolean lShowKnown=stringToBoolean(cursor.getString(15));
-                int lShowHour=Integer.parseInt(cursor.getString(16));
-                int lShowMin=Integer.parseInt(cursor.getString(17));
-
-                boolean lStartTimeKnown=stringToBoolean(cursor.getString(18));
-                int lStartHour=Integer.parseInt(cursor.getString(19));
-                int lStartMin=Integer.parseInt(cursor.getString(20));
-
-                boolean lEndTimeKnown=stringToBoolean(cursor.getString(21));
-                int lEndHour=Integer.parseInt(cursor.getString(22));
-                int lEndMin=Integer.parseInt(cursor.getString(23));
-
-                if(lCheckInKnown && lDepartsKnown && lArrivalKnown)
-                {
-                    lStartTimeKnown=lCheckInKnown;
-                    lStartHour=lCheckInHour;
-                    lStartMin=lCheckInMin;
-                    lEndTimeKnown=lArrivalKnown;
-                    lEndHour=lArrivalHour;
-                    lEndMin=lArrivalMin;
-                }
-                else
-                {
-                    if(lPickupKnown && lDropOffKnown)
-                    {
-                        lStartTimeKnown=lPickupKnown;
-                        lStartHour=lPickupHour;
-                        lStartMin=lPickupMin;
-                        lEndTimeKnown=lDropOffKnown;
-                        lEndHour=lDropOffHour;
-                        lEndMin=lDropOffMin;
-                    }
-                    else
-                    {
-                        if(lDepartsKnown && lArrivalKnown)
-                        {
-                            lStartTimeKnown=lDepartsKnown;
-                            lStartHour=lDepartsHour;
-                            lStartMin=lDepartsMin;
-                            lEndTimeKnown=lArrivalKnown;
-                            lEndHour=lArrivalHour;
-                            lEndMin=lArrivalMin;
-                        }
-                        else
-                        {
-                            if (lShowKnown)
-                            {
-                                lStartTimeKnown=lShowKnown;
-                                lStartHour=lShowHour;
-                                lStartMin=lShowMin;
-                                lEndTimeKnown=lShowKnown;
-                                lEndHour=lShowHour;
-                                lEndMin=lShowMin;
-                            } else
-                            {
-                                if (lCheckInKnown)
-                                {
-                                    lStartTimeKnown=lCheckInKnown;
-                                    lStartHour=lCheckInHour;
-                                    lStartMin=lCheckInMin;
-                                    lEndTimeKnown=lCheckInKnown;
-                                    lEndHour=lCheckInHour;
-                                    lEndMin=lCheckInMin;
-                                } else
-                                {
-                                    if (lDepartsKnown)
-                                    {
-                                        lStartTimeKnown=lDepartsKnown;
-                                        lStartHour=lDepartsHour;
-                                        lStartMin=lDepartsMin;
-                                        lEndTimeKnown=lDepartsKnown;
-                                        lEndHour=lDepartsHour;
-                                        lEndMin=lDepartsMin;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if(lStartTimeKnown)
-                {
-                    int lMinutes=(lStartHour * 60) + lStartMin;
-                    if(lMinutes < lMinMinutes)
-                        lMinMinutes=lMinutes;
-                }
-                if(lEndTimeKnown)
-                {
-                    int lMinutes=(lEndHour * 60) + lEndMin;
-                    if(lMinutes > lMaxMinutes)
-                        lMaxMinutes=lMinutes;
-                }
+                int startTimeAsMinutes = al.get(i).GetStartTimeAsMinutes();
+                int endTimeAsMinutes = al.get(i).GetEndTimeAsMinutes();
+                if(startTimeAsMinutes<lMinMinutes)
+                    lMinMinutes=startTimeAsMinutes;
+                if(endTimeAsMinutes > lMaxMinutes)
+                    lMaxMinutes=endTimeAsMinutes;
             }
-            cursor.close();
+            if(al.size()>1)
+            {
+                // if we have an overnight flight then the night before will show...
+                //   checkin and departs, but not arrival - set end date to midnight
+                // the day after will show
+                //   arrival but not checkin or departs- set start date to 00:00
+                GeneralAttractionItem gai = al.get(al.size()-1).generalAttractionItem;
+                if(gai.CheckInKnown && gai.DepartsKnown && !gai.ArrivalKnown)
+                    lMaxMinutes = 24 * 60;
+                gai = al.get(0).generalAttractionItem;
+                if(!gai.CheckInKnown && !gai.DepartsKnown && gai.ArrivalKnown)
+                    lMinMinutes = 0;
+            }
+
             dayItem.startOfDayHours=-1;
             dayItem.startOfDayMins=-1;
             if(lMinMinutes != 86400)

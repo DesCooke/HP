@@ -579,12 +579,17 @@ class TableSchedule extends TableBase
         return (false);
     }
 
-
     boolean getScheduleList(int holidayId, int dayId, int attractionId, int attractionAreaId, ArrayList<ScheduleItem> al)
     {
         try
         {
-            String lSql="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "       scheduleId, sequenceNo, schedType, " + "       schedName, schedPicture, startTimeKnown, startHour,  " + "       startMin, endTimeKnown, endHour, endMin, infoId, noteId, galleryId, " + "       sygicId " + "FROM Schedule " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "ORDER BY SequenceNo ";
+            String lSql="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
+                    "       scheduleId, sequenceNo, schedType, " +
+                    "       schedName, schedPicture, startTimeKnown, startHour,  " +
+                    "       startMin, endTimeKnown, endHour, endMin, infoId, noteId, galleryId, " +
+                    "       sygicId " + "FROM Schedule " + "WHERE HolidayId = " + holidayId +
+                    " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId +
+                    " " + "AND attractionAreaId = " + attractionAreaId + " " + "ORDER BY SequenceNo ";
 
             Cursor cursor=executeSQLOpenCursor("getScheduleList", lSql);
             if(cursor == null)
