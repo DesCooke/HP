@@ -13,22 +13,10 @@ import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.Holiday.*;
-import com.example.des.hp.Schedule.Flight.*;
 import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionDetailsEdit;
 import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionDetailsView;
-import com.example.des.hp.Schedule.Hotel.*;
-import com.example.des.hp.Schedule.Bus.*;
-import com.example.des.hp.Schedule.Park.*;
-import com.example.des.hp.Schedule.Parade.*;
-import com.example.des.hp.Schedule.Cinema.*;
-import com.example.des.hp.Schedule.Other.*;
-import com.example.des.hp.Schedule.Restaurant.RestaurantDetailsView;
-import com.example.des.hp.Schedule.Ride.RideDetailsEdit;
-import com.example.des.hp.Schedule.Ride.RideDetailsView;
 import com.example.des.hp.Schedule.ScheduleAdapter;
 import com.example.des.hp.Schedule.ScheduleItem;
-import com.example.des.hp.Schedule.Show.*;
-import com.example.des.hp.Schedule.Restaurant.RestaurantDetailsEdit;
 import com.example.des.hp.myutils.*;
 
 import java.util.ArrayList;
@@ -106,36 +94,6 @@ public class DayDetailsView extends BaseActivity
                     return true;
                 case R.id.action_delete_day:
                     deleteDay();
-                    return true;
-                case R.id.action_add_flight:
-                    StartNewAddIntent(FlightDetailsEdit.class);
-                    return true;
-                case R.id.action_add_hotel:
-                    StartNewAddIntent(HotelDetailsEdit.class);
-                    return true;
-                case R.id.action_add_show:
-                    StartNewAddIntent(ShowDetailsEdit.class);
-                    return true;
-                case R.id.action_add_bus:
-                    StartNewAddIntent(BusDetailsEdit.class);
-                    return true;
-                case R.id.action_add_restaurant:
-                    StartNewAddIntent(RestaurantDetailsEdit.class);
-                    return true;
-                case R.id.action_add_cinema:
-                    StartNewAddIntent(CinemaDetailsEdit.class);
-                    return true;
-                case R.id.action_add_park:
-                    StartNewAddIntent(ParkDetailsEdit.class);
-                    return true;
-                case R.id.action_add_parade:
-                    StartNewAddIntent(ParadeDetailsEdit.class);
-                    return true;
-                case R.id.action_add_ride:
-                    StartNewAddIntent(RideDetailsEdit.class);
-                    return true;
-                case R.id.action_add_other:
-                    StartNewAddIntent(OtherDetailsEdit.class);
                     return true;
                 case R.id.action_add_generalattraction:
                     StartNewAddIntent(GeneralAttractionDetailsEdit.class);
@@ -235,46 +193,6 @@ public class DayDetailsView extends BaseActivity
                 @Override
                 public void onItemClick(View view, ScheduleItem obj)
                 {
-                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_flight))
-                    {
-                        StartNewEditIntent(FlightDetailsView.class, obj);
-                    }
-                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_hotel))
-                    {
-                        StartNewEditIntent(HotelDetailsView.class, obj);
-                    }
-                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_bus))
-                    {
-                        StartNewEditIntent(BusDetailsView.class, obj);
-                    }
-                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_show))
-                    {
-                        StartNewEditIntent(ShowDetailsView.class, obj);
-                    }
-                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_restaurant))
-                    {
-                        StartNewEditIntent(RestaurantDetailsView.class, obj);
-                    }
-                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_ride))
-                    {
-                        StartNewEditIntent(RideDetailsView.class, obj);
-                    }
-                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_cinema))
-                    {
-                        StartNewEditIntent(CinemaDetailsView.class, obj);
-                    }
-                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_park))
-                    {
-                        StartNewEditIntent(ParkDetailsView.class, obj);
-                    }
-                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_parade))
-                    {
-                        StartNewEditIntent(ParadeDetailsView.class, obj);
-                    }
-                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_other))
-                    {
-                        StartNewEditIntent(OtherDetailsView.class, obj);
-                    }
                     if(obj.schedType == getResources().getInteger(R.integer.schedule_type_generalattraction))
                     {
                         StartNewEditIntent(GeneralAttractionDetailsView.class, obj);

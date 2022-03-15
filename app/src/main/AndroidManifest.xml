@@ -37,8 +37,6 @@
         <activity android:name=".Schedule.Flight.FlightDetailsView"></activity>
         <activity android:name=".Schedule.Hotel.HotelDetailsEdit"></activity>
         <activity android:name=".Schedule.Hotel.HotelDetailsView"></activity>
-        <activity android:name=".Schedule.Bus.BusDetailsEdit"></activity>
-        <activity android:name=".Schedule.Bus.BusDetailsView"></activity>
         <activity android:name=".Schedule.Restaurant.RestaurantDetailsEdit"></activity>
         <activity android:name=".Schedule.Restaurant.RestaurantDetailsView"></activity>
         <activity android:name=".Schedule.Cinema.CinemaDetailsEdit"></activity>
