@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Environment;
 
 import com.example.des.hp.MainActivity;
 import com.example.des.hp.Notes.NoteItem;
@@ -14,17 +11,7 @@ import com.example.des.hp.R;
 import com.example.des.hp.Holiday.*;
 import com.example.des.hp.Day.*;
 import com.example.des.hp.Schedule.*;
-import com.example.des.hp.Schedule.Bus.BusItem;
-import com.example.des.hp.Schedule.Flight.*;
 import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionItem;
-import com.example.des.hp.Schedule.Hotel.*;
-import com.example.des.hp.Schedule.Restaurant.*;
-import com.example.des.hp.Schedule.Ride.RideItem;
-import com.example.des.hp.Schedule.Show.*;
-import com.example.des.hp.Schedule.Cinema.*;
-import com.example.des.hp.Schedule.Park.*;
-import com.example.des.hp.Schedule.Parade.*;
-import com.example.des.hp.Schedule.Other.*;
 import com.example.des.hp.ExtraFiles.*;
 import com.example.des.hp.ScheduleArea.ScheduleAreaItem;
 import com.example.des.hp.Tasks.TaskItem;
@@ -44,7 +31,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Random;
 
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
@@ -58,15 +44,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
     private Resources res;
     private TableHoliday tableHoliday;
     private TableDay tableDay;
-    private TableFlight tableFlight;
-    private TableHotel tableHotel;
-    private TableRestaurant tableRestaurant;
-    private TableShow tableShow;
-    private TableBus tableBus;
-    private TableCinema tableCinema;
-    private TablePark tablePark;
-    private TableParade tableParade;
-    private TableOther tableOther;
     private TableExtraFiles tableExtraFiles;
     private TableTask tableTask;
     private TableBudget tableBudget;
@@ -77,7 +54,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
     private TableAttractionArea tableAttractionArea;
     private TableContact tableContact;
     private TableFileIds tableFileIds;
-    private TableRide tableRide;
     private TableGeneralAttraction tableGeneralAttraction;
     private TableNotes tableNotes;
     public DateUtils dateUtils;
@@ -99,17 +75,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
             
             tableHoliday = new TableHoliday(context, this);
             tableDay = new TableDay(context, this);
-            tableFlight = new TableFlight(context, this);
-            tableHotel = new TableHotel(context, this);
-            tableRestaurant = new TableRestaurant(context, this);
-            tableRide = new TableRide(context, this);
             tableGeneralAttraction = new TableGeneralAttraction(context, this);
-            tableShow = new TableShow(context, this);
-            tableBus = new TableBus(context, this);
-            tableCinema = new TableCinema(context, this);
-            tablePark = new TablePark(context, this);
-            tableParade = new TableParade(context, this);
-            tableOther = new TableOther(context, this);
             tableSchedule = new TableSchedule(context, this);
             tableExtraFiles = new TableExtraFiles(context, this);
             tableTask = new TableTask(context, this);
@@ -177,27 +143,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
                 return;
             if (!tableDay.onCreate(db))
                 return;
-            if (!tableFlight.onCreate(db))
-                return;
-            if (!tableHotel.onCreate(db))
-                return;
-            if (!tableRestaurant.onCreate(db))
-                return;
-            if (!tableRide.onCreate(db))
-                return;
             if (!tableGeneralAttraction.onCreate(db))
-                return;
-            if (!tableShow.onCreate(db))
-                return;
-            if (!tableBus.onCreate(db))
-                return;
-            if (!tableCinema.onCreate(db))
-                return;
-            if (!tablePark.onCreate(db))
-                return;
-            if (!tableParade.onCreate(db))
-                return;
-            if (!tableOther.onCreate(db))
                 return;
             if (!tableSchedule.onCreate(db))
                 return;
@@ -242,27 +188,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
                 return;
             if (!tableDay.onUpgrade(db, oldVersion, newVersion))
                 return;
-            if (!tableFlight.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableHotel.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableRestaurant.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableRide.onUpgrade(db, oldVersion, newVersion))
-                return;
             if (!tableGeneralAttraction.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableShow.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableBus.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableCinema.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tablePark.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableParade.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableOther.onUpgrade(db, oldVersion, newVersion))
                 return;
             if (!tableSchedule.onUpgrade(db, oldVersion, newVersion))
                 return;
@@ -696,187 +622,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
     }
     
     //endregion;
-    
-    //region FLIGHT functions
-    private boolean updateFlightItem(FlightItem flightItem)
-    {
-        try
-        {
-            return (tableFlight.updateFlightItem(flightItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("updateFlightItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean deleteFlightItem(FlightItem flightItem)
-    {
-        try
-        {
-            return (tableFlight.deleteFlightItem(flightItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("deleteFlightItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean getFlightItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, FlightItem flightItem)
-    {
-        try
-        {
-            return (tableFlight.getFlightItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, flightItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("getFlightItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    //endregion
-    
-    // region HOTEL functions
-    private boolean updateHotelItem(HotelItem hotelItem)
-    {
-        try
-        {
-            return (tableHotel.updateHotelItem(hotelItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("updateHotelItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean deleteHotelItem(HotelItem hotelItem)
-    {
-        try
-        {
-            return (tableHotel.deleteHotelItem(hotelItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("deleteHotelItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean getHotelItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, HotelItem hotelItem)
-    {
-        try
-        {
-            return (tableHotel.getHotelItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, hotelItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("getHotelItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    //endregion
-    
-    //region RESTAURANT functions
-    private boolean updateRestaurantItem(RestaurantItem restaurantItem)
-    {
-        try
-        {
-            return (tableRestaurant.updateRestaurantItem(restaurantItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("updateRestaurantItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean deleteRestaurantItem(RestaurantItem restaurantItem)
-    {
-        try
-        {
-            return (tableRestaurant.deleteRestaurantItem(restaurantItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("deleteRestaurantItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean getRestaurantItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, RestaurantItem restaurantItem)
-    {
-        try
-        {
-            return (tableRestaurant.getRestaurantItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, restaurantItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("getRestaurantItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    //endregion
-    
-    //region RIDE functions
-    private boolean updateRideItem(RideItem rideItem)
-    {
-        try
-        {
-            return (tableRide.updateRideItem(rideItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("updateRideItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean deleteRideItem(RideItem rideItem)
-    {
-        try
-        {
-            return (tableRide.deleteRideItem(rideItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("deleteRideItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean getRideItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, RideItem rideItem)
-    {
-        try
-        {
-            return (tableRide.getRideItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, rideItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("getRideItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    //endregion
-    
+
     //region GENERALATTRACTION functions
     private boolean updateGeneralAttractionItem(GeneralAttractionItem item)
     {
@@ -921,277 +667,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
     }
     
     //endregion
-    
-    //region SHOW functions
-    private boolean updateShowItem(ShowItem showItem)
-    {
-        try
-        {
-            return (tableShow.updateShowItem(showItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("updateShowItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean deleteShowItem(ShowItem showItem)
-    {
-        try
-        {
-            return (tableShow.deleteShowItem(showItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("deleteShowItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean getShowItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, ShowItem showItem)
-    {
-        try
-        {
-            return (tableShow.getShowItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, showItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("getShowItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    //endregion
-    
-    //region BUS functions
-    private boolean updateBusItem(BusItem busItem)
-    {
-        try
-        {
-            return (tableBus.updateBusItem(busItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("updateBusItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean deleteBusItem(BusItem busItem)
-    {
-        try
-        {
-            return (tableBus.deleteBusItem(busItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("deleteBusItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean getBusItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, BusItem busItem)
-    {
-        try
-        {
-            return (tableBus.getBusItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, busItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("getBusItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    //endregion
-    
-    //region CINEMA functions
-    private boolean updateCinemaItem(CinemaItem cinemaItem)
-    {
-        try
-        {
-            return (tableCinema.updateCinemaItem(cinemaItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("updateCinemaItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean deleteCinemaItem(CinemaItem cinemaItem)
-    {
-        try
-        {
-            return (tableCinema.deleteCinemaItem(cinemaItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("deleteCinemaItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean getCinemaItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, CinemaItem cinemaItem)
-    {
-        try
-        {
-            return (tableCinema.getCinemaItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, cinemaItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("getCinemaItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    //endregion
-    
-    //region PARK functions
-    private boolean updateParkItem(ParkItem parkItem)
-    {
-        try
-        {
-            return (tablePark.updateParkItem(parkItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("updateParkItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean deleteParkItem(ParkItem parkItem)
-    {
-        try
-        {
-            return (tablePark.deleteParkItem(parkItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("deleteParkItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean getParkItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, ParkItem parkItem)
-    {
-        try
-        {
-            return (tablePark.getParkItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, parkItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("getParkItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    //endregion
-    
-    //region PARADE functions
-    private boolean updateParadeItem(ParadeItem paradeItem)
-    {
-        try
-        {
-            return (tableParade.updateParadeItem(paradeItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("updateParadeItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean deleteParadeItem(ParadeItem paradeItem)
-    {
-        try
-        {
-            return (tableParade.deleteParadeItem(paradeItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("deleteParadeItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean getParadeItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, ParadeItem paradeItem)
-    {
-        try
-        {
-            return (tableParade.getParadeItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, paradeItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("getParadeItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    //endregion
-    
-    //region OTHER functions
-    private boolean updateOtherItem(OtherItem otherItem)
-    {
-        try
-        {
-            return (tableOther.updateOtherItem(otherItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("updateOtherItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean deleteOtherItem(OtherItem otherItem)
-    {
-        try
-        {
-            return (tableOther.deleteOtherItem(otherItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("deleteOtherItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    private boolean getOtherItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, OtherItem otherItem)
-    {
-        try
-        {
-            return (tableOther.getOtherItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, otherItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("getOtherItem", e.getMessage());
-        }
-        return (false);
-        
-    }
-    
-    //endregion
-    
+
     //region SCHEDULE functions
     public boolean addScheduleItem(ScheduleItem scheduleItem)
     {
@@ -1200,48 +676,8 @@ public class DatabaseAccess extends SQLiteOpenHelper
             if (tableSchedule.addScheduleItem(scheduleItem) == false)
                 return (false);
             
-            if (scheduleItem.flightItem != null)
-                if (tableFlight.addFlightItem(scheduleItem.flightItem) == false)
-                    return (false);
-            
-            if (scheduleItem.hotelItem != null)
-                if (tableHotel.addHotelItem(scheduleItem.hotelItem) == false)
-                    return (false);
-            
-            if (scheduleItem.restaurantItem != null)
-                if (tableRestaurant.addRestaurantItem(scheduleItem.restaurantItem) == false)
-                    return (false);
-            
-            if (scheduleItem.rideItem != null)
-                if (tableRide.addRideItem(scheduleItem.rideItem) == false)
-                    return (false);
-            
             if (scheduleItem.generalAttractionItem != null)
                 if (tableGeneralAttraction.addGeneralAttractionItem(scheduleItem.generalAttractionItem) == false)
-                    return (false);
-            
-            if (scheduleItem.showItem != null)
-                if (tableShow.addShowItem(scheduleItem.showItem) == false)
-                    return (false);
-            
-            if (scheduleItem.busItem != null)
-                if (tableBus.addBusItem(scheduleItem.busItem) == false)
-                    return (false);
-            
-            if (scheduleItem.cinemaItem != null)
-                if (tableCinema.addCinemaItem(scheduleItem.cinemaItem) == false)
-                    return (false);
-            
-            if (scheduleItem.paradeItem != null)
-                if (tableParade.addParadeItem(scheduleItem.paradeItem) == false)
-                    return (false);
-            
-            if (scheduleItem.parkItem != null)
-                if (tablePark.addParkItem(scheduleItem.parkItem) == false)
-                    return (false);
-            
-            if (scheduleItem.otherItem != null)
-                if (tableOther.addOtherItem(scheduleItem.otherItem) == false)
                     return (false);
             
             return (true);
@@ -1275,39 +711,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
             if (tableSchedule.updateScheduleItem(scheduleItem) == false)
                 return (false);
             
-            if (scheduleItem.flightItem != null)
-                if (updateFlightItem(scheduleItem.flightItem) == false)
-                    return (false);
-            if (scheduleItem.hotelItem != null)
-                if (updateHotelItem(scheduleItem.hotelItem) == false)
-                    return (false);
-            if (scheduleItem.restaurantItem != null)
-                if (updateRestaurantItem(scheduleItem.restaurantItem) == false)
-                    return (false);
-            if (scheduleItem.rideItem != null)
-                if (updateRideItem(scheduleItem.rideItem) == false)
-                    return (false);
-            if (scheduleItem.showItem != null)
-                if (updateShowItem(scheduleItem.showItem) == false)
-                    return (false);
-            if (scheduleItem.hotelItem != null)
-                if (updateHotelItem(scheduleItem.hotelItem) == false)
-                    return (false);
-            if (scheduleItem.busItem != null)
-                if (updateBusItem(scheduleItem.busItem) == false)
-                    return (false);
-            if (scheduleItem.cinemaItem != null)
-                if (updateCinemaItem(scheduleItem.cinemaItem) == false)
-                    return (false);
-            if (scheduleItem.paradeItem != null)
-                if (updateParadeItem(scheduleItem.paradeItem) == false)
-                    return (false);
-            if (scheduleItem.parkItem != null)
-                if (updateParkItem(scheduleItem.parkItem) == false)
-                    return (false);
-            if (scheduleItem.otherItem != null)
-                if (updateOtherItem(scheduleItem.otherItem) == false)
-                    return (false);
             if (scheduleItem.generalAttractionItem != null)
                 if (updateGeneralAttractionItem(scheduleItem.generalAttractionItem) == false)
                     return (false);
@@ -1333,36 +736,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
                 if (removeNote(scheduleItem.holidayId, scheduleItem.noteId) == false)
                     return (false);
                 
-                if (scheduleItem.flightItem != null)
-                    if (deleteFlightItem(scheduleItem.flightItem) == false)
-                        return (false);
-                if (scheduleItem.hotelItem != null)
-                    if (deleteHotelItem(scheduleItem.hotelItem) == false)
-                        return (false);
-                if (scheduleItem.restaurantItem != null)
-                    if (deleteRestaurantItem(scheduleItem.restaurantItem) == false)
-                        return (false);
-                if (scheduleItem.showItem != null)
-                    if (deleteShowItem(scheduleItem.showItem) == false)
-                        return (false);
-                if (scheduleItem.busItem != null)
-                    if (deleteBusItem(scheduleItem.busItem) == false)
-                        return (false);
-                if (scheduleItem.cinemaItem != null)
-                    if (deleteCinemaItem(scheduleItem.cinemaItem) == false)
-                        return (false);
-                if (scheduleItem.parkItem != null)
-                    if (deleteParkItem(scheduleItem.parkItem) == false)
-                        return (false);
-                if (scheduleItem.paradeItem != null)
-                    if (deleteParadeItem(scheduleItem.paradeItem) == false)
-                        return (false);
-                if (scheduleItem.otherItem != null)
-                    if (deleteOtherItem(scheduleItem.otherItem) == false)
-                        return (false);
-                if (scheduleItem.rideItem != null)
-                    if (deleteRideItem(scheduleItem.rideItem) == false)
-                        return (false);
                 if (scheduleItem.generalAttractionItem != null)
                     if (deleteGeneralAttractionItem(scheduleItem.generalAttractionItem) == false)
                         return (false);
@@ -1387,87 +760,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
             if (tableSchedule.getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, litem) == false)
                 return (false);
             
-            litem.flightItem = null;
-            litem.hotelItem = null;
-            litem.showItem = null;
-            litem.restaurantItem = null;
-            litem.rideItem = null;
-            litem.busItem = null;
-            litem.cinemaItem = null;
-            litem.paradeItem = null;
-            litem.parkItem = null;
-            litem.otherItem = null;
             litem.generalAttractionItem = null;
-            
-            if (litem.schedType == res.getInteger(R.integer.schedule_type_flight))
-            {
-                litem.flightItem = new FlightItem();
-                if (getFlightItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, litem.flightItem) == false)
-                    return (false);
-            }
-            
-            if (litem.schedType == res.getInteger(R.integer.schedule_type_hotel))
-            {
-                litem.hotelItem = new HotelItem();
-                if (getHotelItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, litem.hotelItem) == false)
-                    return (false);
-            }
-            
-            if (litem.schedType == res.getInteger(R.integer.schedule_type_show))
-            {
-                litem.showItem = new ShowItem();
-                if (getShowItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, litem.showItem) == false)
-                    return (false);
-            }
-            
-            if (litem.schedType == res.getInteger(R.integer.schedule_type_restaurant))
-            {
-                litem.restaurantItem = new RestaurantItem();
-                if (getRestaurantItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, litem.restaurantItem) == false)
-                    return (false);
-            }
-            
-            if (litem.schedType == res.getInteger(R.integer.schedule_type_ride))
-            {
-                litem.rideItem = new RideItem();
-                if (getRideItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, litem.rideItem) == false)
-                    return (false);
-            }
-            
-            if (litem.schedType == res.getInteger(R.integer.schedule_type_bus))
-            {
-                litem.busItem = new BusItem();
-                if (getBusItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, litem.busItem) == false)
-                    return (false);
-            }
-            
-            if (litem.schedType == res.getInteger(R.integer.schedule_type_cinema))
-            {
-                litem.cinemaItem = new CinemaItem();
-                if (getCinemaItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, litem.cinemaItem) == false)
-                    return (false);
-            }
-            
-            if (litem.schedType == res.getInteger(R.integer.schedule_type_parade))
-            {
-                litem.paradeItem = new ParadeItem();
-                if (getParadeItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, litem.paradeItem) == false)
-                    return (false);
-            }
-            
-            if (litem.schedType == res.getInteger(R.integer.schedule_type_park))
-            {
-                litem.parkItem = new ParkItem();
-                if (getParkItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, litem.parkItem) == false)
-                    return (false);
-            }
-            
-            if (litem.schedType == res.getInteger(R.integer.schedule_type_other))
-            {
-                litem.otherItem = new OtherItem();
-                if (getOtherItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, litem.otherItem) == false)
-                    return (false);
-            }
             
             if (litem.schedType == res.getInteger(R.integer.schedule_type_generalattraction))
             {
@@ -1523,94 +816,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
             
             for (ScheduleItem item : al)
             {
-                item.flightItem = null;
-                item.hotelItem = null;
-                item.showItem = null;
-                item.restaurantItem = null;
-                item.rideItem = null;
-                item.busItem = null;
-                item.cinemaItem = null;
-                item.paradeItem = null;
-                item.parkItem = null;
-                item.otherItem = null;
                 item.generalAttractionItem = null;
-                
-                if (item.schedType == res.getInteger(R.integer.schedule_type_flight))
-                {
-                    item.flightItem = new FlightItem();
-                    if (getFlightItem(holidayId, dayId, attractionId, attractionAreaId, item.scheduleId, item.flightItem) == false)
-                        return (false);
-                }
-                
-                if (item.schedType == res.getInteger(R.integer.schedule_type_hotel))
-                {
-                    item.hotelItem = new HotelItem();
-                    if (getHotelItem(holidayId, dayId, attractionId, attractionAreaId, item.scheduleId, item.hotelItem) == false)
-                        return (false);
-                }
-                
-                if (item.schedType == res.getInteger(R.integer.schedule_type_show))
-                {
-                    item.showItem = new ShowItem();
-                    if (getShowItem(holidayId, dayId, attractionId, attractionAreaId, item.scheduleId, item.showItem) == false)
-                        return (false);
-                }
-                
-                if (item.schedType == res.getInteger(R.integer.schedule_type_restaurant))
-                {
-                    item.restaurantItem = new RestaurantItem();
-                    if (getRestaurantItem(holidayId, dayId, attractionId, attractionAreaId, item.scheduleId, item.restaurantItem) == false)
-                        return (false);
-                }
-                
-                if (item.schedType == res.getInteger(R.integer.schedule_type_ride))
-                {
-                    item.rideItem = new RideItem();
-                    if (getRideItem(holidayId, dayId, attractionId, attractionAreaId, item.scheduleId, item.rideItem) == false)
-                        return (false);
-                }
-                
-                if (item.schedType == res.getInteger(R.integer.schedule_type_hotel))
-                {
-                    item.hotelItem = new HotelItem();
-                    if (getHotelItem(holidayId, dayId, attractionId, attractionAreaId, item.scheduleId, item.hotelItem) == false)
-                        return (false);
-                }
-                
-                if (item.schedType == res.getInteger(R.integer.schedule_type_bus))
-                {
-                    item.busItem = new BusItem();
-                    if (getBusItem(holidayId, dayId, attractionId, attractionAreaId, item.scheduleId, item.busItem) == false)
-                        return (false);
-                }
-                
-                if (item.schedType == res.getInteger(R.integer.schedule_type_cinema))
-                {
-                    item.cinemaItem = new CinemaItem();
-                    if (getCinemaItem(holidayId, dayId, attractionId, attractionAreaId, item.scheduleId, item.cinemaItem) == false)
-                        return (false);
-                }
-                
-                if (item.schedType == res.getInteger(R.integer.schedule_type_parade))
-                {
-                    item.paradeItem = new ParadeItem();
-                    if (getParadeItem(holidayId, dayId, attractionId, attractionAreaId, item.scheduleId, item.paradeItem) == false)
-                        return (false);
-                }
-                
-                if (item.schedType == res.getInteger(R.integer.schedule_type_park))
-                {
-                    item.parkItem = new ParkItem();
-                    if (getParkItem(holidayId, dayId, attractionId, attractionAreaId, item.scheduleId, item.parkItem) == false)
-                        return (false);
-                }
-                
-                if (item.schedType == res.getInteger(R.integer.schedule_type_other))
-                {
-                    item.otherItem = new OtherItem();
-                    if (getOtherItem(holidayId, dayId, attractionId, attractionAreaId, item.scheduleId, item.otherItem) == false)
-                        return (false);
-                }
                 
                 if (item.schedType == res.getInteger(R.integer.schedule_type_generalattraction))
                 {

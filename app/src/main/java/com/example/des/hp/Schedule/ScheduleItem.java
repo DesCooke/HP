@@ -2,17 +2,7 @@ package com.example.des.hp.Schedule;
 
 import android.graphics.Bitmap;
 
-import com.example.des.hp.Schedule.Flight.*;
 import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionItem;
-import com.example.des.hp.Schedule.Hotel.*;
-import com.example.des.hp.Schedule.Restaurant.*;
-import com.example.des.hp.Schedule.Ride.RideItem;
-import com.example.des.hp.Schedule.Show.*;
-import com.example.des.hp.Schedule.Bus.*;
-import com.example.des.hp.Schedule.Cinema.*;
-import com.example.des.hp.Schedule.Park.*;
-import com.example.des.hp.Schedule.Parade.*;
-import com.example.des.hp.Schedule.Other.*;
 
 /**
  * * Created by Des on 16/10/2016.
@@ -67,16 +57,6 @@ public class ScheduleItem
     public Bitmap scheduleBitmap;
     public boolean pictureChanged;
 
-    public FlightItem flightItem;
-    public HotelItem hotelItem;
-    public RestaurantItem restaurantItem;
-    public ShowItem showItem;
-    public BusItem busItem;
-    public CinemaItem cinemaItem;
-    public ParkItem parkItem;
-    public ParadeItem paradeItem;
-    public OtherItem otherItem;
-    public RideItem rideItem;
     public GeneralAttractionItem generalAttractionItem;
 
     public int GetEndTimeAsMinutes()
@@ -168,11 +148,6 @@ public class ScheduleItem
         scheduleBitmap=null;
         pictureChanged=false;
 
-        flightItem=null;
-        hotelItem=null;
-        restaurantItem=null;
-        showItem=null;
-        rideItem=null;
         generalAttractionItem=null;
     }
 }

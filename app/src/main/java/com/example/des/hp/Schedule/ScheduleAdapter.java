@@ -172,7 +172,14 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         {
             GeneralAttractionItem g = c.generalAttractionItem;
 
-            holder.txtSchedName.setText(c.schedName + " (" + g.AttractionType + ")");
+            if(g.AttractionType.length()>0)
+            {
+                holder.txtSchedName.setText(c.schedName + " (" + g.AttractionType + ")");
+            }
+            else
+            {
+                holder.txtSchedName.setText(c.schedName);
+            }
 
             holder.scenicRatingView.setRating(g.scenicRating);
             holder.heartRatingView.setRating(g.heartRating);
@@ -292,64 +299,10 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             holder.txtTimeRange.setText(lString);
 
             holder.txtReservationType.setVisibility(View.GONE);
-            if(c.schedType == context.getResources().getInteger(R.integer.schedule_type_restaurant))
-            {
-                if(c.restaurantItem != null)
-                {
-                    if(c.restaurantItem.reservationType == 1)
-                    {
-                        holder.txtReservationType.setVisibility(View.VISIBLE);
-                        holder.txtReservationType.setText(R.string.ReservationTypeJustWalkIn);
-                    }
-                    if(c.restaurantItem.reservationType == 2)
-                    {
-                        holder.txtReservationType.setVisibility(View.VISIBLE);
-                        holder.txtReservationType.setText(R.string.ReservationTypeReserveOnTheDay);
-                    }
-                    if(c.restaurantItem.reservationType == 3)
-                    {
-                        holder.txtReservationType.setVisibility(View.VISIBLE);
-                        holder.txtReservationType.setText(R.string.ReservationTypeReserve180DaysInAdvance);
-                    }
-                    if(c.restaurantItem.reservationType == 4)
-                    {
-                        holder.txtReservationType.setVisibility(View.VISIBLE);
-                        holder.txtReservationType.setText(R.string.ReservationTypeBooked);
-                    }
-                }
-            }
 
-            if(c.rideItem != null)
-            {
-                holder.scenicRatingView.setRating(c.rideItem.scenicRating);
-                holder.heartRatingView.setRating(c.rideItem.heartRating);
-                holder.thrillRatingView.setRating(c.rideItem.thrillRating);
-                if(c.rideItem.scenicRating<0.25)
-                    holder.scenicRatingView.setVisibility(View.GONE);
-                if(c.rideItem.heartRating<0.25)
-                    holder.heartRatingView.setVisibility(View.GONE);
-                if(c.rideItem.thrillRating<0.25)
-                    holder.thrillRatingView.setVisibility(View.GONE);
-            }
-            else {
-                if (c.showItem != null) {
-                    holder.scenicRatingView.setRating(c.showItem.scenicRating);
-                    holder.heartRatingView.setRating(c.showItem.heartRating);
-                    holder.thrillRatingView.setRating(c.showItem.thrillRating);
-                    if (c.showItem.scenicRating < 0.25)
-                        holder.scenicRatingView.setVisibility(View.GONE);
-                    if (c.showItem.heartRating < 0.25)
-                        holder.heartRatingView.setVisibility(View.GONE);
-                    if (c.showItem.thrillRating < 0.25)
-                        holder.thrillRatingView.setVisibility(View.GONE);
-                }
-                else
-                {
                     holder.scenicRatingView.setVisibility(View.GONE);
                     holder.heartRatingView.setVisibility(View.GONE);
                     holder.thrillRatingView.setVisibility(View.GONE);
-                }
-            }
         }
 
         if(c.schedPicture.length() > 0) {
