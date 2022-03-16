@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.des.hp.Budget.BudgetDetailsList;
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
@@ -17,6 +18,8 @@ import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionDetailsEdi
 import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionDetailsView;
 import com.example.des.hp.Schedule.ScheduleAdapter;
 import com.example.des.hp.Schedule.ScheduleItem;
+import com.example.des.hp.Tasks.TaskDetailsList;
+import com.example.des.hp.TipGroup.TipGroupDetailsList;
 import com.example.des.hp.myutils.*;
 
 import java.util.ArrayList;
@@ -97,6 +100,15 @@ public class DayDetailsView extends BaseActivity
                     return true;
                 case R.id.action_add_generalattraction:
                     StartNewAddIntent(GeneralAttractionDetailsEdit.class);
+                    return true;
+                case R.id.action_task:
+                    showTasks();
+                    return true;
+                case R.id.action_budget:
+                    showBudget();
+                    return true;
+                case R.id.action_tips:
+                    showTipGroups();
                     return true;
                 default:
                     return super.onOptionsItemSelected(item);
@@ -225,6 +237,54 @@ public class DayDetailsView extends BaseActivity
 
     }
 
+    public void showBudget()
+    {
+        try
+        {
+            Intent intent2=new Intent(getApplicationContext(), BudgetDetailsList.class);
+            intent2.putExtra("HOLIDAYID", dayItem.holidayId);
+            intent2.putExtra("TITLE", holidayName);
+            intent2.putExtra("SUBTITLE", "Budget");
+            startActivity(intent2);
+        }
+        catch(Exception e)
+        {
+            ShowError("showBudget", e.getMessage());
+        }
+    }
+
+    public void showTipGroups()
+    {
+        try
+        {
+            Intent intent2=new Intent(getApplicationContext(), TipGroupDetailsList.class);
+            intent2.putExtra("HOLIDAYID", dayItem.holidayId);
+            intent2.putExtra("TITLE", holidayName);
+            intent2.putExtra("SUBTITLE", "Tips");
+            startActivity(intent2);
+        }
+        catch(Exception e)
+        {
+            ShowError("showTipGroups", e.getMessage());
+        }
+    }
+
+    public void showTasks()
+    {
+        try
+        {
+            Intent intent2=new Intent(getApplicationContext(), TaskDetailsList.class);
+            intent2.putExtra("HOLIDAYID", dayItem.holidayId);
+            intent2.putExtra("TITLE", holidayName);
+            intent2.putExtra("SUBTITLE", "Tasks");
+            startActivity(intent2);
+        }
+        catch(Exception e)
+        {
+            ShowError("showTasks", e.getMessage());
+        }
+    }
+
     public void setNoteId(int pNoteId)
     {
         try
@@ -327,7 +387,6 @@ public class DayDetailsView extends BaseActivity
         }
     }
 
-
     public void deleteDay()
     {
         try
@@ -341,7 +400,6 @@ public class DayDetailsView extends BaseActivity
             ShowError("deleteDay", e.getMessage());
         }
     }
-
 
     @Override
     public void SwapItems(int from, int to)

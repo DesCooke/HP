@@ -79,6 +79,9 @@
     <string name="action_view_attraction">View Attraction</string>
     <string name="action_view_attractionarea">View Attraction Area</string>
     <string name="action_move">Move to Another Area</string>
+    <string name="action_tasks">View Tasks</string>
+    <string name="action_budget">View Budget</string>
+    <string name="action_tips">View Tips</string>
 
     <string name="settings_date_format">dd/MM/yyyy</string>
 
