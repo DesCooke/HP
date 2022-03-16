@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.des.hp.Dialog.BaseActivity;
+import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
 
@@ -26,6 +27,7 @@ public class BudgetDetailsView extends BaseActivity
     public TextView txtBudgetTotal;
     public TextView txtBudgetPaid;
     public TextView txtBudgetUnpaid;
+    public TextView txtNotes;
     public ImageButton btnClear;
     public Button btnSave;
     public LinearLayout grpMenuFile;
@@ -51,6 +53,7 @@ public class BudgetDetailsView extends BaseActivity
             txtBudgetPaid = (TextView) findViewById(R.id.txtBudgetPaid);
             txtBudgetUnpaid = (TextView) findViewById(R.id.txtBudgetUnpaid);
             txtBudgetTotal = (TextView) findViewById(R.id.txtBudgetTotal);
+            txtNotes = (TextView) findViewById(R.id.txtNotes);
             btnClear = (ImageButton) findViewById(R.id.btnClear);
             btnSave = (Button) findViewById(R.id.btnSave);
             grpMenuFile = (LinearLayout) findViewById(R.id.grpMenuFile);
@@ -119,7 +122,15 @@ public class BudgetDetailsView extends BaseActivity
             budgetItem = new BudgetItem();
             if (!databaseAccess().getBudgetItem(holidayId, budgetId, budgetItem))
                 return;
-            
+
+            if(budgetItem.noteId>0)
+            {
+                NoteItem noteItem = new NoteItem();
+                if (!databaseAccess().getNoteItem(holidayId, budgetItem.noteId, noteItem))
+                    return;
+                txtNotes.setText(noteItem.notes);
+            }
+
             if (title == null || (title.length() == 0))
             {
                 SetTitles(budgetItem.budgetDescription, "");

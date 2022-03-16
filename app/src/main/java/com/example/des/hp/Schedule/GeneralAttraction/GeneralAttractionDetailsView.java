@@ -2,6 +2,7 @@ package com.example.des.hp.Schedule.GeneralAttraction;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,9 +16,13 @@ import android.widget.RadioButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.example.des.hp.Budget.BudgetDetailsList;
+import com.example.des.hp.Holiday.HolidayItem;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.R;
 import com.example.des.hp.Schedule.*;
+import com.example.des.hp.Tasks.TaskDetailsList;
+import com.example.des.hp.TipGroup.TipGroupDetailsList;
 
 public class GeneralAttractionDetailsView extends BaseScheduleView
 {
@@ -214,6 +219,9 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
             if(viewOnlyForm && scheduleItem.generalAttractionItem.scenicRating < 0.25)
                 scenicRating.setVisibility(View.GONE);
 
+            HolidayItem holidayItem = new HolidayItem();
+            databaseAccess().getHolidayItem(holidayId, holidayItem);
+
             radUnknown.setChecked(false);
             radWalkIn.setChecked(false);
             radOnTheDay.setChecked(false);
@@ -316,6 +324,56 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
             ShowError("showForm", e.getMessage());
         }
     }
+
+    public void showBudget()
+    {
+        try
+        {
+            Intent intent2=new Intent(getApplicationContext(), BudgetDetailsList.class);
+            intent2.putExtra("HOLIDAYID", scheduleItem.holidayId);
+            intent2.putExtra("TITLE", holidayName);
+            intent2.putExtra("SUBTITLE", "Budget");
+            startActivity(intent2);
+        }
+        catch(Exception e)
+        {
+            ShowError("showBudget", e.getMessage());
+        }
+    }
+
+    public void showTipGroups()
+    {
+        try
+        {
+            Intent intent2=new Intent(getApplicationContext(), TipGroupDetailsList.class);
+            intent2.putExtra("HOLIDAYID", scheduleItem.holidayId);
+            intent2.putExtra("TITLE", holidayName);
+            intent2.putExtra("SUBTITLE", "Tips");
+            startActivity(intent2);
+        }
+        catch(Exception e)
+        {
+            ShowError("showTipGroups", e.getMessage());
+        }
+    }
+
+    public void showTasks()
+    {
+        try
+        {
+            Intent intent2=new Intent(getApplicationContext(), TaskDetailsList.class);
+            intent2.putExtra("HOLIDAYID", scheduleItem.holidayId);
+            intent2.putExtra("TITLE", holidayName);
+            intent2.putExtra("SUBTITLE", "Tasks");
+            startActivity(intent2);
+        }
+        catch(Exception e)
+        {
+            ShowError("showTasks", e.getMessage());
+        }
+    }
+
+
     //endregion
 
     //region OnClick Events
@@ -334,6 +392,15 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
                     return true;
                 case R.id.action_move:
                     move();
+                    return true;
+                case R.id.action_task:
+                    showTasks();
+                    return true;
+                case R.id.action_budget:
+                    showBudget();
+                    return true;
+                case R.id.action_tips:
+                    showTipGroups();
                     return true;
                 default:
                     return super.onOptionsItemSelected(item);
