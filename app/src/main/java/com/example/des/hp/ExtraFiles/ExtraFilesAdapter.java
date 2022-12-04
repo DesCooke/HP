@@ -80,7 +80,7 @@ class ExtraFilesAdapter extends RecyclerView.Adapter<ExtraFilesAdapter.ViewHolde
     public void onBindViewHolder(ViewHolder holder, int position)
     {
         final ExtraFilesItem c=data.get(position);
-        holder.txtFileDescription.setText(c.fileDescription + " (" + c.fileName + ")");
+        holder.txtFileDescription.setText(c.fileDescription);
 
         holder.fileItemCell.setOnClickListener(new View.OnClickListener()
         {

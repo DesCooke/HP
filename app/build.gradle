@@ -17,6 +17,7 @@ android {
     }
     productFlavors {
     }
+    namespace 'com.example.des.hp'
 }
 
 dependencies {

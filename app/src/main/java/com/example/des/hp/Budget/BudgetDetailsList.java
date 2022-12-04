@@ -97,8 +97,8 @@ public class BudgetDetailsList extends BaseActivity
                 @Override
                 public void onItemClick(View view, BudgetItem obj)
                 {
-                    if (!obj.budgetDescription.equals(getString(R.string.caption_budget_total_marker)))
-                    {
+//                    if (!obj.budgetDescription.equals(getString(R.string.caption_budget_total_marker)))
+  //                  {
                         Intent intent = new Intent(getApplicationContext(), BudgetDetailsView.class);
                         intent.putExtra("ACTION", "view");
                         intent.putExtra("HOLIDAYID", obj.holidayId);
@@ -107,7 +107,7 @@ public class BudgetDetailsList extends BaseActivity
                         intent.putExtra("SUBTITLE", obj.budgetDescription);
                         
                         startActivity(intent);
-                    }
+    //                }
                 }
             });
             
