@@ -46,6 +46,7 @@ package com.example.des.hp.Dialog;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -60,6 +61,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
+
+import android.provider.OpenableColumns;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -374,14 +377,10 @@ public class BaseActivity extends AppCompatActivity
                         mySelectedFileUri=imageReturnedIntent.getData();
                         grantUriPermission("com.example.des.hp", mySelectedFileUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-                        //myMessages().LogMessage("Getting just the filename.");
-                        MyString myString=new MyString();
-                        if(myFileUtils().BaseFilenameFromUri(mySelectedFileUri, myString) == false)
-                            return;
-                        mySelectedFileNameOnly=myString.Value;
-                        //myMessages().LogMessage("mySelectedFileNameOnly = " + mySelectedFileNameOnly);
+                        String filename=GetFileName(mySelectedFileUri);
 
-                        //myMessages().LogMessage("Getting fully qualified path...");
+                        mySelectedFileNameOnly=filename;
+
                         mySelectedFullFilePath=myFileUtils().getMyFilePath(mySelectedFileUri);
                         //myMessages().LogMessage("mySelectedFullFilePath = " + mySelectedFullFilePath);
 
@@ -446,6 +445,30 @@ public class BaseActivity extends AppCompatActivity
         {
             ShowError("onActivityResult", e.getMessage());
         }
+    }
+
+    public String GetFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int colIndex=cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if(colIndex>=0)
+                    result = cursor.getString( colIndex );
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
     }
 
 
