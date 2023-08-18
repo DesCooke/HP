@@ -11,6 +11,6 @@
         android:layout_marginTop="12dp"
         android:onClick="saveSchedule"
         android:text="@string/save"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </LinearLayout>

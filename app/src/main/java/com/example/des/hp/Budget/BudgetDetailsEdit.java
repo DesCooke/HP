@@ -4,7 +4,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
+import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -41,13 +44,85 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             grpBudgetPaid.setOnClickListener(this);
             grpBudgetUnpaid.setOnClickListener(this);
             imageView.setOnClickListener(this);
+
+            swUseOption.setVisibility(View.VISIBLE);
+
+            grpBudgetDescription1.setOnClickListener(this);
+            grpBudgetDescription2.setOnClickListener(this);
+            grpBudgetDescription3.setOnClickListener(this);
+            grpBudgetDescription4.setOnClickListener(this);
+            grpBudgetDescription5.setOnClickListener(this);
+            grpBudgetTotal1.setOnClickListener(this);
+            grpBudgetTotal2.setOnClickListener(this);
+            grpBudgetTotal3.setOnClickListener(this);
+            grpBudgetTotal4.setOnClickListener(this);
+            grpBudgetTotal5.setOnClickListener(this);
+            chkOption1.setOnClickListener(this);
+            chkOption2.setOnClickListener(this);
+            chkOption3.setOnClickListener(this);
+            chkOption4.setOnClickListener(this);
+            chkOption5.setOnClickListener(this);
+
+            swUseOption.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(swUseOption.isChecked())
+                    {
+                        svOptions.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        svOptions.setVisibility(View.GONE);
+                    }
+                }
+            });
+
+
         }
         catch (Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
     }
-    
+
+    //region showForm
+    public void showForm()
+    {
+        super.showForm();
+        try
+        {
+            if(swUseOption.isChecked())
+            {
+                svOptions.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                svOptions.setVisibility(View.GONE);
+            }
+        }
+        catch (Exception e)
+        {
+            ShowError("showForm", e.getMessage());
+        }
+    }
+    //endregion
+
+    public void removeOption()
+    {
+        String lString = txtBudgetDescription.getText().toString();
+        int lIndex=lString.indexOf("(");
+        if(lIndex==-1)
+            return;
+        txtBudgetDescription.setText(lString.substring(0,lIndex-1).trim());
+    }
+
+    public void addOption(String option)
+    {
+        removeOption();
+        String lString=txtBudgetDescription.getText().toString().trim();
+        txtBudgetDescription.setText(lString + " (" + option + ")");
+    }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
@@ -82,6 +157,51 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
                 case R.id.imageViewSmall:
                     pickImage(view);
                     break;
+                case R.id.grpBudgetDescription1:
+                    pickBudgetOptionDesc(txtBudgetDescription1);
+                    break;
+                case R.id.grpBudgetDescription2:
+                    pickBudgetOptionDesc(txtBudgetDescription2);
+                    break;
+                case R.id.grpBudgetDescription3:
+                    pickBudgetOptionDesc(txtBudgetDescription3);
+                    break;
+                case R.id.grpBudgetDescription4:
+                    pickBudgetOptionDesc(txtBudgetDescription4);
+                    break;
+                case R.id.grpBudgetDescription5:
+                    pickBudgetOptionDesc(txtBudgetDescription5);
+                    break;
+                case R.id.grpBudgetTotal1:
+                    pickBudgetOptionTotal(txtBudgetTotal1);
+                    break;
+                case R.id.grpBudgetTotal2:
+                    pickBudgetOptionTotal(txtBudgetTotal2);
+                    break;
+                case R.id.grpBudgetTotal3:
+                    pickBudgetOptionTotal(txtBudgetTotal3);
+                    break;
+                case R.id.grpBudgetTotal4:
+                    pickBudgetOptionTotal(txtBudgetTotal4);
+                    break;
+                case R.id.grpBudgetTotal5:
+                    pickBudgetOptionTotal(txtBudgetTotal5);
+                    break;
+                case R.id.chkOption1:
+                    pickOption(chkOption1, txtBudgetDescription1, txtBudgetTotal1);
+                    break;
+                case R.id.chkOption2:
+                    pickOption(chkOption2, txtBudgetDescription2, txtBudgetTotal2);
+                    break;
+                case R.id.chkOption3:
+                    pickOption(chkOption3, txtBudgetDescription3, txtBudgetTotal3);
+                    break;
+                case R.id.chkOption4:
+                    pickOption(chkOption4, txtBudgetDescription4, txtBudgetTotal4);
+                    break;
+                case R.id.chkOption5:
+                    pickOption(chkOption5, txtBudgetDescription5, txtBudgetTotal5);
+                    break;
             }
         }
         catch (Exception e)
@@ -90,12 +210,32 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
         }
         
     }
-    
-    public void BudgetDescriptionPicked(View view)
+
+    public void pickOption(CheckBox checkBox, TextView desc, TextView total)
+    {
+        if(!checkBox.isChecked())
+            return;
+
+        if(checkBox != chkOption1)
+            chkOption1.setChecked(false);
+        if(checkBox != chkOption2)
+            chkOption2.setChecked(false);
+        if(checkBox != chkOption3)
+            chkOption3.setChecked(false);
+        if(checkBox != chkOption4)
+            chkOption4.setChecked(false);
+        if(checkBox != chkOption5)
+            chkOption5.setChecked(false);
+        addOption(desc.getText().toString());
+        txtBudgetTotal.setText(total.getText().toString());
+        calculateUnpaid();
+    }
+
+    public void BudgetDescriptionPicked(TextView view)
     {
         try
         {
-            txtBudgetDescription.setText(dialogWithEditTextFragment.getFinalText());
+            view.setText(dialogWithEditTextFragment.getFinalText());
             
             dialogWithEditTextFragment.dismiss();
         }
@@ -104,7 +244,34 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             ShowError("BudgetDescriptionPicked", e.getMessage());
         }
     }
-    
+    public void BudgetOptionDescriptionPicked(TextView view)
+    {
+        try
+        {
+            view.setText(dialogWithEditTextFragment.getFinalText());
+
+            dialogWithEditTextFragment.dismiss();
+        }
+        catch (Exception e)
+        {
+            ShowError("BudgetDescriptionPicked", e.getMessage());
+        }
+    }
+
+    public void BudgetObjectDescPicked(TextView textView)
+    {
+        try
+        {
+            textView.setText(dialogWithEditTextFragment.getFinalText());
+
+            dialogWithEditTextFragment.dismiss();
+        }
+        catch (Exception e)
+        {
+            ShowError("BudgetObjectDescPicked", e.getMessage());
+        }
+    }
+
     // Create a YES onclick procedure
     public void pickBudgetDescription(View view)
     {
@@ -114,7 +281,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             {
                 public void onClick(View view)
                 {
-                    BudgetDescriptionPicked(view);
+                    BudgetDescriptionPicked(txtBudgetDescription);
                 }
             };
             
@@ -134,7 +301,36 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             ShowError("pickBudgetDescription", e.getMessage());
         }
     }
-    
+
+    public void pickBudgetOptionDesc(TextView textView)
+    {
+        try
+        {
+            dwetOnOkClick = new View.OnClickListener()
+            {
+                public void onClick(View view)
+                {
+                    BudgetOptionDescriptionPicked(textView);
+                }
+            };
+
+
+            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+                    "hihi",            // unique name for this dialog type
+                    "Option Description",    // form caption
+                    "Description",             // form message
+                    R.drawable.attachment, textView.getText().toString(),                // initial text
+                    dwetOnOkClick, this, false
+            );
+
+            dialogWithEditTextFragment.showIt();
+        }
+        catch (Exception e)
+        {
+            ShowError("pickBudgetOptionDesc", e.getMessage());
+        }
+    }
+
     public void calculateUnpaid()
     {
         try
@@ -165,11 +361,11 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
         }
     }
     
-    public void BudgetTotalPicked(View view)
+    public void BudgetTotalPicked(TextView view)
     {
         try
         {
-            txtBudgetTotal.setText(StringUtils.StringToMoneyString(dialogWithEditTextFragment.getFinalText()));
+            view.setText(StringUtils.StringToMoneyString(dialogWithEditTextFragment.getFinalText()));
             calculateUnpaid();
             dialogWithEditTextFragment.dismiss();
         }
@@ -201,7 +397,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             {
                 public void onClick(View view)
                 {
-                    BudgetTotalPicked(view);
+                    BudgetTotalPicked(txtBudgetTotal);
                 }
             };
             
@@ -234,7 +430,35 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             ShowError("BudgetPaidPicked", e.getMessage());
         }
     }
-    
+
+    public void pickBudgetOptionTotal(TextView textView)
+    {
+        try
+        {
+            dwetOnOkClick = new View.OnClickListener()
+            {
+                public void onClick(View view)
+                {
+                    BudgetTotalPicked(textView);
+                }
+            };
+
+
+            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+                    "hihi",            // unique name for this dialog type
+                    "Budget Option",    // form caption
+                    "Total",             // form message
+                    R.drawable.attachment, removePoundSign(textView.getText().toString()), dwetOnOkClick, this, true
+            );
+
+            dialogWithEditTextFragment.showIt();
+        }
+        catch (Exception e)
+        {
+            ShowError("pickBudgetTotal", e.getMessage());
+        }
+    }
+
     // Create a YES onclick procedure
     public void pickBudgetPaid(View view)
     {
@@ -333,7 +557,26 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             budgetItem.fileBitmap = null;
             if (imageSet)
                 budgetItem.fileBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-            
+
+            budgetItem.useOption = swUseOption.isChecked();
+            budgetItem.useOption1 = chkOption1.isChecked();
+            budgetItem.useOption2 = chkOption2.isChecked();
+            budgetItem.useOption3 = chkOption3.isChecked();
+            budgetItem.useOption4 = chkOption4.isChecked();
+            budgetItem.useOption5 = chkOption5.isChecked();
+
+            budgetItem.option1Desc = txtBudgetDescription1.getText().toString();
+            budgetItem.option2Desc = txtBudgetDescription2.getText().toString();
+            budgetItem.option3Desc = txtBudgetDescription3.getText().toString();
+            budgetItem.option4Desc = txtBudgetDescription4.getText().toString();
+            budgetItem.option5Desc = txtBudgetDescription5.getText().toString();
+
+            budgetItem.option1Budget = Integer.parseInt(removePoundSign(txtBudgetTotal1.getText().toString()));
+            budgetItem.option2Budget = Integer.parseInt(removePoundSign(txtBudgetTotal2.getText().toString()));
+            budgetItem.option3Budget = Integer.parseInt(removePoundSign(txtBudgetTotal3.getText().toString()));
+            budgetItem.option4Budget = Integer.parseInt(removePoundSign(txtBudgetTotal4.getText().toString()));
+            budgetItem.option5Budget = Integer.parseInt(removePoundSign(txtBudgetTotal5.getText().toString()));
+
             if (action.equals("add"))
             {
                 budgetItem.holidayId = holidayId;
