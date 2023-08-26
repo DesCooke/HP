@@ -33,38 +33,39 @@ class TableBudget extends TableBase
     {
         try
         {
-            String lSQL=
-                    "CREATE TABLE IF NOT EXISTS budget " + "( " +
-                            "  holidayId         INT(5),  " +
-                            "  budgetId          INT(5),  " +
-                            "  sequenceNo        INT(5),  " +
-                            "  budgetDescription VARCHAR, " +
-                            "  budgetTotal       INT(5),  " +
-                            "  budgetPaid        INT(5),  " +
-                            "  budgetUnpaid      INT(5),  " +
-                            "  budgetPicture     VARCHAR, " +
-                            "  budgetNotes       VARCHAR, " +
-                            "  infoId            INT(5),  " +
-                            "  noteId            INT(5),  " +
-                            "  galleryId         INT(5),  " +
-                            "  sygicId           INT(5),  " +
-                            "  useOption         INT(5),  " +
-                            "  useOption1        INT(5),  " +
-                            "  useOption2        INT(5),  " +
-                            "  useOption3        INT(5),  " +
-                            "  useOption4        INT(5),  " +
-                            "  useOption5        INT(5),  " +
-                            "  option1Desc       VARCHAR," +
-                            "  option2Desc       VARCHAR," +
-                            "  option3Desc       VARCHAR," +
-                            "  option4Desc       VARCHAR," +
-                            "  option5Desc       VARCHAR," +
-                            "  option1Budget     INT(5), " +
-                            "  option2Budget     INT(5), " +
-                            "  option3Budget     INT(5), " +
-                            "  option4Budget     INT(5), " +
-                            "  option5Budget     INT(5)  " +
-                            ") ";
+            String lSQL =
+            "CREATE TABLE IF NOT EXISTS budget " + "( " +
+            "  holidayId         INT(5),  " +
+            "  budgetId          INT(5),  " +
+            "  sequenceNo        INT(5),  " +
+            "  budgetDescription VARCHAR, " +
+            "  budgetTotal       INT(5),  " +
+            "  budgetPaid        INT(5),  " +
+            "  budgetUnpaid      INT(5),  " +
+            "  budgetPicture     VARCHAR, " +
+            "  budgetNotes       VARCHAR, " +
+            "  infoId            INT(5),  " +
+            "  noteId            INT(5),  " +
+            "  galleryId         INT(5),  " +
+            "  sygicId           INT(5),  " +
+            "  useOption         INT(5),  " +
+            "  useOption1        INT(5),  " +
+            "  useOption2        INT(5),  " +
+            "  useOption3        INT(5),  " +
+            "  useOption4        INT(5),  " +
+            "  useOption5        INT(5),  " +
+            "  option1Desc       VARCHAR," +
+            "  option2Desc       VARCHAR," +
+            "  option3Desc       VARCHAR," +
+            "  option4Desc       VARCHAR," +
+            "  option5Desc       VARCHAR," +
+            "  option1Budget     INT(5), " +
+            "  option2Budget     INT(5), " +
+            "  option3Budget     INT(5), " +
+            "  option4Budget     INT(5), " +
+            "  option5Budget     INT(5), " +
+            "  optionSequenceNo  INT(5) " +
+            ") ";
 
             db.execSQL(lSQL);
 
@@ -131,6 +132,12 @@ class TableBudget extends TableBase
                 db.execSQL("UPDATE budget SET option5Desc = ''");
                 db.execSQL("UPDATE budget SET option5Budget = 0");
             }
+            if(oldVersion == 67 && newVersion == 68)
+            {
+                db.execSQL("ALTER TABLE budget ADD COLUMN optionSequenceNo INT(5) DEFAULT 0");
+
+                db.execSQL("UPDATE budget SET optionSequenceNo = 0");
+            }
             return (true);
         }
         catch(Exception e)
@@ -166,22 +173,22 @@ class TableBudget extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if (IsValid() == false)
                 return (false);
 
-            if(budgetItem.pictureAssigned)
+            if (budgetItem.pictureAssigned)
             {
-            /* if picture name has something in it - it means it came from internal folder */
-                if(budgetItem.budgetPicture.length() == 0)
+                /* if picture name has something in it - it means it came from internal folder */
+                if (budgetItem.budgetPicture.length() == 0)
                 {
                     //myMessages().LogMessage("  - New Image was not from internal folder...");
-                    if(budgetItem.pictureAssigned)
+                    if (budgetItem.pictureAssigned)
                     {
                         //myMessages().LogMessage("  - Save new image and get a filename...");
-                        MyString myString=new MyString();
-                        if(savePicture(budgetItem.holidayId, budgetItem.fileBitmap, myString) == false)
+                        MyString myString = new MyString();
+                        if (savePicture(budgetItem.holidayId, budgetItem.fileBitmap, myString) == false)
                             return (false);
-                        budgetItem.budgetPicture=myString.Value;
+                        budgetItem.budgetPicture = myString.Value;
                         //myMessages().LogMessage("  - New filename " + budgetItem.budgetPicture);
                     } else
                     {
@@ -196,70 +203,72 @@ class TableBudget extends TableBase
                 //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
-            String lSql="INSERT INTO Budget " +
-                    "  ( " +
-                    "    holidayId, " +
-                    "    budgetId, " +
-                    "    sequenceNo, " +
-                    "    budgetDescription, " +
-                    "    budgetTotal, " +
-                    "    budgetPaid, " +
-                    "    budgetUnpaid, " +
-                    "    budgetPicture, " +
-                    "    budgetNotes, " +
-                    "    infoId, " +
-                    "    noteId, " +
-                    "    galleryId, " +
-                    "    sygicId, " +
-                    "    useOption, " +
-                    "    useOption1, " +
-                    "    useOption2, " +
-                    "    useOption3, " +
-                    "    useOption4, " +
-                    "    useOption5, " +
-                    "    option1Desc, " +
-                    "    option2Desc, " +
-                    "    option3Desc, " +
-                    "    option4Desc, " +
-                    "    option5Desc, " +
-                    "    option1Budget, " +
-                    "    option2Budget, " +
-                    "    option3Budget, " +
-                    "    option4Budget, " +
-                    "    option5Budget  " +
-                    ") " +
-                    "VALUES " +
-                    "(" +
-                    budgetItem.holidayId + "," +
-                    budgetItem.budgetId + "," +
-                    budgetItem.sequenceNo + ", " +
-                    MyQuotedString(budgetItem.budgetDescription) + ", " +
-                    budgetItem.budgetTotal + "," +
-                    budgetItem.budgetPaid + "," +
-                    budgetItem.budgetUnpaid + "," +
-                    MyQuotedString(budgetItem.budgetPicture) + ", " +
-                    MyQuotedString(budgetItem.budgetNotes) + ", " +
-                    budgetItem.infoId + ", " +
-                    budgetItem.noteId + ", " +
-                    budgetItem.galleryId + ", " +
-                    budgetItem.sygicId + ", " +
-                    bool2Int(budgetItem.useOption) + ", " +
-                    bool2Int(budgetItem.useOption1) + ", " +
-                    bool2Int(budgetItem.useOption2) + ", " +
-                    bool2Int(budgetItem.useOption3) + ", " +
-                    bool2Int(budgetItem.useOption4) + ", " +
-                    bool2Int(budgetItem.useOption5) + ", " +
-                    MyQuotedString(budgetItem.option1Desc) + ", " +
-                    MyQuotedString(budgetItem.option2Desc) + ", " +
-                    MyQuotedString(budgetItem.option3Desc) + ", " +
-                    MyQuotedString(budgetItem.option4Desc) + ", " +
-                    MyQuotedString(budgetItem.option5Desc) + ", " +
-                    budgetItem.option1Budget + ", " +
-                    budgetItem.option2Budget + ", " +
-                    budgetItem.option3Budget + ", " +
-                    budgetItem.option4Budget + ", " +
-                    budgetItem.option5Budget + " " +
-                    ")";
+            String lSql = "INSERT INTO Budget " +
+                          "  ( " +
+                          "    holidayId, " +
+                          "    budgetId, " +
+                          "    sequenceNo, " +
+                          "    budgetDescription, " +
+                          "    budgetTotal, " +
+                          "    budgetPaid, " +
+                          "    budgetUnpaid, " +
+                          "    budgetPicture, " +
+                          "    budgetNotes, " +
+                          "    infoId, " +
+                          "    noteId, " +
+                          "    galleryId, " +
+                          "    sygicId, " +
+                          "    useOption, " +
+                          "    useOption1, " +
+                          "    useOption2, " +
+                          "    useOption3, " +
+                          "    useOption4, " +
+                          "    useOption5, " +
+                          "    option1Desc, " +
+                          "    option2Desc, " +
+                          "    option3Desc, " +
+                          "    option4Desc, " +
+                          "    option5Desc, " +
+                          "    option1Budget, " +
+                          "    option2Budget, " +
+                          "    option3Budget, " +
+                          "    option4Budget, " +
+                          "    option5Budget, " +
+                          "    optionSequenceNo" +
+                          ") " +
+                          "VALUES " +
+                          "(" +
+                          budgetItem.holidayId + "," +
+                          budgetItem.budgetId + "," +
+                          budgetItem.sequenceNo + ", " +
+                          MyQuotedString(budgetItem.budgetDescription) + ", " +
+                          budgetItem.budgetTotal + "," +
+                          budgetItem.budgetPaid + "," +
+                          budgetItem.budgetUnpaid + "," +
+                          MyQuotedString(budgetItem.budgetPicture) + ", " +
+                          MyQuotedString(budgetItem.budgetNotes) + ", " +
+                          budgetItem.infoId + ", " +
+                          budgetItem.noteId + ", " +
+                          budgetItem.galleryId + ", " +
+                          budgetItem.sygicId + ", " +
+                          bool2Int(budgetItem.useOption) + ", " +
+                          bool2Int(budgetItem.useOption1) + ", " +
+                          bool2Int(budgetItem.useOption2) + ", " +
+                          bool2Int(budgetItem.useOption3) + ", " +
+                          bool2Int(budgetItem.useOption4) + ", " +
+                          bool2Int(budgetItem.useOption5) + ", " +
+                          MyQuotedString(budgetItem.option1Desc) + ", " +
+                          MyQuotedString(budgetItem.option2Desc) + ", " +
+                          MyQuotedString(budgetItem.option3Desc) + ", " +
+                          MyQuotedString(budgetItem.option4Desc) + ", " +
+                          MyQuotedString(budgetItem.option5Desc) + ", " +
+                          budgetItem.option1Budget + ", " +
+                          budgetItem.option2Budget + ", " +
+                          budgetItem.option3Budget + ", " +
+                          budgetItem.option4Budget + ", " +
+                          budgetItem.option5Budget + ", " +
+                          budgetItem.optionSequenceNo + " " +
+                          ")";
 
             return (executeSQL("addBudgetItem", lSql));
         }
@@ -277,6 +286,7 @@ class TableBudget extends TableBase
             return(1);
         return(0);
     }
+
     boolean updateBudgetItems(ArrayList<BudgetItem> items)
     {
         try
@@ -309,35 +319,35 @@ class TableBudget extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if (IsValid() == false)
                 return (false);
 
             //myMessages().LogMessage("updateBudgetItem:Handling Image");
-            if(budgetItem.pictureChanged)
+            if (budgetItem.pictureChanged)
             {
-                if(budgetItem.origPictureAssigned && budgetItem.budgetPicture.length() > 0 && budgetItem.budgetPicture.compareTo(budgetItem.origBudgetPicture) == 0)
+                if (budgetItem.origPictureAssigned && budgetItem.budgetPicture.length() > 0 && budgetItem.budgetPicture.compareTo(budgetItem.origBudgetPicture) == 0)
                 {
                     //myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
                 } else
                 {
-                    if(budgetItem.origPictureAssigned)
+                    if (budgetItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(removePicture(budgetItem.holidayId, budgetItem.origBudgetPicture) == false)
+                        if (removePicture(budgetItem.holidayId, budgetItem.origBudgetPicture) == false)
                             return (false);
                     }
-            
-                /* if picture name has something in it - it means it came from internal folder */
-                    if(budgetItem.budgetPicture.length() == 0)
+
+                    /* if picture name has something in it - it means it came from internal folder */
+                    if (budgetItem.budgetPicture.length() == 0)
                     {
                         //myMessages().LogMessage("  - New Image was not from internal folder...");
-                        if(budgetItem.pictureAssigned)
+                        if (budgetItem.pictureAssigned)
                         {
                             //myMessages().LogMessage("  - Save new image and get a filename...");
-                            MyString myString=new MyString();
-                            if(savePicture(budgetItem.holidayId, budgetItem.fileBitmap, myString) == false)
+                            MyString myString = new MyString();
+                            if (savePicture(budgetItem.holidayId, budgetItem.fileBitmap, myString) == false)
                                 return (false);
-                            budgetItem.budgetPicture=myString.Value;
+                            budgetItem.budgetPicture = myString.Value;
                             //myMessages().LogMessage("  - New filename " + budgetItem.budgetPicture);
                         } else
                         {
@@ -354,36 +364,37 @@ class TableBudget extends TableBase
             }
 
             String lSQL;
-            lSQL="UPDATE Budget " +
-                    "SET sequenceNo = " + budgetItem.sequenceNo + ", " +
-                    "    budgetDescription = " + MyQuotedString(budgetItem.budgetDescription) + ", " +
-                    "    budgetTotal = " + budgetItem.budgetTotal + ", " +
-                    "    budgetPaid = " + budgetItem.budgetPaid + ", " +
-                    "    budgetUnpaid = " + budgetItem.budgetUnpaid + ", " +
-                    "    budgetPicture = " + MyQuotedString(budgetItem.budgetPicture) + ", " +
-                    "    budgetNotes = " + MyQuotedString(budgetItem.budgetNotes) + ", " +
-                    "    infoId = " + budgetItem.infoId + ", " +
-                    "    noteId = " + budgetItem.noteId + ", " +
-                    "    galleryId = " + budgetItem.galleryId + ", " +
-                    "    sygicId = " + budgetItem.sygicId + ", " +
-                    "    useOption = " + bool2Int(budgetItem.useOption) + ", " +
-                    "    useOption1 = " + bool2Int(budgetItem.useOption1) + ", " +
-                    "    useOption2 = " + bool2Int(budgetItem.useOption2) + ", " +
-                    "    useOption3 = " + bool2Int(budgetItem.useOption3) + ", " +
-                    "    useOption4 = " + bool2Int(budgetItem.useOption4) + ", " +
-                    "    useOption5 = " + bool2Int(budgetItem.useOption5) + ", " +
-                    "    option1Desc = " + MyQuotedString(budgetItem.option1Desc) + ", " +
-                    "    option2Desc = " + MyQuotedString(budgetItem.option2Desc) + ", " +
-                    "    option3Desc = " + MyQuotedString(budgetItem.option3Desc) + ", " +
-                    "    option4Desc = " + MyQuotedString(budgetItem.option4Desc) + ", " +
-                    "    option5Desc = " + MyQuotedString(budgetItem.option5Desc) + ", " +
-                    "    option1Budget = " + budgetItem.option1Budget + ", " +
-                    "    option2Budget = " + budgetItem.option2Budget + ", " +
-                    "    option3Budget = " + budgetItem.option3Budget + ", " +
-                    "    option4Budget = " + budgetItem.option4Budget + ", " +
-                    "    option5Budget = " + budgetItem.option5Budget + " " +
-                    "WHERE holidayId = " + budgetItem.holidayId + " " +
-                    "AND budgetId = " + budgetItem.budgetId;
+            lSQL = "UPDATE Budget " +
+                   "SET sequenceNo = " + budgetItem.sequenceNo + ", " +
+                   "    budgetDescription = " + MyQuotedString(budgetItem.budgetDescription) + ", " +
+                   "    budgetTotal = " + budgetItem.budgetTotal + ", " +
+                   "    budgetPaid = " + budgetItem.budgetPaid + ", " +
+                   "    budgetUnpaid = " + budgetItem.budgetUnpaid + ", " +
+                   "    budgetPicture = " + MyQuotedString(budgetItem.budgetPicture) + ", " +
+                   "    budgetNotes = " + MyQuotedString(budgetItem.budgetNotes) + ", " +
+                   "    infoId = " + budgetItem.infoId + ", " +
+                   "    noteId = " + budgetItem.noteId + ", " +
+                   "    galleryId = " + budgetItem.galleryId + ", " +
+                   "    sygicId = " + budgetItem.sygicId + ", " +
+                   "    useOption = " + bool2Int(budgetItem.useOption) + ", " +
+                   "    useOption1 = " + bool2Int(budgetItem.useOption1) + ", " +
+                   "    useOption2 = " + bool2Int(budgetItem.useOption2) + ", " +
+                   "    useOption3 = " + bool2Int(budgetItem.useOption3) + ", " +
+                   "    useOption4 = " + bool2Int(budgetItem.useOption4) + ", " +
+                   "    useOption5 = " + bool2Int(budgetItem.useOption5) + ", " +
+                   "    option1Desc = " + MyQuotedString(budgetItem.option1Desc) + ", " +
+                   "    option2Desc = " + MyQuotedString(budgetItem.option2Desc) + ", " +
+                   "    option3Desc = " + MyQuotedString(budgetItem.option3Desc) + ", " +
+                   "    option4Desc = " + MyQuotedString(budgetItem.option4Desc) + ", " +
+                   "    option5Desc = " + MyQuotedString(budgetItem.option5Desc) + ", " +
+                   "    option1Budget = " + budgetItem.option1Budget + ", " +
+                   "    option2Budget = " + budgetItem.option2Budget + ", " +
+                   "    option3Budget = " + budgetItem.option3Budget + ", " +
+                   "    option4Budget = " + budgetItem.option4Budget + ", " +
+                   "    option5Budget = " + budgetItem.option5Budget + ", " +
+                   "    optionSequenceNo = " + budgetItem.optionSequenceNo + " " +
+                   "WHERE holidayId = " + budgetItem.holidayId + " " +
+                   "AND budgetId = " + budgetItem.budgetId;
 
             return (executeSQL("updateBudgetItem", lSQL));
         }
@@ -460,7 +471,8 @@ class TableBudget extends TableBase
                     "  option2Budget, " +
                     "  option3Budget, " +
                     "  option4Budget, " +
-                    "  option5Budget " +
+                    "  option5Budget, " +
+                    "  optionSequenceNo " +
                     " " +
                     "FROM budget " +
                     "WHERE HolidayId = " + holidayId + " " +
@@ -523,6 +535,7 @@ class TableBudget extends TableBase
             budgetItem.option3Budget=Integer.parseInt(cursor.getString(26));
             budgetItem.option4Budget=Integer.parseInt(cursor.getString(27));
             budgetItem.option5Budget=Integer.parseInt(cursor.getString(28));
+            budgetItem.optionSequenceNo=Integer.parseInt(cursor.getString(29));
 
             budgetItem.origHolidayId=budgetItem.holidayId;
             budgetItem.origBudgetId=budgetItem.budgetId;
@@ -699,7 +712,8 @@ class TableBudget extends TableBase
             "  option2Budget, " +
             "  option3Budget, " +
             "  option4Budget, " +
-            "  option5Budget " +
+            "  option5Budget, " +
+            "  optionSequenceNo " +
             " " +
             "FROM budget " +
             "WHERE HolidayId = " + holidayId + " " +
