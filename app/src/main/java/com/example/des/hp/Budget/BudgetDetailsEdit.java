@@ -1,5 +1,6 @@
 package com.example.des.hp.Budget;
 
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
@@ -45,38 +46,26 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             grpBudgetUnpaid.setOnClickListener(this);
             imageView.setOnClickListener(this);
 
-            swUseOption.setVisibility(View.VISIBLE);
-
-            grpBudgetDescription1.setOnClickListener(this);
-            grpBudgetDescription2.setOnClickListener(this);
-            grpBudgetDescription3.setOnClickListener(this);
-            grpBudgetDescription4.setOnClickListener(this);
-            grpBudgetDescription5.setOnClickListener(this);
-            grpBudgetTotal1.setOnClickListener(this);
-            grpBudgetTotal2.setOnClickListener(this);
-            grpBudgetTotal3.setOnClickListener(this);
-            grpBudgetTotal4.setOnClickListener(this);
-            grpBudgetTotal5.setOnClickListener(this);
-            chkOption1.setOnClickListener(this);
-            chkOption2.setOnClickListener(this);
-            chkOption3.setOnClickListener(this);
-            chkOption4.setOnClickListener(this);
-            chkOption5.setOnClickListener(this);
-
-            swUseOption.setOnClickListener(new View.OnClickListener() {
+            txtBudgetOption.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View view) {
-                    if(swUseOption.isChecked())
+                public void onClick(View view)
+                {
+                    try
                     {
-                        svOptions.setVisibility(View.VISIBLE);
+                        Intent intent2=new Intent(getApplicationContext(), BudgetOptionList.class);
+                        intent2.putExtra("HOLIDAYID", budgetItem.holidayId);
+                        intent2.putExtra("BUDGETID", budgetItem.budgetId);
+                        intent2.putExtra("TITLE", budgetItem.budgetDescription);
+                        intent2.putExtra("SUBTITLE", "Budget Options");
+                        startActivity(intent2);
                     }
-                    else
+                    catch(Exception e)
                     {
-                        svOptions.setVisibility(View.GONE);
+                        ShowError("showBudget", e.getMessage());
                     }
                 }
             });
-
 
         }
         catch (Exception e)
@@ -85,20 +74,13 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
         }
     }
 
+
     //region showForm
     public void showForm()
     {
         super.showForm();
         try
         {
-            if(swUseOption.isChecked())
-            {
-                svOptions.setVisibility(View.VISIBLE);
-            }
-            else
-            {
-                svOptions.setVisibility(View.GONE);
-            }
         }
         catch (Exception e)
         {
@@ -157,51 +139,6 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
                 case R.id.imageViewSmall:
                     pickImage(view);
                     break;
-                case R.id.grpBudgetDescription1:
-                    pickBudgetOptionDesc(txtBudgetDescription1);
-                    break;
-                case R.id.grpBudgetDescription2:
-                    pickBudgetOptionDesc(txtBudgetDescription2);
-                    break;
-                case R.id.grpBudgetDescription3:
-                    pickBudgetOptionDesc(txtBudgetDescription3);
-                    break;
-                case R.id.grpBudgetDescription4:
-                    pickBudgetOptionDesc(txtBudgetDescription4);
-                    break;
-                case R.id.grpBudgetDescription5:
-                    pickBudgetOptionDesc(txtBudgetDescription5);
-                    break;
-                case R.id.grpBudgetTotal1:
-                    pickBudgetOptionTotal(txtBudgetTotal1);
-                    break;
-                case R.id.grpBudgetTotal2:
-                    pickBudgetOptionTotal(txtBudgetTotal2);
-                    break;
-                case R.id.grpBudgetTotal3:
-                    pickBudgetOptionTotal(txtBudgetTotal3);
-                    break;
-                case R.id.grpBudgetTotal4:
-                    pickBudgetOptionTotal(txtBudgetTotal4);
-                    break;
-                case R.id.grpBudgetTotal5:
-                    pickBudgetOptionTotal(txtBudgetTotal5);
-                    break;
-                case R.id.chkOption1:
-                    pickOption(chkOption1, txtBudgetDescription1, txtBudgetTotal1);
-                    break;
-                case R.id.chkOption2:
-                    pickOption(chkOption2, txtBudgetDescription2, txtBudgetTotal2);
-                    break;
-                case R.id.chkOption3:
-                    pickOption(chkOption3, txtBudgetDescription3, txtBudgetTotal3);
-                    break;
-                case R.id.chkOption4:
-                    pickOption(chkOption4, txtBudgetDescription4, txtBudgetTotal4);
-                    break;
-                case R.id.chkOption5:
-                    pickOption(chkOption5, txtBudgetDescription5, txtBudgetTotal5);
-                    break;
             }
         }
         catch (Exception e)
@@ -209,26 +146,6 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             ShowError("onClick", e.getMessage());
         }
         
-    }
-
-    public void pickOption(CheckBox checkBox, TextView desc, TextView total)
-    {
-        if(!checkBox.isChecked())
-            return;
-
-        if(checkBox != chkOption1)
-            chkOption1.setChecked(false);
-        if(checkBox != chkOption2)
-            chkOption2.setChecked(false);
-        if(checkBox != chkOption3)
-            chkOption3.setChecked(false);
-        if(checkBox != chkOption4)
-            chkOption4.setChecked(false);
-        if(checkBox != chkOption5)
-            chkOption5.setChecked(false);
-        addOption(desc.getText().toString());
-        txtBudgetTotal.setText(total.getText().toString());
-        calculateUnpaid();
     }
 
     public void BudgetDescriptionPicked(TextView view)
@@ -557,25 +474,6 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             budgetItem.fileBitmap = null;
             if (imageSet)
                 budgetItem.fileBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-
-            budgetItem.useOption = swUseOption.isChecked();
-            budgetItem.useOption1 = chkOption1.isChecked();
-            budgetItem.useOption2 = chkOption2.isChecked();
-            budgetItem.useOption3 = chkOption3.isChecked();
-            budgetItem.useOption4 = chkOption4.isChecked();
-            budgetItem.useOption5 = chkOption5.isChecked();
-
-            budgetItem.option1Desc = txtBudgetDescription1.getText().toString();
-            budgetItem.option2Desc = txtBudgetDescription2.getText().toString();
-            budgetItem.option3Desc = txtBudgetDescription3.getText().toString();
-            budgetItem.option4Desc = txtBudgetDescription4.getText().toString();
-            budgetItem.option5Desc = txtBudgetDescription5.getText().toString();
-
-            budgetItem.option1Budget = Integer.parseInt(removePoundSign(txtBudgetTotal1.getText().toString()));
-            budgetItem.option2Budget = Integer.parseInt(removePoundSign(txtBudgetTotal2.getText().toString()));
-            budgetItem.option3Budget = Integer.parseInt(removePoundSign(txtBudgetTotal3.getText().toString()));
-            budgetItem.option4Budget = Integer.parseInt(removePoundSign(txtBudgetTotal4.getText().toString()));
-            budgetItem.option5Budget = Integer.parseInt(removePoundSign(txtBudgetTotal5.getText().toString()));
 
             if (action.equals("add"))
             {

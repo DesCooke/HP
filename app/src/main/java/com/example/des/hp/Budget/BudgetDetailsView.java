@@ -39,33 +39,7 @@ public class BudgetDetailsView extends BaseActivity
     public LinearLayout grpBudgetTotal;
     public LinearLayout grpBudgetPaid;
     public LinearLayout grpBudgetUnpaid;
-    public Switch swUseOption;
-    public ScrollView svOptions;
-    public LinearLayout grpBudgetDescription1;
-    public LinearLayout grpBudgetDescription2;
-    public LinearLayout grpBudgetDescription3;
-    public LinearLayout grpBudgetDescription4;
-    public LinearLayout grpBudgetDescription5;
-    public LinearLayout grpBudgetTotal1;
-    public LinearLayout grpBudgetTotal2;
-    public LinearLayout grpBudgetTotal3;
-    public LinearLayout grpBudgetTotal4;
-    public LinearLayout grpBudgetTotal5;
-    public CheckBox chkOption1;
-    public CheckBox chkOption2;
-    public CheckBox chkOption3;
-    public CheckBox chkOption4;
-    public CheckBox chkOption5;
-    public TextView txtBudgetDescription1;
-    public TextView txtBudgetDescription2;
-    public TextView txtBudgetDescription3;
-    public TextView txtBudgetDescription4;
-    public TextView txtBudgetDescription5;
-    public TextView txtBudgetTotal1;
-    public TextView txtBudgetTotal2;
-    public TextView txtBudgetTotal3;
-    public TextView txtBudgetTotal4;
-    public TextView txtBudgetTotal5;
+    public TextView txtBudgetOption;
     //endregion
     
     //region Constructors/Destructors
@@ -92,35 +66,7 @@ public class BudgetDetailsView extends BaseActivity
             grpBudgetTotal = (LinearLayout) findViewById(R.id.grpBudgetTotal);
             grpBudgetPaid = (LinearLayout) findViewById(R.id.grpBudgetPaid);
             grpBudgetUnpaid = (LinearLayout) findViewById(R.id.grpBudgetUnpaid);
-            swUseOption = (Switch)findViewById(R.id.swUseOption);
-            svOptions = (ScrollView)findViewById(R.id.svOptions);
-            grpBudgetDescription1 = (LinearLayout)findViewById(R.id.grpBudgetDescription1);
-            grpBudgetDescription2 = (LinearLayout)findViewById(R.id.grpBudgetDescription2);
-            grpBudgetDescription3 = (LinearLayout)findViewById(R.id.grpBudgetDescription3);
-            grpBudgetDescription4 = (LinearLayout)findViewById(R.id.grpBudgetDescription4);
-            grpBudgetDescription5 = (LinearLayout)findViewById(R.id.grpBudgetDescription5);
-            grpBudgetTotal1 = (LinearLayout)findViewById(R.id.grpBudgetTotal1);
-            grpBudgetTotal2 = (LinearLayout)findViewById(R.id.grpBudgetTotal2);
-            grpBudgetTotal3 = (LinearLayout)findViewById(R.id.grpBudgetTotal3);
-            grpBudgetTotal4 = (LinearLayout)findViewById(R.id.grpBudgetTotal4);
-            grpBudgetTotal5 = (LinearLayout)findViewById(R.id.grpBudgetTotal5);
-            chkOption1 = (CheckBox)findViewById(R.id.chkOption1);
-            chkOption2 = (CheckBox)findViewById(R.id.chkOption2);
-            chkOption3 = (CheckBox)findViewById(R.id.chkOption3);
-            chkOption4 = (CheckBox)findViewById(R.id.chkOption4);
-            chkOption5 = (CheckBox)findViewById(R.id.chkOption5);
-            txtBudgetDescription1 = (TextView)findViewById(R.id.txtBudgetDescription1);
-            txtBudgetDescription2 = (TextView)findViewById(R.id.txtBudgetDescription2);
-            txtBudgetDescription3 = (TextView)findViewById(R.id.txtBudgetDescription3);
-            txtBudgetDescription4 = (TextView)findViewById(R.id.txtBudgetDescription4);
-            txtBudgetDescription5 = (TextView)findViewById(R.id.txtBudgetDescription5);
-            txtBudgetTotal1 = (TextView)findViewById(R.id.txtBudgetTotal1);
-            txtBudgetTotal2 = (TextView)findViewById(R.id.txtBudgetTotal2);
-            txtBudgetTotal3 = (TextView)findViewById(R.id.txtBudgetTotal3);
-            txtBudgetTotal4 = (TextView)findViewById(R.id.txtBudgetTotal4);
-            txtBudgetTotal5 = (TextView)findViewById(R.id.txtBudgetTotal5);
-
-            swUseOption.setVisibility(View.GONE);
+            txtBudgetOption = (TextView)findViewById(R.id.txtBudgetOption);
 
             afterCreate();
             
@@ -198,27 +144,22 @@ public class BudgetDetailsView extends BaseActivity
             txtBudgetUnpaid.setText(StringUtils.IntToMoneyString(budgetItem.budgetUnpaid));
             txtBudgetPaid.setText(StringUtils.IntToMoneyString(budgetItem.budgetPaid));
 
-            swUseOption.setChecked(budgetItem.useOption);
-
-            chkOption1.setChecked(budgetItem.useOption1);
-            chkOption2.setChecked(budgetItem.useOption2);
-            chkOption3.setChecked(budgetItem.useOption3);
-            chkOption4.setChecked(budgetItem.useOption4);
-            chkOption5.setChecked(budgetItem.useOption5);
-
-            txtBudgetDescription1.setText(budgetItem.option1Desc);
-            txtBudgetDescription2.setText(budgetItem.option2Desc);
-            txtBudgetDescription3.setText(budgetItem.option3Desc);
-            txtBudgetDescription4.setText(budgetItem.option4Desc);
-            txtBudgetDescription5.setText(budgetItem.option5Desc);
-
-            txtBudgetTotal1.setText(StringUtils.IntToMoneyString(budgetItem.option1Budget));
-            txtBudgetTotal2.setText(StringUtils.IntToMoneyString(budgetItem.option2Budget));
-            txtBudgetTotal3.setText(StringUtils.IntToMoneyString(budgetItem.option3Budget));
-            txtBudgetTotal4.setText(StringUtils.IntToMoneyString(budgetItem.option4Budget));
-            txtBudgetTotal5.setText(StringUtils.IntToMoneyString(budgetItem.option5Budget));
-
-            svOptions.setVisibility(View.GONE);
+            if(budgetItem.optionSequenceNo==0)
+            {
+                txtBudgetOption.setText("<none>");
+            }
+            else
+            {
+                BudgetOptionItem boi = new BudgetOptionItem();
+                if(databaseAccess().getBudgetOptionItemFromRowId(budgetItem.optionSequenceNo, boi))
+                {
+                    txtBudgetOption.setText(boi.optionDescription);
+                }
+                else
+                {
+                    txtBudgetOption.setText("<none>");
+                }
+            }
 
             afterShow();
         }

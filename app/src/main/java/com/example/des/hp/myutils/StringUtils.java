@@ -4,6 +4,10 @@ import java.util.Locale;
 
 public class StringUtils
 {
+    public static String IntToString(int argInt)
+    {
+        return(String.format(Locale.ENGLISH, "%d", argInt));
+    }
     public static String IntToMoneyString(int argInt)
     {
         return(String.format(Locale.ENGLISH, "£%d", argInt));

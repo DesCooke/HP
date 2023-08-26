@@ -59,6 +59,7 @@
         <activity android:name=".Tasks.TaskDetailsView"></activity>
         <activity android:name=".Tasks.TaskDetailsEdit"></activity>
         <activity android:name=".Budget.BudgetDetailsList"></activity>
+        <activity android:name=".Budget.BudgetOptionList"></activity>
         <activity android:name=".Budget.BudgetDetailsView"></activity>
         <activity android:name=".Budget.BudgetDetailsEdit"></activity>
         <activity android:name=".TipGroup.TipGroupDetailsList"></activity>

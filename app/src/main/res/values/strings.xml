@@ -106,7 +106,7 @@
     <string name="bus_details">Bus Details</string>
     <string name="checkbox">CheckBox</string>
     <string name="checkbox3">CheckBox</string>
-    <string name="description">Description</string>
+    <string name="description">Desc</string>
     <string name="journey_ends">Journey Ends</string>
     <string name="save">Save</string>
     <string name="attached_file">Attached File</string>
@@ -134,5 +134,6 @@
     <string name="ReservationTypeReserveOnTheDay">Book as early as possible on the day</string>
     <string name="ReservationTypeReserve180DaysInAdvance">Need to book in advance</string>
     <string name="ReservationTypeBooked">***Booked***</string>
+    <string name="caption_budget_option">Budget Option</string>
 
 </resources>
