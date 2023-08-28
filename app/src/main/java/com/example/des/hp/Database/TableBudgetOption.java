@@ -215,6 +215,29 @@ class TableBudgetOption extends TableBase
 
     }
 
+    public boolean DeleteAllForBudget(int holidayId, int budgetId)
+    {
+        try
+        {
+            if (IsValid() == false)
+                return (false);
+
+            String lSQL =
+            "DELETE FROM BudgetOption " +
+            "WHERE holidayId = " + holidayId + " " +
+            "AND budgetId = " + budgetId;
+
+            if (executeSQL("DeleteAllForBudget", lSQL) == false)
+                return (false);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteBudgetOptionItem", e.getMessage());
+        }
+        return (false);
+    }
     boolean updateBudgetOptionItem(BudgetOptionItem budgetOptionItem)
     {
         try

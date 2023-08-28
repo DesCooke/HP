@@ -1188,6 +1188,8 @@ public class DatabaseAccess extends SQLiteOpenHelper
             
             if (removeNote(budgetItem.holidayId, budgetItem.noteId) == false)
                 return (false);
+
+            tableBudgetOption.DeleteAllForBudget(budgetItem.holidayId, budgetItem.budgetId);
             
             return (tableBudget.deleteBudgetItem(budgetItem));
         }
