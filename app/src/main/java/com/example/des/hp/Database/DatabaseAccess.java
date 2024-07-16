@@ -100,17 +100,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
                 }
             }
             
-            File f = new File(MyFileUtils.MyDocuments() + "/" +
-                                res.getString(R.string.application_file_path) + "/" +
-                                res.getString(R.string.picture_path));
-            if (!f.exists())
-            {
-                if (!f.mkdir())
-                {
-                    myMessages().ShowMessageWithOk("DatabaseAccess()", "Unable to create directory " + "" + f.getName(), null);
-                }
-            }
-            
         }
         catch (Exception e)
         {

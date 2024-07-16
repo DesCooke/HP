@@ -686,6 +686,7 @@ public class BaseActivity extends AppCompatActivity
 
     public void displayProgramInfo()
     {
+        /*
         try
         {
             if(txtProgramInfo != null)
@@ -707,6 +708,8 @@ public class BaseActivity extends AppCompatActivity
         {
             ShowError("displayProgramInfo", e.getMessage());
         }
+        */
+
     }
 
     @Override
