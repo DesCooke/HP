@@ -1,7 +1,10 @@
 package com.example.des.hp.Attraction;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +15,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -19,10 +23,10 @@ import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.ViewHolder>
 {
-    private Context context;
-    public ArrayList<AttractionItem> data = null;
+    private final Context context;
+    public ArrayList<AttractionItem> data;
     private OnItemClickListener mOnItemClickListener;
-    private ImageUtils imageUtils;
+    private final ImageUtils imageUtils;
     
     
     interface OnItemClickListener
@@ -35,7 +39,7 @@ class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.ViewHolde
         this.mOnItemClickListener = mItemClickListener;
     }
     
-    class ViewHolder extends RecyclerView.ViewHolder
+    static class ViewHolder extends RecyclerView.ViewHolder
     {
         // each data item is just a string in this case
         ImageView attractionImage;
@@ -61,6 +65,7 @@ class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.ViewHolde
         data = items;
     }
     
+    @NonNull
     @Override
     public AttractionAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
@@ -89,15 +94,10 @@ class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.ViewHolde
         }
         
         
-        holder.attractionItemCell.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
+        holder.attractionItemCell.setOnClickListener(view -> {
+            if (mOnItemClickListener != null)
             {
-                if (mOnItemClickListener != null)
-                {
-                    mOnItemClickListener.onItemClick(view, c);
-                }
+                mOnItemClickListener.onItemClick(view, c);
             }
         });
     }
@@ -111,23 +111,28 @@ class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.ViewHolde
     public void add(int position, AttractionItem mail)
     {
         data.add(position, mail);
-        notifyDataSetChanged();
+        notifyItemInserted(position);
     }
     
-    boolean onItemMove()
+    void onItemMove()
     {
         updateGlobalData(data);
-        return true;
     }
     
+    @SuppressLint("NotifyDataSetChanged")
     private void updateGlobalData(ArrayList<AttractionItem> items)
     {
         for (int i = 0; i < items.size(); i++)
         {
             items.get(i).sequenceNo = i + 1;
         }
-        if (!databaseAccess().updateAttractionItems(items))
-            return;
+
+        try(DatabaseAccess da = databaseAccess()){
+            if(!da.updateAttractionItems(items)){
+                return;
+            }
+        }
+
         notifyDataSetChanged();
     }
     
