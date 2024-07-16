@@ -12,7 +12,6 @@
     android:anyDensity="true"/>
 
     <application
-        android:allowBackup="true"
         android:icon="@drawable/plane"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -32,24 +31,6 @@
         <activity android:name=".Day.DayDetailsEdit"></activity>
         <activity android:name=".Day.DayDetailsView"></activity>
         <activity android:name=".Day.DayDetailsList"></activity>
-        <activity android:name=".Schedule.Flight.FlightDetailsEdit"></activity>
-        <activity android:name=".Schedule.Flight.FlightDetailsView"></activity>
-        <activity android:name=".Schedule.Hotel.HotelDetailsEdit"></activity>
-        <activity android:name=".Schedule.Hotel.HotelDetailsView"></activity>
-        <activity android:name=".Schedule.Restaurant.RestaurantDetailsEdit"></activity>
-        <activity android:name=".Schedule.Restaurant.RestaurantDetailsView"></activity>
-        <activity android:name=".Schedule.Cinema.CinemaDetailsEdit"></activity>
-        <activity android:name=".Schedule.Cinema.CinemaDetailsView"></activity>
-        <activity android:name=".Schedule.Park.ParkDetailsEdit"></activity>
-        <activity android:name=".Schedule.Park.ParkDetailsView"></activity>
-        <activity android:name=".Schedule.Parade.ParadeDetailsEdit"></activity>
-        <activity android:name=".Schedule.Parade.ParadeDetailsView"></activity>
-        <activity android:name=".Schedule.Other.OtherDetailsEdit"></activity>
-        <activity android:name=".Schedule.Other.OtherDetailsView"></activity>
-        <activity android:name=".Schedule.Show.ShowDetailsEdit"></activity>
-        <activity android:name=".Schedule.Show.ShowDetailsView"></activity>
-        <activity android:name=".Schedule.Ride.RideDetailsEdit"></activity>
-        <activity android:name=".Schedule.Ride.RideDetailsView"></activity>
         <activity android:name=".Schedule.GeneralAttraction.GeneralAttractionDetailsEdit"></activity>
         <activity android:name=".Schedule.GeneralAttraction.GeneralAttractionDetailsView"></activity>
         <activity android:name=".ExtraFiles.ExtraFilesDetailsList"></activity>
