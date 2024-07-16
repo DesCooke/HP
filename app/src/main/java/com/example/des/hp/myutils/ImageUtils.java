@@ -12,6 +12,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.widget.ImageView;
 
+import com.example.des.hp.Holiday.HolidayItem;
 import com.example.des.hp.InternalFiles.InternalFileItem;
 import com.example.des.hp.InternalImages.InternalImageItem;
 import com.example.des.hp.MainActivity;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyApiSpecific.myApiSpecific;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
@@ -118,6 +120,26 @@ public class ImageUtils
 
     public String GetHolidayDir(int holidayId)
     {
+        HolidayItem holidayItem = new HolidayItem();
+        databaseAccess().getHolidayItem(holidayId, holidayItem);
+        String holidayDirName=holidayItem.holidayName.replace(' ', '_');
+        holidayDirName=holidayDirName.replace('#', '_');
+        holidayDirName=holidayDirName.replace('%', '_');
+        holidayDirName=holidayDirName.replace('&', '_');
+        holidayDirName=holidayDirName.replace('{', '_');
+        holidayDirName=holidayDirName.replace('}', '_');
+        holidayDirName=holidayDirName.replace('\\', '_');
+        holidayDirName=holidayDirName.replace('*', '_');
+        holidayDirName=holidayDirName.replace('?', '_');
+        holidayDirName=holidayDirName.replace('/', '_');
+        holidayDirName=holidayDirName.replace('$', '_');
+        holidayDirName=holidayDirName.replace('!', '_');
+        holidayDirName=holidayDirName.replace('"', '_');
+        holidayDirName=holidayDirName.replace('@', '_');
+        holidayDirName=holidayDirName.replace(':', '_');
+        holidayDirName=holidayDirName.replace('!', '_');
+        holidayDirName=holidayDirName.replace('=', '_');
+
         String lDirName = MyFileUtils.MyDocuments();
         File lFile = new File(lDirName);
         if (!lFile.isDirectory())
@@ -131,7 +153,7 @@ public class ImageUtils
 
         lDirName = MyFileUtils.MyDocuments() + "/" +
                 res.getString(R.string.application_file_path) + "/" +
-                holidayId;
+                holidayDirName;
         lFile = new File(lDirName);
         if (!lFile.isDirectory())
             lFile.mkdir();
