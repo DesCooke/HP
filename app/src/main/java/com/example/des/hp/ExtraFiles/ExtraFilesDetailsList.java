@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.ImageUtils;
@@ -57,8 +58,11 @@ public class ExtraFilesDetailsList extends BaseActivity
             }
 
             extraFilesList=new ArrayList<>();
-            if(!databaseAccess().getExtraFilesList(fileGroupId, extraFilesList))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.getExtraFilesList(fileGroupId, extraFilesList))
+                    return;
+            }
             extraFilesAdapter=new ExtraFilesAdapter(this, extraFilesList);
 
             CreateRecyclerView(R.id.extraFilesListView, extraFilesAdapter);

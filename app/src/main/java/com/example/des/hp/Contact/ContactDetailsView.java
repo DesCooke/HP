@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 
@@ -104,9 +105,12 @@ public class ContactDetailsView extends BaseActivity
         try
         {
             contactItem = new ContactItem();
-            if (!databaseAccess().getContactItem(holidayId, contactId, contactItem))
-                return;
-            
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if (!da.getContactItem(holidayId, contactId, contactItem))
+                    return;
+            }
+
             if (title == null || (title.length() == 0))
             {
                 SetTitles(contactItem.contactDescription, "");
@@ -149,7 +153,10 @@ public class ContactDetailsView extends BaseActivity
         try
         {
             contactItem.noteId = pNoteId;
-            databaseAccess().updateContactItem(contactItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateContactItem(contactItem);
+            }
         }
         catch (Exception e)
         {
@@ -178,7 +185,10 @@ public class ContactDetailsView extends BaseActivity
         try
         {
             contactItem.infoId = pInfoId;
-            databaseAccess().updateContactItem(contactItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateContactItem(contactItem);
+            }
         }
         catch (Exception e)
         {
@@ -209,8 +219,11 @@ public class ContactDetailsView extends BaseActivity
     {
         try
         {
-            if (!databaseAccess().deleteContactItem(contactItem))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if (!da.deleteContactItem(contactItem))
+                    return;
+            }
             finish();
         }
         catch (Exception e)

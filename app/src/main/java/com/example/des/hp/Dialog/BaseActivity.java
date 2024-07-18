@@ -49,8 +49,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -71,19 +69,15 @@ import android.widget.TextView;
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
 import com.example.des.hp.ExtraFiles.ExtraFilesItem;
-import com.example.des.hp.InternalFiles.InternalFileItem;
 import com.example.des.hp.InternalImages.InternalImageItem;
 import com.example.des.hp.InternalImages.InternalImageList;
-import com.example.des.hp.MainActivity;
 import com.example.des.hp.Notes.NoteEdit;
 import com.example.des.hp.Notes.NoteItem;
-import com.example.des.hp.Notes.NoteView;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.DialogWithYesNoFragment;
 import com.example.des.hp.myutils.MyBitmap;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyMessages;
-import com.example.des.hp.myutils.MyString;
 import com.example.des.hp.thirdpartyutils.BadgeView;
 
 import java.util.ArrayList;
@@ -174,8 +168,11 @@ public class BaseActivity extends AppCompatActivity
             if(lNoteId == 0)
             {
                 MyInt myInt=new MyInt();
-                if(!databaseAccess().getNextNoteId(holidayId, myInt))
-                    return;
+                try(DatabaseAccess da = databaseAccess();)
+                {
+                    if(!da.getNextNoteId(holidayId, myInt))
+                        return;
+                }
                 lNoteId=myInt.Value;
                 setNoteId(lNoteId);
             }
@@ -407,16 +404,19 @@ public class BaseActivity extends AppCompatActivity
                         {
                             MyInt myInt=new MyInt();
 
-                            if(!databaseAccess().getNextExtraFilesId(fileGroupId, myInt))
-                                return;
-                            extraFilesItem.fileId=myInt.Value;
+                            try(DatabaseAccess da = databaseAccess();)
+                            {
+                                if(!da.getNextExtraFilesId(fileGroupId, myInt))
+                                    return;
+                                extraFilesItem.fileId=myInt.Value;
 
-                            if(!databaseAccess().getNextExtraFilesSequenceNo(fileGroupId, myInt))
-                                return;
-                            extraFilesItem.sequenceNo=myInt.Value;
+                                if(!da.getNextExtraFilesSequenceNo(fileGroupId, myInt))
+                                    return;
+                                extraFilesItem.sequenceNo=myInt.Value;
 
-                            if(!databaseAccess().addExtraFilesItem(extraFilesItem))
-                                return;
+                                if(!da.addExtraFilesItem(extraFilesItem))
+                                    return;
+                            }
                         }
 
 
@@ -574,8 +574,11 @@ public class BaseActivity extends AppCompatActivity
             if(lInfoId == 0)
             {
                 MyInt myInt=new MyInt();
-                if(!databaseAccess().getNextFileGroupId(myInt))
-                    return;
+                try(DatabaseAccess da = databaseAccess();)
+                {
+                    if(!da.getNextFileGroupId(myInt))
+                        return;
+                }
                 lInfoId=myInt.Value;
                 setInfoId(lInfoId);
             }
@@ -602,8 +605,11 @@ public class BaseActivity extends AppCompatActivity
                 int lInfoId=getInfoId();
                 if(lInfoId > 0)
                 {
-                    if(!databaseAccess().getExtraFilesCount(lInfoId, lFileCount))
-                        return;
+                    try(DatabaseAccess da = databaseAccess();)
+                    {
+                        if(!da.getExtraFilesCount(lInfoId, lFileCount))
+                            return;
+                    }
                 }
                 btnShowInfoBadge.setText(String.format(Locale.getDefault(), "%d", lFileCount.Value));
 
@@ -632,8 +638,11 @@ public class BaseActivity extends AppCompatActivity
             {
                 int lNoteId=getNoteId();
                 NoteItem noteItem=new NoteItem();
-                if(!databaseAccess().getNoteItem(holidayId, lNoteId, noteItem))
-                    return;
+                try(DatabaseAccess da = databaseAccess();)
+                {
+                    if(!da.getNoteItem(holidayId, lNoteId, noteItem))
+                        return;
+                }
                 if(noteItem.notes.length() == 0)
                 {
                     myColor().SetImageButtonTint(btnShowNotes, R.color.colorDisabled);
@@ -655,7 +664,6 @@ public class BaseActivity extends AppCompatActivity
         {
             displayShowInfo();
             displayShowNotes();
-            displayProgramInfo();
             handleImage();
         }
         catch(Exception e)
@@ -671,44 +679,16 @@ public class BaseActivity extends AppCompatActivity
             if(imageView == null)
                 return;
 
-            if(hideImageIfEmpty == false)
+            if(!hideImageIfEmpty)
                 return;
 
-            if(imageSet == false)
+            if(!imageSet)
                 imageView.setVisibility(View.GONE);
         }
         catch(Exception e)
         {
             ShowError("handleImage", e.getMessage());
         }
-
-    }
-
-    public void displayProgramInfo()
-    {
-        /*
-        try
-        {
-            if(txtProgramInfo != null)
-            {
-                int imageListCount=0;
-                ArrayList<InternalImageItem> internalImageList=imageUtils().listInternalImages(holidayId);
-                if(internalImageList != null)
-                    imageListCount=internalImageList.size();
-
-                int fileListCount=0;
-                ArrayList<InternalFileItem> internalFileList=imageUtils().listInternalFiles(holidayId);
-                if(internalFileList != null)
-                    fileListCount=internalFileList.size();
-
-                txtProgramInfo.setText("Class: " + getClass().getSimpleName() + ", " + "View: " + layoutName + ", " + "Program Version: " + getString(R.string.program_version) + ", " + "Date: " + getString(R.string.program_date) + ", " + "Database Version: " + String.valueOf(DatabaseAccess.DATABASE_VERSION) + ", " + "Image Count: " + String.valueOf(imageListCount) + ", " + "File Count: " + String.valueOf(fileListCount));
-            }
-        }
-        catch(Exception e)
-        {
-            ShowError("displayProgramInfo", e.getMessage());
-        }
-        */
 
     }
 

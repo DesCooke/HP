@@ -17,6 +17,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.des.hp.Budget.BudgetDetailsList;
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Holiday.HolidayItem;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.R;
@@ -174,7 +175,7 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
     {
         super.showForm();
         boolean viewOnlyForm=false;
-        try
+        try(DatabaseAccess da = databaseAccess();)
         {
             if(action != null)
             {
@@ -195,7 +196,7 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
             int lNoteId = scheduleItem.noteId;
             if(lNoteId != 0)
             {
-                if(databaseAccess().getNoteItem(holidayId, lNoteId, noteItem))
+                if(da.getNoteItem(holidayId, lNoteId, noteItem))
                 {
                     txtNotes.setText(noteItem.notes);
                     txtNotes.setVisibility(View.VISIBLE);
@@ -220,7 +221,7 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
                 scenicRating.setVisibility(View.GONE);
 
             HolidayItem holidayItem = new HolidayItem();
-            databaseAccess().getHolidayItem(holidayId, holidayItem);
+            da.getHolidayItem(holidayId, holidayItem);
 
             radUnknown.setChecked(false);
             radWalkIn.setChecked(false);

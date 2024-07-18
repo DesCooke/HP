@@ -6,6 +6,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 
@@ -60,9 +61,12 @@ public class AttractionAreaView extends BaseActivity
         try
         {
             attractionAreaItem = new AttractionAreaItem();
-            if (!databaseAccess().getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
-                return;
-            
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if (!da.getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
+                    return;
+            }
+
             txtAttractionAreaDescription.setText(attractionAreaItem.attractionAreaDescription);
             
             SetImage(attractionAreaItem.attractionAreaPicture);
@@ -96,7 +100,10 @@ public class AttractionAreaView extends BaseActivity
         try
         {
             attractionAreaItem.noteId = pNoteId;
-            databaseAccess().updateAttractionAreaItem(attractionAreaItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateAttractionAreaItem(attractionAreaItem);
+            }
         }
         catch (Exception e)
         {
@@ -124,7 +131,10 @@ public class AttractionAreaView extends BaseActivity
         try
         {
             attractionAreaItem.infoId = pInfoId;
-            databaseAccess().updateAttractionAreaItem(attractionAreaItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateAttractionAreaItem(attractionAreaItem);
+            }
         }
         catch (Exception e)
         {

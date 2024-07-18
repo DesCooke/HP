@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -125,8 +126,11 @@ class AttractionAreaAdapter extends RecyclerView.Adapter<AttractionAreaAdapter.V
         {
             items.get(i).sequenceNo = i + 1;
         }
-        if (!databaseAccess().updateAttractionAreaItems(items))
-            return;
+        try(DatabaseAccess da = databaseAccess();)
+        {
+            if (!da.updateAttractionAreaItems(items))
+                return;
+        }
         notifyDataSetChanged();
     }
     

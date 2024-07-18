@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -107,7 +108,7 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
             dialogWithEditTextFragment =
                 DialogWithEditTextFragment.newInstance
                     (
-                        getFragmentManager(),     // for the transaction bit
+                            getSupportFragmentManager(),     // for the transaction bit
                         "hihi",            // unique name for this dialog type
                         "Contact Description",    // form caption
                         "Description",             // form message
@@ -131,7 +132,7 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
     //region Saving
     public void saveSchedule(View view)
     {
-        try
+        try(DatabaseAccess da = databaseAccess();)
         {
             myMessages().ShowMessageShort("Saving " + txtContactDescription.getText().toString());
             
@@ -152,16 +153,16 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
             if (action.equals("add"))
             {
                 contactItem.holidayId = holidayId;
-                
-                if (!databaseAccess().getNextContactId(holidayId, myInt))
+
+                if (!da.getNextContactId(holidayId, myInt))
                     return;
                 contactItem.contactId = myInt.Value;
                 
-                if (!databaseAccess().getNextContactSequenceNo(holidayId, myInt))
+                if (!da.getNextContactSequenceNo(holidayId, myInt))
                     return;
                 contactItem.sequenceNo = myInt.Value;
                 
-                if (!databaseAccess().addContactItem(contactItem))
+                if (!da.addContactItem(contactItem))
                     return;
             }
             
@@ -169,7 +170,7 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
             {
                 contactItem.holidayId = holidayId;
                 contactItem.contactId = contactId;
-                if (!databaseAccess().updateContactItem(contactItem))
+                if (!da.updateContactItem(contactItem))
                     return;
             }
             

@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 
@@ -86,8 +87,11 @@ public class BudgetDetailsList extends BaseActivity
             allowCellMove = true;
             
             budgetList = new ArrayList<>();
-            if (!databaseAccess().getBudgetList(holidayId, budgetList))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if (!da.getBudgetList(holidayId, budgetList))
+                    return;
+            }
             budgetAdapter = new BudgetAdapter(this, budgetList);
             
             CreateRecyclerView(R.id.budgetListView, budgetAdapter);
@@ -95,19 +99,15 @@ public class BudgetDetailsList extends BaseActivity
             budgetAdapter.setOnItemClickListener(new BudgetAdapter.OnItemClickListener()
             {
                 @Override
-                public void onItemClick(View view, BudgetItem obj)
-                {
-//                    if (!obj.budgetDescription.equals(getString(R.string.caption_budget_total_marker)))
-  //                  {
-                        Intent intent = new Intent(getApplicationContext(), BudgetDetailsView.class);
-                        intent.putExtra("ACTION", "view");
-                        intent.putExtra("HOLIDAYID", obj.holidayId);
-                        intent.putExtra("BUDGETID", obj.budgetId);
-                        intent.putExtra("TITLE", title + "/" + subTitle);
-                        intent.putExtra("SUBTITLE", obj.budgetDescription);
-                        
-                        startActivity(intent);
-    //                }
+                public void onItemClick(View view, BudgetItem obj) {
+                    Intent intent = new Intent(getApplicationContext(), BudgetDetailsView.class);
+                    intent.putExtra("ACTION", "view");
+                    intent.putExtra("HOLIDAYID", obj.holidayId);
+                    intent.putExtra("BUDGETID", obj.budgetId);
+                    intent.putExtra("TITLE", title + "/" + subTitle);
+                    intent.putExtra("SUBTITLE", obj.budgetDescription);
+
+                    startActivity(intent);
                 }
             });
             

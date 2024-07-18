@@ -1,9 +1,9 @@
 package com.example.des.hp.myutils;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,7 +25,7 @@ public class DialogWithEditTextFragment extends DialogFragment
     private String title;
     private String message;
     private int imageIcon;
-    private static DialogWithEditTextFragment dialogWithEditTextFragment;
+    private DialogWithEditTextFragment dialogWithEditTextFragment;
     private static String dialogTag;
     private static FragmentTransaction fragmentTransaction;
     private EditText editText;
@@ -57,7 +57,7 @@ public class DialogWithEditTextFragment extends DialogFragment
 
     public static DialogWithEditTextFragment newInstance
       (
-        FragmentManager fm, 
+        FragmentManager fm,
         String tag,
         String argTitle,
         String argMessage,
@@ -81,34 +81,34 @@ public class DialogWithEditTextFragment extends DialogFragment
 
 
         // let's create a new one - giving all the defaults
-        dialogWithEditTextFragment = new DialogWithEditTextFragment();
-        dialogWithEditTextFragment.context = context;
-        dialogWithEditTextFragment.myKeyboard = new MyKeyboard(context);
-        dialogWithEditTextFragment.numericKeypad = numericKeypad;
+        DialogWithEditTextFragment new1 = new DialogWithEditTextFragment();
+        new1.context = context;
+        new1.myKeyboard = new MyKeyboard(context);
+        new1.numericKeypad = numericKeypad;
 
         if(argOnOkClick==null)
         {
           // default the yes click
-          dialogWithEditTextFragment.okClick = new View.OnClickListener()
+            new1.okClick = new View.OnClickListener()
           {
               public void onClick(View view)
               {
-                  dialogWithEditTextFragment.dismiss();
+                  new1.dismiss();
               }
           };
         }
         else
         {
-          dialogWithEditTextFragment.okClick = argOnOkClick;
+            new1.okClick = argOnOkClick;
         }
 
-        dialogWithEditTextFragment.imageIcon = -1;
-        dialogWithEditTextFragment.title = argTitle;
-        dialogWithEditTextFragment.message = argMessage;
-        dialogWithEditTextFragment.imageIcon = argImageIcon;
-        dialogWithEditTextFragment.initialText = argInitialText;
+        new1.imageIcon = -1;
+        new1.title = argTitle;
+        new1.message = argMessage;
+        new1.imageIcon = argImageIcon;
+        new1.initialText = argInitialText;
 
-        return dialogWithEditTextFragment;
+        return new1;
     }
 
     @Override
@@ -119,7 +119,15 @@ public class DialogWithEditTextFragment extends DialogFragment
 
     public void showIt()
     {
-        show(fragmentTransaction, dialogTag);
+        try
+        {
+            show(fragmentTransaction, dialogTag);
+        }
+        catch (Exception e)
+        {
+            ShowError("showIt", e.getMessage());
+        }
+
     }
 
     @Override
@@ -142,12 +150,12 @@ public class DialogWithEditTextFragment extends DialogFragment
 
             if(numericKeypad)
             {
-                if (myKeyboard.showNumeric(getDialog(), editText) == false)
+                if (!myKeyboard.showNumeric(getDialog(), editText))
                     return v;
             }
             else
             {
-                if (myKeyboard.show(getDialog()) == false)
+                if (!myKeyboard.show(getDialog()))
                     return v;
             }
 
@@ -169,4 +177,5 @@ public class DialogWithEditTextFragment extends DialogFragment
 
         return v;
     }
+
 }

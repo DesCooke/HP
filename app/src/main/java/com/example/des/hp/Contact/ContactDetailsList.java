@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 
@@ -86,8 +87,11 @@ public class ContactDetailsList extends BaseActivity
             allowCellMove = true;
             
             contactList = new ArrayList<>();
-            if (!databaseAccess().getContactList(holidayId, contactList))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if (!da.getContactList(holidayId, contactList))
+                    return;
+            }
             contactAdapter = new ContactAdapter(this, contactList);
             
             CreateRecyclerView(R.id.contactListView, contactAdapter);

@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.des.hp.Budget.BudgetDetailsList;
 import com.example.des.hp.Contact.ContactDetailsList;
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.TipGroup.*;
 import com.example.des.hp.Attraction.*;
@@ -244,11 +245,14 @@ public class HolidayDetailsView extends BaseActivity
             if(holidayItem.mapFileGroupId == 0)
             {
                 MyInt myInt=new MyInt();
-                if(!databaseAccess().getNextFileGroupId(myInt))
-                    return;
-                holidayItem.mapFileGroupId=myInt.Value;
-                if(!databaseAccess().updateHolidayItem(holidayItem))
-                    return;
+                try(DatabaseAccess da = databaseAccess();)
+                {
+                    if(!da.getNextFileGroupId(myInt))
+                        return;
+                    holidayItem.mapFileGroupId=myInt.Value;
+                    if(!da.updateHolidayItem(holidayItem))
+                        return;
+                }
             }
             intent2.putExtra("FILEGROUPID", holidayItem.mapFileGroupId);
             intent2.putExtra("HOLIDAYID", holidayItem.holidayId);
@@ -274,46 +278,50 @@ public class HolidayDetailsView extends BaseActivity
             MyInt myInt=new MyInt();
 
             holidayItem=new HolidayItem();
-            if(!databaseAccess().getHolidayItem(holidayId, holidayItem))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
 
-            SetTitles(holidayItem.holidayName, "Holiday");
+                if(!da.getHolidayItem(holidayId, holidayItem))
+                    return;
 
-            if(!databaseAccess().getDayCount(holidayId, myInt))
-                return;
-            int dayCount=myInt.Value;
-            itineraryBadge.setText("Days (" + Integer.toString(dayCount) + ")");
+                SetTitles(holidayItem.holidayName, "Holiday");
 
-            if(!databaseAccess().getExtraFilesCount(holidayItem.mapFileGroupId, myInt))
-                return;
-            int mapCount=myInt.Value;
-            mapBadge.setText("Maps (" + Integer.toString(mapCount) + ")");
+                if(!da.getDayCount(holidayId, myInt))
+                    return;
+                int dayCount=myInt.Value;
+                itineraryBadge.setText("Days (" + Integer.toString(dayCount) + ")");
 
-            if(!databaseAccess().getTaskCount(holidayItem.holidayId, myInt))
-                return;
-            int taskCount=myInt.Value;
-            taskBadge.setText("Tasks (" + Integer.toString(taskCount) + ")");
+                if(!da.getExtraFilesCount(holidayItem.mapFileGroupId, myInt))
+                    return;
+                int mapCount=myInt.Value;
+                mapBadge.setText("Maps (" + Integer.toString(mapCount) + ")");
 
-            if(!databaseAccess().getBudgetCount(holidayItem.holidayId, myInt))
-                return;
-            int budgetCount=myInt.Value;
-            budgetBadge.setText("Budget (" + Integer.toString(budgetCount) + ")");
+                if(!da.getTaskCount(holidayItem.holidayId, myInt))
+                    return;
+                int taskCount=myInt.Value;
+                taskBadge.setText("Tasks (" + Integer.toString(taskCount) + ")");
 
-            if(!databaseAccess().getTipsCount(holidayItem.holidayId, myInt))
-                return;
-            int tipsCount=myInt.Value;
-            tipsBadge.setText("Tips (" + Integer.toString(tipsCount) + ")");
+                if(!da.getBudgetCount(holidayItem.holidayId, myInt))
+                    return;
+                int budgetCount=myInt.Value;
+                budgetBadge.setText("Budget (" + Integer.toString(budgetCount) + ")");
 
-            if(!databaseAccess().getAttractionsCount(holidayItem.holidayId, myInt))
-                return;
-            int attractionsCount=myInt.Value;
-            attractionsBadge.setText("Attractions (" + Integer.toString(attractionsCount) + ")");
+                if(!da.getTipsCount(holidayItem.holidayId, myInt))
+                    return;
+                int tipsCount=myInt.Value;
+                tipsBadge.setText("Tips (" + Integer.toString(tipsCount) + ")");
 
-            if(!databaseAccess().getContactCount(holidayItem.holidayId, myInt))
-                return;
-            int contactCount=myInt.Value;
-            contactsBadge.setText("Contacts (" + Integer.toString(contactCount) + ")");
+                if(!da.getAttractionsCount(holidayItem.holidayId, myInt))
+                    return;
+                int attractionsCount=myInt.Value;
+                attractionsBadge.setText("Attractions (" + Integer.toString(attractionsCount) + ")");
 
+                if(!da.getContactCount(holidayItem.holidayId, myInt))
+                    return;
+                int contactCount=myInt.Value;
+                contactsBadge.setText("Contacts (" + Integer.toString(contactCount) + ")");
+
+            }
             SetImage(holidayItem.holidayPicture);
 
             if(!holidayItem.dateKnown)
@@ -388,8 +396,11 @@ public class HolidayDetailsView extends BaseActivity
     {
         try
         {
-            if(!databaseAccess().deleteHolidayItem(holidayItem))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.deleteHolidayItem(holidayItem))
+                    return;
+            }
             finish();
         }
         catch(Exception e)
@@ -457,7 +468,10 @@ public class HolidayDetailsView extends BaseActivity
         try
         {
             holidayItem.noteId=noteId;
-            databaseAccess().updateHolidayItem(holidayItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateHolidayItem(holidayItem);
+            }
         }
         catch(Exception e)
         {
@@ -485,7 +499,10 @@ public class HolidayDetailsView extends BaseActivity
         try
         {
             holidayItem.infoId=infoId;
-            databaseAccess().updateHolidayItem(holidayItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateHolidayItem(holidayItem);
+            }
         }
         catch(Exception e)
         {

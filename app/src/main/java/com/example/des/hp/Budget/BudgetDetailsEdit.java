@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
@@ -181,7 +182,8 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             };
             
             
-            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(
+                getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
                 "Budget Description",    // form caption
                 "Description",             // form message
@@ -210,7 +212,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             };
 
 
-            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                     "hihi",            // unique name for this dialog type
                     "Option Description",    // form caption
                     "Description",             // form message
@@ -297,7 +299,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             };
             
             
-            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
                 "Budget Total",    // form caption
                 "Total",             // form message
@@ -339,7 +341,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             };
 
 
-            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                     "hihi",            // unique name for this dialog type
                     "Budget Option",    // form caption
                     "Total",             // form message
@@ -368,7 +370,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             };
             
             
-            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
                 "Budget Paid",    // form caption
                 "Paid",             // form message
@@ -413,7 +415,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             };
             
             
-            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
                 "Budget Unpaid",    // form caption
                 "Unpaid",             // form message
@@ -432,7 +434,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
     //region Saving
     public void saveSchedule(View view)
     {
-        try
+        try(DatabaseAccess da = databaseAccess();)
         {
             myMessages().ShowMessageShort("Saving " + txtBudgetDescription.getText().toString());
             
@@ -453,24 +455,23 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             if (imageSet)
                 budgetItem.fileBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
-            if (action.equals("add"))
-            {
+            if (action.equals("add")) {
                 budgetItem.holidayId = holidayId;
-                if (!databaseAccess().getNextBudgetId(holidayId, myInt))
+                if (!da.getNextBudgetId(holidayId, myInt))
                     return;
                 budgetItem.budgetId = myInt.Value;
-                
-                if (!databaseAccess().getNextBudgetSequenceNo(holidayId, myInt))
+
+                if (!da.getNextBudgetSequenceNo(holidayId, myInt))
                     return;
                 budgetItem.sequenceNo = myInt.Value;
-                
-                if (!databaseAccess().addBudgetItem(budgetItem))
+
+                if (!da.addBudgetItem(budgetItem))
                     return;
             }
             
             if (action.equals("modify"))
             {
-                if (!databaseAccess().updateBudgetItem(budgetItem))
+                if (!da.updateBudgetItem(budgetItem))
                     return;
             }
             

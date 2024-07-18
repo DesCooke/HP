@@ -222,8 +222,13 @@ class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
         {
             items.get(i).sequenceNo=i + 1;
         }
-        if(!databaseAccess().updateDayItems(items))
-            return;
+
+        try(DatabaseAccess da = databaseAccess();)
+        {
+            if(!da.updateDayItems(items))
+                return;
+        }
+
         notifyDataSetChanged();
     }
 

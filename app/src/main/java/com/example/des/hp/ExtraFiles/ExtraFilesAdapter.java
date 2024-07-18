@@ -104,7 +104,10 @@ class ExtraFilesAdapter extends RecyclerView.Adapter<ExtraFilesAdapter.ViewHolde
     public void DeleteItemAtPos(int position)
     {
         ExtraFilesItem item=getItem(position);
-        DatabaseAccess.databaseAccess().deleteExtraFilesItem(item);
+        try(DatabaseAccess da = databaseAccess();)
+        {
+            da.deleteExtraFilesItem(item);
+        }
         data.remove(position);
         notifyDataSetChanged();
     }
@@ -132,8 +135,11 @@ class ExtraFilesAdapter extends RecyclerView.Adapter<ExtraFilesAdapter.ViewHolde
         {
             items.get(i).sequenceNo=i + 1;
         }
-        if(!databaseAccess().updateExtraFilesItems(items))
-            return;
+        try(DatabaseAccess da = databaseAccess();)
+        {
+            if(!da.updateExtraFilesItems(items))
+                return;
+        }
         notifyDataSetChanged();
     }
 

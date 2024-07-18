@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.des.hp.Attraction.AttractionDetailsEdit;
 import com.example.des.hp.Attraction.AttractionItem;
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
 import com.example.des.hp.Notes.NoteView;
@@ -117,16 +118,16 @@ public class AttractionAreaDetailsList extends BaseActivity
     public void showForm()
     {
         super.showForm();
-        try
+        try(DatabaseAccess da = databaseAccess();)
         {
             allowCellMove = true;
             
             attractionItem = new AttractionItem();
-            if (!databaseAccess().getAttractionItem(holidayId, attractionId, attractionItem))
+            if (!da.getAttractionItem(holidayId, attractionId, attractionItem))
                 return;
             
             attractionAreaList = new ArrayList<>();
-            if (!databaseAccess().getAttractionAreaList(holidayId, attractionId, attractionAreaList))
+            if (!da.getAttractionAreaList(holidayId, attractionId, attractionAreaList))
                 return;
             
             SetImage(attractionItem.attractionPicture);
@@ -190,7 +191,10 @@ public class AttractionAreaDetailsList extends BaseActivity
         try
         {
             attractionItem.noteId = pNoteId;
-            databaseAccess().updateAttractionItem(attractionItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateAttractionItem(attractionItem);
+            }
         }
         catch (Exception e)
         {
@@ -218,7 +222,10 @@ public class AttractionAreaDetailsList extends BaseActivity
         try
         {
             attractionItem.infoId = pInfoId;
-            databaseAccess().updateAttractionItem(attractionItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateAttractionItem(attractionItem);
+            }
         }
         catch (Exception e)
         {
@@ -250,11 +257,14 @@ public class AttractionAreaDetailsList extends BaseActivity
             if (attractionItem.infoId == 0)
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess().getNextFileGroupId(myInt))
-                    return;
-                attractionItem.infoId = myInt.Value;
-                if (!databaseAccess().updateAttractionItem(attractionItem))
-                    return;
+                try(DatabaseAccess da = databaseAccess();)
+                {
+                    if (!da.getNextFileGroupId(myInt))
+                        return;
+                    attractionItem.infoId = myInt.Value;
+                    if (!da.updateAttractionItem(attractionItem))
+                        return;
+                }
             }
             intent2.putExtra("FILEGROUPID", attractionItem.infoId);
             intent2.putExtra("TITLE", attractionItem.attractionDescription);
@@ -275,11 +285,14 @@ public class AttractionAreaDetailsList extends BaseActivity
             if (attractionItem.noteId == 0)
             {
                 MyInt myInt = new MyInt();
-                if (!databaseAccess().getNextNoteId(holidayId, myInt))
-                    return;
-                attractionItem.noteId = myInt.Value;
-                if (!databaseAccess().updateAttractionItem(attractionItem))
-                    return;
+                try(DatabaseAccess da = databaseAccess();)
+                {
+                    if (!da.getNextNoteId(holidayId, myInt))
+                        return;
+                    attractionItem.noteId = myInt.Value;
+                    if (!da.updateAttractionItem(attractionItem))
+                        return;
+                }
             }
             intent2.putExtra("ACTION", "view");
             intent2.putExtra("HOLIDAYID", attractionItem.holidayId);
@@ -316,8 +329,11 @@ public class AttractionAreaDetailsList extends BaseActivity
     {
         try
         {
-            if (!databaseAccess().deleteAttractionItem(attractionItem))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if (!da.deleteAttractionItem(attractionItem))
+                    return;
+            }
             finish();
         }
         catch (Exception e)

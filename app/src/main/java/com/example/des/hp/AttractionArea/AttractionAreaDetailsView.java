@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionDetailsEdit;
@@ -134,16 +135,16 @@ public class AttractionAreaDetailsView extends BaseActivity
     public void showForm()
     {
         super.showForm();
-        try
+        try(DatabaseAccess da = databaseAccess();)
         {
             allowCellMove = true;
             
             attractionAreaItem = new AttractionAreaItem();
-            if (!databaseAccess().getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
+            if (!da.getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
                 return;
             
             scheduleList = new ArrayList<>();
-            if (!databaseAccess().getScheduleList(holidayId, 0, attractionId, attractionAreaId, scheduleList))
+            if (!da.getScheduleList(holidayId, 0, attractionId, attractionAreaId, scheduleList))
                 return;
             
             SetImage(attractionAreaItem.attractionAreaPicture);
@@ -225,7 +226,10 @@ public class AttractionAreaDetailsView extends BaseActivity
         try
         {
             attractionAreaItem.noteId = pNoteId;
-            databaseAccess().updateAttractionAreaItem(attractionAreaItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateAttractionAreaItem(attractionAreaItem);
+            }
         }
         catch (Exception e)
         {
@@ -253,7 +257,10 @@ public class AttractionAreaDetailsView extends BaseActivity
         try
         {
             attractionAreaItem.infoId = pInfoId;
-            databaseAccess().updateAttractionAreaItem(attractionAreaItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateAttractionAreaItem(attractionAreaItem);
+            }
         }
         catch (Exception e)
         {
@@ -300,8 +307,11 @@ public class AttractionAreaDetailsView extends BaseActivity
     {
         try
         {
-            if (!databaseAccess().deleteAttractionAreaItem(attractionAreaItem))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if (!da.deleteAttractionAreaItem(attractionAreaItem))
+                    return;
+            }
             finish();
         }
         catch (Exception e)

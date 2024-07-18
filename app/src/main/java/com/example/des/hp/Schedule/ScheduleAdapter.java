@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionItem;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
@@ -353,8 +354,11 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         {
             items.get(i).sequenceNo=i + 1;
         }
-        if(!databaseAccess().updateScheduleItems(items))
-            return;
+        try(DatabaseAccess da = databaseAccess();)
+        {
+            if(!da.updateScheduleItems(items))
+                return;
+        }
         notifyDataSetChanged();
     }
 

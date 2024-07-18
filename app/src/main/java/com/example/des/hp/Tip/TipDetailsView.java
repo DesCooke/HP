@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 
@@ -104,8 +105,12 @@ public class TipDetailsView extends BaseActivity
         try
         {
             tipItem=new TipItem();
-            if(!databaseAccess().getTipItem(holidayId, tipGroupId, tipId, tipItem))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.getTipItem(holidayId, tipGroupId, tipId, tipItem))
+                    return;
+            }
+
 
             if(title == null || (title.length() == 0))
             {
@@ -150,7 +155,10 @@ public class TipDetailsView extends BaseActivity
         try
         {
             tipItem.noteId=pNoteId;
-            databaseAccess().updateTipItem(tipItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateTipItem(tipItem);
+            }
         }
         catch(Exception e)
         {
@@ -179,7 +187,10 @@ public class TipDetailsView extends BaseActivity
         try
         {
             tipItem.infoId=pInfoId;
-            databaseAccess().updateTipItem(tipItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateTipItem(tipItem);
+            }
         }
         catch(Exception e)
         {
@@ -213,8 +224,11 @@ public class TipDetailsView extends BaseActivity
     {
         try
         {
-            if(!databaseAccess().deleteTipItem(tipItem))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.deleteTipItem(tipItem))
+                    return;
+            }
             finish();
         }
         catch(Exception e)

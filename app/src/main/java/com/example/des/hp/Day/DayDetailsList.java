@@ -87,16 +87,20 @@ public class DayDetailsList extends BaseActivity
             allowCellMove=true;
 
             holidayItem=new HolidayItem();
-            if(!databaseAccess().getHolidayItem(holidayId, holidayItem))
-                return;
-
-            SetTitles(holidayItem.holidayName, "Itinerary");
-
-            DatabaseAccess.currentStartDate=holidayItem.startDateDate;
-
             dayList=new ArrayList<>();
-            if(!databaseAccess().getDayList(holidayId, dayList))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.getHolidayItem(holidayId, holidayItem))
+                    return;
+
+                SetTitles(holidayItem.holidayName, "Itinerary");
+
+                DatabaseAccess.currentStartDate=holidayItem.startDateDate;
+
+                if(!da.getDayList(holidayId, dayList))
+                    return;
+            }
+
             dayAdapter=new DayAdapter(this, dayList);
 
             CreateRecyclerView(R.id.dayListView, dayAdapter);

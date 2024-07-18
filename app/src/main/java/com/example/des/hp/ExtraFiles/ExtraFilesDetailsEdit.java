@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.InternalFiles.InternalFileList;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
@@ -127,7 +128,7 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
     {
         try
         {
-            dialogWithYesNoFragment=DialogWithYesNoFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithYesNoFragment=DialogWithYesNoFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "SELECTFILELOCATION2",        // unique name for this dialog type
                 "Select File",            // unique name for this dialog type
                 "Yes=Device, No=Files already stored", // form message
@@ -160,7 +161,7 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
     //region Saving
     public void SaveIt()
     {
-        try
+        try(DatabaseAccess da = databaseAccess();)
         {
             if(mySelectedFileChanged)
             {
@@ -205,22 +206,22 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
             {
                 MyInt myInt=new MyInt();
 
-                if(!databaseAccess().getNextExtraFilesId(fileGroupId, myInt))
+                if(!da.getNextExtraFilesId(fileGroupId, myInt))
                     return;
                 extraFilesItem.fileId=myInt.Value;
 
-                if(!databaseAccess().getNextExtraFilesSequenceNo(fileGroupId, myInt))
+                if(!da.getNextExtraFilesSequenceNo(fileGroupId, myInt))
                     return;
                 extraFilesItem.sequenceNo=myInt.Value;
 
-                if(!databaseAccess().addExtraFilesItem(extraFilesItem))
+                if(!da.addExtraFilesItem(extraFilesItem))
                     return;
             }
 
             if(action.equals("modify"))
             {
                 extraFilesItem.fileId=fileId;
-                if(!databaseAccess().updateExtraFilesItem(extraFilesItem))
+                if(!da.updateExtraFilesItem(extraFilesItem))
                     return;
             }
 
@@ -319,7 +320,7 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
                 }
             };
 
-            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
                 "File",    // form caption
                 "Description",             // form message
@@ -369,7 +370,7 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
                 }
             };
 
-            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 dwetDialogTag,            // unique name for this dialog type
                 "New Filename",    // form caption
                 "Filename",             // form message
@@ -421,7 +422,7 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
             };
 
 
-            dialogWithYesNoFragment=DialogWithYesNoFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithYesNoFragment=DialogWithYesNoFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 dwynDialogTag,            // unique name for this dialog type
                 "File Already Exists",    // form caption
                 "Rename " + origFilename + "?", // form message

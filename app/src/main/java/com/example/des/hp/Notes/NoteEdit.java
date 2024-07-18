@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
@@ -52,8 +53,11 @@ public class NoteEdit extends BaseActivity
                     noteItem=new NoteItem();
                     noteItem.holidayId=holidayId;
                     noteItem.noteId=noteId;
-                    if(!databaseAccess().getNoteItem(holidayId, noteId, noteItem))
-                        return;
+                    try(DatabaseAccess da = databaseAccess();)
+                    {
+                        if(!da.getNoteItem(holidayId, noteId, noteItem))
+                            return;
+                    }
 
                     actionBar=getSupportActionBar();
                     if(actionBar != null)
@@ -88,17 +92,21 @@ public class NoteEdit extends BaseActivity
             noteItem.notes=edtNote.getText().toString();
 
             MyBoolean noteExists=new MyBoolean();
-            if(!databaseAccess().noteExists(holidayId, noteItem.noteId, noteExists))
-                return;
-            if(noteExists.Value == false)
+            try(DatabaseAccess da = databaseAccess();)
             {
-                if(!databaseAccess().addNoteItem(noteItem))
+                if(!da.noteExists(holidayId, noteItem.noteId, noteExists))
                     return;
-            } else
-            {
-                if(!databaseAccess().updateNoteItem(noteItem))
-                    return;
+                if(!noteExists.Value)
+                {
+                    if(!da.addNoteItem(noteItem))
+                        return;
+                } else
+                {
+                    if(!da.updateNoteItem(noteItem))
+                        return;
+                }
             }
+
             finish();
         }
         catch(Exception e)

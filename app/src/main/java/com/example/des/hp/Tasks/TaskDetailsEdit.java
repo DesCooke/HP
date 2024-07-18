@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -130,7 +131,7 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
             };
 
 
-            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
                 "Task Description",    // form caption
                 "Description",             // form message
@@ -224,7 +225,7 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
     //region Saving
     public void saveSchedule(View view)
     {
-        try
+        try(DatabaseAccess da = databaseAccess();)
         {
             myMessages().ShowMessageShort("Saving " + txtTaskDescription.getText().toString());
 
@@ -265,21 +266,21 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
                 MyInt myInt=new MyInt();
                 taskItem.holidayId=holidayId;
 
-                if(!databaseAccess().getNextTaskId(holidayId, myInt))
+                if(!da.getNextTaskId(holidayId, myInt))
                     return;
                 taskItem.taskId=myInt.Value;
 
-                if(!databaseAccess().getNextTaskSequenceNo(holidayId, myInt))
+                if(!da.getNextTaskSequenceNo(holidayId, myInt))
                     return;
                 taskItem.sequenceNo=myInt.Value;
 
-                if(!databaseAccess().addTaskItem(taskItem))
+                if(!da.addTaskItem(taskItem))
                     return;
             }
 
             if(action.equals("modify"))
             {
-                if(!databaseAccess().updateTaskItem(taskItem))
+                if(!da.updateTaskItem(taskItem))
                     return;
             }
 

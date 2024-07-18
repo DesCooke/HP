@@ -15,6 +15,7 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.R;
@@ -124,8 +125,11 @@ public class BudgetDetailsView extends BaseActivity
         try
         {
             budgetItem = new BudgetItem();
-            if (!databaseAccess().getBudgetItem(holidayId, budgetId, budgetItem))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if (!da.getBudgetItem(holidayId, budgetId, budgetItem))
+                    return;
+            }
 
             if (title == null || (title.length() == 0))
             {
@@ -171,7 +175,10 @@ public class BudgetDetailsView extends BaseActivity
         try
         {
             budgetItem.noteId = pNoteId;
-            databaseAccess().updateBudgetItem(budgetItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateBudgetItem(budgetItem);
+            }
         }
         catch (Exception e)
         {
@@ -200,7 +207,10 @@ public class BudgetDetailsView extends BaseActivity
         try
         {
             budgetItem.infoId = pInfoId;
-            databaseAccess().updateBudgetItem(budgetItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateBudgetItem(budgetItem);
+            }
         }
         catch (Exception e)
         {
@@ -231,8 +241,11 @@ public class BudgetDetailsView extends BaseActivity
     {
         try
         {
-            if (!databaseAccess().deleteBudgetItem(budgetItem))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if (!da.deleteBudgetItem(budgetItem))
+                    return;
+            }
             finish();
         }
         catch (Exception e)

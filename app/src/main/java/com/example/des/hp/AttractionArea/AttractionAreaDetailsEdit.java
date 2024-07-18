@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -108,7 +109,7 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
             };
             
             
-            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
                 "Attraction Area",    // form caption
                 "Description",             // form message
@@ -130,7 +131,7 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
     public void saveSchedule(View view)
     {
         MyInt retInt = new MyInt();
-        try
+        try(DatabaseAccess da = databaseAccess();)
         {
             myMessages().ShowMessageShort("Saving " + txtAttractionAreaDescription.getText().toString());
             
@@ -152,19 +153,19 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
             {
                 attractionAreaItem.holidayId = holidayId;
                 attractionAreaItem.attractionId = attractionId;
-                if (!databaseAccess().getNextAttractionAreaId(holidayId, attractionId, retInt))
+                if (!da.getNextAttractionAreaId(holidayId, attractionId, retInt))
                     return;
                 attractionAreaItem.attractionAreaId = retInt.Value;
-                if (!databaseAccess().getNextAttractionAreaSequenceNo(holidayId, attractionId, retInt))
+                if (!da.getNextAttractionAreaSequenceNo(holidayId, attractionId, retInt))
                     return;
                 attractionAreaItem.sequenceNo = retInt.Value;
-                if (!databaseAccess().addAttractionAreaItem(attractionAreaItem))
+                if (!da.addAttractionAreaItem(attractionAreaItem))
                     return;
             }
             
             if (action.equals("modify"))
             {
-                if (!databaseAccess().updateAttractionAreaItem(attractionAreaItem))
+                if (!da.updateAttractionAreaItem(attractionAreaItem))
                     return;
             }
             

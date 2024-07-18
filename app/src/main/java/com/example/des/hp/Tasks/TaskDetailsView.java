@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 
@@ -120,8 +121,11 @@ public class TaskDetailsView extends BaseActivity
         try
         {
             taskItem=new TaskItem();
-            if(!databaseAccess().getTaskItem(holidayId, taskId, taskItem))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.getTaskItem(holidayId, taskId, taskItem))
+                    return;
+            }
 
             if(title == null || (title.length() == 0))
             {
@@ -176,7 +180,10 @@ public class TaskDetailsView extends BaseActivity
         try
         {
             taskItem.noteId=pNoteId;
-            databaseAccess().updateTaskItem(taskItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateTaskItem(taskItem);
+            }
         }
         catch(Exception e)
         {
@@ -205,7 +212,10 @@ public class TaskDetailsView extends BaseActivity
         try
         {
             taskItem.infoId=pInfoId;
-            databaseAccess().updateTaskItem(taskItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateTaskItem(taskItem);
+            }
         }
         catch(Exception e)
         {
@@ -237,8 +247,11 @@ public class TaskDetailsView extends BaseActivity
     {
         try
         {
-            if(!databaseAccess().deleteTaskItem(taskItem))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.deleteTaskItem(taskItem))
+                    return;
+            }
             finish();
         }
         catch(Exception e)

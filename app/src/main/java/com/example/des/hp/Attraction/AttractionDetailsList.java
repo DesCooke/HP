@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.des.hp.AttractionArea.AttractionAreaDetailsList;
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 
@@ -85,12 +86,12 @@ public class AttractionDetailsList extends BaseActivity
     public void showForm()
     {
         super.showForm();
-        try
+        try(DatabaseAccess da = databaseAccess();)
         {
             allowCellMove = true;
             
             attractionList = new ArrayList<>();
-            if (!databaseAccess().getAttractionList(holidayId, attractionList))
+            if (!da.getAttractionList(holidayId, attractionList))
                 return;
             attractionAdapter = new AttractionAdapter(this, attractionList);
             

@@ -9,7 +9,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import androidx.fragment.app.FragmentManager;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
@@ -80,8 +82,12 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
                     holidayId=extras.getInt("HOLIDAYID");
                     dayId=extras.getInt("DAYID");
                     holidayName=extras.getString("HOLIDAYNAME");
-                    if(!databaseAccess().getDayItem(holidayId, dayId, dayItem))
-                        return;
+
+                    try(DatabaseAccess da = databaseAccess();)
+                    {
+                        if(!da.getDayItem(holidayId, dayId, dayItem))
+                            return;
+                    }
 
                     SetTitles(holidayName, dayItem.dayName);
 
@@ -217,7 +223,7 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
                 }
             };
 
-            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
                 "Day",    // form caption
                 "Description",             // form message
@@ -239,7 +245,7 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
     //region Regular Form Activities
     public void saveSchedule(View view)
     {
-        try
+        try(DatabaseAccess da = databaseAccess();)
         {
             myMessages().ShowMessageShort("Saving Day");
 
@@ -256,24 +262,23 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
             if(imageSet)
                 dayItem.dayBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
-            if(action.equals("add"))
-            {
-                dayItem.holidayId=holidayId;
+            if(action.equals("add")) {
+                dayItem.holidayId = holidayId;
 
-                if(!databaseAccess().getNextDayId(holidayId, myInt))
+                if (!da.getNextDayId(holidayId, myInt))
                     return;
-                dayItem.dayId=myInt.Value;
+                dayItem.dayId = myInt.Value;
 
-                if(!databaseAccess().getNextSequenceNo(holidayId, myInt))
+                if (!da.getNextSequenceNo(holidayId, myInt))
                     return;
-                dayItem.sequenceNo=myInt.Value;
-                if(!databaseAccess().addDayItem(dayItem))
+                dayItem.sequenceNo = myInt.Value;
+                if (!da.addDayItem(dayItem))
                     return;
             }
 
             if(action.equals("modify"))
             {
-                if(!databaseAccess().updateDayItem(dayItem))
+                if(!da.updateDayItem(dayItem))
                     return;
             }
 

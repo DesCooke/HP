@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 
@@ -90,8 +91,11 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
                 SetImage("");
             } else
             {
-                if(!databaseAccess().getExtraFilesItem(fileGroupId, fileId, extraFilesItem))
-                    return;
+                try(DatabaseAccess da = databaseAccess();)
+                {
+                    if(!da.getExtraFilesItem(fileGroupId, fileId, extraFilesItem))
+                        return;
+                }
 
                 txtFilename.setText(extraFilesItem.fileName);
                 txtFileDescription.setText(extraFilesItem.fileDescription);
@@ -196,8 +200,11 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
     {
         try
         {
-            if(!databaseAccess().deleteExtraFilesItem(extraFilesItem))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.deleteExtraFilesItem(extraFilesItem))
+                    return;
+            }
             finish();
         }
         catch(Exception e)

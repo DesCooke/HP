@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
@@ -83,8 +84,11 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
                 datesAreUnknown();
             } else
             {
-                if(!databaseAccess().getHolidayItem(holidayId, holidayItem))
-                    return;
+                try(DatabaseAccess da = databaseAccess();)
+                {
+                    if(!da.getHolidayItem(holidayId, holidayItem))
+                        return;
+                }
 
                 holidayName.setText(holidayItem.holidayName);
 
@@ -184,7 +188,7 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
                 }
             };
 
-            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
                 "Holiday",    // form caption
                 "Description",             // form message
@@ -308,24 +312,27 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
             holidayItem.buttonAttractions = swAttractions.isChecked();
             holidayItem.buttonContacts = swContacts.isChecked();
 
-            if(action.equals("add"))
+            try(DatabaseAccess da = databaseAccess();)
             {
-                MyInt myInt=new MyInt();
-                if(!databaseAccess().getNextHolidayId(myInt))
-                    return;
-                holidayItem.holidayId=myInt.Value;
+                if(action.equals("add"))
+                {
+                    MyInt myInt=new MyInt();
+                    if(!da.getNextHolidayId(myInt))
+                        return;
+                    holidayItem.holidayId=myInt.Value;
 
-                if(!databaseAccess().addHolidayItem(holidayItem))
-                    return;
+                    if(!da.addHolidayItem(holidayItem))
+                        return;
+                }
+
+                if(action.equals("modify"))
+                {
+                    holidayItem.holidayId=holidayId;
+                    if(!da.updateHolidayItem(holidayItem))
+                        return;
+                }
+
             }
-
-            if(action.equals("modify"))
-            {
-                holidayItem.holidayId=holidayId;
-                if(!databaseAccess().updateHolidayItem(holidayItem))
-                    return;
-            }
-
             finish();
         }
         catch(Exception e)

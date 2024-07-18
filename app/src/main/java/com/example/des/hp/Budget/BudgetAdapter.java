@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -143,8 +144,11 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
         {
             items.get(i).sequenceNo = i + 1;
         }
-        if (!databaseAccess().updateBudgetItems(items))
-            return;
+        try(DatabaseAccess da = databaseAccess();)
+        {
+            if (!da.updateBudgetItems(items))
+                return;
+        }
         notifyDataSetChanged();
     }
     

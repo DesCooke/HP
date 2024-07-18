@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 
@@ -69,8 +70,11 @@ public class TipGroupDetailsView extends BaseActivity
         try
         {
             tipGroupItem=new TipGroupItem();
-            if(!databaseAccess().getTipGroupItem(holidayId, tipGroupId, tipGroupItem))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.getTipGroupItem(holidayId, tipGroupId, tipGroupItem))
+                    return;
+            }
 
             if(title == null || (title.length() == 0))
             {
@@ -113,7 +117,10 @@ public class TipGroupDetailsView extends BaseActivity
         try
         {
             tipGroupItem.noteId=pNoteId;
-            databaseAccess().updateTipGroupItem(tipGroupItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateTipGroupItem(tipGroupItem);
+            }
         }
         catch(Exception e)
         {
@@ -142,7 +149,10 @@ public class TipGroupDetailsView extends BaseActivity
         try
         {
             tipGroupItem.infoId=pInfoId;
-            databaseAccess().updateTipGroupItem(tipGroupItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateTipGroupItem(tipGroupItem);
+            }
         }
         catch(Exception e)
         {

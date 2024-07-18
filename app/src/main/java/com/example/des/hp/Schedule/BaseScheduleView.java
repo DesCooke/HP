@@ -7,6 +7,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.ScheduleArea.ScheduleAreaList;
@@ -58,7 +59,7 @@ public class BaseScheduleView extends BaseActivity
                 }
             };
 
-            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
                 scheduleTypeDescription,    // form caption
                 scheduleTypeDescription,             // form message
@@ -94,7 +95,10 @@ public class BaseScheduleView extends BaseActivity
         try
         {
             scheduleItem.noteId=noteId;
-            databaseAccess().updateScheduleItem(scheduleItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateScheduleItem(scheduleItem);
+            }
         }
         catch(Exception e)
         {
@@ -122,7 +126,10 @@ public class BaseScheduleView extends BaseActivity
         try
         {
             scheduleItem.infoId=infoId;
-            databaseAccess().updateScheduleItem(scheduleItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateScheduleItem(scheduleItem);
+            }
         }
         catch(Exception e)
         {
@@ -147,7 +154,10 @@ public class BaseScheduleView extends BaseActivity
                             scheduleItem.dayId=data.getIntExtra("DAYID", 0);
                             scheduleItem.attractionId=data.getIntExtra("ATTRACTIONID", 0);
                             scheduleItem.attractionAreaId=data.getIntExtra("ATTRACTIONAREAID", 0);
-                            databaseAccess().updateScheduleItem(scheduleItem);
+                            try(DatabaseAccess da = databaseAccess();)
+                            {
+                                da.updateScheduleItem(scheduleItem);
+                            }
                             finish();
                         }
                         catch(Exception e)
@@ -197,8 +207,11 @@ public class BaseScheduleView extends BaseActivity
                 SetImage("");
             } else
             {
-                if(!databaseAccess().getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, scheduleItem))
-                    return;
+                try(DatabaseAccess da = databaseAccess();)
+                {
+                    if(!da.getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, scheduleItem))
+                        return;
+                }
 
                 txtSchedName.setText(scheduleItem.schedName);
 
@@ -236,8 +249,11 @@ public class BaseScheduleView extends BaseActivity
     {
         try
         {
-            if(!databaseAccess().deleteScheduleItem(scheduleItem))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.deleteScheduleItem(scheduleItem))
+                    return;
+            }
 
             finish();
         }
@@ -369,8 +385,11 @@ public class BaseScheduleView extends BaseActivity
             }
             else
             {
-                if(!databaseAccess().getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, scheduleItem))
-                    return;
+                try(DatabaseAccess da = databaseAccess();)
+                {
+                    if(!da.getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, scheduleItem))
+                        return;
+                }
 
                 txtSchedName.setText(scheduleItem.schedName);
 

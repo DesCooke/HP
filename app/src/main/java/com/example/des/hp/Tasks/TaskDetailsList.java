@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 
@@ -89,8 +90,12 @@ public class TaskDetailsList extends BaseActivity
                 SetTitles("Task", "Tasks");
 
             taskList=new ArrayList<>();
-            if(!databaseAccess().getTaskList(holidayId, taskList))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.getTaskList(holidayId, taskList))
+                    return;
+            }
+
             taskAdapter=new TaskAdapter(this, taskList);
 
             CreateRecyclerView(R.id.taskListView, taskAdapter);

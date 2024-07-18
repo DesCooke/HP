@@ -1,22 +1,27 @@
 package com.example.des.hp.myutils;
 
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.Fragment;
+
+import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.MainActivity;
 import com.example.des.hp.R;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.view.View;
 import android.widget.Toast;
 import android.content.Context;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.app.Activity;
-
 import java.util.Arrays;
 
 import static com.example.des.hp.myutils.MyLog.myLog;
 
-public class MyMessages extends Activity
+public class MyMessages extends BaseActivity
 {
     public static Boolean answerYes;
     public static Boolean answerNo;
@@ -108,7 +113,7 @@ public class MyMessages extends Activity
     {
 
         dialogWithTextViewFragment=DialogWithTextViewFragment.newInstance(
-            getFragmentManager(),     // for the transaction bit
+            getSupportFragmentManager(),     // for the transaction bit
             dwtvDialogTag,            // unique name for this dialog type
             argTitle,                 // form caption
             argString,                // form message
@@ -121,15 +126,13 @@ public class MyMessages extends Activity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if(resultCode == RESULT_OK)
-        {
-            answerYes=true;
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            answerYes = true;
         }
-        if(resultCode == RESULT_OK)
-        {
-            answerYes=false;
+        if (resultCode == RESULT_OK) {
+            answerYes = false;
         }
     }
 }

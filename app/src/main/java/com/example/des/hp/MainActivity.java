@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.InternalFiles.InternalFileItem;
 import com.example.des.hp.InternalImages.InternalImageItem;
@@ -137,10 +138,13 @@ public class MainActivity extends BaseActivity
                 ArrayList<InternalImageItem> internalImageList = imageUtils().listInternalImages(holidayId);
                 if (internalImageList != null) {
                     for (InternalImageItem item : internalImageList) {
-                        if (databaseAccess().pictureUsageCount(item.internalImageFilename) == 0) {
-                            //myMessages().LogMessage("Picture " + item.internalImageFilename + ", is not linked to anything - removing");
-                            databaseAccess().removePicture(holidayId, item.internalImageFilename);
-                            lCount++;
+
+                        try(DatabaseAccess da = databaseAccess();)
+                        {
+                            if(da.pictureUsageCount(item.internalImageFilename) == 0) {
+                              da.removePicture(holidayId, item.internalImageFilename);
+                              lCount++;
+                            }
                         }
                     }
                     //myMessages().LogMessage("There are a total of " + String.valueOf(internalImageList.size()) + " and " + String.valueOf(lCount) + " were orphaned");
@@ -148,21 +152,23 @@ public class MainActivity extends BaseActivity
 
                 //myMessages().LogMessage("Identifying orphaned files....");
 
-                int lCount2 = 0;
-                ArrayList<InternalFileItem> internalFileList = imageUtils().listInternalFiles(holidayId);
-                if (internalFileList != null) {
-                    for (InternalFileItem item : internalFileList) {
-                        if (databaseAccess().fileUsageCount(holidayId, item.filename) == 0) {
-                            //myMessages().LogMessage("File " + item.filename + ", is not linked to anything - removing");
-                            databaseAccess().removeExtraFile(holidayId, item.filename);
-                            lCount2++;
+                try(DatabaseAccess da = databaseAccess();)
+                {
+                    int lCount2 = 0;
+                    ArrayList<InternalFileItem> internalFileList = imageUtils().listInternalFiles(holidayId);
+                    if (internalFileList != null) {
+                        for (InternalFileItem item : internalFileList) {
+                            if (da.fileUsageCount(holidayId, item.filename) == 0) {
+                                da.removeExtraFile(holidayId, item.filename);
+                                lCount2++;
+                            }
                         }
-                    }
-                    //myMessages().LogMessage("There are a total of " + String.valueOf(internalFileList.size()) + " and " + String.valueOf(lCount2) + " were orphaned");
 
-                    if (internalImageList != null)
-                        myMessages().ShowMessageLong("Images: Orphaned " + String.valueOf(lCount) + ", " + "Total " + String.valueOf(internalImageList.size()) + ", " + "Files: Orphaned " + String.valueOf(lCount2) + ", " + "Total " + String.valueOf(internalFileList.size()) + " ");
+                        if (internalImageList != null)
+                            myMessages().ShowMessageLong("Images: Orphaned " + String.valueOf(lCount) + ", " + "Total " + String.valueOf(internalImageList.size()) + ", " + "Files: Orphaned " + String.valueOf(lCount2) + ", " + "Total " + String.valueOf(internalFileList.size()) + " ");
+                    }
                 }
+
             }
         }
         catch(Exception e)
@@ -194,8 +200,11 @@ public class MainActivity extends BaseActivity
                 invalidateOptionsMenu();
 
                 holidayList = new ArrayList<>();
-                if (!databaseAccess().getHolidayList(holidayList))
-                    return;
+                try(DatabaseAccess da = databaseAccess();)
+                {
+                    if (!da.getHolidayList(holidayList))
+                        return;
+                }
 
                 HolidayAdapter adapter = new HolidayAdapter(this, R.layout.holidaylistitemrow, holidayList);
                 ListView listView1 = (ListView) findViewById(R.id.holidayListView);

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
 
@@ -175,7 +176,7 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
     public void EnterString(String formCaption, String formMessage, TextView textView)
     {
         dialogWithEditTextFragment=
-                DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+                DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                         "hihi1",            // unique name for this dialog type
                         formCaption,    // form caption
                         formMessage,             // form message
@@ -200,7 +201,7 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
     //region Saving
     public void saveSchedule(View view)
     {
-        try
+        try(DatabaseAccess da = databaseAccess();)
         {
             myMessages().ShowMessageShort("Saving Schedule");
 
@@ -274,11 +275,11 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
                 scheduleItem.attractionId=attractionId;
                 scheduleItem.attractionAreaId=attractionAreaId;
 
-                if(!databaseAccess().getNextScheduleId(holidayId, dayId, attractionId, attractionAreaId, myInt))
+                if(!da.getNextScheduleId(holidayId, dayId, attractionId, attractionAreaId, myInt))
                     return;
                 scheduleItem.scheduleId=myInt.Value;
 
-                if(!databaseAccess().getNextScheduleSequenceNo(holidayId, dayId, attractionId, attractionAreaId, myInt))
+                if(!da.getNextScheduleSequenceNo(holidayId, dayId, attractionId, attractionAreaId, myInt))
                     return;
                 scheduleItem.sequenceNo=myInt.Value;
 
@@ -290,14 +291,14 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
                 scheduleItem.generalAttractionItem.attractionAreaId=attractionAreaId;
                 scheduleItem.generalAttractionItem.scheduleId=scheduleItem.scheduleId;
 
-                if(!databaseAccess().addScheduleItem(scheduleItem))
+                if(!da.addScheduleItem(scheduleItem))
                     return;
             }
 
             if(action.equals("edit"))
             {
 
-                if(!databaseAccess().updateScheduleItem(scheduleItem))
+                if(!da.updateScheduleItem(scheduleItem))
                     return;
             }
 

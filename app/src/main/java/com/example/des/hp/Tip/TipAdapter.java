@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -129,8 +130,11 @@ class TipAdapter extends RecyclerView.Adapter<TipAdapter.ViewHolder>
         {
             items.get(i).sequenceNo=i + 1;
         }
-        if(!databaseAccess().updateTipItems(items))
-            return;
+        try(DatabaseAccess da = databaseAccess();)
+        {
+            if(!da.updateTipItems(items))
+                return;
+        }
         notifyDataSetChanged();
     }
 

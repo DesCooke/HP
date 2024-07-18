@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -108,7 +109,7 @@ public class TipGroupDetailsEdit extends TipGroupDetailsView implements View.OnC
             };
 
 
-            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
                 "Tip Group",    // form caption
                 "Description",             // form message
@@ -129,7 +130,7 @@ public class TipGroupDetailsEdit extends TipGroupDetailsView implements View.OnC
     //region Saving
     public void saveSchedule(View view)
     {
-        try
+        try(DatabaseAccess da = databaseAccess();)
         {
             myMessages().ShowMessageShort("Saving " + txtTipGroupDescription.getText().toString());
 
@@ -152,22 +153,22 @@ public class TipGroupDetailsEdit extends TipGroupDetailsView implements View.OnC
 
                 tipGroupItem.holidayId=holidayId;
 
-                if(!databaseAccess().getNextTipGroupId(holidayId, myInt))
+                if(!da.getNextTipGroupId(holidayId, myInt))
                     return;
                 tipGroupItem.tipGroupId=myInt.Value;
 
-                if(!databaseAccess().getNextTipGroupSequenceNo(holidayId, myInt))
+                if(!da.getNextTipGroupSequenceNo(holidayId, myInt))
                     return;
 
                 tipGroupItem.sequenceNo=myInt.Value;
 
-                if(!databaseAccess().addTipGroupItem(tipGroupItem))
+                if(!da.addTipGroupItem(tipGroupItem))
                     return;
             }
 
             if(action.equals("modify"))
             {
-                if(!databaseAccess().updateTipGroupItem(tipGroupItem))
+                if(!da.updateTipGroupItem(tipGroupItem))
                     return;
             }
 

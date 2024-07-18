@@ -131,12 +131,14 @@ public class DayDetailsView extends BaseActivity
             allowCellMove=true;
 
             dayItem=new DayItem();
-            if(!databaseAccess().getDayItem(holidayId, dayId, dayItem))
-                return;
-
             HolidayItem holidayItem=new HolidayItem();
-            if(!databaseAccess().getHolidayItem(holidayId, holidayItem))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.getDayItem(holidayId, dayId, dayItem))
+                    return;
+                if(!da.getHolidayItem(holidayId, holidayItem))
+                    return;
+            }
 
             SetImage(dayItem.dayPicture);
 
@@ -192,8 +194,13 @@ public class DayDetailsView extends BaseActivity
             }
 
             scheduleList=new ArrayList<>();
-            if(!databaseAccess().getScheduleList(holidayId, dayId, attractionId, attractionAreaId, scheduleList))
-                return;
+
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.getScheduleList(holidayId, dayId, attractionId, attractionAreaId, scheduleList))
+                    return;
+            }
+
             scheduleAdapter=new ScheduleAdapter(this, scheduleList);
 
             CreateRecyclerView(R.id.dayListView, scheduleAdapter);
@@ -290,7 +297,10 @@ public class DayDetailsView extends BaseActivity
         try
         {
             dayItem.noteId=pNoteId;
-            databaseAccess().updateDayItem(dayItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateDayItem(dayItem);
+            }
         }
         catch(Exception e)
         {
@@ -319,7 +329,10 @@ public class DayDetailsView extends BaseActivity
         try
         {
             dayItem.infoId=pInfoId;
-            databaseAccess().updateDayItem(dayItem);
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                da.updateDayItem(dayItem);
+            }
         }
         catch(Exception e)
         {
@@ -391,8 +404,11 @@ public class DayDetailsView extends BaseActivity
     {
         try
         {
-            if(!databaseAccess().deleteDayItem(dayItem))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.deleteDayItem(dayItem))
+                    return;
+            }
             finish();
         }
         catch(Exception e)

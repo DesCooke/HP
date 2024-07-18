@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import com.example.des.hp.Attraction.AttractionItem;
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 
@@ -41,8 +42,11 @@ public class ScheduleAreaList extends BaseActivity
             }
 
             scheduleAreaList=new ArrayList<>();
-            if(!databaseAccess().getScheduleAreaList(holidayId, scheduleAreaList))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.getScheduleAreaList(holidayId, scheduleAreaList))
+                    return;
+            }
 
             RecyclerView recyclerView=(RecyclerView) findViewById(R.id.scheduleAreaListView);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -12,6 +12,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.widget.ImageView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Holiday.HolidayItem;
 import com.example.des.hp.InternalFiles.InternalFileItem;
 import com.example.des.hp.InternalImages.InternalImageItem;
@@ -121,7 +122,10 @@ public class ImageUtils
     public String GetHolidayDir(int holidayId)
     {
         HolidayItem holidayItem = new HolidayItem();
-        databaseAccess().getHolidayItem(holidayId, holidayItem);
+        try(DatabaseAccess da = databaseAccess();)
+        {
+            da.getHolidayItem(holidayId, holidayItem);
+        }
         String holidayDirName=holidayItem.holidayName.replace(' ', '_');
         holidayDirName=holidayDirName.replace('#', '_');
         holidayDirName=holidayDirName.replace('%', '_');

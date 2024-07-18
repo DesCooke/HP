@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -129,8 +130,11 @@ class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder>
         {
             items.get(i).sequenceNo = i + 1;
         }
-        if (!databaseAccess().updateContactItems(items))
-            return;
+        try(DatabaseAccess da = databaseAccess();)
+        {
+            if (!da.updateContactItems(items))
+                return;
+        }
         notifyDataSetChanged();
     }
     

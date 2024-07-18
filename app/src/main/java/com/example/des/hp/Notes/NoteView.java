@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
@@ -50,8 +51,16 @@ public class NoteView extends BaseActivity
                     noteItem=new NoteItem();
                     noteItem.holidayId=holidayId;
                     noteItem.noteId=noteId;
-                    if(!databaseAccess().getNoteItem(holidayId, noteId, noteItem))
-                        return;
+                    try(DatabaseAccess da = databaseAccess();)
+                    {
+                        if(!da.getNoteItem(holidayId, noteId, noteItem))
+                            return;
+                    }
+                    try(DatabaseAccess da = databaseAccess();)
+                    {
+                        if(!da.getNoteItem(holidayId, noteId, noteItem))
+                            return;
+                    }
 
                     actionBar=getSupportActionBar();
                     if(actionBar != null)
@@ -148,8 +157,11 @@ public class NoteView extends BaseActivity
         try
         {
             noteItem.notes="";
-            if(!databaseAccess().updateNoteItem(noteItem))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.updateNoteItem(noteItem))
+                    return;
+            }
             finish();
         }
         catch(Exception e)

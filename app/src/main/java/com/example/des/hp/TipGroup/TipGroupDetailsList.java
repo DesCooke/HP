@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.Tip.TipDetailsList;
@@ -86,8 +87,11 @@ public class TipGroupDetailsList extends BaseActivity
             allowCellMove=true;
 
             tipGroupList=new ArrayList<>();
-            if(!databaseAccess().getTipGroupList(holidayId, tipGroupList))
-                return;
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.getTipGroupList(holidayId, tipGroupList))
+                    return;
+            }
             tipGroupAdapter=new TipGroupAdapter(this, tipGroupList);
 
             CreateRecyclerView(R.id.tipGroupListView, tipGroupAdapter);
