@@ -36,11 +36,11 @@ public class AttractionDetailsView extends BaseActivity
             layoutName = "activity_attraction_details_view";
             setContentView(R.layout.activity_attraction_details_view);
             
-            txtAttractionDescription = (TextView) findViewById(R.id.txtAttractionDescription);
-            btnClear = (ImageButton) findViewById(R.id.btnClear);
-            btnSave = (Button) findViewById(R.id.btnSave);
-            grpMenuFile = (LinearLayout) findViewById(R.id.grpMenuFile);
-            grpAttractionDescription = (LinearLayout) findViewById(R.id.grpAttractionDescription);
+            txtAttractionDescription = findViewById(R.id.txtAttractionDescription);
+            btnClear = findViewById(R.id.btnClear);
+            btnSave = findViewById(R.id.btnSave);
+            grpMenuFile = findViewById(R.id.grpMenuFile);
+            grpAttractionDescription = findViewById(R.id.grpAttractionDescription);
             
             afterCreate();
             
@@ -84,7 +84,7 @@ public class AttractionDetailsView extends BaseActivity
                 SetImage("");
             } else
             {
-                try(DatabaseAccess da = databaseAccess();)
+                try(DatabaseAccess da = databaseAccess())
                 {
                     if (!da.getAttractionItem(holidayId, attractionId, attractionItem))
                         return;
@@ -94,7 +94,7 @@ public class AttractionDetailsView extends BaseActivity
                 
                 SetImage(attractionItem.attractionPicture);
             }
-            if (title.length() > 0)
+            if (!title.isEmpty())
             {
                 SetTitles(title, subTitle);
             } else
@@ -133,7 +133,7 @@ public class AttractionDetailsView extends BaseActivity
         try
         {
             attractionItem.noteId = noteId;
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 da.updateAttractionItem(attractionItem);
             }
@@ -164,7 +164,7 @@ public class AttractionDetailsView extends BaseActivity
         try
         {
             attractionItem.infoId = infoId;
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 da.updateAttractionItem(attractionItem);
             }

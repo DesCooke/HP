@@ -92,13 +92,7 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
     {
         try
         {
-            dwetOnOkClick = new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    AttractionDescriptionPicked(view);
-                }
-            };
+            dwetOnOkClick = this::AttractionDescriptionPicked;
             
             
             dialogWithEditTextFragment =
@@ -128,7 +122,7 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
     //region Saving
     public void saveSchedule(View view)
     {
-        try(DatabaseAccess da = databaseAccess();)
+        try(DatabaseAccess da = databaseAccess())
         {
             MyInt retInt = new MyInt();
             
@@ -137,7 +131,7 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
             attractionItem.pictureAssigned = imageSet;
             attractionItem.pictureChanged = imageChanged;
             attractionItem.attractionPicture = "";
-            if (internalImageFilename.length() > 0)
+            if (!internalImageFilename.isEmpty())
                 attractionItem.attractionPicture = internalImageFilename;
             attractionItem.fileBitmap = null;
             if (imageSet)

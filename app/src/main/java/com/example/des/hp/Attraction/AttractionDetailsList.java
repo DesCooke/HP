@@ -21,12 +21,14 @@ import java.util.Collections;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
+import androidx.annotation.NonNull;
+
 public class AttractionDetailsList extends BaseActivity
 {
     
     //region Member Variables
     public ArrayList<AttractionItem> attractionList;
-    public AttractionAdapter attractionAdapter;
+    private AttractionAdapter attractionAdapter;
     //endregion
     
     //region Constructors/Destructors
@@ -86,7 +88,7 @@ public class AttractionDetailsList extends BaseActivity
     public void showForm()
     {
         super.showForm();
-        try(DatabaseAccess da = databaseAccess();)
+        try(DatabaseAccess da = databaseAccess())
         {
             allowCellMove = true;
             
@@ -97,19 +99,14 @@ public class AttractionDetailsList extends BaseActivity
             
             CreateRecyclerView(R.id.attractionListView, attractionAdapter);
             
-            attractionAdapter.setOnItemClickListener(new AttractionAdapter.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(View view, AttractionItem obj)
-                {
-                    Intent intent = new Intent(getApplicationContext(), AttractionAreaDetailsList.class);
-                    intent.putExtra("ACTION", "view");
-                    intent.putExtra("HOLIDAYID", obj.holidayId);
-                    intent.putExtra("ATTRACTIONID", obj.attractionId);
-                    intent.putExtra("TITLE", title + "/" + subTitle);
-                    intent.putExtra("SUBTITLE", obj.attractionDescription);
-                    startActivity(intent);
-                }
+            attractionAdapter.setOnItemClickListener((view, obj) -> {
+                Intent intent = new Intent(getApplicationContext(), AttractionAreaDetailsList.class);
+                intent.putExtra("ACTION", "view");
+                intent.putExtra("HOLIDAYID", obj.holidayId);
+                intent.putExtra("ATTRACTIONID", obj.attractionId);
+                intent.putExtra("TITLE", title + "/" + subTitle);
+                intent.putExtra("SUBTITLE", obj.attractionDescription);
+                startActivity(intent);
             });
             
             afterShow();
@@ -162,18 +159,15 @@ public class AttractionDetailsList extends BaseActivity
     
     //region OnClick Events
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
         try
         {
-            switch (item.getItemId())
-            {
-                case R.id.action_add_attraction:
-                    showAttractionAdd(null);
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
+            if (item.getItemId() == R.id.action_add_attraction) {
+                showAttractionAdd(null);
+                return true;
             }
+            return super.onOptionsItemSelected(item);
         }
         catch (Exception e)
         {

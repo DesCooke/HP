@@ -19,8 +19,7 @@ public class AttractionItem
     public int infoId;
     public int noteId;
     public int galleryId;
-    public int sygicId;
-    
+
     // Original Fields
     public int origHolidayId;
     public int origAttractionId;
@@ -32,8 +31,7 @@ public class AttractionItem
     public int origInfoId;
     public int origNoteId;
     public int origGalleryId;
-    public int origSygicId;
-    
+
     public boolean pictureChanged;
     
     public Bitmap fileBitmap;
