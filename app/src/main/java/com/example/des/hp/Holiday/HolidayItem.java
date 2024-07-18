@@ -23,7 +23,6 @@ public class HolidayItem
     public int infoId;
     public int noteId;
     public int galleryId;
-    public int sygicId;
     public boolean buttonDays;
     public boolean buttonDay;
     public boolean buttonMaps;
@@ -46,7 +45,6 @@ public class HolidayItem
     public int origInfoId;
     public int origNoteId;
     public int origGalleryId;
-    public int origSygicId;
     public boolean origButtonDays;
     public boolean origButtonDay;
     public boolean origButtonMaps;
@@ -91,8 +89,6 @@ public class HolidayItem
         if(item1.noteId!=item2.noteId)
             return(false);
         if(item1.galleryId!=item2.galleryId)
-            return(false);
-        if(item1.sygicId!=item2.sygicId)
             return(false);
         if(item1.buttonDays!=item2.buttonDays)
             return(false);

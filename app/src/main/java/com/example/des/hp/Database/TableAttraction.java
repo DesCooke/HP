@@ -32,7 +32,7 @@ class TableAttraction extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS attraction " + "( " + "  holidayId             INT(5),  " + "  attractionId          INT(5),  " + "  sequenceNo            INT(5),  " + "  attractionDescription VARCHAR, " + "  attractionPicture     VARCHAR, " + "  attractionNotes       VARCHAR, " + "  infoId                INT(5),  " + "  noteId                INT(5),  " + "  galleryId             INT(5),  " + "  sygicId               INT(5)   " + ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS attraction " + "( " + "  holidayId             INT(5),  " + "  attractionId          INT(5),  " + "  sequenceNo            INT(5),  " + "  attractionDescription VARCHAR, " + "  attractionPicture     VARCHAR, " + "  attractionNotes       VARCHAR, " + "  infoId                INT(5),  " + "  noteId                INT(5),  " + "  galleryId             INT(5)  " + ") ";
 
             db.execSQL(lSQL);
 
@@ -49,17 +49,6 @@ class TableAttraction extends TableBase
     {
         try
         {
-            if(oldVersion == 35 && newVersion == 36)
-            {
-                db.execSQL("ALTER TABLE attraction ADD COLUMN noteId INT(5) DEFAULT 0");
-                db.execSQL("ALTER TABLE attraction ADD COLUMN galleryId INT(5) DEFAULT 0");
-                db.execSQL("ALTER TABLE attraction ADD COLUMN sygicId INT(5) DEFAULT 0");
-
-                db.execSQL("UPDATE attraction SET noteId = 0");
-                db.execSQL("UPDATE attraction SET galleryId = 0");
-                db.execSQL("UPDATE attraction SET sygicId = 0");
-            }
-
             return (true);
         }
         catch(Exception e)
@@ -124,7 +113,7 @@ class TableAttraction extends TableBase
                 //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
-            String lSql="INSERT INTO Attraction " + "  (holidayId, attractionId, sequenceNo, attractionDescription, " + "   attractionPicture, attractionNotes, infoId, noteId, galleryId, sygicId) " + "VALUES " + "(" + attractionItem.holidayId + "," + attractionItem.attractionId + "," + attractionItem.sequenceNo + ", " + MyQuotedString(attractionItem.attractionDescription) + ", " + MyQuotedString(attractionItem.attractionPicture) + ", " + MyQuotedString(attractionItem.attractionNotes) + ", " + attractionItem.infoId + ", " + attractionItem.noteId + ", " + attractionItem.galleryId + ", " + attractionItem.sygicId + " " + ")";
+            String lSql="INSERT INTO Attraction " + "  (holidayId, attractionId, sequenceNo, attractionDescription, " + "   attractionPicture, attractionNotes, infoId, noteId, galleryId) " + "VALUES " + "(" + attractionItem.holidayId + "," + attractionItem.attractionId + "," + attractionItem.sequenceNo + ", " + MyQuotedString(attractionItem.attractionDescription) + ", " + MyQuotedString(attractionItem.attractionPicture) + ", " + MyQuotedString(attractionItem.attractionNotes) + ", " + attractionItem.infoId + ", " + attractionItem.noteId + ", " + attractionItem.galleryId + ")";
 
             return (executeSQL("addAttractionItem", lSql));
         }
@@ -215,7 +204,7 @@ class TableAttraction extends TableBase
 
 
             String lSQL;
-            lSQL="UPDATE Attraction " + "SET sequenceNo = " + attractionItem.sequenceNo + ", " + "    attractionDescription = " + MyQuotedString(attractionItem.attractionDescription) + ", " + "    attractionPicture = " + MyQuotedString(attractionItem.attractionPicture) + ", " + "    attractionNotes = " + MyQuotedString(attractionItem.attractionNotes) + ", " + "    infoId = " + attractionItem.infoId + ", " + "    noteId = " + attractionItem.noteId + ", " + "    galleryId = " + attractionItem.galleryId + ", " + "    sygicId = " + attractionItem.sygicId + " " + "WHERE holidayId = " + attractionItem.holidayId + " " + "AND attractionId = " + attractionItem.attractionId;
+            lSQL="UPDATE Attraction " + "SET sequenceNo = " + attractionItem.sequenceNo + ", " + "    attractionDescription = " + MyQuotedString(attractionItem.attractionDescription) + ", " + "    attractionPicture = " + MyQuotedString(attractionItem.attractionPicture) + ", " + "    attractionNotes = " + MyQuotedString(attractionItem.attractionNotes) + ", " + "    infoId = " + attractionItem.infoId + ", " + "    noteId = " + attractionItem.noteId + ", " + "    galleryId = " + attractionItem.galleryId + " WHERE holidayId = " + attractionItem.holidayId + " " + "AND attractionId = " + attractionItem.attractionId;
 
             return (executeSQL("updateAttractionItem", lSQL));
         }
@@ -261,7 +250,7 @@ class TableAttraction extends TableBase
                 return (false);
 
             String lSQL;
-            lSQL="SELECT holidayId, attractionId, sequenceNo, attractionDescription, " + "  attractionPicture, attractionNotes, infoId, noteId, galleryId, sygicId " + "FROM attraction " + "WHERE HolidayId = " + holidayId + " " + "AND AttractionId = " + attractionId;
+            lSQL="SELECT holidayId, attractionId, sequenceNo, attractionDescription, " + "  attractionPicture, attractionNotes, infoId, noteId, galleryId " + "FROM attraction " + "WHERE HolidayId = " + holidayId + " " + "AND AttractionId = " + attractionId;
 
             Cursor cursor=executeSQLOpenCursor("getAttractionItem", lSQL);
             if(cursor != null)
@@ -300,7 +289,6 @@ class TableAttraction extends TableBase
             attractionItem.infoId=Integer.parseInt(cursor.getString(6));
             attractionItem.noteId=Integer.parseInt(cursor.getString(7));
             attractionItem.galleryId=Integer.parseInt(cursor.getString(8));
-            attractionItem.sygicId=Integer.parseInt(cursor.getString(9));
 
             attractionItem.origHolidayId=attractionItem.holidayId;
             attractionItem.origAttractionId=attractionItem.attractionId;
@@ -311,7 +299,6 @@ class TableAttraction extends TableBase
             attractionItem.origInfoId=attractionItem.infoId;
             attractionItem.origNoteId=attractionItem.noteId;
             attractionItem.origGalleryId=attractionItem.galleryId;
-            attractionItem.origSygicId=attractionItem.sygicId;
 
             attractionItem.pictureChanged=false;
 
@@ -383,7 +370,7 @@ class TableAttraction extends TableBase
     {
         try
         {
-            String lSql="SELECT holidayId, attractionId, sequenceNo, attractionDescription, " + "  attractionPicture, attractionNotes, infoId, noteId, galleryId, sygicId " + "FROM Attraction " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
+            String lSql="SELECT holidayId, attractionId, sequenceNo, attractionDescription, " + "  attractionPicture, attractionNotes, infoId, noteId, galleryId " + "FROM Attraction " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
 
             Cursor cursor=executeSQLOpenCursor("getAttractionList", lSql);
             if(cursor == null)

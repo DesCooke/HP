@@ -61,17 +61,11 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
     {
         try
         {
-            switch (view.getId())
-            {
-                
-                case R.id.grpAttractionAreaDescription:
-                    pickAttractionAreaDescription(view);
-                    break;
-                
-                case R.id.imageViewSmall:
-                    pickImage(view);
-                    break;
-            }
+            int id=view.getId();
+            if(id==R.id.grpAttractionAreaDescription)
+                pickAttractionAreaDescription(view);
+            if(id==R.id.imageViewSmall)
+                pickImage(view);
         }
         catch (Exception e)
         {
@@ -100,13 +94,7 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
     {
         try
         {
-            dwetOnOkClick = new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    AttractionAreaDescriptionPicked(view);
-                }
-            };
+            dwetOnOkClick = this::AttractionAreaDescriptionPicked;
             
             
             dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
@@ -131,7 +119,7 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
     public void saveSchedule(View view)
     {
         MyInt retInt = new MyInt();
-        try(DatabaseAccess da = databaseAccess();)
+        try(DatabaseAccess da = databaseAccess())
         {
             myMessages().ShowMessageShort("Saving " + txtAttractionAreaDescription.getText().toString());
             
@@ -139,7 +127,7 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
             
             
             attractionAreaItem.attractionAreaPicture = "";
-            if (internalImageFilename.length() > 0)
+            if (!internalImageFilename.isEmpty())
                 attractionAreaItem.attractionAreaPicture = internalImageFilename;
             attractionAreaItem.pictureAssigned = imageSet;
             attractionAreaItem.pictureChanged = imageChanged;

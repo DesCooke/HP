@@ -26,12 +26,14 @@ import java.util.Collections;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
+import androidx.annotation.NonNull;
+
 public class AttractionAreaDetailsList extends BaseActivity
 {
     
     //region Member variables
     public ArrayList<AttractionAreaItem> attractionAreaList;
-    public AttractionAreaAdapter attractionAreaAdapter;
+    private AttractionAreaAdapter attractionAreaAdapter;
     public AttractionItem attractionItem;
     public LinearLayout grpMenuFile;
     public TextView txtAttractionDescription;
@@ -48,8 +50,8 @@ public class AttractionAreaDetailsList extends BaseActivity
             layoutName = "activity_attractionarea_list";
             setContentView(R.layout.activity_attractionarea_list);
             
-            txtAttractionDescription = (TextView) findViewById(R.id.txtAttractionDescription);
-            grpMenuFile = (LinearLayout) findViewById(R.id.grpMenuFile);
+            txtAttractionDescription = findViewById(R.id.txtAttractionDescription);
+            grpMenuFile = findViewById(R.id.grpMenuFile);
             
             afterCreate();
             
@@ -79,38 +81,24 @@ public class AttractionAreaDetailsList extends BaseActivity
     
     //region OnClick Events
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
-        boolean lv_return = false;
         try
         {
-            switch (item.getItemId())
-            {
-                case R.id.action_add_attractionarea:
-                    showAttractionAreaAdd();
-                    lv_return = true;
-                    break;
-                
-                case R.id.action_delete_attraction:
-                    deleteAttraction();
-                    lv_return = true;
-                    break;
-                
-                case R.id.action_edit_attraction:
-                    editAttraction();
-                    lv_return = true;
-                    break;
-                
-                default:
-                    lv_return = super.onOptionsItemSelected(item);
-                    break;
-            }
+            int id=item.getItemId();
+            if(id==R.id.action_add_attractionarea)
+                showAttractionAreaAdd();
+            if(id==R.id.action_delete_attraction)
+                deleteAttraction();
+            if(id==R.id.action_edit_attraction)
+                editAttraction();
         }
         catch (Exception e)
         {
             ShowError("onOptionsItemSelected", e.getMessage());
+            return(false);
         }
-        return (lv_return);
+        return (true);
     }
     //endregion
     
@@ -118,7 +106,7 @@ public class AttractionAreaDetailsList extends BaseActivity
     public void showForm()
     {
         super.showForm();
-        try(DatabaseAccess da = databaseAccess();)
+        try(DatabaseAccess da = databaseAccess())
         {
             allowCellMove = true;
             
@@ -135,7 +123,7 @@ public class AttractionAreaDetailsList extends BaseActivity
             txtAttractionDescription.setText(attractionItem.attractionDescription);
             
             subTitle = attractionItem.attractionDescription;
-            if (title.length() > 0)
+            if (!title.isEmpty())
             {
                 SetTitles(title, subTitle);
             } else
@@ -147,20 +135,15 @@ public class AttractionAreaDetailsList extends BaseActivity
             
             CreateRecyclerView(R.id.attractionAreaListView, attractionAreaAdapter);
             
-            attractionAreaAdapter.setOnItemClickListener(new AttractionAreaAdapter.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(View view, AttractionAreaItem obj)
-                {
-                    Intent intent = new Intent(getApplicationContext(), AttractionAreaDetailsView.class);
-                    intent.putExtra("ACTION", "view");
-                    intent.putExtra("HOLIDAYID", obj.holidayId);
-                    intent.putExtra("ATTRACTIONID", obj.attractionId);
-                    intent.putExtra("ATTRACTIONAREAID", obj.attractionAreaId);
-                    intent.putExtra("TITLE", title + "/" + subTitle);
-                    intent.putExtra("SUBTITLE", obj.attractionAreaDescription);
-                    startActivity(intent);
-                }
+            attractionAreaAdapter.setOnItemClickListener((view, obj) -> {
+                Intent intent = new Intent(getApplicationContext(), AttractionAreaDetailsView.class);
+                intent.putExtra("ACTION", "view");
+                intent.putExtra("HOLIDAYID", obj.holidayId);
+                intent.putExtra("ATTRACTIONID", obj.attractionId);
+                intent.putExtra("ATTRACTIONAREAID", obj.attractionAreaId);
+                intent.putExtra("TITLE", title + "/" + subTitle);
+                intent.putExtra("SUBTITLE", obj.attractionAreaDescription);
+                startActivity(intent);
             });
             afterShow();
         }
@@ -191,7 +174,7 @@ public class AttractionAreaDetailsList extends BaseActivity
         try
         {
             attractionItem.noteId = pNoteId;
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 da.updateAttractionItem(attractionItem);
             }
@@ -222,7 +205,7 @@ public class AttractionAreaDetailsList extends BaseActivity
         try
         {
             attractionItem.infoId = pInfoId;
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 da.updateAttractionItem(attractionItem);
             }
@@ -257,7 +240,7 @@ public class AttractionAreaDetailsList extends BaseActivity
             if (attractionItem.infoId == 0)
             {
                 MyInt myInt = new MyInt();
-                try(DatabaseAccess da = databaseAccess();)
+                try(DatabaseAccess da = databaseAccess())
                 {
                     if (!da.getNextFileGroupId(myInt))
                         return;
@@ -285,7 +268,7 @@ public class AttractionAreaDetailsList extends BaseActivity
             if (attractionItem.noteId == 0)
             {
                 MyInt myInt = new MyInt();
-                try(DatabaseAccess da = databaseAccess();)
+                try(DatabaseAccess da = databaseAccess())
                 {
                     if (!da.getNextNoteId(holidayId, myInt))
                         return;
@@ -329,7 +312,7 @@ public class AttractionAreaDetailsList extends BaseActivity
     {
         try
         {
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if (!da.deleteAttractionItem(attractionItem))
                     return;

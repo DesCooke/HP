@@ -34,7 +34,7 @@ class TableTipGroup extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS tipgroup " + "( " + "  holidayId           INT(5),  " + "  tipGroupId          INT(5),  " + "  sequenceNo          INT(5),  " + "  tipGroupDescription VARCHAR, " + "  tipGroupPicture     VARCHAR, " + "  tipGroupNotes       VARCHAR, " + "  infoId              INT(5),  " + "  noteId              INT(5),  " + "  galleryId           INT(5),  " + "  sygicId             INT(5)   " + ")";
+            String lSQL="CREATE TABLE IF NOT EXISTS tipgroup " + "( " + "  holidayId           INT(5),  " + "  tipGroupId          INT(5),  " + "  sequenceNo          INT(5),  " + "  tipGroupDescription VARCHAR, " + "  tipGroupPicture     VARCHAR, " + "  tipGroupNotes       VARCHAR, " + "  infoId              INT(5),  " + "  noteId              INT(5),  " + "  galleryId           INT(5)  " + ")";
 
             db.execSQL(lSQL);
 
@@ -51,16 +51,6 @@ class TableTipGroup extends TableBase
     {
         try
         {
-            if(oldVersion == 35 && newVersion == 36)
-            {
-                db.execSQL("ALTER TABLE tipgroup ADD COLUMN noteId INT(5) DEFAULT 0");
-                db.execSQL("ALTER TABLE tipgroup ADD COLUMN galleryId INT(5) DEFAULT 0");
-                db.execSQL("ALTER TABLE tipgroup ADD COLUMN sygicId INT(5) DEFAULT 0");
-
-                db.execSQL("UPDATE tipgroup SET noteId = 0");
-                db.execSQL("UPDATE tipgroup SET galleryId = 0");
-                db.execSQL("UPDATE tipgroup SET sygicId = 0");
-            }
             return (true);
         }
         catch(Exception e)
@@ -104,7 +94,7 @@ class TableTipGroup extends TableBase
                 //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
-            String lSql="INSERT INTO TipGroup " + "  (holidayId, tipGroupId, sequenceNo, tipGroupDescription, " + "   tipGroupPicture, tipGroupNotes, infoId, noteId, galleryId, sygicId) " + "VALUES " + "(" + tipGroupItem.holidayId + "," + tipGroupItem.tipGroupId + "," + tipGroupItem.sequenceNo + ", " + MyQuotedString(tipGroupItem.tipGroupDescription) + ", " + MyQuotedString(tipGroupItem.tipGroupPicture) + ", " + MyQuotedString(tipGroupItem.tipGroupNotes) + ", " + tipGroupItem.infoId + ", " + tipGroupItem.noteId + ", " + tipGroupItem.galleryId + ", " + tipGroupItem.sygicId + " " + ")";
+            String lSql="INSERT INTO TipGroup " + "  (holidayId, tipGroupId, sequenceNo, tipGroupDescription, " + "   tipGroupPicture, tipGroupNotes, infoId, noteId, galleryId) " + "VALUES " + "(" + tipGroupItem.holidayId + "," + tipGroupItem.tipGroupId + "," + tipGroupItem.sequenceNo + ", " + MyQuotedString(tipGroupItem.tipGroupDescription) + ", " + MyQuotedString(tipGroupItem.tipGroupPicture) + ", " + MyQuotedString(tipGroupItem.tipGroupNotes) + ", " + tipGroupItem.infoId + ", " + tipGroupItem.noteId + ", " + tipGroupItem.galleryId + ")";
 
             return (executeSQL("addTipGroupItem", lSql));
 
@@ -193,7 +183,7 @@ class TableTipGroup extends TableBase
             }
 
             String lSQL;
-            lSQL="UPDATE TipGroup " + "SET sequenceNo = " + tipGroupItem.sequenceNo + ", " + "    tipGroupDescription = " + MyQuotedString(tipGroupItem.tipGroupDescription) + ", " + "    tipGroupPicture = " + MyQuotedString(tipGroupItem.tipGroupPicture) + ", " + "    tipGroupNotes = " + MyQuotedString(tipGroupItem.tipGroupNotes) + ", " + "    infoId = " + tipGroupItem.infoId + ", " + "    noteId = " + tipGroupItem.noteId + ", " + "    galleryId = " + tipGroupItem.galleryId + ", " + "    sygicId = " + tipGroupItem.sygicId + " " + "WHERE holidayId = " + tipGroupItem.holidayId + " " + "AND tipGroupId = " + tipGroupItem.tipGroupId;
+            lSQL="UPDATE TipGroup " + "SET sequenceNo = " + tipGroupItem.sequenceNo + ", " + "    tipGroupDescription = " + MyQuotedString(tipGroupItem.tipGroupDescription) + ", " + "    tipGroupPicture = " + MyQuotedString(tipGroupItem.tipGroupPicture) + ", " + "    tipGroupNotes = " + MyQuotedString(tipGroupItem.tipGroupNotes) + ", " + "    infoId = " + tipGroupItem.infoId + ", " + "    noteId = " + tipGroupItem.noteId + ", " + "    galleryId = " + tipGroupItem.galleryId + ", " + "WHERE holidayId = " + tipGroupItem.holidayId + " " + "AND tipGroupId = " + tipGroupItem.tipGroupId;
 
             return (executeSQL("updateTipGroupItem", lSQL));
         }
@@ -238,7 +228,7 @@ class TableTipGroup extends TableBase
                 return (false);
 
             String lSQL;
-            lSQL="SELECT holidayId, tipGroupId, sequenceNo, tipGroupDescription, " + "  tipGroupPicture, tipGroupNotes, infoId, noteId, galleryId, sygicId " + "FROM tipGroup " + "WHERE HolidayId = " + holidayId + " " + "AND TipGroupId = " + tipGroupId;
+            lSQL="SELECT holidayId, tipGroupId, sequenceNo, tipGroupDescription, " + "  tipGroupPicture, tipGroupNotes, infoId, noteId, galleryId " + "FROM tipGroup " + "WHERE HolidayId = " + holidayId + " " + "AND TipGroupId = " + tipGroupId;
 
             Cursor cursor=executeSQLOpenCursor("getTipGroupItem", lSQL);
             if(cursor != null)
@@ -276,7 +266,6 @@ class TableTipGroup extends TableBase
             tipGroupItem.infoId=Integer.parseInt(cursor.getString(6));
             tipGroupItem.noteId=Integer.parseInt(cursor.getString(7));
             tipGroupItem.galleryId=Integer.parseInt(cursor.getString(8));
-            tipGroupItem.sygicId=Integer.parseInt(cursor.getString(9));
 
             tipGroupItem.origHolidayId=tipGroupItem.holidayId;
             tipGroupItem.origTipGroupId=tipGroupItem.tipGroupId;
@@ -287,7 +276,6 @@ class TableTipGroup extends TableBase
             tipGroupItem.origInfoId=tipGroupItem.infoId;
             tipGroupItem.origNoteId=tipGroupItem.noteId;
             tipGroupItem.origGalleryId=tipGroupItem.galleryId;
-            tipGroupItem.origSygicId=tipGroupItem.sygicId;
 
             tipGroupItem.pictureChanged=false;
 
@@ -368,7 +356,7 @@ class TableTipGroup extends TableBase
     {
         try
         {
-            String lSql="SELECT holidayId, tipGroupId, sequenceNo, tipGroupDescription, " + "  tipGroupPicture, tipGroupNotes, infoId, noteId, galleryId, sygicId  " + "FROM TipGroup " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
+            String lSql="SELECT holidayId, tipGroupId, sequenceNo, tipGroupDescription, " + "  tipGroupPicture, tipGroupNotes, infoId, noteId, galleryId  " + "FROM TipGroup " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
 
             Cursor cursor=executeSQLOpenCursor("getTipGroupList", lSql);
             if(cursor == null)

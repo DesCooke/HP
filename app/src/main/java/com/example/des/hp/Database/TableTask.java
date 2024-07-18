@@ -35,7 +35,7 @@ class TableTask extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS tasks " + "( " + "  holidayId       INT(5),  " + "  taskId          INT(5),  " + "  sequenceNo      INT(5),  " + "  taskDescription VARCHAR, " + "  taskDateKnown   INT(1),  " + "  taskDate        INT(16), " + "  taskPicture     VARCHAR, " + "  taskComplete    INT(1),  " + "  taskNotes       VARCHAR, " + "  infoId          INT(5),  " + "  noteId          INT(5),  " + "  galleryId       INT(5),  " + "  sygicId         INT(5)   " + ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS tasks " + "( " + "  holidayId       INT(5),  " + "  taskId          INT(5),  " + "  sequenceNo      INT(5),  " + "  taskDescription VARCHAR, " + "  taskDateKnown   INT(1),  " + "  taskDate        INT(16), " + "  taskPicture     VARCHAR, " + "  taskComplete    INT(1),  " + "  taskNotes       VARCHAR, " + "  infoId          INT(5),  " + "  noteId          INT(5),  " + "  galleryId       INT(5)  " + ") ";
 
             db.execSQL(lSQL);
 
@@ -52,16 +52,6 @@ class TableTask extends TableBase
     {
         try
         {
-            if(oldVersion == 35 && newVersion == 36)
-            {
-                db.execSQL("ALTER TABLE tasks ADD COLUMN noteId INT(5) DEFAULT 0");
-                db.execSQL("ALTER TABLE tasks ADD COLUMN galleryId INT(5) DEFAULT 0");
-                db.execSQL("ALTER TABLE tasks ADD COLUMN sygicId INT(5) DEFAULT 0");
-
-                db.execSQL("UPDATE tasks SET noteId = 0");
-                db.execSQL("UPDATE tasks SET galleryId = 0");
-                db.execSQL("UPDATE tasks SET sygicId = 0");
-            }
             return (true);
         }
         catch(Exception e)
@@ -132,7 +122,7 @@ class TableTask extends TableBase
             if(taskItem.taskComplete)
                 lTaskComplete=1;
 
-            String lSql="INSERT INTO tasks " + "  (holidayId, taskId, sequenceNo, taskDescription, " + "   taskDateKnown, taskDate, taskPicture, taskComplete, taskNotes, infoId, " + "   noteId, galleryId, sygicId) " + "VALUES " + "(" + taskItem.holidayId + "," + taskItem.taskId + "," + taskItem.sequenceNo + ", " + MyQuotedString(taskItem.taskDescription) + ", " + lTaskDateKnown + "," + taskItem.taskDateInt + "," + MyQuotedString(taskItem.taskPicture) + ", " + lTaskComplete + ", " + MyQuotedString(taskItem.taskNotes) + ", " + taskItem.infoId + ", " + taskItem.noteId + ", " + taskItem.galleryId + ", " + taskItem.sygicId + " " + ")";
+            String lSql="INSERT INTO tasks " + "  (holidayId, taskId, sequenceNo, taskDescription, " + "   taskDateKnown, taskDate, taskPicture, taskComplete, taskNotes, infoId, " + "   noteId, galleryId) " + "VALUES " + "(" + taskItem.holidayId + "," + taskItem.taskId + "," + taskItem.sequenceNo + ", " + MyQuotedString(taskItem.taskDescription) + ", " + lTaskDateKnown + "," + taskItem.taskDateInt + "," + MyQuotedString(taskItem.taskPicture) + ", " + lTaskComplete + ", " + MyQuotedString(taskItem.taskNotes) + ", " + taskItem.infoId + ", " + taskItem.noteId + ", " + taskItem.galleryId + ")";
 
             return (executeSQL("addTaskItem", lSql));
 
@@ -230,7 +220,7 @@ class TableTask extends TableBase
                 lTaskComplete=1;
 
             String lSQL;
-            lSQL="UPDATE Tasks " + "SET sequenceNo = " + taskItem.sequenceNo + ", " + "    taskDescription = " + MyQuotedString(taskItem.taskDescription) + ", " + "    taskDateKnown = " + lDateKnown + ", " + "    taskDate = " + taskItem.taskDateInt + ", " + "    taskPicture = " + MyQuotedString(taskItem.taskPicture) + ", " + "    taskComplete = " + lTaskComplete + ", " + "    taskNotes = " + MyQuotedString(taskItem.taskNotes) + ", " + "    infoId = " + taskItem.infoId + ", " + "    noteId = " + taskItem.noteId + ", " + "    galleryId = " + taskItem.galleryId + ", " + "    sygicId = " + taskItem.sygicId + " " + "WHERE holidayId = " + taskItem.holidayId + " " + "AND taskId = " + taskItem.taskId;
+            lSQL="UPDATE Tasks " + "SET sequenceNo = " + taskItem.sequenceNo + ", " + "    taskDescription = " + MyQuotedString(taskItem.taskDescription) + ", " + "    taskDateKnown = " + lDateKnown + ", " + "    taskDate = " + taskItem.taskDateInt + ", " + "    taskPicture = " + MyQuotedString(taskItem.taskPicture) + ", " + "    taskComplete = " + lTaskComplete + ", " + "    taskNotes = " + MyQuotedString(taskItem.taskNotes) + ", " + "    infoId = " + taskItem.infoId + ", " + "    noteId = " + taskItem.noteId + ", " + "    galleryId = " + taskItem.galleryId + " " + "WHERE holidayId = " + taskItem.holidayId + " " + "AND taskId = " + taskItem.taskId;
             return (executeSQL("updateTaskItem", lSQL));
         }
         catch(Exception e)
@@ -296,7 +286,7 @@ class TableTask extends TableBase
                 return (false);
 
             String lSQL;
-            lSQL="SELECT holidayId, taskId, sequenceNo, taskDescription, " + "  taskDateKnown, taskDate, taskPicture, taskComplete, taskNotes, infoId, " + "  noteId, galleryId, sygicId " + "FROM Tasks " + "WHERE HolidayId = " + holidayId + " " + "AND TaskId = " + taskId;
+            lSQL="SELECT holidayId, taskId, sequenceNo, taskDescription, " + "  taskDateKnown, taskDate, taskPicture, taskComplete, taskNotes, infoId, " + "  noteId, galleryId " + "FROM Tasks " + "WHERE HolidayId = " + holidayId + " " + "AND TaskId = " + taskId;
 
             Cursor cursor=executeSQLOpenCursor("getTaskItem", lSQL);
             if(cursor != null)
@@ -351,7 +341,6 @@ class TableTask extends TableBase
             taskItem.infoId=Integer.parseInt(cursor.getString(9));
             taskItem.noteId=Integer.parseInt(cursor.getString(10));
             taskItem.galleryId=Integer.parseInt(cursor.getString(11));
-            taskItem.sygicId=Integer.parseInt(cursor.getString(12));
 
             taskItem.origHolidayId=taskItem.holidayId;
             taskItem.origTaskId=taskItem.taskId;
@@ -367,7 +356,6 @@ class TableTask extends TableBase
             taskItem.origInfoId=taskItem.infoId;
             taskItem.origNoteId=taskItem.noteId;
             taskItem.origGalleryId=taskItem.galleryId;
-            taskItem.origSygicId=taskItem.sygicId;
             taskItem.pictureChanged=false;
 
             if(taskItem.taskPicture.length() > 0)
@@ -429,7 +417,7 @@ class TableTask extends TableBase
     {
         try
         {
-            String lSql="SELECT holidayId, taskId, sequenceNo, taskDescription, " + "  taskDateKnown, taskDate, taskPicture, taskComplete, taskNotes, infoId, " + "  noteId, galleryId, sygicId " + "FROM Tasks " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
+            String lSql="SELECT holidayId, taskId, sequenceNo, taskDescription, " + "  taskDateKnown, taskDate, taskPicture, taskComplete, taskNotes, infoId, " + "  noteId, galleryId " + "FROM Tasks " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
 
             Cursor cursor=executeSQLOpenCursor("getTaskList", lSql);
             if(cursor == null)

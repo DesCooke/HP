@@ -51,8 +51,7 @@ class TableSchedule extends TableBase
                     "  endMin           INT(2),  " +
                     "  infoId           INT(5),  " +
                     "  noteId           INT(5),  " +
-                    "  galleryId        INT(5),  " +
-                    "  sygicId          INT(5)   " +
+                    "  galleryId        INT(5)   " +
                     ") ";
 
             db.execSQL(lSQL);
@@ -70,16 +69,6 @@ class TableSchedule extends TableBase
     {
         try
         {
-            if(oldVersion == 35 && newVersion == 36)
-            {
-                db.execSQL("ALTER TABLE schedule ADD COLUMN noteId INT(5) DEFAULT 0");
-                db.execSQL("ALTER TABLE schedule ADD COLUMN galleryId INT(5) DEFAULT 0");
-                db.execSQL("ALTER TABLE schedule ADD COLUMN sygicId INT(5) DEFAULT 0");
-
-                db.execSQL("UPDATE schedule SET noteId = 0");
-                db.execSQL("UPDATE schedule SET galleryId = 0");
-                db.execSQL("UPDATE schedule SET sygicId = 0");
-            }
             return (true);
         }
         catch(Exception e)
@@ -127,7 +116,7 @@ class TableSchedule extends TableBase
 
             int lEndTimeKnown=scheduleItem.endTimeKnown ? 1 : 0;
 
-            String lSql="INSERT INTO schedule " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, sequenceNo, schedType, " + "   schedName, schedPicture, startTimeKnown, startHour, " + "   startMin, endTimeKnown, endHour, endMin, infoId, " + "   noteId, galleryId, sygicId) " + " VALUES " + "(" + scheduleItem.holidayId + "," + scheduleItem.dayId + "," + scheduleItem.attractionId + "," + scheduleItem.attractionAreaId + "," + scheduleItem.scheduleId + "," + scheduleItem.sequenceNo + "," + scheduleItem.schedType + "," + MyQuotedString(scheduleItem.schedName) + "," + MyQuotedString(scheduleItem.schedPicture) + "," + lStartTimeKnown + ", " + scheduleItem.startHour + ", " + scheduleItem.startMin + ", " + lEndTimeKnown + ", " + scheduleItem.endHour + ", " + scheduleItem.endMin + ", " + scheduleItem.infoId + ", " + scheduleItem.noteId + ", " + scheduleItem.galleryId + ", " + scheduleItem.sygicId + " " + ")";
+            String lSql="INSERT INTO schedule " + "  (holidayId, dayId, attractionId, attractionAreaId, " + "   scheduleId, sequenceNo, schedType, " + "   schedName, schedPicture, startTimeKnown, startHour, " + "   startMin, endTimeKnown, endHour, endMin, infoId, " + "   noteId, galleryId) " + " VALUES " + "(" + scheduleItem.holidayId + "," + scheduleItem.dayId + "," + scheduleItem.attractionId + "," + scheduleItem.attractionAreaId + "," + scheduleItem.scheduleId + "," + scheduleItem.sequenceNo + "," + scheduleItem.schedType + "," + MyQuotedString(scheduleItem.schedName) + "," + MyQuotedString(scheduleItem.schedPicture) + "," + lStartTimeKnown + ", " + scheduleItem.startHour + ", " + scheduleItem.startMin + ", " + lEndTimeKnown + ", " + scheduleItem.endHour + ", " + scheduleItem.endMin + ", " + scheduleItem.infoId + ", " + scheduleItem.noteId + ", " + scheduleItem.galleryId + ")";
 
             return (executeSQL("addScheduleItem", lSql));
 
@@ -308,7 +297,7 @@ class TableSchedule extends TableBase
 
             }
             String lSQL;
-            lSQL="UPDATE schedule " + "SET dayId = " + scheduleItem.dayId + ", " + "    attractionId = " + scheduleItem.attractionId + ", " + "    attractionAreaId = " + scheduleItem.attractionAreaId + ", " + "    schedName = " + MyQuotedString(scheduleItem.schedName) + ", " + "    schedPicture = " + MyQuotedString(scheduleItem.schedPicture) + ", " + "    startTimeKnown = " + lStartTimeKnown + ", " + "    startHour = " + scheduleItem.startHour + ", " + "    startMin = " + scheduleItem.startMin + ", " + "    endTimeKnown = " + lEndTimeKnown + ", " + "    endHour = " + scheduleItem.endHour + ", " + "    endMin = " + scheduleItem.endMin + ", " + "    sequenceNo = " + scheduleItem.sequenceNo + ", " + "    scheduleId = " + scheduleItem.scheduleId + ", " + "    infoId = " + scheduleItem.infoId + ", " + "    noteId = " + scheduleItem.noteId + ", " + "    galleryId = " + scheduleItem.galleryId + ", " + "    sygicId = " + scheduleItem.sygicId + " " + "WHERE holidayId = " + scheduleItem.holidayId + " " + "AND dayId = " + scheduleItem.origDayId + " " + "AND attractionId = " + scheduleItem.origAttractionId + " " + "AND attractionAreaId = " + scheduleItem.origAttractionAreaId + " " + "AND scheduleId = " + scheduleItem.origScheduleId;
+            lSQL="UPDATE schedule " + "SET dayId = " + scheduleItem.dayId + ", " + "    attractionId = " + scheduleItem.attractionId + ", " + "    attractionAreaId = " + scheduleItem.attractionAreaId + ", " + "    schedName = " + MyQuotedString(scheduleItem.schedName) + ", " + "    schedPicture = " + MyQuotedString(scheduleItem.schedPicture) + ", " + "    startTimeKnown = " + lStartTimeKnown + ", " + "    startHour = " + scheduleItem.startHour + ", " + "    startMin = " + scheduleItem.startMin + ", " + "    endTimeKnown = " + lEndTimeKnown + ", " + "    endHour = " + scheduleItem.endHour + ", " + "    endMin = " + scheduleItem.endMin + ", " + "    sequenceNo = " + scheduleItem.sequenceNo + ", " + "    scheduleId = " + scheduleItem.scheduleId + ", " + "    infoId = " + scheduleItem.infoId + ", " + "    noteId = " + scheduleItem.noteId + ", " + "    galleryId = " + scheduleItem.galleryId + " WHERE holidayId = " + scheduleItem.holidayId + " " + "AND dayId = " + scheduleItem.origDayId + " " + "AND attractionId = " + scheduleItem.origAttractionId + " " + "AND attractionAreaId = " + scheduleItem.origAttractionAreaId + " " + "AND scheduleId = " + scheduleItem.origScheduleId;
 
             return (executeSQL("updateScheduleItem", lSQL));
 
@@ -375,7 +364,7 @@ class TableSchedule extends TableBase
                 return (false);
 
             String lSQL;
-            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "       scheduleId, sequenceNo, schedType, " + "       schedName, schedPicture, startTimeKnown, startHour,  " + "       startMin, endTimeKnown, endHour, endMin, infoId, noteId, galleryId, " + "       sygicId " + "FROM Schedule " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
+            lSQL="SELECT holidayId, dayId, attractionId, attractionAreaId, " + "       scheduleId, sequenceNo, schedType, " + "       schedName, schedPicture, startTimeKnown, startHour,  " + "       startMin, endTimeKnown, endHour, endMin, infoId, noteId, galleryId " + " FROM Schedule " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId + " " + "AND attractionAreaId = " + attractionAreaId + " " + "AND ScheduleId = " + scheduleId;
 
             Cursor cursor=executeSQLOpenCursor("getScheduleItem", lSQL);
             if(cursor != null)
@@ -423,7 +412,6 @@ class TableSchedule extends TableBase
             scheduleItem.infoId=Integer.parseInt(cursor.getString(15));
             scheduleItem.noteId=Integer.parseInt(cursor.getString(16));
             scheduleItem.galleryId=Integer.parseInt(cursor.getString(17));
-            scheduleItem.sygicId=Integer.parseInt(cursor.getString(18));
 
             scheduleItem.origHolidayId=scheduleItem.holidayId;
             scheduleItem.origDayId=scheduleItem.dayId;
@@ -443,7 +431,6 @@ class TableSchedule extends TableBase
             scheduleItem.origInfoId=scheduleItem.infoId;
             scheduleItem.origNoteId=scheduleItem.noteId;
             scheduleItem.origGalleryId=scheduleItem.galleryId;
-            scheduleItem.origSygicId=scheduleItem.sygicId;
 
             scheduleItem.pictureChanged=false;
 
@@ -509,8 +496,8 @@ class TableSchedule extends TableBase
             String lSql="SELECT holidayId, dayId, attractionId, attractionAreaId, " +
                     "       scheduleId, sequenceNo, schedType, " +
                     "       schedName, schedPicture, startTimeKnown, startHour,  " +
-                    "       startMin, endTimeKnown, endHour, endMin, infoId, noteId, galleryId, " +
-                    "       sygicId " + "FROM Schedule " + "WHERE HolidayId = " + holidayId +
+                    "       startMin, endTimeKnown, endHour, endMin, infoId, noteId, galleryId " +
+                    "       FROM Schedule " + "WHERE HolidayId = " + holidayId +
                     " " + "AND DayId = " + dayId + " " + "AND attractionId = " + attractionId +
                     " " + "AND attractionAreaId = " + attractionAreaId + " " + "ORDER BY SequenceNo ";
 

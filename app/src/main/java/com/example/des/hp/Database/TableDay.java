@@ -36,7 +36,7 @@ class TableDay extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS day " + "( " + "  holidayId  INT(5),  " + "  dayId      INT(5),  " + "  sequenceNo INT(5),  " + "  dayName    VARCHAR, " + "  dayPicture VARCHAR, " + "  dayCat     INT(5),  " + "  infoId     INT(5),  " + "  noteId     INT(5),  " + "  galleryId  INT(5),  " + "  sygicId    INT(5)   " + ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS day " + "( " + "  holidayId  INT(5),  " + "  dayId      INT(5),  " + "  sequenceNo INT(5),  " + "  dayName    VARCHAR, " + "  dayPicture VARCHAR, " + "  dayCat     INT(5),  " + "  infoId     INT(5),  " + "  noteId     INT(5),  " + "  galleryId  INT(5) ) ";
 
             db.execSQL(lSQL);
 
@@ -53,16 +53,6 @@ class TableDay extends TableBase
     {
         try
         {
-            if(oldVersion == 35 && newVersion == 36)
-            {
-                db.execSQL("ALTER TABLE day ADD COLUMN noteId INT(5) DEFAULT 0");
-                db.execSQL("ALTER TABLE day ADD COLUMN galleryId INT(5) DEFAULT 0");
-                db.execSQL("ALTER TABLE day ADD COLUMN sygicId INT(5) DEFAULT 0");
-
-                db.execSQL("UPDATE day SET noteId = 0");
-                db.execSQL("UPDATE day SET galleryId = 0");
-                db.execSQL("UPDATE day SET sygicId = 0");
-            }
             return (true);
         }
         catch(Exception e)
@@ -126,7 +116,7 @@ class TableDay extends TableBase
                 //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
-            String lSql="INSERT INTO day " + "  (holidayId, dayId, dayName, dayPicture, sequenceNo, dayCat, infoId, " + "   noteId, galleryId, sygicId) " + "VALUES " + "(" + dayItem.holidayId + "," + dayItem.dayId + "," + MyQuotedString(dayItem.dayName) + "," + MyQuotedString(dayItem.dayPicture) + "," + dayItem.sequenceNo + ", " + dayItem.dayCat + ", " + dayItem.infoId + ", " + dayItem.noteId + ", " + dayItem.galleryId + ", " + dayItem.sygicId + " " + ")";
+            String lSql="INSERT INTO day " + "  (holidayId, dayId, dayName, dayPicture, sequenceNo, dayCat, infoId, " + "   noteId, galleryId) " + "VALUES " + "(" + dayItem.holidayId + "," + dayItem.dayId + "," + MyQuotedString(dayItem.dayName) + "," + MyQuotedString(dayItem.dayPicture) + "," + dayItem.sequenceNo + ", " + dayItem.dayCat + ", " + dayItem.infoId + ", " + dayItem.noteId + ", " + dayItem.galleryId + ")";
 
             return (executeSQL("addDayItem", lSql));
         }
@@ -215,7 +205,7 @@ class TableDay extends TableBase
             }
 
             String lSQL;
-            lSQL="UPDATE day " + "SET dayName = " + MyQuotedString(dayItem.dayName) + ", " + "    dayPicture = " + MyQuotedString(dayItem.dayPicture) + ", " + "    dayId = " + dayItem.dayId + ", " + "    sequenceNo = " + dayItem.sequenceNo + ", " + "    dayCat = " + dayItem.dayCat + ", " + "    infoId = " + dayItem.infoId + ", " + "    noteId = " + dayItem.noteId + ", " + "    galleryId = " + dayItem.galleryId + ", " + "    sygicId = " + dayItem.sygicId + " " + "WHERE holidayId = " + dayItem.holidayId + " " + "AND dayId = " + dayItem.origDayId;
+            lSQL="UPDATE day " + "SET dayName = " + MyQuotedString(dayItem.dayName) + ", " + "    dayPicture = " + MyQuotedString(dayItem.dayPicture) + ", " + "    dayId = " + dayItem.dayId + ", " + "    sequenceNo = " + dayItem.sequenceNo + ", " + "    dayCat = " + dayItem.dayCat + ", " + "    infoId = " + dayItem.infoId + ", " + "    noteId = " + dayItem.noteId + ", " + "    galleryId = " + dayItem.galleryId + "  " + "WHERE holidayId = " + dayItem.holidayId + " " + "AND dayId = " + dayItem.origDayId;
 
             return (executeSQL("updateDayItem", lSQL));
         }
@@ -283,7 +273,7 @@ class TableDay extends TableBase
                 return (false);
 
             String lSQL;
-            lSQL="SELECT holidayId, dayId, dayName, dayPicture, sequenceNo, dayCat, infoId, " + " noteId, galleryId, sygicId " + "FROM Day " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId;
+            lSQL="SELECT holidayId, dayId, dayName, dayPicture, sequenceNo, dayCat, infoId, " + " noteId, galleryId " + "FROM Day " + "WHERE HolidayId = " + holidayId + " " + "AND DayId = " + dayId;
 
             Cursor cursor=executeSQLOpenCursor("getDayItem", lSQL);
             if(cursor != null)
@@ -322,7 +312,6 @@ class TableDay extends TableBase
             dayItem.infoId=Integer.parseInt(cursor.getString(6));
             dayItem.noteId=Integer.parseInt(cursor.getString(7));
             dayItem.galleryId=Integer.parseInt(cursor.getString(8));
-            dayItem.sygicId=Integer.parseInt(cursor.getString(9));
 
             dayItem.origHolidayId=dayItem.holidayId;
             dayItem.origDayId=dayItem.dayId;
@@ -333,7 +322,6 @@ class TableDay extends TableBase
             dayItem.origInfoId=dayItem.infoId;
             dayItem.origNoteId=dayItem.noteId;
             dayItem.origGalleryId=dayItem.galleryId;
-            dayItem.origSygicId=dayItem.sygicId;
 
             dayItem.pictureChanged=false;
 
@@ -402,7 +390,7 @@ class TableDay extends TableBase
     {
         try
         {
-            String lSql="SELECT holidayId, dayId, dayName, dayPicture, sequenceNo, dayCat, infoId, " + " noteId, galleryId, sygicId " + "FROM day " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
+            String lSql="SELECT holidayId, dayId, dayName, dayPicture, sequenceNo, dayCat, infoId, " + " noteId, galleryId " + "FROM day " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
 
             Cursor cursor=executeSQLOpenCursor("getDayList", lSql);
             if(cursor == null)

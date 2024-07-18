@@ -31,7 +31,7 @@ class TableContact extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS contact " + "( " + "  holidayId          INT(5),  " + "  contactId          INT(5),  " + "  sequenceNo         INT(5),  " + "  contactDescription VARCHAR, " + "  contactPicture     VARCHAR, " + "  contactNotes       VARCHAR, " + "  infoId             INT(5),  " + "  noteId             INT(5),  " + "  galleryId          INT(5),  " + "  sygicId            INT(5)   " + ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS contact " + "( " + "  holidayId          INT(5),  " + "  contactId          INT(5),  " + "  sequenceNo         INT(5),  " + "  contactDescription VARCHAR, " + "  contactPicture     VARCHAR, " + "  contactNotes       VARCHAR, " + "  infoId             INT(5),  " + "  noteId             INT(5),  " + "  galleryId          INT(5)  " + ") ";
 
             db.execSQL(lSQL);
 
@@ -48,16 +48,6 @@ class TableContact extends TableBase
     {
         try
         {
-            if(oldVersion == 35 && newVersion == 36)
-            {
-                db.execSQL("ALTER TABLE contact ADD COLUMN noteId INT(5) DEFAULT 0");
-                db.execSQL("ALTER TABLE contact ADD COLUMN galleryId INT(5) DEFAULT 0");
-                db.execSQL("ALTER TABLE contact ADD COLUMN sygicId INT(5) DEFAULT 0");
-
-                db.execSQL("UPDATE contact SET noteId = 0");
-                db.execSQL("UPDATE contact SET galleryId = 0");
-                db.execSQL("UPDATE contact SET sygicId = 0");
-            }
             return (true);
         }
         catch(Exception e)
@@ -120,7 +110,7 @@ class TableContact extends TableBase
                 //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
-            String lSql="INSERT INTO Contact " + "  (holidayId, contactId, sequenceNo, contactDescription, " + "   contactPicture, contactNotes, infoId, noteId, galleryId, sygicId) " + "VALUES " + "(" + contactItem.holidayId + "," + contactItem.contactId + "," + contactItem.sequenceNo + ", " + MyQuotedString(contactItem.contactDescription) + ", " + MyQuotedString(contactItem.contactPicture) + ", " + MyQuotedString(contactItem.contactNotes) + ", " + contactItem.infoId + ", " + contactItem.noteId + ", " + contactItem.galleryId + ", " + contactItem.sygicId + " " + ")";
+            String lSql="INSERT INTO Contact " + "  (holidayId, contactId, sequenceNo, contactDescription, " + "   contactPicture, contactNotes, infoId, noteId, galleryId) " + "VALUES " + "(" + contactItem.holidayId + "," + contactItem.contactId + "," + contactItem.sequenceNo + ", " + MyQuotedString(contactItem.contactDescription) + ", " + MyQuotedString(contactItem.contactPicture) + ", " + MyQuotedString(contactItem.contactNotes) + ", " + contactItem.infoId + ", " + contactItem.noteId + ", " + contactItem.galleryId + ")";
 
             return (executeSQL("addContactItem", lSql));
         }
@@ -209,7 +199,7 @@ class TableContact extends TableBase
             }
 
             String lSQL;
-            lSQL="UPDATE Contact " + "SET sequenceNo = " + contactItem.sequenceNo + ", " + "    contactDescription = " + MyQuotedString(contactItem.contactDescription) + ", " + "    contactPicture = " + MyQuotedString(contactItem.contactPicture) + ", " + "    contactNotes = " + MyQuotedString(contactItem.contactNotes) + ", " + "    infoId = " + contactItem.infoId + ", " + "    noteId = " + contactItem.noteId + ", " + "    galleryId = " + contactItem.galleryId + ", " + "    sygicId = " + contactItem.sygicId + " " + "WHERE holidayId = " + contactItem.holidayId + " " + "AND contactId = " + contactItem.contactId;
+            lSQL="UPDATE Contact " + "SET sequenceNo = " + contactItem.sequenceNo + ", " + "    contactDescription = " + MyQuotedString(contactItem.contactDescription) + ", " + "    contactPicture = " + MyQuotedString(contactItem.contactPicture) + ", " + "    contactNotes = " + MyQuotedString(contactItem.contactNotes) + ", " + "    infoId = " + contactItem.infoId + ", " + "    noteId = " + contactItem.noteId + ", " + "    galleryId = " + contactItem.galleryId + " WHERE holidayId = " + contactItem.holidayId + " " + "AND contactId = " + contactItem.contactId;
 
             return (executeSQL("updateContactItem", lSQL));
         }
@@ -255,7 +245,7 @@ class TableContact extends TableBase
                 return (false);
 
             String lSQL;
-            lSQL="SELECT holidayId, contactId, sequenceNo, contactDescription, " + "  contactPicture, contactNotes, infoId, noteId, galleryId, sygicId " + "FROM contact " + "WHERE HolidayId = " + holidayId + " " + "AND ContactId = " + contactId;
+            lSQL="SELECT holidayId, contactId, sequenceNo, contactDescription, " + "  contactPicture, contactNotes, infoId, noteId, galleryId " + "FROM contact " + "WHERE HolidayId = " + holidayId + " " + "AND ContactId = " + contactId;
 
             Cursor cursor=executeSQLOpenCursor("getContactItem", lSQL);
             if(cursor != null)
@@ -294,7 +284,6 @@ class TableContact extends TableBase
             contactItem.infoId=Integer.parseInt(cursor.getString(6));
             contactItem.noteId=Integer.parseInt(cursor.getString(7));
             contactItem.galleryId=Integer.parseInt(cursor.getString(8));
-            contactItem.sygicId=Integer.parseInt(cursor.getString(9));
 
             contactItem.origHolidayId=contactItem.holidayId;
             contactItem.origContactId=contactItem.contactId;
@@ -305,7 +294,6 @@ class TableContact extends TableBase
             contactItem.origInfoId=contactItem.infoId;
             contactItem.origNoteId=contactItem.noteId;
             contactItem.origGalleryId=contactItem.galleryId;
-            contactItem.origSygicId=contactItem.sygicId;
 
             contactItem.pictureChanged=false;
 
@@ -378,7 +366,7 @@ class TableContact extends TableBase
     {
         try
         {
-            String lSql="SELECT holidayId, contactId, sequenceNo, contactDescription, " + "  contactPicture, contactNotes, infoId, noteId, galleryId, sygicId  " + "FROM Contact " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
+            String lSql="SELECT holidayId, contactId, sequenceNo, contactDescription, " + "  contactPicture, contactNotes, infoId, noteId, galleryId " + "FROM Contact " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
 
             Cursor cursor=executeSQLOpenCursor("getContactList", lSql);
             if(cursor == null)
