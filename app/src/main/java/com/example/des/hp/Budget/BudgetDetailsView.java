@@ -39,7 +39,6 @@ public class BudgetDetailsView extends BaseActivity
     public LinearLayout grpBudgetTotal;
     public LinearLayout grpBudgetPaid;
     public LinearLayout grpBudgetUnpaid;
-    public TextView txtBudgetOption;
     //endregion
     
     //region Constructors/Destructors
@@ -66,7 +65,6 @@ public class BudgetDetailsView extends BaseActivity
             grpBudgetTotal = (LinearLayout) findViewById(R.id.grpBudgetTotal);
             grpBudgetPaid = (LinearLayout) findViewById(R.id.grpBudgetPaid);
             grpBudgetUnpaid = (LinearLayout) findViewById(R.id.grpBudgetUnpaid);
-            txtBudgetOption = (TextView)findViewById(R.id.txtBudgetOption);
 
             afterCreate();
             
@@ -143,23 +141,6 @@ public class BudgetDetailsView extends BaseActivity
             txtBudgetTotal.setText(StringUtils.IntToMoneyString(budgetItem.budgetTotal));
             txtBudgetUnpaid.setText(StringUtils.IntToMoneyString(budgetItem.budgetUnpaid));
             txtBudgetPaid.setText(StringUtils.IntToMoneyString(budgetItem.budgetPaid));
-
-            if(budgetItem.optionSequenceNo==0)
-            {
-                txtBudgetOption.setText("<none>");
-            }
-            else
-            {
-                BudgetOptionItem boi = new BudgetOptionItem();
-                if(databaseAccess().getBudgetOptionItemFromRowId(budgetItem.optionSequenceNo, boi))
-                {
-                    txtBudgetOption.setText(boi.optionDescription);
-                }
-                else
-                {
-                    txtBudgetOption.setText("<none>");
-                }
-            }
 
             afterShow();
         }

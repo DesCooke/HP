@@ -45,28 +45,6 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             grpBudgetPaid.setOnClickListener(this);
             grpBudgetUnpaid.setOnClickListener(this);
             imageView.setOnClickListener(this);
-
-            txtBudgetOption.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    try
-                    {
-                        Intent intent2=new Intent(getApplicationContext(), BudgetOptionList.class);
-                        intent2.putExtra("HOLIDAYID", budgetItem.holidayId);
-                        intent2.putExtra("BUDGETID", budgetItem.budgetId);
-                        intent2.putExtra("TITLE", budgetItem.budgetDescription);
-                        intent2.putExtra("SUBTITLE", "Budget Options");
-                        startActivity(intent2);
-                    }
-                    catch(Exception e)
-                    {
-                        ShowError("showBudget", e.getMessage());
-                    }
-                }
-            });
-
         }
         catch (Exception e)
         {

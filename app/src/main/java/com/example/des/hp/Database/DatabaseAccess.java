@@ -37,7 +37,7 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 public class DatabaseAccess extends SQLiteOpenHelper
 {
     //region MEMBERVARIABLES
-    public static final int DATABASE_VERSION = 68;
+    public static final int DATABASE_VERSION = 72;
     public static Date currentStartDate;
     public static DatabaseAccess database = null;
     
@@ -47,7 +47,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
     private TableExtraFiles tableExtraFiles;
     private TableTask tableTask;
     private TableBudget tableBudget;
-    private TableBudgetOption tableBudgetOption;
     private TableSchedule tableSchedule;
     private TableTip tableTip;
     private TableTipGroup tableTipGroup;
@@ -81,7 +80,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
             tableExtraFiles = new TableExtraFiles(context, this);
             tableTask = new TableTask(context, this);
             tableBudget = new TableBudget(context, this);
-            tableBudgetOption = new TableBudgetOption(context, this);
             tableTip = new TableTip(context, this);
             tableTipGroup = new TableTipGroup(context, this);
             tableAttraction = new TableAttraction(context, this);
@@ -144,8 +142,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
                 return;
             if (!tableBudget.onCreate(db))
                 return;
-            if (!tableBudgetOption.onCreate(db))
-                return;
             if (!tableTip.onCreate(db))
                 return;
             if (!tableTipGroup.onCreate(db))
@@ -190,8 +186,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
             if (!tableTask.onUpgrade(db, oldVersion, newVersion))
                 return;
             if (!tableBudget.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableBudgetOption.onUpgrade(db, oldVersion, newVersion))
                 return;
             if (!tableTip.onUpgrade(db, oldVersion, newVersion))
                 return;
@@ -1178,8 +1172,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
             if (removeNote(budgetItem.holidayId, budgetItem.noteId) == false)
                 return (false);
 
-            tableBudgetOption.DeleteAllForBudget(budgetItem.holidayId, budgetItem.budgetId);
-            
             return (tableBudget.deleteBudgetItem(budgetItem));
         }
         catch (Exception e)
@@ -1246,148 +1238,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    //endregion
-
-    //region BUDGETOPTION functions
-    public boolean getBudgetOptionCount(int holidayId, int budgetId, MyInt retInt)
-    {
-        try
-        {
-            return (tableBudgetOption.getBudgetOptionCount(holidayId, budgetId, retInt));
-        }
-        catch (Exception e)
-        {
-            ShowError("getBudgetOptionCount", e.getMessage());
-        }
-        return (false);
-
-    }
-
-    public boolean addBudgetOptionItem(BudgetOptionItem budgetOptionItem)
-    {
-        try
-        {
-            return (tableBudgetOption.addBudgetOptionItem(budgetOptionItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("addBudgetOptionItem", e.getMessage());
-        }
-        return (false);
-
-    }
-
-    public boolean updateBudgetOptionItems(ArrayList<BudgetOptionItem> items)
-    {
-        try
-        {
-            return (tableBudgetOption.updateBudgetOptionItems(items));
-        }
-        catch (Exception e)
-        {
-            ShowError("updateBudgetOptionItems", e.getMessage());
-        }
-        return (false);
-
-    }
-
-    public boolean updateBudgetOptionItem(BudgetOptionItem budgetOptionItem)
-    {
-        try
-        {
-            return (tableBudgetOption.updateBudgetOptionItem(budgetOptionItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("updateBudgetOptionItem", e.getMessage());
-        }
-        return (false);
-
-    }
-
-    public boolean deleteBudgetOptionItem(BudgetOptionItem budgetOptionItem)
-    {
-        try
-        {
-            return (tableBudgetOption.deleteBudgetOptionItem(budgetOptionItem));
-        }
-        catch (Exception e)
-        {
-            ShowError("deleteBudgetOptionItem", e.getMessage());
-        }
-        return (false);
-
-    }
-
-    public boolean getBudgetOptionItem(int holidayId, int budgetId, int sequenceNo, BudgetOptionItem item)
-    {
-        try
-        {
-            return (tableBudgetOption.getBudgetOptionItem(holidayId, budgetId, sequenceNo, item));
-        }
-        catch (Exception e)
-        {
-            ShowError("getBudgetOptionItem", e.getMessage());
-        }
-        return (false);
-
-    }
-
-    public boolean getBudgetOptionItemFromRowId(int rowId, BudgetOptionItem item)
-    {
-        try
-        {
-            return (tableBudgetOption.getBudgetOptionItemFromRowId(rowId, item));
-        }
-        catch (Exception e)
-        {
-            ShowError("getBudgetOptionItem", e.getMessage());
-        }
-        return (false);
-
-    }
-
-    public boolean getNextBudgetOptionSequenceNo(int holidayId, int budgetId, MyInt retInt)
-    {
-        try
-        {
-            return (tableBudgetOption.getNextBudgetSequenceNo(holidayId, budgetId, retInt));
-        }
-        catch (Exception e)
-        {
-            ShowError("getNextBudgetOptionSequenceNo", e.getMessage());
-        }
-        return (false);
-
-    }
-
-    public boolean getBudgetOptionList(int holidayId, int budgetId, ArrayList<BudgetOptionItem> al)
-    {
-        try
-        {
-            return (tableBudgetOption.getBudgetOptionList(holidayId, budgetId, al));
-        }
-        catch (Exception e)
-        {
-            ShowError("getBudgetOptionList", e.getMessage());
-        }
-        return (false);
-
-    }
-
-    public boolean getAllBudgetOptions(ArrayList<BudgetOptionItem> al)
-    {
-        try
-        {
-            return (tableBudgetOption.getAllOptions(al));
-        }
-        catch (Exception e)
-        {
-            ShowError("getAllBudgetOptions", e.getMessage());
-        }
-        return (false);
-
-    }
     //endregion
 
     //region TIP functions

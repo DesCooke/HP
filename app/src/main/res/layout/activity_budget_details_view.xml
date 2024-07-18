@@ -118,30 +118,6 @@
             android:textSize="22sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/grpBudgetOption"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/txtBudgetOptionCaption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/caption_budget_option"
-            android:textSize="22sp" />
-
-        <TextView
-            android:id="@+id/txtBudgetOption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/caption_zero"
-            android:textAlignment="textEnd"
-            android:textSize="22sp" />
-    </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/grpMenuFile"

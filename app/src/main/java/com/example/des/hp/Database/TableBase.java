@@ -111,6 +111,9 @@ public class TableBase
 
     public String MyQuotedString(String argString)
     {
+        if(argString == null)
+            return ("''");
+
         if(argString.length() == 0)
             return ("''");
 
