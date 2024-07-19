@@ -42,25 +42,6 @@ public class BudgetItem
 
     public Bitmap fileBitmap;
 
-    public void RemoveOption()
-    {
-        int i = budgetDescription.indexOf("(");
-        if(i<0)
-            return;
-        budgetDescription = budgetDescription.substring(0,i-1);
-        budgetDescription = budgetDescription.trim();
-    }
-
-    public void AddOption(String option)
-    {
-        RemoveOption();
-        budgetDescription = budgetDescription + " (" + option + ")";
-    }
-
-    public void CalculateUnPaid()
-    {
-        budgetUnpaid = budgetTotal - budgetPaid;
-    }
     public BudgetItem()
     {
         budgetDescription="";

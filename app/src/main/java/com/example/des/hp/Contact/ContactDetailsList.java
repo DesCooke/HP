@@ -16,12 +16,14 @@ import java.util.Collections;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
+import androidx.annotation.NonNull;
+
 public class ContactDetailsList extends BaseActivity
 {
     
     //region Member Variables
     public ArrayList<ContactItem> contactList;
-    public ContactAdapter contactAdapter;
+    private ContactAdapter contactAdapter;
     //endregion
     
     //region Constructors/Destructors
@@ -87,7 +89,7 @@ public class ContactDetailsList extends BaseActivity
             allowCellMove = true;
             
             contactList = new ArrayList<>();
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if (!da.getContactList(holidayId, contactList))
                     return;
@@ -96,19 +98,14 @@ public class ContactDetailsList extends BaseActivity
             
             CreateRecyclerView(R.id.contactListView, contactAdapter);
             
-            contactAdapter.setOnItemClickListener(new ContactAdapter.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(View view, ContactItem obj)
-                {
-                    Intent intent = new Intent(getApplicationContext(), ContactDetailsView.class);
-                    intent.putExtra("ACTION", "view");
-                    intent.putExtra("HOLIDAYID", obj.holidayId);
-                    intent.putExtra("CONTACTID", obj.contactId);
-                    intent.putExtra("TITLE", title + "/" + subTitle);
-                    intent.putExtra("SUBTITLE", obj.contactDescription);
-                    startActivity(intent);
-                }
+            contactAdapter.setOnItemClickListener((view, obj) -> {
+                Intent intent = new Intent(getApplicationContext(), ContactDetailsView.class);
+                intent.putExtra("ACTION", "view");
+                intent.putExtra("HOLIDAYID", obj.holidayId);
+                intent.putExtra("CONTACTID", obj.contactId);
+                intent.putExtra("TITLE", title + "/" + subTitle);
+                intent.putExtra("SUBTITLE", obj.contactDescription);
+                startActivity(intent);
             });
             
             afterShow();
@@ -165,18 +162,13 @@ public class ContactDetailsList extends BaseActivity
     
     //region OnClick Events
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
         try
         {
-            switch (item.getItemId())
-            {
-                case R.id.action_add_contact:
-                    showContactAdd(null);
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
+            int id=item.getItemId();
+            if(id==R.id.action_add_contact)
+                showContactAdd(null);
         }
         catch (Exception e)
         {

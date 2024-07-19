@@ -5,23 +5,19 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
-import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
+import androidx.annotation.NonNull;
 
 public class BudgetDetailsView extends BaseActivity
 {
@@ -53,19 +49,19 @@ public class BudgetDetailsView extends BaseActivity
             layoutName = "activity_tip_details_view";
             setContentView(R.layout.activity_budget_details_view);
             
-            imageView = (ImageView) findViewById(R.id.imageViewSmall);
-            txtBudgetDescription = (TextView) findViewById(R.id.txtBudgetDescription);
-            txtBudgetPaid = (TextView) findViewById(R.id.txtBudgetPaid);
-            txtBudgetUnpaid = (TextView) findViewById(R.id.txtBudgetUnpaid);
-            txtBudgetTotal = (TextView) findViewById(R.id.txtBudgetTotal);
-            txtNotes = (TextView) findViewById(R.id.txtNotes);
-            btnClear = (ImageButton) findViewById(R.id.btnClear);
-            btnSave = (Button) findViewById(R.id.btnSave);
-            grpMenuFile = (LinearLayout) findViewById(R.id.grpMenuFile);
-            grpBudgetDescription = (LinearLayout) findViewById(R.id.grpBudgetDescription);
-            grpBudgetTotal = (LinearLayout) findViewById(R.id.grpBudgetTotal);
-            grpBudgetPaid = (LinearLayout) findViewById(R.id.grpBudgetPaid);
-            grpBudgetUnpaid = (LinearLayout) findViewById(R.id.grpBudgetUnpaid);
+            imageView = findViewById(R.id.imageViewSmall);
+            txtBudgetDescription = findViewById(R.id.txtBudgetDescription);
+            txtBudgetPaid = findViewById(R.id.txtBudgetPaid);
+            txtBudgetUnpaid = findViewById(R.id.txtBudgetUnpaid);
+            txtBudgetTotal = findViewById(R.id.txtBudgetTotal);
+            txtNotes = findViewById(R.id.txtNotes);
+            btnClear = findViewById(R.id.btnClear);
+            btnSave = findViewById(R.id.btnSave);
+            grpMenuFile = findViewById(R.id.grpMenuFile);
+            grpBudgetDescription = findViewById(R.id.grpBudgetDescription);
+            grpBudgetTotal = findViewById(R.id.grpBudgetTotal);
+            grpBudgetPaid = findViewById(R.id.grpBudgetPaid);
+            grpBudgetUnpaid = findViewById(R.id.grpBudgetUnpaid);
 
             afterCreate();
             
@@ -94,21 +90,15 @@ public class BudgetDetailsView extends BaseActivity
     
     //region OnClick Events
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
         try
         {
-            switch (item.getItemId())
-            {
-                case R.id.action_delete_budget:
-                    deleteBudget();
-                    return true;
-                case R.id.action_edit_budget:
-                    editBudget();
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
+            int id=item.getItemId();
+            if(id==R.id.action_delete_budget)
+                deleteBudget();
+            if(id==R.id.action_edit_budget)
+                editBudget();
         }
         catch (Exception e)
         {
@@ -125,13 +115,13 @@ public class BudgetDetailsView extends BaseActivity
         try
         {
             budgetItem = new BudgetItem();
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if (!da.getBudgetItem(holidayId, budgetId, budgetItem))
                     return;
             }
 
-            if (title == null || (title.length() == 0))
+            if (title == null || (title.isEmpty()))
             {
                 SetTitles(budgetItem.budgetDescription, "");
             } else
@@ -175,7 +165,7 @@ public class BudgetDetailsView extends BaseActivity
         try
         {
             budgetItem.noteId = pNoteId;
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 da.updateBudgetItem(budgetItem);
             }
@@ -207,7 +197,7 @@ public class BudgetDetailsView extends BaseActivity
         try
         {
             budgetItem.infoId = pInfoId;
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 da.updateBudgetItem(budgetItem);
             }
@@ -241,7 +231,7 @@ public class BudgetDetailsView extends BaseActivity
     {
         try
         {
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if (!da.deleteBudgetItem(budgetItem))
                     return;

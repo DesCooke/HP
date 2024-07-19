@@ -59,16 +59,11 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
     {
         try
         {
-            switch (view.getId())
-            {
-                case R.id.grpContactDescription:
-                    pickContactDescription(view);
-                    break;
-                
-                case R.id.imageViewSmall:
-                    pickImage(view);
-                    break;
-            }
+            int id=view.getId();
+            if(id==R.id.grpContactDescription)
+                pickContactDescription(view);
+            if(id==R.id.imageViewSmall)
+                pickImage(view);
         }
         catch (Exception e)
         {
@@ -96,13 +91,7 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
     {
         try
         {
-            dwetOnOkClick = new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    ContactDescriptionPicked(view);
-                }
-            };
+            dwetOnOkClick = this::ContactDescriptionPicked;
             
             
             dialogWithEditTextFragment =
@@ -132,7 +121,7 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
     //region Saving
     public void saveSchedule(View view)
     {
-        try(DatabaseAccess da = databaseAccess();)
+        try(DatabaseAccess da = databaseAccess())
         {
             myMessages().ShowMessageShort("Saving " + txtContactDescription.getText().toString());
             
@@ -142,7 +131,7 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
             contactItem.contactNotes = "";
             
             contactItem.contactPicture = "";
-            if (internalImageFilename.length() > 0)
+            if (!internalImageFilename.isEmpty())
                 contactItem.contactPicture = internalImageFilename;
             contactItem.pictureAssigned = imageSet;
             contactItem.pictureChanged = imageChanged;

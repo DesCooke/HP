@@ -38,23 +38,4 @@ class TableFileIds extends TableBase
         return (false);
     }
 
-    public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-    {
-        try
-        {
-            if(oldVersion==45 && newVersion==46)
-            {
-                String lSQL="INSERT INTO fileIds " + " (fileType, nextId) " + "VALUES ('file',1) ";
-                db.execSQL(lSQL);
-            }
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("onUpgrade", e.getMessage());
-        }
-        return (false);
-    }
-
-
 }

@@ -5,16 +5,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import androidx.annotation.NonNull;
+
 import com.example.des.hp.Budget.BudgetItem;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
-import java.util.Random;
-
-import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
-import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 class TableBudget extends TableBase
 {
@@ -60,32 +58,16 @@ class TableBudget extends TableBase
         return (false);
     }
 
-    public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+    boolean getBudgetCount(int holidayId, MyInt retInt)
     {
         try
         {
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("onUpgrade", e.getMessage());
-        }
-        return (false);
-    }
-
-    boolean getBudgetCount(int argholidayId, MyInt retInt)
-    {
-        try
-        {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
-            String lSQL="SELECT IFNULL(COUNT(*),0) " + "FROM Budget " + "WHERE holidayId = " + argholidayId;
+            String lSQL="SELECT IFNULL(COUNT(*),0) " + "FROM Budget " + "WHERE holidayId = " + holidayId;
 
-            if(executeSQLGetInt("getBudgetCount", lSQL, retInt) == false)
-                return (false);
-
-            return (true);
+            return executeSQLGetInt("getBudgetCount", lSQL, retInt);
         }
         catch(Exception e)
         {
@@ -99,34 +81,21 @@ class TableBudget extends TableBase
     {
         try
         {
-            if (IsValid() == false)
+            if (!IsValid())
                 return (false);
 
             if (budgetItem.pictureAssigned)
             {
                 /* if picture name has something in it - it means it came from internal folder */
-                if (budgetItem.budgetPicture.length() == 0)
+                if (budgetItem.budgetPicture.isEmpty())
                 {
-                    //myMessages().LogMessage("  - New Image was not from internal folder...");
-                    if (budgetItem.pictureAssigned)
-                    {
                         //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString = new MyString();
-                        if (savePicture(budgetItem.holidayId, budgetItem.fileBitmap, myString) == false)
+                        if (!savePicture(budgetItem.holidayId, budgetItem.fileBitmap, myString))
                             return (false);
                         budgetItem.budgetPicture = myString.Value;
                         //myMessages().LogMessage("  - New filename " + budgetItem.budgetPicture);
-                    } else
-                    {
-                        //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
-                    }
-                } else
-                {
-                    //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + budgetItem.budgetPicture + ")");
                 }
-            } else
-            {
-                //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
             String lSql = "INSERT INTO Budget " +
@@ -170,18 +139,11 @@ class TableBudget extends TableBase
 
     }
 
-    public int bool2Int(boolean thebool)
-    {
-        if(thebool)
-            return(1);
-        return(0);
-    }
-
     boolean updateBudgetItems(ArrayList<BudgetItem> items)
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             if(items == null)
@@ -191,7 +153,7 @@ class TableBudget extends TableBase
             {
                 if(items.get(i).sequenceNo != 9999 && items.get(i).sequenceNo != items.get(i).origSequenceNo)
                 {
-                    if(updateBudgetItem(items.get(i)) == false)
+                    if(!updateBudgetItem(items.get(i)))
                         return (false);
                 }
             }
@@ -209,48 +171,35 @@ class TableBudget extends TableBase
     {
         try
         {
-            if (IsValid() == false)
+            if (!IsValid())
                 return (false);
 
             //myMessages().LogMessage("updateBudgetItem:Handling Image");
             if (budgetItem.pictureChanged)
             {
-                if (budgetItem.origPictureAssigned && budgetItem.budgetPicture.length() > 0 && budgetItem.budgetPicture.compareTo(budgetItem.origBudgetPicture) == 0)
-                {
-                    //myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
-                } else
-                {
+                if (!budgetItem.origPictureAssigned || budgetItem.budgetPicture.isEmpty() || budgetItem.budgetPicture.compareTo(budgetItem.origBudgetPicture) != 0) {
                     if (budgetItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if (removePicture(budgetItem.holidayId, budgetItem.origBudgetPicture) == false)
+                        if (!removePicture(budgetItem.holidayId, budgetItem.origBudgetPicture))
                             return (false);
                     }
 
                     /* if picture name has something in it - it means it came from internal folder */
-                    if (budgetItem.budgetPicture.length() == 0)
+                    if (budgetItem.budgetPicture.isEmpty())
                     {
                         //myMessages().LogMessage("  - New Image was not from internal folder...");
                         if (budgetItem.pictureAssigned)
                         {
                             //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString = new MyString();
-                            if (savePicture(budgetItem.holidayId, budgetItem.fileBitmap, myString) == false)
+                            if (!savePicture(budgetItem.holidayId, budgetItem.fileBitmap, myString))
                                 return (false);
                             budgetItem.budgetPicture = myString.Value;
                             //myMessages().LogMessage("  - New filename " + budgetItem.budgetPicture);
-                        } else
-                        {
-                            //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                         }
-                    } else
-                    {
-                        //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + budgetItem.budgetPicture + ")");
                     }
                 }
-            } else
-            {
-                //myMessages().LogMessage("  - Image not changed - do nothing");
             }
 
             String lSQL;
@@ -283,16 +232,16 @@ class TableBudget extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL="DELETE FROM Budget " + "WHERE holidayId = " + budgetItem.holidayId + " " + "AND budgetId = " + budgetItem.budgetId;
 
-            if(budgetItem.budgetPicture.length() > 0)
-                if(removePicture(budgetItem.holidayId, budgetItem.budgetPicture) == false)
+            if(!budgetItem.budgetPicture.isEmpty())
+                if(!removePicture(budgetItem.holidayId, budgetItem.budgetPicture))
                     return (false);
 
-            if(executeSQL("deleteBudgetItem", lSQL) == false)
+            if(!executeSQL("deleteBudgetItem", lSQL))
                 return (false);
 
             return (true);
@@ -305,37 +254,20 @@ class TableBudget extends TableBase
 
     }
 
-    boolean getBudgetItem(int holidayId, int budgetId, BudgetItem litem)
+    boolean getBudgetItem(int holidayId, int budgetId, BudgetItem item)
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
-            String lSQL;
-            lSQL=
-                    "SELECT " +
-                    "  holidayId, " +
-                    "  budgetId, " +
-                    "  sequenceNo, " +
-                    "  budgetDescription, " +
-                    "  budgetTotal, " +
-                    "  budgetPaid, " +
-                    "  budgetUnpaid, " +
-                    "  budgetPicture, " +
-                    "  budgetNotes, " +
-                    "  infoId, " +
-                    "  noteId, " +
-                    "  galleryId " +
-                    "FROM budget " +
-                    "WHERE HolidayId = " + holidayId + " " +
-                    "AND BudgetId = " + budgetId;
+            String lSQL = getBudgetItemString(holidayId, budgetId);
 
             Cursor cursor=executeSQLOpenCursor("getBudgetItem", lSQL);
             if(cursor != null)
             {
                 cursor.moveToFirst();
-                if(GetBudgetItemFromQuery(cursor, litem) == false)
+                if(!GetBudgetItemFromQuery(cursor, item))
                     return (false);
             }
             executeSQLCloseCursor("getBudgetItem");
@@ -349,9 +281,31 @@ class TableBudget extends TableBase
 
     }
 
+    private static @NonNull String getBudgetItemString(int holidayId, int budgetId) {
+        String lSQL;
+        lSQL=
+                "SELECT " +
+                "  holidayId, " +
+                "  budgetId, " +
+                "  sequenceNo, " +
+                "  budgetDescription, " +
+                "  budgetTotal, " +
+                "  budgetPaid, " +
+                "  budgetUnpaid, " +
+                "  budgetPicture, " +
+                "  budgetNotes, " +
+                "  infoId, " +
+                "  noteId, " +
+                "  galleryId " +
+                "FROM budget " +
+                "WHERE HolidayId = " + holidayId + " " +
+                "AND BudgetId = " + budgetId;
+        return lSQL;
+    }
+
     private boolean GetBudgetItemFromQuery(Cursor cursor, BudgetItem budgetItem)
     {
-        if(IsValid() == false)
+        if(!IsValid())
             return (false);
 
         try
@@ -387,7 +341,7 @@ class TableBudget extends TableBase
 
             budgetItem.pictureChanged=false;
 
-            if(budgetItem.budgetPicture.length() > 0)
+            if(!budgetItem.budgetPicture.isEmpty())
             {
                 budgetItem.pictureAssigned=true;
                 budgetItem.origPictureAssigned=true;
@@ -406,19 +360,13 @@ class TableBudget extends TableBase
         return (false);
     }
 
-    boolean String2Bool(String theString)
-    {
-        if(theString.compareTo("1")==0)
-            return(true);
-        return(false);
-    }
     boolean getNextBudgetId(int holidayId, MyInt retInt)
     {
         try
         {
             String lSQL="SELECT IFNULL(MAX(budgetId),0) " + "FROM Budget " + "WHERE holidayId = " + holidayId;
 
-            if(executeSQLGetInt("getNextBudgetId", lSQL, retInt) == false)
+            if(!executeSQLGetInt("getNextBudgetId", lSQL, retInt))
                 return (false);
 
             retInt.Value=retInt.Value + 1;
@@ -433,61 +381,46 @@ class TableBudget extends TableBase
 
     }
 
-    private boolean getBudgetTotal(int holidayId, MyInt retInt)
+    private void getBudgetTotal(int holidayId, MyInt retInt)
     {
         try
         {
             String lSQL="SELECT IFNULL(SUM(budgetTotal),0) " + "FROM Budget " + "WHERE holidayId = " + holidayId;
 
-            if(executeSQLGetInt("getBudgetTotal", lSQL, retInt) == false)
-                return (false);
-
-            return (true);
+            executeSQLGetInt("getBudgetTotal", lSQL, retInt);   
         }
         catch(Exception e)
         {
             ShowError("getBudgetTotal", e.getMessage());
         }
-        return (false);
-
     }
 
-    private boolean getBudgetUnpaid(int holidayId, MyInt retInt)
+    private void getBudgetUnpaid(int holidayId, MyInt retInt)
     {
         try
         {
             String lSQL="SELECT IFNULL(SUM(budgetUnpaid),0) " + "FROM Budget " + "WHERE holidayId = " + holidayId;
 
-            if(executeSQLGetInt("getBudgetUnpaid", lSQL, retInt) == false)
-                return (false);
-
-            return (true);
+            executeSQLGetInt("getBudgetUnpaid", lSQL, retInt);
         }
         catch(Exception e)
         {
             ShowError("getBudgetUnpaid", e.getMessage());
         }
-        return (false);
-
     }
 
-    private boolean getBudgetPaid(int holidayId, MyInt retInt)
+    private void getBudgetPaid(int holidayId, MyInt retInt)
     {
         try
         {
             String lSQL="SELECT IFNULL(SUM(budgetPaid),0) " + "FROM Budget " + "WHERE holidayId = " + holidayId;
 
-            if(executeSQLGetInt("getBudgetPaid", lSQL, retInt) == false)
-                return (false);
-
-            return (true);
+            executeSQLGetInt("getBudgetPaid", lSQL, retInt);
         }
         catch(Exception e)
         {
             ShowError("getBudgetPaid", e.getMessage());
         }
-        return (false);
-
     }
 
     boolean getNextBudgetSequenceNo(int holidayId, MyInt retInt)
@@ -496,7 +429,7 @@ class TableBudget extends TableBase
         {
             String lSQL="SELECT IFNULL(MAX(SequenceNo),0) " + "FROM Budget " + "WHERE holidayId = " + holidayId;
 
-            if(executeSQLGetInt("getNextBudgetSequenceNo", lSQL, retInt) == false)
+            if(!executeSQLGetInt("getNextBudgetSequenceNo", lSQL, retInt))
                 return (false);
 
             retInt.Value=retInt.Value + 1;
@@ -541,7 +474,7 @@ class TableBudget extends TableBase
             while(cursor.moveToNext())
             {
                 BudgetItem budgetItem=new BudgetItem();
-                if(GetBudgetItemFromQuery(cursor, budgetItem) == false)
+                if(!GetBudgetItemFromQuery(cursor, budgetItem))
                     return (false);
 
                 al.add(budgetItem);
@@ -573,39 +506,5 @@ class TableBudget extends TableBase
 
     }
 
-    private String randomBudgetDescription()
-    {
-        try
-        {
-            Random random=new Random();
-            int i=random.nextInt(7);
-            switch(i)
-            {
-                case 0:
-                    return ("Villa");
-                case 1:
-                    return ("Park Tickets");
-                case 2:
-                    return ("Flight");
-                case 3:
-                    return ("VIP Room");
-                case 4:
-                    return ("Special Event");
-                case 5:
-                    return ("Cruise");
-                case 6:
-                    return ("Photo Pass");
-            }
-            return ("Photo Pass");
-        }
-        catch(Exception e)
-        {
-            ShowError("randomBudgetDescription", e.getMessage());
-        }
-        return ("Photo Pass");
 
-    }
-
-
-    
 }

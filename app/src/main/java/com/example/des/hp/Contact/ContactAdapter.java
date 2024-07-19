@@ -2,6 +2,8 @@ package com.example.des.hp.Contact;
 
 import android.app.Activity;
 import android.content.Context;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +26,10 @@ import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder>
 {
-    private Context context;
-    public ArrayList<ContactItem> data = null;
+    private final Context context;
+    public ArrayList<ContactItem> data;
     private OnItemClickListener mOnItemClickListener;
-    private ImageUtils imageUtils;
+    private final ImageUtils imageUtils;
     
     
     interface OnItemClickListener
@@ -40,7 +42,7 @@ class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder>
         this.mOnItemClickListener = mItemClickListener;
     }
     
-    class ViewHolder extends RecyclerView.ViewHolder
+    static class ViewHolder extends RecyclerView.ViewHolder
     {
         // each data item is just a string in this case
         ImageView contactImage;
@@ -66,6 +68,7 @@ class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder>
         data = items;
     }
     
+    @NonNull
     @Override
     public ContactAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
@@ -93,15 +96,10 @@ class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder>
         }
         
         
-        holder.contactItemCell.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
+        holder.contactItemCell.setOnClickListener(view -> {
+            if (mOnItemClickListener != null)
             {
-                if (mOnItemClickListener != null)
-                {
-                    mOnItemClickListener.onItemClick(view, c);
-                }
+                mOnItemClickListener.onItemClick(view, c);
             }
         });
     }
@@ -115,13 +113,12 @@ class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder>
     public void add(int position, ContactItem mail)
     {
         data.add(position, mail);
-        notifyDataSetChanged();
+        notifyItemInserted(position);
     }
     
-    boolean onItemMove()
+    void onItemMove()
     {
         updateGlobalData(data);
-        return true;
     }
     
     private void updateGlobalData(ArrayList<ContactItem> items)
@@ -130,12 +127,12 @@ class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder>
         {
             items.get(i).sequenceNo = i + 1;
         }
-        try(DatabaseAccess da = databaseAccess();)
+        try(DatabaseAccess da = databaseAccess())
         {
             if (!da.updateContactItems(items))
                 return;
         }
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, items.size()-1);
     }
     
     // Return the size of your dataset (invoked by the layout manager)

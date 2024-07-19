@@ -10,10 +10,6 @@ import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
-import java.util.Random;
-
-import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
-import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 class TableAttractionArea extends TableBase
 {
@@ -44,52 +40,26 @@ class TableAttractionArea extends TableBase
         return (false);
     }
 
-    public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-    {
-        try
-        {
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("onUpgrade", e.getMessage());
-            return (false);
-        }
-    }
-
     boolean addAttractionAreaItem(AttractionAreaItem attractionAreaItem)
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             //myMessages().LogMessage("addAttractionAreaItem:Handling Image");
             if(attractionAreaItem.pictureAssigned)
             {
             /* if picture name has something in it - it means it came from internal folder */
-                if(attractionAreaItem.attractionAreaPicture.length() == 0)
+                if(attractionAreaItem.attractionAreaPicture.isEmpty())
                 {
-                    //myMessages().LogMessage("  - New Image was not from internal folder...");
-                    if(attractionAreaItem.pictureAssigned)
-                    {
                         //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
-                        if(savePicture(attractionAreaItem.holidayId, attractionAreaItem.fileBitmap, myString) == false)
+                        if(!savePicture(attractionAreaItem.holidayId, attractionAreaItem.fileBitmap, myString))
                             return (false);
                         attractionAreaItem.attractionAreaPicture=myString.Value;
                         //myMessages().LogMessage("  - New filename " + attractionAreaItem.attractionAreaPicture);
-                    } else
-                    {
-                        //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
-                    }
-                } else
-                {
-                    //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + attractionAreaItem.attractionAreaPicture + ")");
                 }
-            } else
-            {
-                //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
             String lSql="INSERT INTO AttractionArea " +
@@ -111,7 +81,7 @@ class TableAttractionArea extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             if(items == null)
@@ -121,7 +91,7 @@ class TableAttractionArea extends TableBase
             {
                 if(items.get(i).sequenceNo != items.get(i).origSequenceNo)
                 {
-                    if(updateAttractionAreaItem(items.get(i)) == false)
+                    if(!updateAttractionAreaItem(items.get(i)))
                         return (false);
                 }
             }
@@ -139,50 +109,36 @@ class TableAttractionArea extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             //myMessages().LogMessage("updateAttractionAreaItem:Handling Image");
             if(item.pictureChanged)
             {
-                if(item.origPictureAssigned && item.attractionAreaPicture.length() > 0 && item.attractionAreaPicture.compareTo(item.origAttractionAreaPicture) == 0)
-                {
-                    //myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
-                } else
-                {
+                if (!item.origPictureAssigned || item.attractionAreaPicture.isEmpty() || item.attractionAreaPicture.compareTo(item.origAttractionAreaPicture) != 0) {
 
                     if(item.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(removePicture(item.holidayId, item.origAttractionAreaPicture) == false)
+                        if(!removePicture(item.holidayId, item.origAttractionAreaPicture))
                             return (false);
                     }
-            
+
                 /* if picture name has something in it - it means it came from internal folder */
-                    if(item.attractionAreaPicture.length() == 0)
+                    if(item.attractionAreaPicture.isEmpty())
                     {
                         //myMessages().LogMessage("  - New Image was not from internal folder...");
                         if(item.pictureAssigned)
                         {
                             //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
-                            if(savePicture(item.holidayId, item.fileBitmap, myString) == false)
+                            if(!savePicture(item.holidayId, item.fileBitmap, myString))
                                 return (false);
                             item.attractionAreaPicture=myString.Value;
                             //myMessages().LogMessage("  - New filename " + item.attractionAreaPicture);
-                        } else
-                        {
-                            //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                         }
-                    } else
-                    {
-                        //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + item.attractionAreaPicture + ")");
                     }
                 }
-
-            } else
-            {
-                //myMessages().LogMessage("  - Image not changed - do nothing");
             }
 
 
@@ -203,19 +159,16 @@ class TableAttractionArea extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL="DELETE FROM AttractionArea " + "WHERE holidayId = " + attractionAreaItem.holidayId + " " + "AND attractionId = " + attractionAreaItem.attractionId + " " + "AND attractionAreaId = " + attractionAreaItem.attractionAreaId;
 
-            if(attractionAreaItem.attractionAreaPicture.length() > 0)
-                if(removePicture(attractionAreaItem.holidayId, attractionAreaItem.attractionAreaPicture) == false)
+            if(!attractionAreaItem.attractionAreaPicture.isEmpty())
+                if(!removePicture(attractionAreaItem.holidayId, attractionAreaItem.attractionAreaPicture))
                     return (false);
 
-            if(executeSQL("deleteAttractionAreaItem", lSQL) == false)
-                return (false);
-
-            return (true);
+            return executeSQL("deleteAttractionAreaItem", lSQL);
         }
         catch(Exception e)
         {
@@ -225,11 +178,11 @@ class TableAttractionArea extends TableBase
 
     }
 
-    boolean getAttractionAreaItem(int holidayId, int attractionId, int attractionAreaId, AttractionAreaItem litem)
+    boolean getAttractionAreaItem(int holidayId, int attractionId, int attractionAreaId, AttractionAreaItem item)
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL;
@@ -239,7 +192,7 @@ class TableAttractionArea extends TableBase
             if(cursor != null)
             {
                 cursor.moveToFirst();
-                if(GetAttractionAreaItemFromQuery(cursor, litem) == false)
+                if(!GetAttractionAreaItemFromQuery(cursor, item))
                     return (false);
             }
             executeSQLCloseCursor("getAttractionAreaItem");
@@ -255,7 +208,7 @@ class TableAttractionArea extends TableBase
 
     private boolean GetAttractionAreaItemFromQuery(Cursor cursor, AttractionAreaItem attractionAreaItem)
     {
-        if(IsValid() == false)
+        if(!IsValid())
             return (false);
 
         try
@@ -287,7 +240,7 @@ class TableAttractionArea extends TableBase
 
             attractionAreaItem.pictureChanged=false;
 
-            if(attractionAreaItem.attractionAreaPicture.length() > 0)
+            if(!attractionAreaItem.attractionAreaPicture.isEmpty())
             {
                 attractionAreaItem.pictureAssigned=true;
                 attractionAreaItem.origPictureAssigned=true;
@@ -312,7 +265,7 @@ class TableAttractionArea extends TableBase
         {
             String lSQL="SELECT IFNULL(MAX(attractionAreaId),0) " + "FROM AttractionArea " + "WHERE holidayId = " + holidayId + " " + "AND attractionId = " + attractionId;
 
-            if(executeSQLGetInt("getNextAttractionAreaId", lSQL, myInt) == false)
+            if(!executeSQLGetInt("getNextAttractionAreaId", lSQL, myInt))
                 return (false);
 
             myInt.Value=myInt.Value + 1;
@@ -333,7 +286,7 @@ class TableAttractionArea extends TableBase
         {
             String lSQL="SELECT IFNULL(MAX(SequenceNo),0) " + "FROM AttractionArea " + "WHERE holidayId = " + holidayId + " " + "AND attractionId = " + attractionId;
 
-            if(executeSQLGetInt("getNextAttractionAreaSequenceNo", lSQL, myInt) == false)
+            if(!executeSQLGetInt("getNextAttractionAreaSequenceNo", lSQL, myInt))
                 return (false);
 
             myInt.Value=myInt.Value + 1;
@@ -362,7 +315,7 @@ class TableAttractionArea extends TableBase
             while(cursor.moveToNext())
             {
                 AttractionAreaItem attractionAreaItem=new AttractionAreaItem();
-                if(GetAttractionAreaItemFromQuery(cursor, attractionAreaItem) == false)
+                if(!GetAttractionAreaItemFromQuery(cursor, attractionAreaItem))
                     return (false);
 
                 al.add(attractionAreaItem);

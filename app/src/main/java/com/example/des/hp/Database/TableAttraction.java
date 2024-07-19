@@ -10,11 +10,6 @@ import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
-import java.util.Random;
-
-import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
-import static com.example.des.hp.myutils.MyMessages.myMessages;
-
 
 class TableAttraction extends TableBase
 {
@@ -45,24 +40,11 @@ class TableAttraction extends TableBase
         }
     }
 
-    public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-    {
-        try
-        {
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("onUpgrade", e.getMessage());
-            return (false);
-        }
-    }
-
     boolean getAttractionsCount(int holidayId, MyInt myInt)
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL="SELECT IFNULL(COUNT(*),0) " + "FROM Attraction " + "WHERE holidayId = " + holidayId;
@@ -81,7 +63,7 @@ class TableAttraction extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
 
@@ -89,28 +71,15 @@ class TableAttraction extends TableBase
             if(attractionItem.pictureAssigned)
             {
             /* if picture name has something in it - it means it came from internal folder */
-                if(attractionItem.attractionPicture.length() == 0)
+                if(attractionItem.attractionPicture.isEmpty())
                 {
-                    //myMessages().LogMessage("  - New Image was not from internal folder...");
-                    if(attractionItem.pictureAssigned)
-                    {
                         //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
-                        if(savePicture(attractionItem.holidayId, attractionItem.fileBitmap, myString) == false)
+                        if(!savePicture(attractionItem.holidayId, attractionItem.fileBitmap, myString))
                             return (false);
                         attractionItem.attractionPicture=myString.Value;
                         //myMessages().LogMessage("  - New filename " + attractionItem.attractionPicture);
-                    } else
-                    {
-                        //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
-                    }
-                } else
-                {
-                    //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + attractionItem.attractionPicture + ")");
                 }
-            } else
-            {
-                //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
             String lSql="INSERT INTO Attraction " + "  (holidayId, attractionId, sequenceNo, attractionDescription, " + "   attractionPicture, attractionNotes, infoId, noteId, galleryId) " + "VALUES " + "(" + attractionItem.holidayId + "," + attractionItem.attractionId + "," + attractionItem.sequenceNo + ", " + MyQuotedString(attractionItem.attractionDescription) + ", " + MyQuotedString(attractionItem.attractionPicture) + ", " + MyQuotedString(attractionItem.attractionNotes) + ", " + attractionItem.infoId + ", " + attractionItem.noteId + ", " + attractionItem.galleryId + ")";
@@ -129,7 +98,7 @@ class TableAttraction extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             if(items == null)
@@ -139,7 +108,7 @@ class TableAttraction extends TableBase
             {
                 if(items.get(i).sequenceNo != items.get(i).origSequenceNo)
                 {
-                    if(updateAttractionItem(items.get(i)) == false)
+                    if(!updateAttractionItem(items.get(i)))
                         return (false);
                 }
             }
@@ -157,49 +126,36 @@ class TableAttraction extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             //myMessages().LogMessage("updateAttractionItem:Handling Image");
             if(attractionItem.pictureChanged)
             {
-                if(attractionItem.origPictureAssigned && attractionItem.attractionPicture.length() > 0 && attractionItem.attractionPicture.compareTo(attractionItem.origAttractionPicture) == 0)
-                {
-                    //myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
-                } else
-                {
+                if (!attractionItem.origPictureAssigned || attractionItem.attractionPicture.isEmpty() || attractionItem.attractionPicture.compareTo(attractionItem.origAttractionPicture) != 0) {
 
                     if(attractionItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(removePicture(attractionItem.holidayId, attractionItem.origAttractionPicture) == false)
+                        if(!removePicture(attractionItem.holidayId, attractionItem.origAttractionPicture))
                             return (false);
                     }
-            
+
                 /* if picture name has something in it - it means it came from internal folder */
-                    if(attractionItem.attractionPicture.length() == 0)
+                    if(attractionItem.attractionPicture.isEmpty())
                     {
                         //myMessages().LogMessage("  - New Image was not from internal folder...");
                         if(attractionItem.pictureAssigned)
                         {
                             //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
-                            if(savePicture(attractionItem.holidayId, attractionItem.fileBitmap, myString) == false)
+                            if(!savePicture(attractionItem.holidayId, attractionItem.fileBitmap, myString))
                                 return (false);
                             attractionItem.attractionPicture=myString.Value;
                             //myMessages().LogMessage("  - New filename " + attractionItem.attractionPicture);
-                        } else
-                        {
-                            //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                         }
-                    } else
-                    {
-                        //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + attractionItem.attractionPicture + ")");
                     }
                 }
-            } else
-            {
-                //myMessages().LogMessage("  - Image not changed - do nothing");
             }
 
 
@@ -220,19 +176,16 @@ class TableAttraction extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL="DELETE FROM Attraction " + "WHERE holidayId = " + attractionItem.holidayId + " " + "AND attractionId = " + attractionItem.attractionId;
 
-            if(attractionItem.attractionPicture.length() > 0)
-                if(removePicture(attractionItem.holidayId, attractionItem.attractionPicture) == false)
+            if(!attractionItem.attractionPicture.isEmpty())
+                if(!removePicture(attractionItem.holidayId, attractionItem.attractionPicture))
                     return (false);
 
-            if(executeSQL("deleteAttractionItem", lSQL) == false)
-                return (false);
-
-            return (true);
+            return executeSQL("deleteAttractionItem", lSQL);
         }
         catch(Exception e)
         {
@@ -246,7 +199,7 @@ class TableAttraction extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL;
@@ -256,7 +209,7 @@ class TableAttraction extends TableBase
             if(cursor != null)
             {
                 cursor.moveToFirst();
-                if(GetAttractionItemFromQuery(cursor, attractionItem) == false)
+                if(!GetAttractionItemFromQuery(cursor, attractionItem))
                     return (false);
             }
             executeSQLCloseCursor("getAttractionItem");
@@ -272,7 +225,7 @@ class TableAttraction extends TableBase
 
     private boolean GetAttractionItemFromQuery(Cursor cursor, AttractionItem attractionItem)
     {
-        if(IsValid() == false)
+        if(!IsValid())
             return (false);
 
         try
@@ -302,7 +255,7 @@ class TableAttraction extends TableBase
 
             attractionItem.pictureChanged=false;
 
-            if(attractionItem.attractionPicture.length() > 0)
+            if(!attractionItem.attractionPicture.isEmpty())
             {
                 attractionItem.pictureAssigned=true;
                 attractionItem.origPictureAssigned=true;
@@ -329,7 +282,7 @@ class TableAttraction extends TableBase
         {
             String lSQL="SELECT IFNULL(MAX(attractionId),0) " + "FROM Attraction " + "WHERE holidayId = " + holidayId;
 
-            if(executeSQLGetInt("getNextAttractionId", lSQL, myInt) == false)
+            if(!executeSQLGetInt("getNextAttractionId", lSQL, myInt))
                 return (false);
 
             myInt.Value=myInt.Value + 1;
@@ -350,7 +303,7 @@ class TableAttraction extends TableBase
         {
             String lSQL="SELECT IFNULL(MAX(SequenceNo),0) " + "FROM Attraction " + "WHERE holidayId = " + holidayId;
 
-            if(executeSQLGetInt("getNextAttractionSequenceNo", lSQL, myInt) == false)
+            if(!executeSQLGetInt("getNextAttractionSequenceNo", lSQL, myInt))
                 return (false);
 
             myInt.Value=myInt.Value + 1;
@@ -379,7 +332,7 @@ class TableAttraction extends TableBase
             while(cursor.moveToNext())
             {
                 AttractionItem attractionItem=new AttractionItem();
-                if(GetAttractionItemFromQuery(cursor, attractionItem) == false)
+                if(!GetAttractionItemFromQuery(cursor, attractionItem))
                     return (false);
 
                 al.add(attractionItem);

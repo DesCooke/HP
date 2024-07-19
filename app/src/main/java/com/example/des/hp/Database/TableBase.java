@@ -6,32 +6,26 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 
-import com.example.des.hp.R;
 import com.example.des.hp.myutils.DateUtils;
 import com.example.des.hp.myutils.ImageUtils;
 import com.example.des.hp.myutils.MyFileUtils;
 import com.example.des.hp.myutils.MyInt;
-import com.example.des.hp.myutils.MyLong;
 import com.example.des.hp.myutils.MyString;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.Date;
-import java.util.Random;
 
-import static com.example.des.hp.myutils.DateUtils.dateUtils;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class TableBase
 {
     public Context _context;
-    private SQLiteOpenHelper _dbHelper;
+    private final SQLiteOpenHelper _dbHelper;
     Resources _resources;
     DateUtils _dateUtils;
-    private MyFileUtils _myFileUtils;
+    private final MyFileUtils _myFileUtils;
 
 
     private SQLiteDatabase currentDB;
@@ -69,41 +63,9 @@ public class TableBase
 
     }
 
-    String randomPictureName()
-    {
-        try
-        {
-            Random random=new Random();
-            int fileid=random.nextInt(5) + 1;
-            return ("pic_" + String.valueOf(fileid) + ".png");
-        }
-        catch(Exception e)
-        {
-            ShowError("randomPictureName", e.getMessage());
-        }
-        return ("");
-
-    }
-
-    String randomFileName()
-    {
-        try
-        {
-            Random random=new Random();
-            int fileid=random.nextInt(5) + 1;
-            return ("testfile_" + String.valueOf(fileid) + ".txt");
-        }
-        catch(Exception e)
-        {
-            ShowError("randomFileName", e.getMessage());
-        }
-        return ("");
-
-    }
-
     private String CleanString(String argString)
     {
-        if(argString.length() == 0)
+        if(argString.isEmpty())
             return ("");
 
         return (argString.replace("'", "''"));
@@ -114,7 +76,7 @@ public class TableBase
         if(argString == null)
             return ("''");
 
-        if(argString.length() == 0)
+        if(argString.isEmpty())
             return ("''");
 
         String lCleanString=CleanString(argString);
@@ -127,64 +89,6 @@ public class TableBase
         myMessages().ShowError("Error in DatabaseAccess::" + argFunction, argMessage);
     }
 
-    long randomDateInt()
-    {
-        try
-        {
-            Date today=new Date();
-            MyLong myLong=new MyLong();
-            Random random=new Random();
-            int i=random.nextInt(100);
-            int addDays=random.nextInt(100) + 5;
-            if(!dateUtils().GetToday(today))
-                return (DateUtils.unknownDate);
-
-            if(!dateUtils().DateToInt(today, myLong))
-                return (DateUtils.unknownDate);
-            return (myLong.Value + (addDays * DateUtils.milliSecondsInADay));
-        }
-        catch(Exception e)
-        {
-            ShowError("randomDateInt", e.getMessage());
-        }
-        return (0);
-
-    }
-
-    Bitmap randomPicture()
-    {
-        try
-        {
-            int pictureId;
-            Random random=new Random();
-            int sample=random.nextInt(5);
-            pictureId=R.drawable.sample1;
-            switch(sample)
-            {
-                case 0:
-                    pictureId=R.drawable.sample2;
-                    break;
-                case 1:
-                    pictureId=R.drawable.sample3;
-                    break;
-                case 2:
-                    pictureId=R.drawable.sample4;
-                    break;
-                case 3:
-                    pictureId=R.drawable.sample5;
-                    break;
-            }
-
-            return (BitmapFactory.decodeResource(_resources, pictureId));
-        }
-        catch(Exception e)
-        {
-            ShowError("onCreate", e.getMessage());
-        }
-        return (null);
-
-    }
-
 
     // returns true/false
     public boolean removePicture(int holidayId, String argFilename)
@@ -192,7 +96,7 @@ public class TableBase
         try
         {
             //myMessages().LogMessage("  - removePicture " + argFilename);
-            if(argFilename.length() == 0)
+            if(argFilename.isEmpty())
                 return (true);
 
             int lUsageCount=totalUsageCount(argFilename);
@@ -207,13 +111,7 @@ public class TableBase
 
                     if(!file.delete())
                         throw new Exception("unable to delete " + file.getAbsolutePath());
-                } else
-                {
-                    //myMessages().LogMessage("  Does not seem to exist!... " + file.getAbsolutePath());
                 }
-            } else
-            {
-                //myMessages().LogMessage("  Not deleting - something else appears to use it" + file.getAbsolutePath());
             }
             return (true);
         }
@@ -318,7 +216,7 @@ public class TableBase
     {
         try
         {
-            if(argFilename.length() == 0)
+            if(argFilename.isEmpty())
                 return (true);
 
             if(fileUsageCount(holidayId, argFilename) < 2)
@@ -377,20 +275,6 @@ public class TableBase
         return (false);
     }
 
-    boolean createExtraFileSample(String newName)
-    {
-        try
-        {
-            return (_myFileUtils.createSample(newName));
-        }
-        catch(Exception e)
-        {
-            ShowError("createExtraFileSample", e.getMessage());
-        }
-        return (false);
-
-    }
-
     // returns true/false
     public boolean savePicture(int holidayId, Bitmap bm, MyString retString)
     {
@@ -398,15 +282,15 @@ public class TableBase
         {
             String lFilename;
             MyInt myInt=new MyInt();
-            if(getNextFileId("picture", myInt) == false)
+            if(!getNextFileId("picture", myInt))
                 return (false);
 
-            if(setNextFileId("picture", myInt.Value + 1) == false)
+            if(!setNextFileId("picture", myInt.Value + 1))
                 return (false);
 
             lFilename="pic_" + myInt.Value + ".png";
 
-            if(saveImageToInternalStorage(holidayId, bm, lFilename) == false)
+            if(!saveImageToInternalStorage(holidayId, bm, lFilename))
                 return (false);
 
             retString.Value=lFilename;
@@ -426,7 +310,7 @@ public class TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             SQLiteDatabase db=_dbHelper.getReadableDatabase();
@@ -461,7 +345,7 @@ public class TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             SQLiteDatabase db=_dbHelper.getWritableDatabase();
@@ -482,7 +366,7 @@ public class TableBase
 
     public Cursor executeSQLOpenCursor(String argFunction, String argSql)
     {
-        if(IsValid() == false)
+        if(!IsValid())
             return (null);
 
         currentDB=null;
@@ -511,7 +395,7 @@ public class TableBase
 
     public boolean executeSQLCloseCursor(String argFunction)
     {
-        if(IsValid() == false)
+        if(!IsValid())
             return (false);
 
         try
@@ -536,16 +420,13 @@ public class TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL;
             lSQL="SELECT nextId " + "FROM fileIds " + "WHERE fileType = '" + argType + "' ";
 
-            if(executeSQLGetInt("getNextFileId", lSQL, retInt) == false)
-                return (false);
-
-            return (true);
+            return executeSQLGetInt("getNextFileId", lSQL, retInt);
         }
         catch(Exception e)
         {
@@ -559,7 +440,7 @@ public class TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL;

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +24,10 @@ import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
 {
-    private Context context;
-    public ArrayList<BudgetItem> data = null;
+    private final Context context;
+    public ArrayList<BudgetItem> data;
     private OnItemClickListener mOnItemClickListener;
-    private ImageUtils imageUtils;
+    private final ImageUtils imageUtils;
     private static Bitmap imageTotal = null;
     
     interface OnItemClickListener
@@ -38,7 +40,7 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
         this.mOnItemClickListener = mItemClickListener;
     }
     
-    class ViewHolder extends RecyclerView.ViewHolder
+    static class ViewHolder extends RecyclerView.ViewHolder
     {
         // each data item is just a string in this case
         ImageView budgetImage;
@@ -69,6 +71,7 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
         data = items;
     }
     
+    @NonNull
     @Override
     public BudgetAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
@@ -107,15 +110,10 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
         }
         
         
-        holder.budgetItemCell.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
+        holder.budgetItemCell.setOnClickListener(view -> {
+            if (mOnItemClickListener != null)
             {
-                if (mOnItemClickListener != null)
-                {
-                    mOnItemClickListener.onItemClick(view, c);
-                }
+                mOnItemClickListener.onItemClick(view, c);
             }
         });
     }
@@ -129,13 +127,12 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
     public void add(int position, BudgetItem mail)
     {
         data.add(position, mail);
-        notifyDataSetChanged();
+        notifyItemInserted(position);
     }
     
-    boolean onItemMove()
+    void onItemMove()
     {
         updateGlobalData(data);
-        return true;
     }
     
     private void updateGlobalData(ArrayList<BudgetItem> items)
@@ -144,12 +141,12 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
         {
             items.get(i).sequenceNo = i + 1;
         }
-        try(DatabaseAccess da = databaseAccess();)
+        try(DatabaseAccess da = databaseAccess())
         {
             if (!da.updateBudgetItems(items))
                 return;
         }
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, items.size()-1);
     }
     
     // Return the size of your dataset (invoked by the layout manager)

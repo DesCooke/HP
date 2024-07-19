@@ -16,12 +16,14 @@ import java.util.Collections;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
+import androidx.annotation.NonNull;
+
 public class BudgetDetailsList extends BaseActivity
 {
     
     //region Member Variables
     public ArrayList<BudgetItem> budgetList;
-    public BudgetAdapter budgetAdapter;
+    private BudgetAdapter budgetAdapter;
     //endregion
     
     //region Constructors/Destructors
@@ -87,7 +89,7 @@ public class BudgetDetailsList extends BaseActivity
             allowCellMove = true;
             
             budgetList = new ArrayList<>();
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if (!da.getBudgetList(holidayId, budgetList))
                     return;
@@ -96,19 +98,15 @@ public class BudgetDetailsList extends BaseActivity
             
             CreateRecyclerView(R.id.budgetListView, budgetAdapter);
             
-            budgetAdapter.setOnItemClickListener(new BudgetAdapter.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(View view, BudgetItem obj) {
-                    Intent intent = new Intent(getApplicationContext(), BudgetDetailsView.class);
-                    intent.putExtra("ACTION", "view");
-                    intent.putExtra("HOLIDAYID", obj.holidayId);
-                    intent.putExtra("BUDGETID", obj.budgetId);
-                    intent.putExtra("TITLE", title + "/" + subTitle);
-                    intent.putExtra("SUBTITLE", obj.budgetDescription);
+            budgetAdapter.setOnItemClickListener((view, obj) -> {
+                Intent intent = new Intent(getApplicationContext(), BudgetDetailsView.class);
+                intent.putExtra("ACTION", "view");
+                intent.putExtra("HOLIDAYID", obj.holidayId);
+                intent.putExtra("BUDGETID", obj.budgetId);
+                intent.putExtra("TITLE", title + "/" + subTitle);
+                intent.putExtra("SUBTITLE", obj.budgetDescription);
 
-                    startActivity(intent);
-                }
+                startActivity(intent);
             });
             
             afterShow();
@@ -166,18 +164,13 @@ public class BudgetDetailsList extends BaseActivity
     
     //region OnClick Events
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
         try
         {
-            switch (item.getItemId())
-            {
-                case R.id.action_add_budget:
-                    showBudgetAdd(null);
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
+            int id = item.getItemId();
+            if(id==R.id.action_add_budget)
+                showBudgetAdd(null);
         }
         catch (Exception e)
         {

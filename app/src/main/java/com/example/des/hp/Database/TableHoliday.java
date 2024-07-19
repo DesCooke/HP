@@ -4,7 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
+
+import androidx.annotation.NonNull;
 
 import com.example.des.hp.Holiday.HolidayItem;
 import com.example.des.hp.myutils.DateUtils;
@@ -14,10 +15,6 @@ import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Random;
-
-import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
-import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 class TableHoliday extends TableBase
 {
@@ -68,51 +65,24 @@ class TableHoliday extends TableBase
         return (false);
     }
 
-    public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-    {
-        try
-        {
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("onUpgrade", e.getMessage());
-        }
-        return (false);
-    }
-
     boolean addHolidayItem(HolidayItem holidayItem)
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             if(holidayItem.pictureAssigned)
             {
             /* if picture name has something in it - it means it came from internal folder */
-                if(holidayItem.holidayPicture.length() == 0)
-                {
-                    //myMessages().LogMessage("  - New Image was not from internal folder...");
-                    if(holidayItem.pictureAssigned)
-                    {
-                        //myMessages().LogMessage("  - Save new image and get a filename...");
-                        MyString myString=new MyString();
-                        if(savePicture(holidayItem.holidayId, holidayItem.holidayBitmap, myString) == false)
-                            return (false);
-                        holidayItem.holidayPicture=myString.Value;
-                        //myMessages().LogMessage("  - New filename " + holidayItem.holidayPicture);
-                    } else
-                    {
-                        //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
-                    }
-                } else
-                {
-                    //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + holidayItem.holidayPicture + ")");
+                if(holidayItem.holidayPicture.isEmpty()) {
+                    //myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (!savePicture(holidayItem.holidayId, holidayItem.holidayBitmap, myString))
+                        return (false);
+                    holidayItem.holidayPicture = myString.Value;
+                    //myMessages().LogMessage("  - New filename " + holidayItem.holidayPicture);
                 }
-            } else
-            {
-                //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
             String lSql=
@@ -156,89 +126,40 @@ class TableHoliday extends TableBase
             return("1");
         return("0");
     }
-    private String randomHolidayName()
-    {
-        try
-        {
-            Random random=new Random();
-            int i=random.nextInt(10);
-            switch(i)
-            {
-                case 0:
-                    return ("New York");
-                case 1:
-                    return ("Disney World");
-                case 2:
-                    return ("Italy");
-                case 3:
-                    return ("Africa");
-                case 4:
-                    return ("Australia");
-                case 5:
-                    return ("Blackpool");
-                case 6:
-                    return ("Greece");
-                case 7:
-                    return ("Spain");
-                case 8:
-                    return ("Corfu");
-            }
-            return ("Hawaii");
-        }
-        catch(Exception e)
-        {
-            ShowError("randomHolidayName", e.getMessage());
-        }
-        return ("Canada");
-
-    }
 
     boolean updateHolidayItem(HolidayItem holidayItem)
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             //myMessages().LogMessage("updateHolidayItem:Handling Image");
             if(holidayItem.pictureChanged)
             {
-                if(holidayItem.origPictureAssigned && holidayItem.holidayPicture.length() > 0 && holidayItem.holidayPicture.compareTo(holidayItem.origHolidayPicture) == 0)
-                {
-                    //myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
-                } else
-                {
+                if (!holidayItem.origPictureAssigned || holidayItem.holidayPicture.isEmpty() || holidayItem.holidayPicture.compareTo(holidayItem.origHolidayPicture) != 0) {
                     if(holidayItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(removePicture(holidayItem.holidayId, holidayItem.origHolidayPicture) == false)
+                        if(!removePicture(holidayItem.holidayId, holidayItem.origHolidayPicture))
                             return (false);
                     }
-            
+
                 /* if picture name has something in it - it means it came from internal folder */
-                    if(holidayItem.holidayPicture.length() == 0)
+                    if(holidayItem.holidayPicture.isEmpty())
                     {
                         //myMessages().LogMessage("  - New Image was not from internal folder...");
                         if(holidayItem.pictureAssigned)
                         {
                             //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
-                            if(savePicture(holidayItem.holidayId, holidayItem.holidayBitmap, myString) == false)
+                            if(!savePicture(holidayItem.holidayId, holidayItem.holidayBitmap, myString))
                                 return (false);
                             holidayItem.holidayPicture=myString.Value;
                             //myMessages().LogMessage("  - New filename " + holidayItem.holidayPicture);
-                        } else
-                        {
-                            //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                         }
-                    } else
-                    {
-                        //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + holidayItem.holidayPicture + ")");
                     }
                 }
-            } else
-            {
-                //myMessages().LogMessage("  - Image not changed - do nothing");
             }
 
 
@@ -274,16 +195,16 @@ class TableHoliday extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String l_SQL="DELETE FROM holiday WHERE holidayId = " + holidayItem.holidayId;
 
-            if(holidayItem.holidayPicture.length() > 0)
-                if(removePicture(holidayItem.holidayId, holidayItem.holidayPicture) == false)
+            if(!holidayItem.holidayPicture.isEmpty())
+                if(!removePicture(holidayItem.holidayId, holidayItem.holidayPicture))
                     return (false);
 
-            if(executeSQL("deleteHolidayItem", l_SQL) == false)
+            if(!executeSQL("deleteHolidayItem", l_SQL))
                 return (false);
 
             return (true);
@@ -296,33 +217,11 @@ class TableHoliday extends TableBase
 
     }
 
-    boolean clearNote(int holidayId, int noteId)
-    {
-        try
-        {
-            if(IsValid() == false)
-                return (false);
-
-            String l_SQL="UPDATE holiday SET noteId = 0 " + "WHERE holidayId = " + holidayId + " " + "AND noteId = " + noteId;
-
-            if(executeSQL("clearNote", l_SQL) == false)
-                return (false);
-
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("clearNote", e.getMessage());
-        }
-        return (false);
-
-    }
-
     boolean getHolidayItem(int id, HolidayItem holidayItem)
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL;
@@ -337,7 +236,7 @@ class TableHoliday extends TableBase
             if(cursor != null)
             {
                 cursor.moveToFirst();
-                if(GetHolidayItemFromQuery(cursor, holidayItem) == false)
+                if(!GetHolidayItemFromQuery(cursor, holidayItem))
                     return (false);
             }
             executeSQLCloseCursor("getHolidayItem");
@@ -353,7 +252,7 @@ class TableHoliday extends TableBase
 
     private boolean GetHolidayItemFromQuery(Cursor cursor, HolidayItem retHolidayItem)
     {
-        if(IsValid() == false)
+        if(!IsValid())
             return (false);
 
         try
@@ -368,11 +267,11 @@ class TableHoliday extends TableBase
             retHolidayItem.mapFileGroupId=0;
             if(cursor.getString(4) != null)
                 retHolidayItem.mapFileGroupId=Integer.parseInt(cursor.getString(4));
-            if(_dateUtils.IntToDate(retHolidayItem.startDateInt, retHolidayItem.startDateDate) == false)
+            if(!_dateUtils.IntToDate(retHolidayItem.startDateInt, retHolidayItem.startDateDate))
                 return (false);
 
             MyString myString=new MyString();
-            if(_dateUtils.DateToStr(retHolidayItem.startDateDate, myString) == false)
+            if(!_dateUtils.DateToStr(retHolidayItem.startDateDate, myString))
                 return (false);
             retHolidayItem.startDateStr=myString.Value;
 
@@ -411,11 +310,7 @@ class TableHoliday extends TableBase
             retHolidayItem.origButtonAttractions=retHolidayItem.buttonAttractions;
             retHolidayItem.origButtonContacts=retHolidayItem.buttonContacts;
 
-            Bitmap bitmap=null;
-
-            int currentHolidayId=retHolidayItem.holidayId;
-
-            if(retHolidayItem.holidayPicture.length() > 0)
+            if(!retHolidayItem.holidayPicture.isEmpty())
             {
                 retHolidayItem.pictureAssigned=true;
                 retHolidayItem.origPictureAssigned=true;
@@ -427,68 +322,18 @@ class TableHoliday extends TableBase
 
 
             Date lToday=new Date();
-            if(_dateUtils.GetToday(lToday) == false)
+            if(!_dateUtils.GetToday(lToday))
                 return (false);
-
-            MyInt myInt=new MyInt();
 
             String lSuffix=" ago";
             if(retHolidayItem.startDateDate.getTime() > lToday.getTime())
                 lSuffix=" to go";
 
             MyDateDiff myDateDiff=new MyDateDiff();
-            if(_dateUtils.GetDiff(lToday, new Date(retHolidayItem.startDateDate.getTime()), myDateDiff) == false)
+            if(!_dateUtils.GetDiff(lToday, new Date(retHolidayItem.startDateDate.getTime()), myDateDiff))
                 return (false);
-            int lYear=myDateDiff.year;
-            int lMonth=myDateDiff.month;
-            int lDay=myDateDiff.day;
 
-            String lString="";
-            if(lYear != 0 || lMonth != 0 || lDay != 0)
-            {
-                if(lYear != 0)
-                {
-                    if(lYear == 1)
-                    {
-                        lString=lYear + " year";
-                    } else
-                    {
-                        lString=lYear + " years";
-                    }
-                }
-                if(lString.length() > 0 || lMonth != 0)
-                {
-                    if(lString.length() > 0)
-                        lString=lString + ", ";
-
-                    if(lMonth == 1)
-                    {
-                        lString=lString + lMonth + " month";
-                    } else
-                    {
-                        lString=lString + lMonth + " months";
-                    }
-                }
-                if(lString.length() > 0 || lDay != 0)
-                {
-                    if(lString.length() > 0)
-                        lString=lString + ", ";
-
-                    if(lDay == 1)
-                    {
-                        lString=lString + lDay + " day";
-                    } else
-                    {
-                        lString=lString + lDay + " days";
-                    }
-                }
-                lString=lString + lSuffix;
-            } else
-            {
-                lString="*** OFF ON OUR HOLS TODAY ***";
-            }
-
-            retHolidayItem.ToGo=lString;
+            retHolidayItem.ToGo= getTheDateAsString(myDateDiff, lSuffix);
 
             retHolidayItem.holidayBitmap=null;
             return (true);
@@ -500,11 +345,58 @@ class TableHoliday extends TableBase
         }
     }
 
+    private static @NonNull String getTheDateAsString(MyDateDiff myDateDiff, String lSuffix) {
+        int lYear= myDateDiff.year;
+        int lMonth= myDateDiff.month;
+        int lDay= myDateDiff.day;
+
+        String lString="";
+        if(lYear != 0 || lMonth != 0 || lDay != 0)
+        {
+            if(lYear != 0)
+            {
+                if(lYear == 1)
+                {
+                    lString=lYear + " year";
+                } else
+                {
+                    lString=lYear + " years";
+                }
+            }
+            if(!lString.isEmpty() || lMonth != 0)
+            {
+                if(!lString.isEmpty())
+                    lString=lString + ", ";
+
+                if(lMonth == 1)
+                {
+                    lString=lString + lMonth + " month";
+                } else
+                {
+                    lString=lString + lMonth + " months";
+                }
+            }
+            if (!lString.isEmpty())
+                lString = lString + ", ";
+
+            if(lDay == 1)
+            {
+                lString=lString + lDay + " day";
+            } else
+            {
+                lString=lString + lDay + " days";
+            }
+            lString=lString + lSuffix;
+        } else
+        {
+            lString="*** OFF ON OUR HOLS TODAY ***";
+        }
+        return lString;
+    }
+
     boolean booleanFromString(String value)
     {
-        if(value.compareTo("0")==0)
-            return(false);
-        return(true);
+        return value.compareTo("0") != 0;
     }
     boolean getNextHolidayId(MyInt retInt)
     {
@@ -514,7 +406,7 @@ class TableHoliday extends TableBase
 
             lSQL="SELECT IFNULL(MAX(holidayId),0) FROM holiday";
 
-            if(executeSQLGetInt("getNextHolidayId", lSQL, retInt) == false)
+            if(!executeSQLGetInt("getNextHolidayId", lSQL, retInt))
                 return (false);
             retInt.Value=retInt.Value + 1;
             return (true);
@@ -545,7 +437,7 @@ class TableHoliday extends TableBase
             while(cursor.moveToNext())
             {
                 HolidayItem holidayItem=new HolidayItem();
-                if(GetHolidayItemFromQuery(cursor, holidayItem) == false)
+                if(!GetHolidayItemFromQuery(cursor, holidayItem))
                     return (false);
 
                 retAl.add(holidayItem);

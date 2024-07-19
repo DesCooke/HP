@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,6 +15,8 @@ import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
+import androidx.annotation.NonNull;
 
 public class ContactDetailsView extends BaseActivity
 {
@@ -40,12 +41,12 @@ public class ContactDetailsView extends BaseActivity
             layoutName = "activity_contact_details_view";
             setContentView(R.layout.activity_contact_details_view);
             
-            imageView = (ImageView) findViewById(R.id.imageViewSmall);
-            txtContactDescription = (TextView) findViewById(R.id.txtContactDescription);
-            btnClear = (ImageButton) findViewById(R.id.btnClear);
-            btnSave = (Button) findViewById(R.id.btnSave);
-            grpMenuFile = (LinearLayout) findViewById(R.id.grpMenuFile);
-            grpContactDescription = (LinearLayout) findViewById(R.id.grpContactDescription);
+            imageView = findViewById(R.id.imageViewSmall);
+            txtContactDescription = findViewById(R.id.txtContactDescription);
+            btnClear = findViewById(R.id.btnClear);
+            btnSave = findViewById(R.id.btnSave);
+            grpMenuFile = findViewById(R.id.grpMenuFile);
+            grpContactDescription = findViewById(R.id.grpContactDescription);
             
             afterCreate();
             
@@ -74,21 +75,15 @@ public class ContactDetailsView extends BaseActivity
     
     //region OnClick Events
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
         try
         {
-            switch (item.getItemId())
-            {
-                case R.id.action_delete_contact:
-                    deleteContact();
-                    return true;
-                case R.id.action_edit_contact:
-                    editContact();
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
+            int id=item.getItemId();
+            if(id==R.id.action_delete_contact)
+                deleteContact();
+            if(id==R.id.action_edit_contact)
+                editContact();
         }
         catch (Exception e)
         {
@@ -105,13 +100,13 @@ public class ContactDetailsView extends BaseActivity
         try
         {
             contactItem = new ContactItem();
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if (!da.getContactItem(holidayId, contactId, contactItem))
                     return;
             }
 
-            if (title == null || (title.length() == 0))
+            if (title == null || (title.isEmpty()))
             {
                 SetTitles(contactItem.contactDescription, "");
             } else
@@ -153,7 +148,7 @@ public class ContactDetailsView extends BaseActivity
         try
         {
             contactItem.noteId = pNoteId;
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 da.updateContactItem(contactItem);
             }
@@ -185,7 +180,7 @@ public class ContactDetailsView extends BaseActivity
         try
         {
             contactItem.infoId = pInfoId;
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 da.updateContactItem(contactItem);
             }
@@ -219,7 +214,7 @@ public class ContactDetailsView extends BaseActivity
     {
         try
         {
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if (!da.deleteContactItem(contactItem))
                     return;

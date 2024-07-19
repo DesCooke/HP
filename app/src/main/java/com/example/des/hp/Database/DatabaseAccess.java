@@ -94,7 +94,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
             {
                 if (!f1.mkdir())
                 {
-                    myMessages().ShowMessageWithOk("DatabaseAccess()", "Unable to create directory " + "" + f1.getName(), null);
+                    myMessages().ShowMessageWithOk("DatabaseAccess()", "Unable to create directory " + f1.getName(), null);
                 }
             }
             
@@ -115,7 +115,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
     
     //endregion
     
-    //region GENERICFUNCTIONS
+    //region GENERIC FUNCTIONS
     private void ShowError(String argFunction, String argMessage)
     {
         myMessages().ShowError("Error in DatabaseAccess::" + argFunction, argMessage);
@@ -154,9 +154,8 @@ public class DatabaseAccess extends SQLiteOpenHelper
                 return;
             if (!tableFileIds.onCreate(db))
                 return;
-            if (!tableNotes.onCreate(db))
-                return;
-            
+            tableNotes.onCreate(db);
+
             //myMessages().LogMessage("Finished onCreate");
         }
         catch (Exception e)
@@ -173,34 +172,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
         {
             myMessages().ShowMessageShort("Upgrading from " + oldVersion + " to " + newVersion);
             
-            if (!tableHoliday.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableDay.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableGeneralAttraction.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableSchedule.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableExtraFiles.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableTask.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableBudget.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableTip.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableTipGroup.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableAttraction.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableAttractionArea.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableContact.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableFileIds.onUpgrade(db, oldVersion, newVersion))
-                return;
-            if (!tableNotes.onUpgrade(db, oldVersion, newVersion))
-                return;
             //myMessages().LogMessage("Finished onUpgrade");
         }
         catch (Exception e)
@@ -228,20 +199,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
         }
         return (false);
     }
-    
-    boolean createSampleNote(int holidayId, MyInt myInt)
-    {
-        try
-        {
-            return (tableNotes.createSample(holidayId, myInt));
-        }
-        catch (Exception e)
-        {
-            ShowError("createSampleNote", e.getMessage());
-        }
-        return (false);
-    }
-    
+
     public boolean removePicture(int holidayId, String picture)
     {
         try
@@ -255,17 +213,16 @@ public class DatabaseAccess extends SQLiteOpenHelper
         return (false);
     }
     
-    public boolean removeExtraFile(int holidayId, String file)
+    public void removeExtraFile(int holidayId, String file)
     {
         try
         {
-            return (tableNotes.removeExtraFile(holidayId, file));
+            tableNotes.removeExtraFile(holidayId, file);
         }
         catch (Exception e)
         {
             ShowError("removeExtraFile", e.getMessage());
         }
-        return (false);
     }
     
     private boolean removeNote(int holidayId, int noteId)
@@ -279,12 +236,9 @@ public class DatabaseAccess extends SQLiteOpenHelper
             NoteItem item = new NoteItem();
             item.holidayId = holidayId;
             item.noteId = noteId;
-            if (!tableNotes.deleteNoteItem(item))
-                return (false);
+            return tableNotes.deleteNoteItem(item);
             
             //myMessages().LogMessage("Finished removeNote");
-            
-            return (true);
         }
         catch (Exception e)
         {
@@ -364,56 +318,53 @@ public class DatabaseAccess extends SQLiteOpenHelper
             
             // AttractionItem
             ArrayList<AttractionItem> attractionList = new ArrayList<>();
-            if (getAttractionList(holidayItem.holidayId, attractionList) == false)
+            if (!getAttractionList(holidayItem.holidayId, attractionList))
                 return (false);
             for (AttractionItem attractionItem : attractionList)
                 deleteAttractionItem(attractionItem);
             
             // BudgetItem
             ArrayList<BudgetItem> budgetList = new ArrayList<>();
-            if (getBudgetList(holidayItem.holidayId, budgetList) == false)
+            if (!getBudgetList(holidayItem.holidayId, budgetList))
                 return (false);
             for (BudgetItem budgetItem : budgetList)
                 deleteBudgetItem(budgetItem);
             
             // DayItem
             ArrayList<DayItem> dayList = new ArrayList<>();
-            if (getDayList(holidayItem.holidayId, dayList) == false)
+            if (!getDayList(holidayItem.holidayId, dayList))
                 return (false);
             for (DayItem dayItem : dayList)
-                if (deleteDayItem(dayItem) == false)
+                if (!deleteDayItem(dayItem))
                     return (false);
             
             // ExtraFilesItem for maps
-            if (removeExtraFiles(holidayItem.mapFileGroupId) == false)
+            if (!removeExtraFiles(holidayItem.mapFileGroupId))
                 return (false);
             
             // ContactItem
             ArrayList<ContactItem> contactList = new ArrayList<>();
-            if (getContactList(holidayItem.holidayId, contactList) == false)
+            if (!getContactList(holidayItem.holidayId, contactList))
                 return (false);
             for (ContactItem contactItem : contactList)
                 deleteContactItem(contactItem);
             
             // TaskItem
             ArrayList<TaskItem> taskList = new ArrayList<>();
-            if (getTaskList(holidayItem.holidayId, taskList) == false)
+            if (!getTaskList(holidayItem.holidayId, taskList))
                 return (false);
             for (TaskItem taskItem : taskList)
-                if (deleteTaskItem(taskItem) == false)
+                if (!deleteTaskItem(taskItem))
                     return (false);
             
             // TipGroupItem
             ArrayList<TipGroupItem> tipGroupList = new ArrayList<>();
-            if (getTipGroupList(holidayItem.holidayId, tipGroupList) == false)
+            if (!getTipGroupList(holidayItem.holidayId, tipGroupList))
                 return (false);
             for (TipGroupItem tipGroupItem : tipGroupList)
                 deleteTipGroupItem(tipGroupItem);
-            
-            if (tableHoliday.deleteHolidayItem(holidayItem) == false)
-                return (false);
-            
-            return (true);
+
+            return tableHoliday.deleteHolidayItem(holidayItem);
         }
         catch (Exception e)
         {
@@ -529,22 +480,19 @@ public class DatabaseAccess extends SQLiteOpenHelper
         {
             // ScheduleItem
             ArrayList<ScheduleItem> scheduleList = new ArrayList<>();
-            if (getScheduleList(dayItem.holidayId, dayItem.dayId, 0, 0, scheduleList) == false)
+            if (!getScheduleList(dayItem.holidayId, dayItem.dayId, 0, 0, scheduleList))
                 return (false);
             for (ScheduleItem scheduleItem : scheduleList)
                 deleteScheduleItem(scheduleItem);
             
             // ExtraFilesItem for maps
-            if (removeExtraFiles(dayItem.infoId) == false)
+            if (!removeExtraFiles(dayItem.infoId))
                 return (false);
             
-            if (removeNote(dayItem.holidayId, dayItem.noteId) == false)
+            if (!removeNote(dayItem.holidayId, dayItem.noteId))
                 return (false);
-            
-            if (tableDay.deleteDayItem(dayItem) == false)
-                return (false);
-            
-            return (true);
+
+            return tableDay.deleteDayItem(dayItem);
         }
         catch (Exception e)
         {
@@ -612,7 +560,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
     
     //endregion;
 
-    //region GENERALATTRACTION functions
+    //region GENERAL ATTRACTION functions
     private boolean updateGeneralAttractionItem(GeneralAttractionItem item)
     {
         try
@@ -662,12 +610,11 @@ public class DatabaseAccess extends SQLiteOpenHelper
     {
         try
         {
-            if (tableSchedule.addScheduleItem(scheduleItem) == false)
+            if (!tableSchedule.addScheduleItem(scheduleItem))
                 return (false);
             
             if (scheduleItem.generalAttractionItem != null)
-                if (tableGeneralAttraction.addGeneralAttractionItem(scheduleItem.generalAttractionItem) == false)
-                    return (false);
+                return tableGeneralAttraction.addGeneralAttractionItem(scheduleItem.generalAttractionItem);
             
             return (true);
         }
@@ -697,12 +644,11 @@ public class DatabaseAccess extends SQLiteOpenHelper
     {
         try
         {
-            if (tableSchedule.updateScheduleItem(scheduleItem) == false)
+            if (!tableSchedule.updateScheduleItem(scheduleItem))
                 return (false);
             
             if (scheduleItem.generalAttractionItem != null)
-                if (updateGeneralAttractionItem(scheduleItem.generalAttractionItem) == false)
-                    return (false);
+                return updateGeneralAttractionItem(scheduleItem.generalAttractionItem);
             return (true);
         }
         catch (Exception e)
@@ -719,18 +665,17 @@ public class DatabaseAccess extends SQLiteOpenHelper
         {
             if (scheduleItem != null)
             {
-                if (removeExtraFiles(scheduleItem.infoId) == false)
+                if (!removeExtraFiles(scheduleItem.infoId))
                     return (false);
                 
-                if (removeNote(scheduleItem.holidayId, scheduleItem.noteId) == false)
+                if (!removeNote(scheduleItem.holidayId, scheduleItem.noteId))
                     return (false);
                 
                 if (scheduleItem.generalAttractionItem != null)
-                    if (deleteGeneralAttractionItem(scheduleItem.generalAttractionItem) == false)
+                    if (!deleteGeneralAttractionItem(scheduleItem.generalAttractionItem))
                         return (false);
-                
-                if (tableSchedule.deleteScheduleItem(scheduleItem) == false)
-                    return (false);
+
+                return tableSchedule.deleteScheduleItem(scheduleItem);
             }
             return (true);
         }
@@ -742,20 +687,19 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    public boolean getScheduleItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, ScheduleItem litem)
+    public boolean getScheduleItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, ScheduleItem item)
     {
         try
         {
-            if (tableSchedule.getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, litem) == false)
+            if (!tableSchedule.getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, item))
                 return (false);
             
-            litem.generalAttractionItem = null;
+            item.generalAttractionItem = null;
             
-            if (litem.schedType == res.getInteger(R.integer.schedule_type_generalattraction))
+            if (item.schedType == res.getInteger(R.integer.schedule_type_generalattraction))
             {
-                litem.generalAttractionItem = new GeneralAttractionItem();
-                if (getGeneralAttractionItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, litem.generalAttractionItem) == false)
-                    return (false);
+                item.generalAttractionItem = new GeneralAttractionItem();
+                return getGeneralAttractionItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, item.generalAttractionItem);
             }
             
             return (true);
@@ -800,7 +744,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
     {
         try
         {
-            if (tableSchedule.getScheduleList(holidayId, dayId, attractionId, attractionAreaId, al) == false)
+            if (!tableSchedule.getScheduleList(holidayId, dayId, attractionId, attractionAreaId, al))
                 return (false);
             
             for (ScheduleItem item : al)
@@ -810,7 +754,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
                 if (item.schedType == res.getInteger(R.integer.schedule_type_generalattraction))
                 {
                     item.generalAttractionItem = new GeneralAttractionItem();
-                    if (getGeneralAttractionItem(holidayId, dayId, attractionId, attractionAreaId, item.scheduleId, item.generalAttractionItem) == false)
+                    if (!getGeneralAttractionItem(holidayId, dayId, attractionId, attractionAreaId, item.scheduleId, item.generalAttractionItem))
                         return (false);
                 }
             }
@@ -826,7 +770,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
     
     //endregion
     
-    //region EXTRAFILES functions
+    //region EXTRA FILES functions
     public boolean addExtraFilesItem(ExtraFilesItem extraFilesItem)
     {
         try
@@ -1031,10 +975,10 @@ public class DatabaseAccess extends SQLiteOpenHelper
     {
         try
         {
-            if (removeExtraFiles(taskItem.infoId) == false)
+            if (!removeExtraFiles(taskItem.infoId))
                 return (false);
             
-            if (removeNote(taskItem.holidayId, taskItem.noteId) == false)
+            if (!removeNote(taskItem.holidayId, taskItem.noteId))
                 return (false);
             
             return (tableTask.deleteTaskItem(taskItem));
@@ -1166,10 +1110,10 @@ public class DatabaseAccess extends SQLiteOpenHelper
     {
         try
         {
-            if (removeExtraFiles(budgetItem.infoId) == false)
+            if (!removeExtraFiles(budgetItem.infoId))
                 return (false);
             
-            if (removeNote(budgetItem.holidayId, budgetItem.noteId) == false)
+            if (!removeNote(budgetItem.holidayId, budgetItem.noteId))
                 return (false);
 
             return (tableBudget.deleteBudgetItem(budgetItem));
@@ -1286,10 +1230,10 @@ public class DatabaseAccess extends SQLiteOpenHelper
     {
         try
         {
-            if (removeExtraFiles(tipItem.infoId) == false)
+            if (!removeExtraFiles(tipItem.infoId))
                 return (false);
             
-            if (removeNote(tipItem.holidayId, tipItem.noteId) == false)
+            if (!removeNote(tipItem.holidayId, tipItem.noteId))
                 return (false);
             
             return (tableTip.deleteTipItem(tipItem));
@@ -1374,7 +1318,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
     
     //endregion
     
-    //region TIPGROUP functions
+    //region TIP GROUP functions
     public boolean addTipGroupItem(TipGroupItem tipGroupItem)
     {
         try
@@ -1423,15 +1367,15 @@ public class DatabaseAccess extends SQLiteOpenHelper
         {
             // TipItem
             ArrayList<TipItem> tipList = new ArrayList<>();
-            if (getTipList(tipGroupItem.holidayId, tipGroupItem.tipGroupId, tipList) == false)
+            if (!getTipList(tipGroupItem.holidayId, tipGroupItem.tipGroupId, tipList))
                 return (false);
             for (TipItem tipItem : tipList)
                 deleteTipItem(tipItem);
             
-            if (removeExtraFiles(tipGroupItem.infoId) == false)
+            if (!removeExtraFiles(tipGroupItem.infoId))
                 return (false);
             
-            if (removeNote(tipGroupItem.holidayId, tipGroupItem.noteId) == false)
+            if (!removeNote(tipGroupItem.holidayId, tipGroupItem.noteId))
                 return (false);
             
             return (tableTipGroup.deleteTipGroupItem(tipGroupItem));
@@ -1565,15 +1509,15 @@ public class DatabaseAccess extends SQLiteOpenHelper
         {
             // AttractionAreaItem
             ArrayList<AttractionAreaItem> attractionAreaList = new ArrayList<>();
-            if (getAttractionAreaList(attractionItem.holidayId, attractionItem.attractionId, attractionAreaList) == false)
+            if (!getAttractionAreaList(attractionItem.holidayId, attractionItem.attractionId, attractionAreaList))
                 return (false);
             for (AttractionAreaItem attractionAreaItem : attractionAreaList)
                 deleteAttractionAreaItem(attractionAreaItem);
             
-            if (removeExtraFiles(attractionItem.infoId) == false)
+            if (!removeExtraFiles(attractionItem.infoId))
                 return (false);
             
-            if (removeNote(attractionItem.holidayId, attractionItem.noteId) == false)
+            if (!removeNote(attractionItem.holidayId, attractionItem.noteId))
                 return (false);
             
             return (tableAttraction.deleteAttractionItem(attractionItem));
@@ -1693,21 +1637,18 @@ public class DatabaseAccess extends SQLiteOpenHelper
         {
             // ScheduleItem
             ArrayList<ScheduleItem> scheduleList = new ArrayList<>();
-            if (getScheduleList(attractionAreaItem.holidayId, 0, attractionAreaItem.attractionId, attractionAreaItem.attractionAreaId, scheduleList) == false)
+            if (!getScheduleList(attractionAreaItem.holidayId, 0, attractionAreaItem.attractionId, attractionAreaItem.attractionAreaId, scheduleList))
                 return (false);
             for (ScheduleItem scheduleItem : scheduleList)
                 deleteScheduleItem(scheduleItem);
             
-            if (removeExtraFiles(attractionAreaItem.infoId) == false)
+            if (!removeExtraFiles(attractionAreaItem.infoId))
                 return (false);
             
-            if (removeNote(attractionAreaItem.holidayId, attractionAreaItem.noteId) == false)
+            if (!removeNote(attractionAreaItem.holidayId, attractionAreaItem.noteId))
                 return (false);
-            
-            if (tableAttractionArea.deleteAttractionAreaItem(attractionAreaItem) == false)
-                return (false);
-            
-            return (true);
+
+            return tableAttractionArea.deleteAttractionAreaItem(attractionAreaItem);
         }
         catch (Exception e)
         {
@@ -1775,7 +1716,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
     
     //endregion
     
-    //region CONTACTITEM functions
+    //region CONTACT ITEM functions
     public boolean getContactCount(int holidayId, MyInt retInt)
     {
         try
@@ -1836,10 +1777,10 @@ public class DatabaseAccess extends SQLiteOpenHelper
     {
         try
         {
-            if (removeExtraFiles(contactItem.infoId) == false)
+            if (!removeExtraFiles(contactItem.infoId))
                 return (false);
             
-            if (removeNote(contactItem.holidayId, contactItem.noteId) == false)
+            if (!removeNote(contactItem.holidayId, contactItem.noteId))
                 return (false);
             
             return (tableContact.deleteContactItem(contactItem));
@@ -1910,7 +1851,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
     
     //endregion
     
-    //region SCHEDULEAREA functions
+    //region SCHEDULER functions
     public boolean getScheduleAreaList(int holidayId, ArrayList<ScheduleAreaItem> al)
     {
         try
@@ -1920,7 +1861,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
                 return (false);
             
             ArrayList<DayItem> lDayList = new ArrayList<>();
-            if (getDayList(holidayId, lDayList) == false)
+            if (!getDayList(holidayId, lDayList))
                 return (false);
             for (DayItem dayItem : lDayList)
             {
@@ -1936,13 +1877,13 @@ public class DatabaseAccess extends SQLiteOpenHelper
                 {
                     Date lcurrdate = new Date();
                     
-                    // we subtract 1 because sequenceno starts at 1 - but we want to add 0 days for the
+                    // we subtract 1 because sequence starts at 1 - but we want to add 0 days for the
                     // first element
-                    if (dateUtils.AddDays(holidayItem.startDateDate, (dayItem.sequenceNo - 1), lcurrdate) == false)
+                    if (!dateUtils.AddDays(holidayItem.startDateDate, (dayItem.sequenceNo - 1), lcurrdate))
                         return (false);
                     
                     MyString myString = new MyString();
-                    if (dateUtils.DateToStr(lcurrdate, myString) == false)
+                    if (!dateUtils.DateToStr(lcurrdate, myString))
                         return (false);
                     lStartDate = String.format(Locale.ENGLISH, res.getString(R.string.fmt_date_line), myString.Value);
                 }
@@ -1959,12 +1900,12 @@ public class DatabaseAccess extends SQLiteOpenHelper
             
             
             ArrayList<AttractionItem> lAttractionList = new ArrayList<>();
-            if (getAttractionList(holidayId, lAttractionList) == false)
+            if (!getAttractionList(holidayId, lAttractionList))
                 return (false);
             for (AttractionItem attractionItem : lAttractionList)
             {
                 ArrayList<AttractionAreaItem> lAttractionAreaList = new ArrayList<>();
-                if (getAttractionAreaList(attractionItem.holidayId, attractionItem.attractionId, lAttractionAreaList) == false)
+                if (!getAttractionAreaList(attractionItem.holidayId, attractionItem.attractionId, lAttractionAreaList))
                     return (false);
                 for (AttractionAreaItem attractionAreaItem : lAttractionAreaList)
                 {
