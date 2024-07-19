@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -77,16 +78,10 @@ public class TipDetailsEdit extends TipDetailsView implements View.OnClickListen
     {
         try
         {
-            dwetOnOkClick=new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    TipDescriptionPicked(view);
-                }
-            };
+            dwetOnOkClick= this::TipDescriptionPicked;
 
 
-            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
                 "A New Tip",    // form caption
                 "Description",             // form message
@@ -121,23 +116,16 @@ public class TipDetailsEdit extends TipDetailsView implements View.OnClickListen
     // Create a YES onclick procedure
     public void onClick(View view)
     {
-        try
-        {
-            switch(view.getId())
-            {
+        try {
+            int id = view.getId();
+            if (id == R.id.grpTipDescription)
+                pickTipDescription(view);
 
-                case R.id.grpTipDescription:
-                    pickTipDescription(view);
-                    break;
+            if (id == R.id.txtTipNotes)
+                pickTipNotes(view);
 
-                case R.id.txtTipNotes:
-                    pickTipNotes(view);
-                    break;
-
-                case R.id.imageViewSmall:
-                    pickImage(view);
-                    break;
-            }
+            if (id == R.id.imageViewSmall)
+                pickImage(view);
         }
         catch(Exception e)
         {
@@ -150,20 +138,14 @@ public class TipDetailsEdit extends TipDetailsView implements View.OnClickListen
     {
         try
         {
-            dwetOnOkClick=new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    TipNotesPicked(view);
-                }
-            };
+            dwetOnOkClick= this::TipNotesPicked;
 
 
-            dialogWithMultiEditTextFragment=DialogWithMultiEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithMultiEditTextFragment=DialogWithMultiEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hjhj",            // unique name for this dialog type
                 "TIP Group Notes",    // form caption
-                "Notes",             // form message
-                R.drawable.attachment, txtTipNotes.getText().toString(),                // initial text
+                    // form message
+                    txtTipNotes.getText().toString(),                // initial text
                 dwetOnOkClick, this
             );
 
@@ -181,7 +163,7 @@ public class TipDetailsEdit extends TipDetailsView implements View.OnClickListen
     //region Saving
     public void saveSchedule(View view)
     {
-        try
+        try(DatabaseAccess da = databaseAccess())
         {
             myMessages().ShowMessageShort("Saving " + txtTipDescription.getText().toString());
 
@@ -189,7 +171,7 @@ public class TipDetailsEdit extends TipDetailsView implements View.OnClickListen
             tipItem.tipNotes=txtTipNotes.getText().toString();
 
             tipItem.tipPicture="";
-            if(internalImageFilename.length() > 0)
+            if(!internalImageFilename.isEmpty())
                 tipItem.tipPicture=internalImageFilename;
             tipItem.pictureAssigned=imageSet;
             tipItem.pictureChanged=imageChanged;
@@ -198,28 +180,27 @@ public class TipDetailsEdit extends TipDetailsView implements View.OnClickListen
                 tipItem.fileBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
 
-            if(action.equals("add"))
-            {
-                MyInt myInt=new MyInt();
+            if(action.equals("add")) {
+                MyInt myInt = new MyInt();
 
-                tipItem.holidayId=holidayId;
-                tipItem.tipGroupId=tipGroupId;
+                tipItem.holidayId = holidayId;
+                tipItem.tipGroupId = tipGroupId;
 
-                if(!databaseAccess().getNextTipId(holidayId, tipGroupId, myInt))
+                if (!da.getNextTipId(holidayId, tipGroupId, myInt))
                     return;
-                tipItem.tipId=myInt.Value;
+                tipItem.tipId = myInt.Value;
 
-                if(!databaseAccess().getNextTipSequenceNo(holidayId, tipGroupId, myInt))
+                if (!da.getNextTipSequenceNo(holidayId, tipGroupId, myInt))
                     return;
-                tipItem.sequenceNo=myInt.Value;
+                tipItem.sequenceNo = myInt.Value;
 
-                if(!databaseAccess().addTipItem(tipItem))
+                if (!da.addTipItem(tipItem))
                     return;
             }
 
             if(action.equals("modify"))
             {
-                if(!databaseAccess().updateTipItem(tipItem))
+                if(!da.updateTipItem(tipItem))
                     return;
             }
 

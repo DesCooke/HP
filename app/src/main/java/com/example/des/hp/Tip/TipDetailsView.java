@@ -10,10 +10,13 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
+import androidx.annotation.NonNull;
 
 public class TipDetailsView extends BaseActivity
 {
@@ -38,12 +41,12 @@ public class TipDetailsView extends BaseActivity
             layoutName="activity_tip_details_view";
             setContentView(R.layout.activity_tip_details_view);
 
-            txtTipDescription=(TextView) findViewById(R.id.txtTipDescription);
-            txtTipNotes=(TextView) findViewById(R.id.txtTipNotes);
-            btnClear=(ImageButton) findViewById(R.id.btnClear);
-            btnSave=(Button) findViewById(R.id.btnSave);
-            grpTipDescription=(LinearLayout) findViewById(R.id.grpTipDescription);
-            grpMenuFile=(LinearLayout) findViewById(R.id.grpMenuFile);
+            txtTipDescription= findViewById(R.id.txtTipDescription);
+            txtTipNotes= findViewById(R.id.txtTipNotes);
+            btnClear= findViewById(R.id.btnClear);
+            btnSave= findViewById(R.id.btnSave);
+            grpTipDescription= findViewById(R.id.grpTipDescription);
+            grpMenuFile= findViewById(R.id.grpMenuFile);
 
             afterCreate();
 
@@ -73,21 +76,14 @@ public class TipDetailsView extends BaseActivity
 
     //region OnClick Events
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
-        try
-        {
-            switch(item.getItemId())
-            {
-                case R.id.action_delete_tip:
-                    deleteTip();
-                    return true;
-                case R.id.action_edit_tip:
-                    editTip();
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
+        try {
+            int id = item.getItemId();
+            if (id == R.id.action_delete_tip)
+                deleteTip();
+            if (id == R.id.action_edit_tip)
+                editTip();
         }
         catch(Exception e)
         {
@@ -104,10 +100,14 @@ public class TipDetailsView extends BaseActivity
         try
         {
             tipItem=new TipItem();
-            if(!databaseAccess().getTipItem(holidayId, tipGroupId, tipId, tipItem))
-                return;
+            try(DatabaseAccess da = databaseAccess())
+            {
+                if(!da.getTipItem(holidayId, tipGroupId, tipId, tipItem))
+                    return;
+            }
 
-            if(title == null || (title.length() == 0))
+
+            if(title == null || (title.isEmpty()))
             {
                 SetTitles(tipItem.tipDescription, "");
             } else
@@ -150,7 +150,10 @@ public class TipDetailsView extends BaseActivity
         try
         {
             tipItem.noteId=pNoteId;
-            databaseAccess().updateTipItem(tipItem);
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateTipItem(tipItem);
+            }
         }
         catch(Exception e)
         {
@@ -179,7 +182,10 @@ public class TipDetailsView extends BaseActivity
         try
         {
             tipItem.infoId=pInfoId;
-            databaseAccess().updateTipItem(tipItem);
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateTipItem(tipItem);
+            }
         }
         catch(Exception e)
         {
@@ -213,8 +219,11 @@ public class TipDetailsView extends BaseActivity
     {
         try
         {
-            if(!databaseAccess().deleteTipItem(tipItem))
-                return;
+            try(DatabaseAccess da = databaseAccess())
+            {
+                if(!da.deleteTipItem(tipItem))
+                    return;
+            }
             finish();
         }
         catch(Exception e)

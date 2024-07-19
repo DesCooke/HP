@@ -2,6 +2,8 @@ package com.example.des.hp.Tasks;
 
 import android.app.Activity;
 import android.content.Context;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -20,12 +23,10 @@ import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>
 {
-    private Context context;
-    private int layoutResourceId;
-    public ArrayList<TaskItem> data=null;
-    private DateUtils dateUtils;
+    private final Context context;
+    public ArrayList<TaskItem> data;
     private OnItemClickListener mOnItemClickListener;
-    private ImageUtils imageUtils;
+    private final ImageUtils imageUtils;
 
 
     interface OnItemClickListener
@@ -38,7 +39,7 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>
         this.mOnItemClickListener=mItemClickListener;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder
+    static class ViewHolder extends RecyclerView.ViewHolder
     {
         // each data item is just a string in this case
         ImageView taskImage;
@@ -51,11 +52,11 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>
         {
             super(v);
 
-            taskImage=(ImageView) v.findViewById(R.id.imgIcon);
-            txtTaskDescription=(TextView) v.findViewById(R.id.taskDescription);
-            txtTaskDate=(TextView) v.findViewById(R.id.taskDate);
-            taskItemCell=(LinearLayout) v.findViewById(R.id.taskItemCell);
-            chkTaskComplete=(CheckBox) v.findViewById(R.id.chkTaskComplete);
+            taskImage= v.findViewById(R.id.imgIcon);
+            txtTaskDescription= v.findViewById(R.id.taskDescription);
+            txtTaskDate= v.findViewById(R.id.taskDate);
+            taskItemCell= v.findViewById(R.id.taskItemCell);
+            chkTaskComplete= v.findViewById(R.id.chkTaskComplete);
         }
     }
 
@@ -67,6 +68,7 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>
         data=items;
     }
 
+    @NonNull
     @Override
     public TaskAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
@@ -96,7 +98,7 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>
         if(c.pictureAssigned)
         {
             holder.taskImage.setVisibility(View.VISIBLE);
-            if(imageUtils.getListIcon(c.holidayId, context, c.taskPicture, holder.taskImage) == false)
+            if(!imageUtils.getListIcon(c.holidayId, context, c.taskPicture, holder.taskImage))
                 return;
         } else
         {
@@ -104,15 +106,10 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>
         }
 
 
-        holder.taskItemCell.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
+        holder.taskItemCell.setOnClickListener(view -> {
+            if(mOnItemClickListener != null)
             {
-                if(mOnItemClickListener != null)
-                {
-                    mOnItemClickListener.onItemClick(view, c);
-                }
+                mOnItemClickListener.onItemClick(view, c);
             }
         });
     }
@@ -126,13 +123,12 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>
     public void add(int position, TaskItem mail)
     {
         data.add(position, mail);
-        notifyDataSetChanged();
+        notifyItemInserted(position);
     }
 
-    boolean onItemMove(int fromPosition, int toPosition)
+    void onItemMove()
     {
         updateGlobalData(data);
-        return true;
     }
 
     private void updateGlobalData(ArrayList<TaskItem> items)
@@ -141,12 +137,13 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>
         {
             items.get(i).sequenceNo=i + 1;
         }
-        if(!databaseAccess().updateTaskItems(items))
-            return;
-        notifyDataSetChanged();
+        try(DatabaseAccess da = databaseAccess())
+        {
+            if(!da.updateTaskItems(items))
+                return;
+        }
+        notifyItemRangeChanged(0, items.size()-1);
     }
-
-    private int lastPosition=-1;
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override

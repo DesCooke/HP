@@ -1,9 +1,11 @@
 package com.example.des.hp.myutils;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.Fragment;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +26,7 @@ public class DialogWithYesNoFragment extends DialogFragment
     private int imageIcon;
     public View.OnClickListener yesClick;
     public View.OnClickListener noClick;
+    @SuppressLint("StaticFieldLeak")
     public static DialogWithYesNoFragment dialogWithYesNoFragment;
     private static FragmentTransaction fragmentTransaction;
     private String dialogTag;
@@ -34,11 +37,11 @@ public class DialogWithYesNoFragment extends DialogFragment
 
     }
 
-    private void ShowError(String argFunction, String argMessage)
+    private void ShowError(String argMessage)
     {
         myMessages().ShowError
                 (
-                        "Error in DialogWithYesNoFragment::" + argFunction,
+                        "Error in DialogWithYesNoFragment::" + "onCreateView",
                         argMessage
                 );
     }
@@ -65,19 +68,12 @@ public class DialogWithYesNoFragment extends DialogFragment
 
         // let's create a new one - giving all the defaults
         dialogWithYesNoFragment = new DialogWithYesNoFragment();
-        dialogWithYesNoFragment.dialogTag=tag;
         dialogWithYesNoFragment.context = context;
 
         if(argOnYesClick==null)
         {
           // default the yes click
-          dialogWithYesNoFragment.yesClick = new View.OnClickListener()
-          {
-              public void onClick(View view)
-              {
-                  dialogWithYesNoFragment.dismiss();
-              }
-          };
+          dialogWithYesNoFragment.yesClick = view -> dialogWithYesNoFragment.dismiss();
         }
         else
         {
@@ -87,13 +83,7 @@ public class DialogWithYesNoFragment extends DialogFragment
         if(argOnNoClick==null)
         {        
           // default the no click
-          dialogWithYesNoFragment.noClick = new View.OnClickListener()
-          {
-              public void onClick(View view)
-              {
-                  dialogWithYesNoFragment.dismiss();
-              }
-          };
+          dialogWithYesNoFragment.noClick = view -> dialogWithYesNoFragment.dismiss();
         }
         else
         {
@@ -137,15 +127,15 @@ public class DialogWithYesNoFragment extends DialogFragment
             }
 
             // Watch for button clicks.
-            Button btnYes = (Button) v.findViewById(R.id.btnYes);
+            Button btnYes = v.findViewById(R.id.btnYes);
             btnYes.setOnClickListener(yesClick);
 
-            Button btnNo = (Button) v.findViewById(R.id.btnNo);
+            Button btnNo = v.findViewById(R.id.btnNo);
             btnNo.setOnClickListener(noClick);
         }
         catch (Exception e)
         {
-            ShowError("onCreateView", e.getMessage());
+            ShowError(e.getMessage());
         }
 
         return v;

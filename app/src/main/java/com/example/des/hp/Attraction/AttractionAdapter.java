@@ -21,7 +21,7 @@ import com.example.des.hp.R;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
-class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.ViewHolder>
+public class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.ViewHolder>
 {
     private final Context context;
     public ArrayList<AttractionItem> data;

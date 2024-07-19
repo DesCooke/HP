@@ -13,10 +13,7 @@ import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 import com.example.des.hp.myutils.MyUri;
 
-import java.io.File;
 import java.util.ArrayList;
-
-import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 class TableExtraFiles extends TableBase
 {
@@ -56,66 +53,34 @@ class TableExtraFiles extends TableBase
         return (false);
     }
 
-    public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-    {
-        try
-        {
-            if(oldVersion==44 && newVersion==45)
-            {
-                db.execSQL("ALTER TABLE extraFiles ADD COLUMN holidayId INT(5) DEFAULT 0");
-            }
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("onUpgrade", e.getMessage());
-        }
-        return (false);
-    }
-
     boolean addExtraFilesItem(ExtraFilesItem extraFilesItem)
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
-            if(extraFilesItem.pictureAssigned)
-            {
-            /* if picture name has something in it - it means it came from internal folder */
-                if(extraFilesItem.filePicture.length() == 0)
-                {
-                    //myMessages().LogMessage("  - New Image was not from internal folder...");
-                    if(extraFilesItem.pictureAssigned)
-                    {
-                        //myMessages().LogMessage("  - Save new image and get a filename...");
-                        MyString myString=new MyString();
-                        if(savePicture(/*holidayid*/ 0, extraFilesItem.fileBitmap, myString) == false)
-                            return (false);
-                        extraFilesItem.filePicture=myString.Value;
-                        //myMessages().LogMessage("  - New filename " + extraFilesItem.filePicture);
-                    } else
-                    {
-                        //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
-                    }
-                } else
-                {
-                    //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + extraFilesItem.filePicture + ")");
+            if(extraFilesItem.pictureAssigned) {
+                /* if picture name has something in it - it means it came from internal folder */
+                if (extraFilesItem.filePicture.isEmpty()) {
+                    //myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (!savePicture(/*holidayid*/ 0, extraFilesItem.fileBitmap, myString))
+                        return (false);
+                    extraFilesItem.filePicture = myString.Value;
+                    //myMessages().LogMessage("  - New filename " + extraFilesItem.filePicture);
                 }
-            } else
-            {
-                //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
 
-            if(extraFilesItem.fileName.length() > 0)
+            if(!extraFilesItem.fileName.isEmpty())
             {
                 String lFilename;
                 MyInt myInt=new MyInt();
-                if(getNextFileId("file", myInt) == false)
+                if(!getNextFileId("file", myInt))
                     return (false);
 
-                if(setNextFileId("file", myInt.Value + 1) == false)
+                if(!setNextFileId("file", myInt.Value + 1))
                     return (false);
 
                 MyUri myUri = new MyUri(_context);
@@ -132,8 +97,8 @@ class TableExtraFiles extends TableBase
 
 
                 extraFilesItem.fileName=lFilename;
-                if(extraFilesItem.internalFilename.length() == 0)
-                    if(saveExtraFile(extraFilesItem.holidayId, extraFilesItem.fileUri, extraFilesItem.fileName) == false)
+                if(extraFilesItem.internalFilename.isEmpty())
+                    if(!saveExtraFile(extraFilesItem.holidayId, extraFilesItem.fileUri, extraFilesItem.fileName))
                         return (false);
             }
 
@@ -159,7 +124,7 @@ class TableExtraFiles extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             if(items == null)
@@ -169,7 +134,7 @@ class TableExtraFiles extends TableBase
             {
                 if(items.get(i).sequenceNo != items.get(i).origSequenceNo)
                 {
-                    if(updateExtraFilesItem(items.get(i)) == false)
+                    if(!updateExtraFilesItem(items.get(i)))
                         return (false);
                 }
             }
@@ -187,18 +152,18 @@ class TableExtraFiles extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             if(extraFilesItem.fileChanged)
             {
-                if(extraFilesItem.origFileName.length() > 0 && extraFilesItem.origFileName.compareTo(extraFilesItem.internalFilename) != 0)
-                    if(removeExtraFile(extraFilesItem.holidayId, extraFilesItem.origFileName) == false)
+                if(!extraFilesItem.origFileName.isEmpty() && extraFilesItem.origFileName.compareTo(extraFilesItem.internalFilename) != 0)
+                    if(!removeExtraFile(extraFilesItem.holidayId, extraFilesItem.origFileName))
                         return (false);
-                if(extraFilesItem.internalFilename.length() == 0 && extraFilesItem.fileName.length() > 0)
+                if(extraFilesItem.internalFilename.isEmpty() && !extraFilesItem.fileName.isEmpty())
                 {
                     extraFilesItem.fileName=extraFilesItem.fileName.replace("'", "");
-                    if(saveExtraFile(extraFilesItem.holidayId, extraFilesItem.fileUri, extraFilesItem.fileName) == false)
+                    if(!saveExtraFile(extraFilesItem.holidayId, extraFilesItem.fileUri, extraFilesItem.fileName))
                         return (false);
                 }
             }
@@ -220,16 +185,16 @@ class TableExtraFiles extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL="DELETE FROM ExtraFiles " + "WHERE fileGroupId = " + extraFilesItem.fileGroupId + " " + "AND fileId = " + extraFilesItem.fileId;
 
-            if(extraFilesItem.fileName.length() > 0)
-                if(removeExtraFile(extraFilesItem.holidayId, extraFilesItem.fileName) == false)
+            if(!extraFilesItem.fileName.isEmpty())
+                if(!removeExtraFile(extraFilesItem.holidayId, extraFilesItem.fileName))
                     return (false);
 
-            if(executeSQL("deleteExtraFilesItem", lSQL) == false)
+            if(!executeSQL("deleteExtraFilesItem", lSQL))
                 return (false);
 
             return (true);
@@ -242,11 +207,11 @@ class TableExtraFiles extends TableBase
 
     }
 
-    boolean getExtraFilesItem(int fileGroupId, int fileId, ExtraFilesItem litem)
+    boolean getExtraFilesItem(int fileGroupId, int fileId, ExtraFilesItem item)
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL;
@@ -258,7 +223,7 @@ class TableExtraFiles extends TableBase
             if(cursor != null)
             {
                 cursor.moveToFirst();
-                if(GetExtraFilesItemFromQuery(cursor, litem) == false)
+                if(!GetExtraFilesItemFromQuery(cursor, item))
                     return (false);
             }
             executeSQLCloseCursor("getExtraFilesItem");
@@ -274,7 +239,7 @@ class TableExtraFiles extends TableBase
 
     private boolean GetExtraFilesItemFromQuery(Cursor cursor, ExtraFilesItem extraFilesItem)
     {
-        if(IsValid() == false)
+        if(!IsValid())
             return (false);
 
         try
@@ -299,7 +264,7 @@ class TableExtraFiles extends TableBase
 
             extraFilesItem.pictureChanged=false;
 
-            if(extraFilesItem.filePicture.length() > 0)
+            if(!extraFilesItem.filePicture.isEmpty())
             {
                 extraFilesItem.pictureAssigned=true;
                 extraFilesItem.origPictureAssigned=true;
@@ -324,7 +289,7 @@ class TableExtraFiles extends TableBase
         {
             String lSQL="SELECT IFNULL(MAX(fileId),0) FROM ExtraFiles WHERE fileGroupId = " + fileGroupId;
 
-            if(executeSQLGetInt("getNextSequenceNo", lSQL, retInt) == false)
+            if(!executeSQLGetInt("getNextSequenceNo", lSQL, retInt))
                 return (false);
 
             retInt.Value=retInt.Value + 1;
@@ -343,10 +308,10 @@ class TableExtraFiles extends TableBase
     {
         try
         {
-            if(getNextFileId("fgi", retInt) == false)
+            if(!getNextFileId("fgi", retInt))
                 return (false);
 
-            if(setNextFileId("fgi", retInt.Value + 1) == false)
+            if(!setNextFileId("fgi", retInt.Value + 1))
                 return (false);
 
             return (true);
@@ -365,10 +330,7 @@ class TableExtraFiles extends TableBase
         {
             String lSQL="SELECT IFNULL(COUNT(*),0) FROM ExtraFiles WHERE fileGroupId = " + fileGroupId;
 
-            if(executeSQLGetInt("getNextSequenceNo", lSQL, retInt) == false)
-                return (false);
-
-            return (true);
+            return executeSQLGetInt("getNextSequenceNo", lSQL, retInt);
         }
         catch(Exception e)
         {
@@ -384,7 +346,7 @@ class TableExtraFiles extends TableBase
         {
             String lSQL="SELECT IFNULL(MAX(SequenceNo),0) FROM ExtraFiles WHERE fileGroupId = " + fileGroupId;
 
-            if(executeSQLGetInt("getNextSequenceNo", lSQL, retInt) == false)
+            if(!executeSQLGetInt("getNextSequenceNo", lSQL, retInt))
                 return (false);
 
             retInt.Value=retInt.Value + 1;
@@ -394,30 +356,6 @@ class TableExtraFiles extends TableBase
         catch(Exception e)
         {
             ShowError("getNextExtraFilesSequenceNo", e.getMessage());
-        }
-        return (false);
-
-    }
-
-    public boolean deleteExtraFilesList(int fileGroupId)
-    {
-        try
-        {
-            ArrayList<ExtraFilesItem> al=new ArrayList<>();
-            if(getExtraFilesList(fileGroupId, al) == false)
-                return (false);
-
-            for(int i=0; i < al.size(); i++)
-            {
-                if(deleteExtraFilesItem(al.get(i)) == false)
-                    return (false);
-            }
-
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("deleteExtraFilesList", e.getMessage());
         }
         return (false);
 
@@ -439,7 +377,7 @@ class TableExtraFiles extends TableBase
             while(cursor.moveToNext())
             {
                 ExtraFilesItem extraFilesItem=new ExtraFilesItem();
-                if(GetExtraFilesItemFromQuery(cursor, extraFilesItem) == false)
+                if(!GetExtraFilesItemFromQuery(cursor, extraFilesItem))
                     return (false);
 
                 al.add(extraFilesItem);

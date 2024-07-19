@@ -6,6 +6,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 
@@ -34,11 +35,11 @@ public class AttractionAreaView extends BaseActivity
             layoutName = "activity_attractionarea_view";
             setContentView(R.layout.activity_attractionarea_view);
             
-            txtAttractionAreaDescription = (TextView) findViewById(R.id.txtAttractionAreaDescription);
-            grpAttractionAreaDescription = (LinearLayout) findViewById(R.id.grpAttractionAreaDescription);
-            btnClear = (ImageButton) findViewById(R.id.btnClear);
-            btnSave = (Button) findViewById(R.id.btnSave);
-            grpMenuFile = (LinearLayout) findViewById(R.id.grpMenuFile);
+            txtAttractionAreaDescription = findViewById(R.id.txtAttractionAreaDescription);
+            grpAttractionAreaDescription = findViewById(R.id.grpAttractionAreaDescription);
+            btnClear = findViewById(R.id.btnClear);
+            btnSave = findViewById(R.id.btnSave);
+            grpMenuFile = findViewById(R.id.grpMenuFile);
             
             
             afterCreate();
@@ -60,9 +61,12 @@ public class AttractionAreaView extends BaseActivity
         try
         {
             attractionAreaItem = new AttractionAreaItem();
-            if (!databaseAccess().getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
-                return;
-            
+            try(DatabaseAccess da = databaseAccess())
+            {
+                if (!da.getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
+                    return;
+            }
+
             txtAttractionAreaDescription.setText(attractionAreaItem.attractionAreaDescription);
             
             SetImage(attractionAreaItem.attractionAreaPicture);
@@ -96,7 +100,10 @@ public class AttractionAreaView extends BaseActivity
         try
         {
             attractionAreaItem.noteId = pNoteId;
-            databaseAccess().updateAttractionAreaItem(attractionAreaItem);
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateAttractionAreaItem(attractionAreaItem);
+            }
         }
         catch (Exception e)
         {
@@ -124,7 +131,10 @@ public class AttractionAreaView extends BaseActivity
         try
         {
             attractionAreaItem.infoId = pInfoId;
-            databaseAccess().updateAttractionAreaItem(attractionAreaItem);
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateAttractionAreaItem(attractionAreaItem);
+            }
         }
         catch (Exception e)
         {

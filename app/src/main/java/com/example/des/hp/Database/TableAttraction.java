@@ -10,11 +10,6 @@ import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
-import java.util.Random;
-
-import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
-import static com.example.des.hp.myutils.MyMessages.myMessages;
-
 
 class TableAttraction extends TableBase
 {
@@ -32,7 +27,7 @@ class TableAttraction extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS attraction " + "( " + "  holidayId             INT(5),  " + "  attractionId          INT(5),  " + "  sequenceNo            INT(5),  " + "  attractionDescription VARCHAR, " + "  attractionPicture     VARCHAR, " + "  attractionNotes       VARCHAR, " + "  infoId                INT(5),  " + "  noteId                INT(5),  " + "  galleryId             INT(5),  " + "  sygicId               INT(5)   " + ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS attraction " + "( " + "  holidayId             INT(5),  " + "  attractionId          INT(5),  " + "  sequenceNo            INT(5),  " + "  attractionDescription VARCHAR, " + "  attractionPicture     VARCHAR, " + "  attractionNotes       VARCHAR, " + "  infoId                INT(5),  " + "  noteId                INT(5),  " + "  galleryId             INT(5)  " + ") ";
 
             db.execSQL(lSQL);
 
@@ -45,35 +40,11 @@ class TableAttraction extends TableBase
         }
     }
 
-    public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-    {
-        try
-        {
-            if(oldVersion == 35 && newVersion == 36)
-            {
-                db.execSQL("ALTER TABLE attraction ADD COLUMN noteId INT(5) DEFAULT 0");
-                db.execSQL("ALTER TABLE attraction ADD COLUMN galleryId INT(5) DEFAULT 0");
-                db.execSQL("ALTER TABLE attraction ADD COLUMN sygicId INT(5) DEFAULT 0");
-
-                db.execSQL("UPDATE attraction SET noteId = 0");
-                db.execSQL("UPDATE attraction SET galleryId = 0");
-                db.execSQL("UPDATE attraction SET sygicId = 0");
-            }
-
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("onUpgrade", e.getMessage());
-            return (false);
-        }
-    }
-
     boolean getAttractionsCount(int holidayId, MyInt myInt)
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL="SELECT IFNULL(COUNT(*),0) " + "FROM Attraction " + "WHERE holidayId = " + holidayId;
@@ -92,7 +63,7 @@ class TableAttraction extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
 
@@ -100,31 +71,18 @@ class TableAttraction extends TableBase
             if(attractionItem.pictureAssigned)
             {
             /* if picture name has something in it - it means it came from internal folder */
-                if(attractionItem.attractionPicture.length() == 0)
+                if(attractionItem.attractionPicture.isEmpty())
                 {
-                    //myMessages().LogMessage("  - New Image was not from internal folder...");
-                    if(attractionItem.pictureAssigned)
-                    {
                         //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
-                        if(savePicture(attractionItem.holidayId, attractionItem.fileBitmap, myString) == false)
+                        if(!savePicture(attractionItem.holidayId, attractionItem.fileBitmap, myString))
                             return (false);
                         attractionItem.attractionPicture=myString.Value;
                         //myMessages().LogMessage("  - New filename " + attractionItem.attractionPicture);
-                    } else
-                    {
-                        //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
-                    }
-                } else
-                {
-                    //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + attractionItem.attractionPicture + ")");
                 }
-            } else
-            {
-                //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
-            String lSql="INSERT INTO Attraction " + "  (holidayId, attractionId, sequenceNo, attractionDescription, " + "   attractionPicture, attractionNotes, infoId, noteId, galleryId, sygicId) " + "VALUES " + "(" + attractionItem.holidayId + "," + attractionItem.attractionId + "," + attractionItem.sequenceNo + ", " + MyQuotedString(attractionItem.attractionDescription) + ", " + MyQuotedString(attractionItem.attractionPicture) + ", " + MyQuotedString(attractionItem.attractionNotes) + ", " + attractionItem.infoId + ", " + attractionItem.noteId + ", " + attractionItem.galleryId + ", " + attractionItem.sygicId + " " + ")";
+            String lSql="INSERT INTO Attraction " + "  (holidayId, attractionId, sequenceNo, attractionDescription, " + "   attractionPicture, attractionNotes, infoId, noteId, galleryId) " + "VALUES " + "(" + attractionItem.holidayId + "," + attractionItem.attractionId + "," + attractionItem.sequenceNo + ", " + MyQuotedString(attractionItem.attractionDescription) + ", " + MyQuotedString(attractionItem.attractionPicture) + ", " + MyQuotedString(attractionItem.attractionNotes) + ", " + attractionItem.infoId + ", " + attractionItem.noteId + ", " + attractionItem.galleryId + ")";
 
             return (executeSQL("addAttractionItem", lSql));
         }
@@ -140,7 +98,7 @@ class TableAttraction extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             if(items == null)
@@ -150,7 +108,7 @@ class TableAttraction extends TableBase
             {
                 if(items.get(i).sequenceNo != items.get(i).origSequenceNo)
                 {
-                    if(updateAttractionItem(items.get(i)) == false)
+                    if(!updateAttractionItem(items.get(i)))
                         return (false);
                 }
             }
@@ -168,54 +126,41 @@ class TableAttraction extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             //myMessages().LogMessage("updateAttractionItem:Handling Image");
             if(attractionItem.pictureChanged)
             {
-                if(attractionItem.origPictureAssigned && attractionItem.attractionPicture.length() > 0 && attractionItem.attractionPicture.compareTo(attractionItem.origAttractionPicture) == 0)
-                {
-                    //myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
-                } else
-                {
+                if (!attractionItem.origPictureAssigned || attractionItem.attractionPicture.isEmpty() || attractionItem.attractionPicture.compareTo(attractionItem.origAttractionPicture) != 0) {
 
                     if(attractionItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(removePicture(attractionItem.holidayId, attractionItem.origAttractionPicture) == false)
+                        if(!removePicture(attractionItem.holidayId, attractionItem.origAttractionPicture))
                             return (false);
                     }
-            
+
                 /* if picture name has something in it - it means it came from internal folder */
-                    if(attractionItem.attractionPicture.length() == 0)
+                    if(attractionItem.attractionPicture.isEmpty())
                     {
                         //myMessages().LogMessage("  - New Image was not from internal folder...");
                         if(attractionItem.pictureAssigned)
                         {
                             //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
-                            if(savePicture(attractionItem.holidayId, attractionItem.fileBitmap, myString) == false)
+                            if(!savePicture(attractionItem.holidayId, attractionItem.fileBitmap, myString))
                                 return (false);
                             attractionItem.attractionPicture=myString.Value;
                             //myMessages().LogMessage("  - New filename " + attractionItem.attractionPicture);
-                        } else
-                        {
-                            //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                         }
-                    } else
-                    {
-                        //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + attractionItem.attractionPicture + ")");
                     }
                 }
-            } else
-            {
-                //myMessages().LogMessage("  - Image not changed - do nothing");
             }
 
 
             String lSQL;
-            lSQL="UPDATE Attraction " + "SET sequenceNo = " + attractionItem.sequenceNo + ", " + "    attractionDescription = " + MyQuotedString(attractionItem.attractionDescription) + ", " + "    attractionPicture = " + MyQuotedString(attractionItem.attractionPicture) + ", " + "    attractionNotes = " + MyQuotedString(attractionItem.attractionNotes) + ", " + "    infoId = " + attractionItem.infoId + ", " + "    noteId = " + attractionItem.noteId + ", " + "    galleryId = " + attractionItem.galleryId + ", " + "    sygicId = " + attractionItem.sygicId + " " + "WHERE holidayId = " + attractionItem.holidayId + " " + "AND attractionId = " + attractionItem.attractionId;
+            lSQL="UPDATE Attraction " + "SET sequenceNo = " + attractionItem.sequenceNo + ", " + "    attractionDescription = " + MyQuotedString(attractionItem.attractionDescription) + ", " + "    attractionPicture = " + MyQuotedString(attractionItem.attractionPicture) + ", " + "    attractionNotes = " + MyQuotedString(attractionItem.attractionNotes) + ", " + "    infoId = " + attractionItem.infoId + ", " + "    noteId = " + attractionItem.noteId + ", " + "    galleryId = " + attractionItem.galleryId + " WHERE holidayId = " + attractionItem.holidayId + " " + "AND attractionId = " + attractionItem.attractionId;
 
             return (executeSQL("updateAttractionItem", lSQL));
         }
@@ -231,19 +176,16 @@ class TableAttraction extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL="DELETE FROM Attraction " + "WHERE holidayId = " + attractionItem.holidayId + " " + "AND attractionId = " + attractionItem.attractionId;
 
-            if(attractionItem.attractionPicture.length() > 0)
-                if(removePicture(attractionItem.holidayId, attractionItem.attractionPicture) == false)
+            if(!attractionItem.attractionPicture.isEmpty())
+                if(!removePicture(attractionItem.holidayId, attractionItem.attractionPicture))
                     return (false);
 
-            if(executeSQL("deleteAttractionItem", lSQL) == false)
-                return (false);
-
-            return (true);
+            return executeSQL("deleteAttractionItem", lSQL);
         }
         catch(Exception e)
         {
@@ -257,17 +199,17 @@ class TableAttraction extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL;
-            lSQL="SELECT holidayId, attractionId, sequenceNo, attractionDescription, " + "  attractionPicture, attractionNotes, infoId, noteId, galleryId, sygicId " + "FROM attraction " + "WHERE HolidayId = " + holidayId + " " + "AND AttractionId = " + attractionId;
+            lSQL="SELECT holidayId, attractionId, sequenceNo, attractionDescription, " + "  attractionPicture, attractionNotes, infoId, noteId, galleryId " + "FROM attraction " + "WHERE HolidayId = " + holidayId + " " + "AND AttractionId = " + attractionId;
 
             Cursor cursor=executeSQLOpenCursor("getAttractionItem", lSQL);
             if(cursor != null)
             {
                 cursor.moveToFirst();
-                if(GetAttractionItemFromQuery(cursor, attractionItem) == false)
+                if(!GetAttractionItemFromQuery(cursor, attractionItem))
                     return (false);
             }
             executeSQLCloseCursor("getAttractionItem");
@@ -283,7 +225,7 @@ class TableAttraction extends TableBase
 
     private boolean GetAttractionItemFromQuery(Cursor cursor, AttractionItem attractionItem)
     {
-        if(IsValid() == false)
+        if(!IsValid())
             return (false);
 
         try
@@ -300,7 +242,6 @@ class TableAttraction extends TableBase
             attractionItem.infoId=Integer.parseInt(cursor.getString(6));
             attractionItem.noteId=Integer.parseInt(cursor.getString(7));
             attractionItem.galleryId=Integer.parseInt(cursor.getString(8));
-            attractionItem.sygicId=Integer.parseInt(cursor.getString(9));
 
             attractionItem.origHolidayId=attractionItem.holidayId;
             attractionItem.origAttractionId=attractionItem.attractionId;
@@ -311,11 +252,10 @@ class TableAttraction extends TableBase
             attractionItem.origInfoId=attractionItem.infoId;
             attractionItem.origNoteId=attractionItem.noteId;
             attractionItem.origGalleryId=attractionItem.galleryId;
-            attractionItem.origSygicId=attractionItem.sygicId;
 
             attractionItem.pictureChanged=false;
 
-            if(attractionItem.attractionPicture.length() > 0)
+            if(!attractionItem.attractionPicture.isEmpty())
             {
                 attractionItem.pictureAssigned=true;
                 attractionItem.origPictureAssigned=true;
@@ -342,7 +282,7 @@ class TableAttraction extends TableBase
         {
             String lSQL="SELECT IFNULL(MAX(attractionId),0) " + "FROM Attraction " + "WHERE holidayId = " + holidayId;
 
-            if(executeSQLGetInt("getNextAttractionId", lSQL, myInt) == false)
+            if(!executeSQLGetInt("getNextAttractionId", lSQL, myInt))
                 return (false);
 
             myInt.Value=myInt.Value + 1;
@@ -363,7 +303,7 @@ class TableAttraction extends TableBase
         {
             String lSQL="SELECT IFNULL(MAX(SequenceNo),0) " + "FROM Attraction " + "WHERE holidayId = " + holidayId;
 
-            if(executeSQLGetInt("getNextAttractionSequenceNo", lSQL, myInt) == false)
+            if(!executeSQLGetInt("getNextAttractionSequenceNo", lSQL, myInt))
                 return (false);
 
             myInt.Value=myInt.Value + 1;
@@ -383,7 +323,7 @@ class TableAttraction extends TableBase
     {
         try
         {
-            String lSql="SELECT holidayId, attractionId, sequenceNo, attractionDescription, " + "  attractionPicture, attractionNotes, infoId, noteId, galleryId, sygicId " + "FROM Attraction " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
+            String lSql="SELECT holidayId, attractionId, sequenceNo, attractionDescription, " + "  attractionPicture, attractionNotes, infoId, noteId, galleryId " + "FROM Attraction " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
 
             Cursor cursor=executeSQLOpenCursor("getAttractionList", lSql);
             if(cursor == null)
@@ -392,7 +332,7 @@ class TableAttraction extends TableBase
             while(cursor.moveToNext())
             {
                 AttractionItem attractionItem=new AttractionItem();
-                if(GetAttractionItemFromQuery(cursor, attractionItem) == false)
+                if(!GetAttractionItemFromQuery(cursor, attractionItem))
                     return (false);
 
                 al.add(attractionItem);

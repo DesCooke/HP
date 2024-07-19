@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -58,16 +59,11 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
     {
         try
         {
-            switch (view.getId())
-            {
-                case R.id.grpContactDescription:
-                    pickContactDescription(view);
-                    break;
-                
-                case R.id.imageViewSmall:
-                    pickImage(view);
-                    break;
-            }
+            int id=view.getId();
+            if(id==R.id.grpContactDescription)
+                pickContactDescription(view);
+            if(id==R.id.imageViewSmall)
+                pickImage(view);
         }
         catch (Exception e)
         {
@@ -95,19 +91,13 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
     {
         try
         {
-            dwetOnOkClick = new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    ContactDescriptionPicked(view);
-                }
-            };
+            dwetOnOkClick = this::ContactDescriptionPicked;
             
             
             dialogWithEditTextFragment =
                 DialogWithEditTextFragment.newInstance
                     (
-                        getFragmentManager(),     // for the transaction bit
+                            getSupportFragmentManager(),     // for the transaction bit
                         "hihi",            // unique name for this dialog type
                         "Contact Description",    // form caption
                         "Description",             // form message
@@ -131,7 +121,7 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
     //region Saving
     public void saveSchedule(View view)
     {
-        try
+        try(DatabaseAccess da = databaseAccess())
         {
             myMessages().ShowMessageShort("Saving " + txtContactDescription.getText().toString());
             
@@ -141,7 +131,7 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
             contactItem.contactNotes = "";
             
             contactItem.contactPicture = "";
-            if (internalImageFilename.length() > 0)
+            if (!internalImageFilename.isEmpty())
                 contactItem.contactPicture = internalImageFilename;
             contactItem.pictureAssigned = imageSet;
             contactItem.pictureChanged = imageChanged;
@@ -152,16 +142,16 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
             if (action.equals("add"))
             {
                 contactItem.holidayId = holidayId;
-                
-                if (!databaseAccess().getNextContactId(holidayId, myInt))
+
+                if (!da.getNextContactId(holidayId, myInt))
                     return;
                 contactItem.contactId = myInt.Value;
                 
-                if (!databaseAccess().getNextContactSequenceNo(holidayId, myInt))
+                if (!da.getNextContactSequenceNo(holidayId, myInt))
                     return;
                 contactItem.sequenceNo = myInt.Value;
                 
-                if (!databaseAccess().addContactItem(contactItem))
+                if (!da.addContactItem(contactItem))
                     return;
             }
             
@@ -169,7 +159,7 @@ public class ContactDetailsEdit extends ContactDetailsView implements View.OnCli
             {
                 contactItem.holidayId = holidayId;
                 contactItem.contactId = contactId;
-                if (!databaseAccess().updateContactItem(contactItem))
+                if (!da.updateContactItem(contactItem))
                     return;
             }
             

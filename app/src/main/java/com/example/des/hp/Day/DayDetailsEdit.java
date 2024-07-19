@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
@@ -20,8 +20,6 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
 {
 
-    //region Member variables
-    public LinearLayout grpStartDate;
     public TextView dayName;
     public String holidayName;
     public DayItem dayItem;
@@ -49,15 +47,15 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
 
             dayItem=new DayItem();
 
-            imageView=(ImageView) findViewById(R.id.imageViewSmall);
-            dayName=(TextView) findViewById(R.id.txtDayName);
-            radUnknown=(RadioButton) findViewById(R.id.radUnknown);
-            radEasy=(RadioButton) findViewById(R.id.radEasy);
-            radModerate=(RadioButton) findViewById(R.id.radModerate);
-            radBusy=(RadioButton) findViewById(R.id.radBusy);
-            grpDayName=(LinearLayout) findViewById(R.id.grpDayName);
-            btnClear=(ImageButton) findViewById(R.id.btnClear);
-            btnSave=(Button) findViewById(R.id.btnSave);
+            imageView= findViewById(R.id.imageViewSmall);
+            dayName= findViewById(R.id.txtDayName);
+            radUnknown= findViewById(R.id.radUnknown);
+            radEasy= findViewById(R.id.radEasy);
+            radModerate= findViewById(R.id.radModerate);
+            radBusy= findViewById(R.id.radBusy);
+            grpDayName= findViewById(R.id.grpDayName);
+            btnClear= findViewById(R.id.btnClear);
+            btnSave= findViewById(R.id.btnSave);
 
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
@@ -80,8 +78,12 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
                     holidayId=extras.getInt("HOLIDAYID");
                     dayId=extras.getInt("DAYID");
                     holidayName=extras.getString("HOLIDAYNAME");
-                    if(!databaseAccess().getDayItem(holidayId, dayId, dayItem))
-                        return;
+
+                    try(DatabaseAccess da = databaseAccess())
+                    {
+                        if(!da.getDayItem(holidayId, dayId, dayItem))
+                            return;
+                    }
 
                     SetTitles(holidayName, dayItem.dayName);
 
@@ -141,17 +143,11 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
     {
         try
         {
-            switch(view.getId())
-            {
-
-                case R.id.grpDayName:
-                    pickDayName(view);
-                    break;
-
-                case R.id.imageViewSmall:
-                    pickImage(view);
-                    break;
-            }
+            int id=view.getId();
+            if(id==R.id.grpDayName)
+                pickDayName(view);
+            if(id==R.id.imageViewSmall)
+                pickImage(view);
         }
         catch(Exception e)
         {
@@ -209,15 +205,9 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
     {
         try
         {
-            dwetOnOkClick=new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    DayNamePicked(view);
-                }
-            };
+            dwetOnOkClick= this::DayNamePicked;
 
-            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
                 "Day",    // form caption
                 "Description",             // form message
@@ -239,7 +229,7 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
     //region Regular Form Activities
     public void saveSchedule(View view)
     {
-        try
+        try(DatabaseAccess da = databaseAccess())
         {
             myMessages().ShowMessageShort("Saving Day");
 
@@ -248,7 +238,7 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
             dayItem.dayName=dayName.getText().toString();
 
             dayItem.dayPicture="";
-            if(internalImageFilename.length() > 0)
+            if(!internalImageFilename.isEmpty())
                 dayItem.dayPicture=internalImageFilename;
             dayItem.pictureAssigned=imageSet;
             dayItem.pictureChanged=imageChanged;
@@ -256,24 +246,23 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
             if(imageSet)
                 dayItem.dayBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
-            if(action.equals("add"))
-            {
-                dayItem.holidayId=holidayId;
+            if(action.equals("add")) {
+                dayItem.holidayId = holidayId;
 
-                if(!databaseAccess().getNextDayId(holidayId, myInt))
+                if (!da.getNextDayId(holidayId, myInt))
                     return;
-                dayItem.dayId=myInt.Value;
+                dayItem.dayId = myInt.Value;
 
-                if(!databaseAccess().getNextSequenceNo(holidayId, myInt))
+                if (!da.getNextSequenceNo(holidayId, myInt))
                     return;
-                dayItem.sequenceNo=myInt.Value;
-                if(!databaseAccess().addDayItem(dayItem))
+                dayItem.sequenceNo = myInt.Value;
+                if (!da.addDayItem(dayItem))
                     return;
             }
 
             if(action.equals("modify"))
             {
-                if(!databaseAccess().updateDayItem(dayItem))
+                if(!da.updateDayItem(dayItem))
                     return;
             }
 

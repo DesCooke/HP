@@ -1,8 +1,6 @@
 package com.example.des.hp.InternalFiles;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.res.Resources;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +14,7 @@ import com.example.des.hp.R;
 
 class InternalFileAdapter extends RecyclerView.Adapter<InternalFileAdapter.ViewHolder>
 {
-    private int layoutResourceId;
-    public ArrayList<InternalFileItem> data=null;
+    public ArrayList<InternalFileItem> data;
     private OnItemClickListener mOnItemClickListener;
 
     interface OnItemClickListener
@@ -30,7 +27,7 @@ class InternalFileAdapter extends RecyclerView.Adapter<InternalFileAdapter.ViewH
         this.mOnItemClickListener=mItemClickListener;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder
+    static class ViewHolder extends RecyclerView.ViewHolder
     {
         // each data item is just a string in this case
         TextView txtFilename;
@@ -40,20 +37,19 @@ class InternalFileAdapter extends RecyclerView.Adapter<InternalFileAdapter.ViewH
         {
             super(v);
 
-            txtFilename=(TextView) v.findViewById(R.id.txtFilename);
-            grpFilename=(LinearLayout) v.findViewById(R.id.grpFilename);
+            txtFilename= v.findViewById(R.id.txtFilename);
+            grpFilename= v.findViewById(R.id.grpFilename);
         }
 
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    InternalFileAdapter(Activity activity, ArrayList<InternalFileItem> items)
+    InternalFileAdapter(ArrayList<InternalFileItem> items)
     {
-        Context context=activity;
-        Resources res=context.getResources();
         data=items;
     }
 
+    @NonNull
     @Override
     public InternalFileAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
@@ -71,15 +67,10 @@ class InternalFileAdapter extends RecyclerView.Adapter<InternalFileAdapter.ViewH
 
         holder.txtFilename.setText(c.filename);
 
-        holder.grpFilename.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
+        holder.grpFilename.setOnClickListener(view -> {
+            if(mOnItemClickListener != null)
             {
-                if(mOnItemClickListener != null)
-                {
-                    mOnItemClickListener.onItemClick(view, c);
-                }
+                mOnItemClickListener.onItemClick(view, c);
             }
         });
 

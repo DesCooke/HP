@@ -36,12 +36,6 @@ public class CircleTransform implements Transformation {
         return bitmap;
     }
 
-//    public Drawable circleDrawable(Drawable d){
-//        Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
-//        Drawable drawable=new BitmapDrawable(transform(bitmap));
-//        return drawable;
-//    }
-
     @Override
     public String key() {
         return "circle";

@@ -4,8 +4,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
-import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -76,23 +76,14 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
     //region OnClick Events
     public void onClick(View view)
     {
-        try
-        {
-            switch(view.getId())
-            {
-
-                case R.id.grpTaskDate:
-                    pickDateTime(view);
-                    break;
-
-                case R.id.grpTaskName:
-                    pickTaskName(view);
-                    break;
-
-                case R.id.imageViewSmall:
-                    pickImage(view);
-                    break;
-            }
+        try {
+            int id = view.getId();
+            if (id == R.id.grpTaskDate)
+                pickDateTime(view);
+            if (id == R.id.grpTaskName)
+                pickTaskName(view);
+            if (id == R.id.imageViewSmall)
+                pickImage(view);
         }
         catch(Exception e)
         {
@@ -121,16 +112,10 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
     {
         try
         {
-            dwetOnOkClick=new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    TaskDescriptionPicked(view);
-                }
-            };
+            dwetOnOkClick= this::TaskDescriptionPicked;
 
 
-            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
                 "Task Description",    // form caption
                 "Description",             // form message
@@ -154,7 +139,7 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
         try
         {
             DialogDatePicker ddp=new DialogDatePicker(this);
-            ddp.txtStartDate=(TextView) findViewById(R.id.txtTaskDate);
+            ddp.txtStartDate= findViewById(R.id.txtTaskDate);
             Date date=new Date();
             if(!dateUtils().StrToDate(ddp.txtStartDate.getText().toString(), date))
                 return;
@@ -224,14 +209,14 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
     //region Saving
     public void saveSchedule(View view)
     {
-        try
+        try(DatabaseAccess da = databaseAccess())
         {
             myMessages().ShowMessageShort("Saving " + txtTaskDescription.getText().toString());
 
             taskItem.taskDescription=txtTaskDescription.getText().toString();
 
             taskItem.taskPicture="";
-            if(internalImageFilename.length() > 0)
+            if(!internalImageFilename.isEmpty())
                 taskItem.taskPicture=internalImageFilename;
             taskItem.pictureAssigned=imageSet;
             taskItem.pictureChanged=imageChanged;
@@ -265,21 +250,21 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
                 MyInt myInt=new MyInt();
                 taskItem.holidayId=holidayId;
 
-                if(!databaseAccess().getNextTaskId(holidayId, myInt))
+                if(!da.getNextTaskId(holidayId, myInt))
                     return;
                 taskItem.taskId=myInt.Value;
 
-                if(!databaseAccess().getNextTaskSequenceNo(holidayId, myInt))
+                if(!da.getNextTaskSequenceNo(holidayId, myInt))
                     return;
                 taskItem.sequenceNo=myInt.Value;
 
-                if(!databaseAccess().addTaskItem(taskItem))
+                if(!da.addTaskItem(taskItem))
                     return;
             }
 
             if(action.equals("modify"))
             {
-                if(!databaseAccess().updateTaskItem(taskItem))
+                if(!da.updateTaskItem(taskItem))
                     return;
             }
 

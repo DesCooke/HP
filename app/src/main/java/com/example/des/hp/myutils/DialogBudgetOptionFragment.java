@@ -1,22 +1,21 @@
 package com.example.des.hp.myutils;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.Fragment;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.des.hp.R;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
@@ -28,12 +27,11 @@ public class DialogBudgetOptionFragment extends DialogFragment
     private String message;
     private String optionDescription;
     private int optionTotal;
+    @SuppressLint("StaticFieldLeak")
     private static DialogBudgetOptionFragment dialogBudgetOptionFragment;
     private static String dialogTag;
     private static FragmentTransaction fragmentTransaction;
-    public TextInputLayout tilOptionDescription;
     public TextInputEditText tieOptionDescription;
-    public TextInputLayout tilOptionTotal;
     public TextInputEditText tieOptionTotal;
     public Context context;
     public MyKeyboard myKeyboard;
@@ -43,11 +41,11 @@ public class DialogBudgetOptionFragment extends DialogFragment
     {
     }
 
-    private void ShowError(String argFunction, String argMessage)
+    private void ShowError(String argMessage)
     {
         myMessages().ShowError
                     (
-                    "Error in DialogBudgetOptionFragment::" + argFunction,
+                    "Error in DialogBudgetOptionFragment::" + "onCreateView",
                     argMessage
                     );
     }
@@ -80,19 +78,13 @@ public class DialogBudgetOptionFragment extends DialogFragment
         // let's create a new one - giving all the defaults
         dialogBudgetOptionFragment = new DialogBudgetOptionFragment();
         dialogBudgetOptionFragment.context = context;
-        dialogBudgetOptionFragment.myKeyboard = new MyKeyboard(context);
+        dialogBudgetOptionFragment.myKeyboard = new MyKeyboard();
         dialogBudgetOptionFragment.numericKeypad = numericKeypad;
 
         if(argOnOkClick==null)
         {
             // default the yes click
-            dialogBudgetOptionFragment.okClick = new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    dialogBudgetOptionFragment.dismiss();
-                }
-            };
+            dialogBudgetOptionFragment.okClick = view -> dialogBudgetOptionFragment.dismiss();
         }
         else
         {
@@ -139,22 +131,22 @@ public class DialogBudgetOptionFragment extends DialogFragment
             tieOptionTotal.setText(StringUtils.IntToString(optionTotal));
             if(numericKeypad)
             {
-                if (myKeyboard.showNumeric(getDialog(), tieOptionDescription) == false)
+                if (!myKeyboard.showNumeric(getDialog(), tieOptionDescription))
                     return v;
             }
             else
             {
-                if (myKeyboard.show(getDialog()) == false)
+                if (!myKeyboard.show(getDialog()))
                     return v;
             }
 
             // Watch for button clicks.
-            Button btnOk = (Button) v.findViewById(R.id.btnOk);
+            Button btnOk = v.findViewById(R.id.btnOk);
             btnOk.setOnClickListener(okClick);
         }
         catch (Exception e)
         {
-            ShowError("onCreateView", e.getMessage());
+            ShowError(e.getMessage());
         }
 
         return v;

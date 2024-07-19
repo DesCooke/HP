@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.example.des.hp.R;
 
-import static com.example.des.hp.myutils.DateUtils.dateUtils;
 import static com.example.des.hp.myutils.MyApiSpecific.myApiSpecific;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
@@ -34,7 +33,6 @@ public class DialogTimePicker extends Dialog implements android.view.View.OnClic
     public DialogTimePicker(Activity a)
     {
         super(a);
-        Activity activity=a;
     }
 
     private void ShowError(String argFunction, String argMessage)
@@ -52,12 +50,10 @@ public class DialogTimePicker extends Dialog implements android.view.View.OnClic
             requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.dialog_time_picker);
 
-            DateUtils dateUtils=new DateUtils(this.getContext());
-
-            Button ok=(Button) findViewById(R.id.btnOk);
-            frmTimePicker=(TimePicker) findViewById(R.id.timePicker);
-            frmCheckBox=(CheckBox) findViewById(R.id.chkTimeKnown);
-            TextView txtTitle=(TextView) findViewById(R.id.txtTitle);
+            Button ok= findViewById(R.id.btnOk);
+            frmTimePicker= findViewById(R.id.timePicker);
+            frmCheckBox= findViewById(R.id.chkTimeKnown);
+            TextView txtTitle= findViewById(R.id.txtTitle);
 
             setTime(hour, minute);
             frmCheckBox.setChecked(timeKnown);
@@ -67,16 +63,11 @@ public class DialogTimePicker extends Dialog implements android.view.View.OnClic
             frmTimePicker.setIs24HourView(true);
 
             //Set a TimeChangedListener for TimePicker widget
-            frmTimePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener()
-            {
-                @Override
-                public void onTimeChanged(TimePicker view, int hourOfDay, int minute)
+            frmTimePicker.setOnTimeChangedListener((view, hourOfDay, minute) -> {
+                //Display the new time to app interface
+                if(myApiSpecific().GetHour(frmTimePicker) > 0 || myApiSpecific().GetMinute(frmTimePicker) > 0)
                 {
-                    //Display the new time to app interface
-                    if(myApiSpecific().GetHour(frmTimePicker) > 0 || myApiSpecific().GetMinute(frmTimePicker) > 0)
-                    {
-                        frmCheckBox.setChecked(true);
-                    }
+                    frmCheckBox.setChecked(true);
                 }
             });
         }
@@ -86,11 +77,11 @@ public class DialogTimePicker extends Dialog implements android.view.View.OnClic
         }
     }
 
-    private void timeKnownOnClick(View view)
+    private void timeKnownOnClick()
     {
         try
         {
-            if(frmCheckBox.isChecked() == false)
+            if(!frmCheckBox.isChecked())
             {
                 setTime(0, 0);
             }
@@ -135,24 +126,20 @@ public class DialogTimePicker extends Dialog implements android.view.View.OnClic
     {
         try
         {
-            switch(v.getId())
-            {
-                case R.id.btnOk:
-                    if(frmCheckBox.isChecked() == false)
-                    {
-                        setTimeText(0, 0);
-                    } else
-                    {
-                        setTimeText(myApiSpecific().GetHour(frmTimePicker), myApiSpecific().GetMinute(frmTimePicker));
-                    }
-                    chkTimeKnown.setChecked(frmCheckBox.isChecked());
-                    dismiss();
-                    break;
-                case R.id.chkTimeKnown:
-                    timeKnownOnClick(v);
-                    break;
-                default:
-                    break;
+            int id=v.getId();
+            if(id==R.id.btnOk){
+                if(!frmCheckBox.isChecked())
+                {
+                    setTimeText(0, 0);
+                } else
+                {
+                    setTimeText(myApiSpecific().GetHour(frmTimePicker), myApiSpecific().GetMinute(frmTimePicker));
+                }
+                chkTimeKnown.setChecked(frmCheckBox.isChecked());
+                dismiss();
+            }
+            if(id==R.id.chkTimeKnown){
+                timeKnownOnClick();
             }
         }
         catch(Exception e)

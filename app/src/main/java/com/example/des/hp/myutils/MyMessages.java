@@ -1,32 +1,31 @@
 package com.example.des.hp.myutils;
 
+import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.MainActivity;
 import com.example.des.hp.R;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.view.View;
 import android.widget.Toast;
 import android.content.Context;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.app.Activity;
-
 import java.util.Arrays;
 
 import static com.example.des.hp.myutils.MyLog.myLog;
 
-public class MyMessages extends Activity
+public class MyMessages extends BaseActivity
 {
     public static Boolean answerYes;
-    public static Boolean answerNo;
+    @SuppressLint("StaticFieldLeak")
     public static Context lcontext;
     public static Resources lres;
+    @SuppressLint("StaticFieldLeak")
     public static MyMessages messages=null;
 
     public DialogWithTextViewFragment dialogWithTextViewFragment;
     public String dwtvDialogTag;
-    public View.OnClickListener dwtvOnOkClick;
     public View.OnClickListener onError;
 
     public static MyMessages myMessages()
@@ -95,12 +94,8 @@ public class MyMessages extends Activity
 
         myLog().WriteLogMessage(message);
 
-        new AlertDialog.Builder(lcontext).setTitle(argTitle).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
-        {
-            public void onClick(DialogInterface dialog, int which)
-            {
-                //
-            }
+        new AlertDialog.Builder(lcontext).setTitle(argTitle).setPositiveButton(android.R.string.ok, (dialog, which) -> {
+            //
         }).setMessage(message).setIcon(android.R.drawable.ic_dialog_alert).show();
     }
 
@@ -108,7 +103,7 @@ public class MyMessages extends Activity
     {
 
         dialogWithTextViewFragment=DialogWithTextViewFragment.newInstance(
-            getFragmentManager(),     // for the transaction bit
+            getSupportFragmentManager(),     // for the transaction bit
             dwtvDialogTag,            // unique name for this dialog type
             argTitle,                 // form caption
             argString,                // form message
@@ -121,15 +116,13 @@ public class MyMessages extends Activity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if(resultCode == RESULT_OK)
-        {
-            answerYes=true;
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            answerYes = true;
         }
-        if(resultCode == RESULT_OK)
-        {
-            answerYes=false;
+        if (resultCode == RESULT_OK) {
+            answerYes = false;
         }
     }
 }

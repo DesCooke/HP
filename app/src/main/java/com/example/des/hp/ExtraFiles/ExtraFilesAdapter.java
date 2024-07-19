@@ -1,7 +1,6 @@
 package com.example.des.hp.ExtraFiles;
 
-import android.app.Activity;
-import android.content.Context;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import com.example.des.hp.Database.DatabaseAccess;
-import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
@@ -24,12 +22,8 @@ import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 class ExtraFilesAdapter extends RecyclerView.Adapter<ExtraFilesAdapter.ViewHolder>
 {
-    private Context context;
-    private int layoutResourceId;
-    public ArrayList<ExtraFilesItem> data=null;
-    private DateUtils dateUtils;
+    public ArrayList<ExtraFilesItem> data;
     private OnItemClickListener mOnItemClickListener;
-    private ImageUtils imageUtils;
 
     interface OnItemClickListener
     {
@@ -41,7 +35,7 @@ class ExtraFilesAdapter extends RecyclerView.Adapter<ExtraFilesAdapter.ViewHolde
         this.mOnItemClickListener=mItemClickListener;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder
+    static class ViewHolder extends RecyclerView.ViewHolder
     {
         // each data item is just a string in this case
         ImageView fileImage;
@@ -52,20 +46,19 @@ class ExtraFilesAdapter extends RecyclerView.Adapter<ExtraFilesAdapter.ViewHolde
         {
             super(v);
 
-            fileImage=(ImageView) v.findViewById(R.id.imgIcon);
-            txtFileDescription=(TextView) v.findViewById(R.id.txtFileDescription);
-            fileItemCell=(LinearLayout) v.findViewById(R.id.fileItemCell);
+            fileImage= v.findViewById(R.id.imgIcon);
+            txtFileDescription= v.findViewById(R.id.txtFileDescription);
+            fileItemCell= v.findViewById(R.id.fileItemCell);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    ExtraFilesAdapter(Activity activity, ArrayList<ExtraFilesItem> items)
+    ExtraFilesAdapter(ArrayList<ExtraFilesItem> items)
     {
-        this.context=activity;
-        imageUtils=new ImageUtils(activity);
         data=items;
     }
 
+    @NonNull
     @Override
     public ExtraFilesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
@@ -82,15 +75,10 @@ class ExtraFilesAdapter extends RecyclerView.Adapter<ExtraFilesAdapter.ViewHolde
         final ExtraFilesItem c=data.get(position);
         holder.txtFileDescription.setText(c.fileDescription);
 
-        holder.fileItemCell.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
+        holder.fileItemCell.setOnClickListener(view -> {
+            if(mOnItemClickListener != null)
             {
-                if(mOnItemClickListener != null)
-                {
-                    mOnItemClickListener.onItemClick(view, c);
-                }
+                mOnItemClickListener.onItemClick(view, c);
             }
         });
     }
@@ -104,26 +92,23 @@ class ExtraFilesAdapter extends RecyclerView.Adapter<ExtraFilesAdapter.ViewHolde
     public void DeleteItemAtPos(int position)
     {
         ExtraFilesItem item=getItem(position);
-        DatabaseAccess.databaseAccess().deleteExtraFilesItem(item);
+        try(DatabaseAccess da = databaseAccess())
+        {
+            da.deleteExtraFilesItem(item);
+        }
         data.remove(position);
-        notifyDataSetChanged();
+        notifyItemRemoved(position);
     }
 
     public void add(int position, ExtraFilesItem mail)
     {
         data.add(position, mail);
-        notifyDataSetChanged();
+        notifyItemInserted(position);
     }
 
-    public void NotifyDataSetChanged()
-    {
-        notifyDataSetChanged();
-    }
-
-    boolean onItemMove(int fromPosition, int toPosition)
+    void onItemMove()
     {
         updateGlobalData(data);
-        return true;
     }
 
     private void updateGlobalData(ArrayList<ExtraFilesItem> items)
@@ -132,12 +117,13 @@ class ExtraFilesAdapter extends RecyclerView.Adapter<ExtraFilesAdapter.ViewHolde
         {
             items.get(i).sequenceNo=i + 1;
         }
-        if(!databaseAccess().updateExtraFilesItems(items))
-            return;
-        notifyDataSetChanged();
+        try(DatabaseAccess da = databaseAccess())
+        {
+            if(!da.updateExtraFilesItems(items))
+                return;
+        }
+        notifyItemRangeChanged(0, items.size()-1);
     }
-
-    private int lastPosition=-1;
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override

@@ -2,6 +2,8 @@ package com.example.des.hp.TipGroup;
 
 import android.app.Activity;
 import android.content.Context;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -23,11 +26,10 @@ import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 class TipGroupAdapter extends RecyclerView.Adapter<TipGroupAdapter.ViewHolder>
 {
-    private Context context;
-    private int layoutResourceId;
-    public ArrayList<TipGroupItem> data=null;
+    private final Context context;
+    public ArrayList<TipGroupItem> data;
     private OnItemClickListener mOnItemClickListener;
-    private ImageUtils imageUtils;
+    private final ImageUtils imageUtils;
 
 
     interface OnItemClickListener
@@ -40,7 +42,7 @@ class TipGroupAdapter extends RecyclerView.Adapter<TipGroupAdapter.ViewHolder>
         this.mOnItemClickListener=mItemClickListener;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder
+    static class ViewHolder extends RecyclerView.ViewHolder
     {
         // each data item is just a string in this case
         ImageView tipGroupImage;
@@ -52,9 +54,9 @@ class TipGroupAdapter extends RecyclerView.Adapter<TipGroupAdapter.ViewHolder>
         {
             super(v);
 
-            tipGroupImage=(ImageView) v.findViewById(R.id.imgIcon);
-            txtTipGroupDescription=(TextView) v.findViewById(R.id.tipGroupDescription);
-            tipGroupItemCell=(LinearLayout) v.findViewById(R.id.tipGroupItemCell);
+            tipGroupImage= v.findViewById(R.id.imgIcon);
+            txtTipGroupDescription= v.findViewById(R.id.tipGroupDescription);
+            tipGroupItemCell= v.findViewById(R.id.tipGroupItemCell);
         }
     }
 
@@ -66,6 +68,7 @@ class TipGroupAdapter extends RecyclerView.Adapter<TipGroupAdapter.ViewHolder>
         data=items;
     }
 
+    @NonNull
     @Override
     public TipGroupAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
@@ -85,7 +88,7 @@ class TipGroupAdapter extends RecyclerView.Adapter<TipGroupAdapter.ViewHolder>
         if(c.pictureAssigned)
         {
             holder.tipGroupImage.setVisibility(View.VISIBLE);
-            if(imageUtils.getListIcon(c.holidayId, context, c.tipGroupPicture, holder.tipGroupImage) == false)
+            if(!imageUtils.getListIcon(c.holidayId, context, c.tipGroupPicture, holder.tipGroupImage))
                 return;
         } else
         {
@@ -93,15 +96,10 @@ class TipGroupAdapter extends RecyclerView.Adapter<TipGroupAdapter.ViewHolder>
         }
 
 
-        holder.tipGroupItemCell.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
+        holder.tipGroupItemCell.setOnClickListener(view -> {
+            if(mOnItemClickListener != null)
             {
-                if(mOnItemClickListener != null)
-                {
-                    mOnItemClickListener.onItemClick(view, c);
-                }
+                mOnItemClickListener.onItemClick(view, c);
             }
         });
     }
@@ -115,13 +113,12 @@ class TipGroupAdapter extends RecyclerView.Adapter<TipGroupAdapter.ViewHolder>
     public void add(int position, TipGroupItem mail)
     {
         data.add(position, mail);
-        notifyDataSetChanged();
+        notifyItemInserted(position);
     }
 
-    boolean onItemMove(int fromPosition, int toPosition)
+    void onItemMove()
     {
         updateGlobalData(data);
-        return true;
     }
 
     private void updateGlobalData(ArrayList<TipGroupItem> items)
@@ -130,12 +127,13 @@ class TipGroupAdapter extends RecyclerView.Adapter<TipGroupAdapter.ViewHolder>
         {
             items.get(i).sequenceNo=i + 1;
         }
-        if(!databaseAccess().updateTipGroupItems(items))
-            return;
-        notifyDataSetChanged();
+        try(DatabaseAccess da = databaseAccess())
+        {
+            if(!da.updateTipGroupItems(items))
+                return;
+        }
+        notifyItemRangeChanged(0, items.size()-1);
     }
-
-    private int lastPosition=-1;
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override

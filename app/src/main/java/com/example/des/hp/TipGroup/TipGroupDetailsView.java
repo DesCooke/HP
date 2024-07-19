@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 
@@ -36,12 +36,12 @@ public class TipGroupDetailsView extends BaseActivity
             layoutName="activity_tipgroup_details_view";
             setContentView(R.layout.activity_tipgroup_details_view);
 
-            imageView=(ImageView) findViewById(R.id.imageViewSmall);
-            txtTipGroupDescription=(TextView) findViewById(R.id.txtTipGroupDescription);
-            btnClear=(ImageButton) findViewById(R.id.btnClear);
-            btnSave=(Button) findViewById(R.id.btnSave);
-            grpTipGroupDescription=(LinearLayout) findViewById(R.id.grpTipGroupDescription);
-            grpMenuFile=(LinearLayout) findViewById(R.id.grpMenuFile);
+            imageView= findViewById(R.id.imageViewSmall);
+            txtTipGroupDescription= findViewById(R.id.txtTipGroupDescription);
+            btnClear= findViewById(R.id.btnClear);
+            btnSave= findViewById(R.id.btnSave);
+            grpTipGroupDescription= findViewById(R.id.grpTipGroupDescription);
+            grpMenuFile= findViewById(R.id.grpMenuFile);
 
             afterCreate();
 
@@ -69,10 +69,13 @@ public class TipGroupDetailsView extends BaseActivity
         try
         {
             tipGroupItem=new TipGroupItem();
-            if(!databaseAccess().getTipGroupItem(holidayId, tipGroupId, tipGroupItem))
-                return;
+            try(DatabaseAccess da = databaseAccess())
+            {
+                if(!da.getTipGroupItem(holidayId, tipGroupId, tipGroupItem))
+                    return;
+            }
 
-            if(title == null || (title.length() == 0))
+            if(title == null || (title.isEmpty()))
             {
                 SetTitles(tipGroupItem.tipGroupDescription, "");
             } else
@@ -113,7 +116,10 @@ public class TipGroupDetailsView extends BaseActivity
         try
         {
             tipGroupItem.noteId=pNoteId;
-            databaseAccess().updateTipGroupItem(tipGroupItem);
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateTipGroupItem(tipGroupItem);
+            }
         }
         catch(Exception e)
         {
@@ -142,7 +148,10 @@ public class TipGroupDetailsView extends BaseActivity
         try
         {
             tipGroupItem.infoId=pInfoId;
-            databaseAccess().updateTipGroupItem(tipGroupItem);
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateTipGroupItem(tipGroupItem);
+            }
         }
         catch(Exception e)
         {

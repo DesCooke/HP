@@ -1,7 +1,6 @@
 package com.example.des.hp.ScheduleArea;
 
-import android.app.Activity;
-import android.content.Context;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
 /**
@@ -20,7 +18,7 @@ import com.example.des.hp.R;
 
 class ScheduleAreaAdapter extends RecyclerView.Adapter<ScheduleAreaAdapter.ViewHolder>
 {
-    public ArrayList<ScheduleAreaItem> data=null;
+    public ArrayList<ScheduleAreaItem> data;
     private OnItemClickListener mOnItemClickListener;
 
 
@@ -34,7 +32,7 @@ class ScheduleAreaAdapter extends RecyclerView.Adapter<ScheduleAreaAdapter.ViewH
         this.mOnItemClickListener=mItemClickListener;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder
+    static class ViewHolder extends RecyclerView.ViewHolder
     {
         // each data item is just a string in this case
         TextView txtSchedName;
@@ -46,20 +44,19 @@ class ScheduleAreaAdapter extends RecyclerView.Adapter<ScheduleAreaAdapter.ViewH
         {
             super(v);
 
-            txtSchedName=(TextView) v.findViewById(R.id.txtSchedName);
-            txtSchedDesc=(TextView) v.findViewById(R.id.txtSchedDesc);
-            fullCell=(LinearLayout) v.findViewById(R.id.fullCell);
+            txtSchedName= v.findViewById(R.id.txtSchedName);
+            txtSchedDesc= v.findViewById(R.id.txtSchedDesc);
+            fullCell= v.findViewById(R.id.fullCell);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    ScheduleAreaAdapter(Activity activity, ArrayList<ScheduleAreaItem> items)
+    ScheduleAreaAdapter(ArrayList<ScheduleAreaItem> items)
     {
-        Context context=activity;
-        ImageUtils imageUtils=new ImageUtils(activity);
         data=items;
     }
 
+    @NonNull
     @Override
     public ScheduleAreaAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
@@ -77,15 +74,10 @@ class ScheduleAreaAdapter extends RecyclerView.Adapter<ScheduleAreaAdapter.ViewH
         holder.txtSchedName.setText(c.schedName);
         holder.txtSchedDesc.setText(c.schedDesc);
 
-        holder.fullCell.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
+        holder.fullCell.setOnClickListener(view -> {
+            if(mOnItemClickListener != null)
             {
-                if(mOnItemClickListener != null)
-                {
-                    mOnItemClickListener.onItemClick(view, c);
-                }
+                mOnItemClickListener.onItemClick(view, c);
             }
         });
     }
@@ -99,7 +91,7 @@ class ScheduleAreaAdapter extends RecyclerView.Adapter<ScheduleAreaAdapter.ViewH
     public void add(int position, ScheduleAreaItem mail)
     {
         data.add(position, mail);
-        notifyDataSetChanged();
+        notifyItemInserted(position);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

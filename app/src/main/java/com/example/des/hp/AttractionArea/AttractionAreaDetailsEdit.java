@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -60,17 +61,11 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
     {
         try
         {
-            switch (view.getId())
-            {
-                
-                case R.id.grpAttractionAreaDescription:
-                    pickAttractionAreaDescription(view);
-                    break;
-                
-                case R.id.imageViewSmall:
-                    pickImage(view);
-                    break;
-            }
+            int id=view.getId();
+            if(id==R.id.grpAttractionAreaDescription)
+                pickAttractionAreaDescription(view);
+            if(id==R.id.imageViewSmall)
+                pickImage(view);
         }
         catch (Exception e)
         {
@@ -99,16 +94,10 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
     {
         try
         {
-            dwetOnOkClick = new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    AttractionAreaDescriptionPicked(view);
-                }
-            };
+            dwetOnOkClick = this::AttractionAreaDescriptionPicked;
             
             
-            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment = DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
                 "Attraction Area",    // form caption
                 "Description",             // form message
@@ -130,7 +119,7 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
     public void saveSchedule(View view)
     {
         MyInt retInt = new MyInt();
-        try
+        try(DatabaseAccess da = databaseAccess())
         {
             myMessages().ShowMessageShort("Saving " + txtAttractionAreaDescription.getText().toString());
             
@@ -138,7 +127,7 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
             
             
             attractionAreaItem.attractionAreaPicture = "";
-            if (internalImageFilename.length() > 0)
+            if (!internalImageFilename.isEmpty())
                 attractionAreaItem.attractionAreaPicture = internalImageFilename;
             attractionAreaItem.pictureAssigned = imageSet;
             attractionAreaItem.pictureChanged = imageChanged;
@@ -152,19 +141,19 @@ public class AttractionAreaDetailsEdit extends AttractionAreaView implements Vie
             {
                 attractionAreaItem.holidayId = holidayId;
                 attractionAreaItem.attractionId = attractionId;
-                if (!databaseAccess().getNextAttractionAreaId(holidayId, attractionId, retInt))
+                if (!da.getNextAttractionAreaId(holidayId, attractionId, retInt))
                     return;
                 attractionAreaItem.attractionAreaId = retInt.Value;
-                if (!databaseAccess().getNextAttractionAreaSequenceNo(holidayId, attractionId, retInt))
+                if (!da.getNextAttractionAreaSequenceNo(holidayId, attractionId, retInt))
                     return;
                 attractionAreaItem.sequenceNo = retInt.Value;
-                if (!databaseAccess().addAttractionAreaItem(attractionAreaItem))
+                if (!da.addAttractionAreaItem(attractionAreaItem))
                     return;
             }
             
             if (action.equals("modify"))
             {
-                if (!databaseAccess().updateAttractionAreaItem(attractionAreaItem))
+                if (!da.updateAttractionAreaItem(attractionAreaItem))
                     return;
             }
             

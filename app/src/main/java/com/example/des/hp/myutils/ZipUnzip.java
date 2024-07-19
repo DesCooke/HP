@@ -9,17 +9,21 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+/** @noinspection unused*/
 class ZipUnzip
 {
     private static final int BUFFER_SIZE=8192;//2048;
-    private static String TAG=ZipUnzip.class.getName();
+    private static final String TAG=ZipUnzip.class.getName();
     private static String parentPath="";
 
-    static boolean zip(String sourcePath, String destinationPath, String destinationFileName, Boolean includeParentFolder)
+    static void zip(String sourcePath, String destinationPath, String destinationFileName)
     {
         FileOutputStream fileOutputStream;
         ZipOutputStream zipOutputStream=null;
@@ -40,18 +44,14 @@ class ZipUnzip
             fileOutputStream=new FileOutputStream(file);
             zipOutputStream=new ZipOutputStream(new BufferedOutputStream(fileOutputStream));
 
-            if(includeParentFolder)
-                parentPath=new File(sourcePath).getParent() + "/";
-            else
-                parentPath=sourcePath;
+            parentPath=new File(sourcePath).getParent() + "/";
 
             zipFile(zipOutputStream, sourcePath);
 
         }
         catch(Exception ioe)
         {
-            Log.d(TAG, ioe.getMessage());
-            return false;
+            Log.d(TAG, Objects.requireNonNull(ioe.getMessage()));
         }
         finally
         {
@@ -66,8 +66,6 @@ class ZipUnzip
                 }
         }
 
-        return true;
-
     }
 
     private static void zipFile(ZipOutputStream zipOutputStream, String sourcePath) throws IOException
@@ -78,6 +76,7 @@ class ZipUnzip
 
         String entryPath;
         BufferedInputStream input;
+        assert fileList != null;
         for(java.io.File file : fileList)
         {
             if(file.isDirectory())
@@ -85,7 +84,7 @@ class ZipUnzip
                 zipFile(zipOutputStream, file.getPath());
             } else
             {
-                byte data[]=new byte[BUFFER_SIZE];
+                byte[] data =new byte[BUFFER_SIZE];
                 FileInputStream fileInputStream=new FileInputStream(file.getPath());
                 input=new BufferedInputStream(fileInputStream, BUFFER_SIZE);
                 entryPath=file.getAbsolutePath().replace(parentPath, "");
@@ -111,7 +110,7 @@ class ZipUnzip
 
         try
         {
-            zis=new ZipInputStream(new BufferedInputStream(new FileInputStream(sourceFile)));
+            zis=new ZipInputStream(new BufferedInputStream(Files.newInputStream(Paths.get(sourceFile))));
             ZipEntry ze;
             int count;
             byte[] buffer=new byte[BUFFER_SIZE];
@@ -122,6 +121,7 @@ class ZipUnzip
                 File file=new File(destinationFolder, fileName);
                 File dir=ze.isDirectory() ? file : file.getParentFile();
 
+                assert dir != null;
                 if(!dir.isDirectory() && !dir.mkdirs())
                     throw new FileNotFoundException("Invalid path: " + dir.getAbsolutePath());
                 if(ze.isDirectory())
@@ -134,7 +134,7 @@ class ZipUnzip
         }
         catch(IOException ioe)
         {
-            Log.d(TAG, ioe.getMessage());
+            Log.d(TAG, Objects.requireNonNull(ioe.getMessage()));
             return false;
         }
         finally
@@ -166,13 +166,14 @@ class ZipUnzip
                 if(!file.createNewFile())
                     throw new Exception("unable to create new file  " + destinationPath + fileName);
             }
-            FileOutputStream fileOutputStream=new FileOutputStream(file, true);
-            fileOutputStream.write((data + System.getProperty("line.separator")).getBytes());
+            try (FileOutputStream fileOutputStream = new FileOutputStream(file, true)) {
+                fileOutputStream.write((data + System.lineSeparator()).getBytes());
+            }
 
         }
         catch(Exception ex)
         {
-            Log.d(TAG, ex.getMessage());
+            Log.d(TAG, Objects.requireNonNull(ex.getMessage()));
         }
     }
 

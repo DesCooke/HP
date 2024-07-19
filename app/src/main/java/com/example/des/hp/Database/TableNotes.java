@@ -8,10 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.Notes.*;
 
-import java.util.Random;
-
-import static com.example.des.hp.myutils.MyLoremIpsum.myLoremIpsum;
-
 class TableNotes extends TableBase
 {
     TableNotes(Context context, SQLiteOpenHelper dbHelper)
@@ -41,30 +37,11 @@ class TableNotes extends TableBase
         return (false);
     }
 
-    public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-    {
-        try
-        {
-            if(oldVersion == 38 && newVersion == 39)
-            {
-                String lSQL="CREATE TABLE IF NOT EXISTS notes " + "( " + "  holidayId       INT(5),  " + "  noteId          INT(5),  " + "  notes           VARCHAR  " + ") ";
-
-                db.execSQL(lSQL);
-            }
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("onUpgrade", e.getMessage());
-        }
-        return (false);
-    }
-
     boolean addNoteItem(NoteItem noteItem)
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSql="INSERT INTO notes " + "  (holidayId, noteId, notes) " + "VALUES " + "(" + noteItem.holidayId + ", " + noteItem.noteId + "," + MyQuotedString(noteItem.notes) + " " + ")";
@@ -83,15 +60,12 @@ class TableNotes extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL="UPDATE notes SET notes=" + MyQuotedString(noteItem.notes) + " " + "WHERE holidayId = " + noteItem.holidayId + " " + "AND noteId = " + noteItem.noteId;
 
-            if(executeSQL("updateNoteItem", lSQL) == false)
-                return (false);
-
-            return (true);
+            return executeSQL("updateNoteItem", lSQL);
         }
         catch(Exception e)
         {
@@ -104,16 +78,13 @@ class TableNotes extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             noteItem.notes="";
             String lSQL="UPDATE notes SET notes=" + MyQuotedString(noteItem.notes) + " " + "WHERE holidayId = " + noteItem.holidayId + " " + "AND noteId = " + noteItem.noteId;
 
-            if(executeSQL("deleteNoteItem", lSQL) == false)
-                return (false);
-
-            return (true);
+            return executeSQL("deleteNoteItem", lSQL);
         }
         catch(Exception e)
         {
@@ -126,7 +97,7 @@ class TableNotes extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL;
@@ -136,7 +107,7 @@ class TableNotes extends TableBase
             if(cursor != null)
             {
                 cursor.moveToFirst();
-                if(GetNoteItemFromQuery(cursor, noteItem) == false)
+                if(!GetNoteItemFromQuery(cursor, noteItem))
                     return (false);
             }
             executeSQLCloseCursor("getNoteItem");
@@ -153,7 +124,7 @@ class TableNotes extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             myBoolean.Value=false;
@@ -180,7 +151,7 @@ class TableNotes extends TableBase
 
     private boolean GetNoteItemFromQuery(Cursor cursor, NoteItem noteItem)
     {
-        if(IsValid() == false)
+        if(!IsValid())
             return (false);
 
         try
@@ -205,39 +176,13 @@ class TableNotes extends TableBase
         return (false);
     }
 
-    boolean createSample(int holidayId, MyInt myInt)
-    {
-        try
-        {
-            NoteItem item=new NoteItem();
-            Random random=new Random();
-            int lStart=random.nextInt(5) + 1;
-            int lCount=random.nextInt(30) + 4;
-
-            if(!getNextNoteId(holidayId, myInt))
-                return (false);
-            item.holidayId=holidayId;
-            item.noteId=myInt.Value;
-            item.notes=myLoremIpsum().getWords(lCount, lStart);
-            if(!addNoteItem(item))
-                return (false);
-
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("createSample", e.getMessage());
-        }
-        return (false);
-    }
-
     boolean getNextNoteId(int holidayId, MyInt retInt)
     {
         try
         {
             String lSQL="SELECT IFNULL(MAX(noteId),0) " + "FROM notes " + "WHERE holidayId = " + holidayId;
 
-            if(executeSQLGetInt("getNextNoteId", lSQL, retInt) == false)
+            if(!executeSQLGetInt("getNextNoteId", lSQL, retInt))
                 return (false);
             retInt.Value=retInt.Value + 1;
             return (true);

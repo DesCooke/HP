@@ -3,7 +3,6 @@ package com.example.des.hp.InternalFiles;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
@@ -16,7 +15,6 @@ import static com.example.des.hp.myutils.ImageUtils.imageUtils;
 public class InternalFileList extends BaseActivity
 {
     public ArrayList<InternalFileItem> internalFileList;
-    public InternalFileAdapter internalFileAdapter;
 
     public void showForm()
     {
@@ -27,20 +25,15 @@ public class InternalFileList extends BaseActivity
 
             internalFileList=imageUtils().listInternalFiles(holidayId);
 
-            internalFileAdapter=new InternalFileAdapter(this, internalFileList);
+            InternalFileAdapter internalFileAdapter = new InternalFileAdapter(internalFileList);
 
             CreateRecyclerView(R.id.internalFileListView, internalFileAdapter);
 
-            internalFileAdapter.setOnItemClickListener(new InternalFileAdapter.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(View view, InternalFileItem obj)
-                {
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra("selectedfile", obj.filename);
-                    setResult(Activity.RESULT_OK, resultIntent);
-                    finish();                }
-            });
+            internalFileAdapter.setOnItemClickListener((view, obj) -> {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("selectedfile", obj.filename);
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();                });
 
         }
         catch(Exception e)

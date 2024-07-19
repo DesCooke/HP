@@ -11,19 +11,15 @@ import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
-import java.util.Random;
-
-import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
-import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 class TableTask extends TableBase
 {
-    private DateUtils dateUtils;
+    private final DateUtils dateUtils;
 
     TableTask(Context context, SQLiteOpenHelper dbHelper)
     {
         super(context, dbHelper);
-        dateUtils=new DateUtils(context);
+        dateUtils=new DateUtils();
     }
 
     public void ShowError(String argFunction, String argMessage)
@@ -35,7 +31,7 @@ class TableTask extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS tasks " + "( " + "  holidayId       INT(5),  " + "  taskId          INT(5),  " + "  sequenceNo      INT(5),  " + "  taskDescription VARCHAR, " + "  taskDateKnown   INT(1),  " + "  taskDate        INT(16), " + "  taskPicture     VARCHAR, " + "  taskComplete    INT(1),  " + "  taskNotes       VARCHAR, " + "  infoId          INT(5),  " + "  noteId          INT(5),  " + "  galleryId       INT(5),  " + "  sygicId         INT(5)   " + ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS tasks " + "( " + "  holidayId       INT(5),  " + "  taskId          INT(5),  " + "  sequenceNo      INT(5),  " + "  taskDescription VARCHAR, " + "  taskDateKnown   INT(1),  " + "  taskDate        INT(16), " + "  taskPicture     VARCHAR, " + "  taskComplete    INT(1),  " + "  taskNotes       VARCHAR, " + "  infoId          INT(5),  " + "  noteId          INT(5),  " + "  galleryId       INT(5)  " + ") ";
 
             db.execSQL(lSQL);
 
@@ -48,34 +44,11 @@ class TableTask extends TableBase
         return (false);
     }
 
-    public boolean onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-    {
-        try
-        {
-            if(oldVersion == 35 && newVersion == 36)
-            {
-                db.execSQL("ALTER TABLE tasks ADD COLUMN noteId INT(5) DEFAULT 0");
-                db.execSQL("ALTER TABLE tasks ADD COLUMN galleryId INT(5) DEFAULT 0");
-                db.execSQL("ALTER TABLE tasks ADD COLUMN sygicId INT(5) DEFAULT 0");
-
-                db.execSQL("UPDATE tasks SET noteId = 0");
-                db.execSQL("UPDATE tasks SET galleryId = 0");
-                db.execSQL("UPDATE tasks SET sygicId = 0");
-            }
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("onUpgrade", e.getMessage());
-        }
-        return (false);
-    }
-
     boolean getTaskCount(int argHolidayId, MyInt retInt)
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL="SELECT IFNULL(COUNT(*),0) " + "FROM Tasks " + "WHERE holidayId = " + argHolidayId;
@@ -94,34 +67,19 @@ class TableTask extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
-            if(taskItem.pictureAssigned)
-            {
-            /* if picture name has something in it - it means it came from internal folder */
-                if(taskItem.taskPicture.length() == 0)
-                {
-                    //myMessages().LogMessage("  - New Image was not from internal folder...");
-                    if(taskItem.pictureAssigned)
-                    {
-                        //myMessages().LogMessage("  - Save new image and get a filename...");
-                        MyString myString=new MyString();
-                        if(savePicture(taskItem.holidayId, taskItem.fileBitmap, myString) == false)
-                            return (false);
-                        taskItem.taskPicture=myString.Value;
-                        //myMessages().LogMessage("  - New filename " + taskItem.taskPicture);
-                    } else
-                    {
-                        //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
-                    }
-                } else
-                {
-                    //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + taskItem.taskPicture + ")");
+            if(taskItem.pictureAssigned) {
+                /* if picture name has something in it - it means it came from internal folder */
+                if (taskItem.taskPicture.isEmpty()) {
+                    //myMessages().LogMessage("  - Save new image and get a filename...");
+                    MyString myString = new MyString();
+                    if (!savePicture(taskItem.holidayId, taskItem.fileBitmap, myString))
+                        return (false);
+                    taskItem.taskPicture = myString.Value;
+                    //myMessages().LogMessage("  - New filename " + taskItem.taskPicture);
                 }
-            } else
-            {
-                //myMessages().LogMessage("  - New Image not assigned - do nothing");
             }
 
             int lTaskDateKnown=0;
@@ -132,7 +90,7 @@ class TableTask extends TableBase
             if(taskItem.taskComplete)
                 lTaskComplete=1;
 
-            String lSql="INSERT INTO tasks " + "  (holidayId, taskId, sequenceNo, taskDescription, " + "   taskDateKnown, taskDate, taskPicture, taskComplete, taskNotes, infoId, " + "   noteId, galleryId, sygicId) " + "VALUES " + "(" + taskItem.holidayId + "," + taskItem.taskId + "," + taskItem.sequenceNo + ", " + MyQuotedString(taskItem.taskDescription) + ", " + lTaskDateKnown + "," + taskItem.taskDateInt + "," + MyQuotedString(taskItem.taskPicture) + ", " + lTaskComplete + ", " + MyQuotedString(taskItem.taskNotes) + ", " + taskItem.infoId + ", " + taskItem.noteId + ", " + taskItem.galleryId + ", " + taskItem.sygicId + " " + ")";
+            String lSql="INSERT INTO tasks " + "  (holidayId, taskId, sequenceNo, taskDescription, " + "   taskDateKnown, taskDate, taskPicture, taskComplete, taskNotes, infoId, " + "   noteId, galleryId) " + "VALUES " + "(" + taskItem.holidayId + "," + taskItem.taskId + "," + taskItem.sequenceNo + ", " + MyQuotedString(taskItem.taskDescription) + ", " + lTaskDateKnown + "," + taskItem.taskDateInt + "," + MyQuotedString(taskItem.taskPicture) + ", " + lTaskComplete + ", " + MyQuotedString(taskItem.taskNotes) + ", " + taskItem.infoId + ", " + taskItem.noteId + ", " + taskItem.galleryId + ")";
 
             return (executeSQL("addTaskItem", lSql));
 
@@ -149,7 +107,7 @@ class TableTask extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             if(items == null)
@@ -159,7 +117,7 @@ class TableTask extends TableBase
             {
                 if(items.get(i).sequenceNo != items.get(i).origSequenceNo)
                 {
-                    if(updateTaskItem(items.get(i)) == false)
+                    if(!updateTaskItem(items.get(i)))
                         return (false);
                 }
             }
@@ -176,48 +134,35 @@ class TableTask extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             //myMessages().LogMessage("updateTaskItem:Handling Image");
             if(taskItem.pictureChanged)
             {
-                if(taskItem.origPictureAssigned && taskItem.taskPicture.length() > 0 && taskItem.taskPicture.compareTo(taskItem.origTaskPicture) == 0)
-                {
-                    //myMessages().LogMessage("  - Original Image changed back to the original - do nothing");
-                } else
-                {
+                if (!taskItem.origPictureAssigned || taskItem.taskPicture.isEmpty() || taskItem.taskPicture.compareTo(taskItem.origTaskPicture) != 0) {
                     if(taskItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(removePicture(taskItem.holidayId, taskItem.origTaskPicture) == false)
+                        if(!removePicture(taskItem.holidayId, taskItem.origTaskPicture))
                             return (false);
                     }
-            
+
                 /* if picture name has something in it - it means it came from internal folder */
-                    if(taskItem.taskPicture.length() == 0)
+                    if(taskItem.taskPicture.isEmpty())
                     {
                         //myMessages().LogMessage("  - New Image was not from internal folder...");
                         if(taskItem.pictureAssigned)
                         {
                             //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
-                            if(savePicture(taskItem.holidayId, taskItem.fileBitmap, myString) == false)
+                            if(!savePicture(taskItem.holidayId, taskItem.fileBitmap, myString))
                                 return (false);
                             taskItem.taskPicture=myString.Value;
                             //myMessages().LogMessage("  - New filename " + taskItem.taskPicture);
-                        } else
-                        {
-                            //myMessages().LogMessage("  - New Image not setup - so - keep it blank");
                         }
-                    } else
-                    {
-                        //myMessages().LogMessage("  - New Image was from internal folder - so just use it (" + taskItem.taskPicture + ")");
                     }
                 }
-            } else
-            {
-                //myMessages().LogMessage("  - Image not changed - do nothing");
             }
 
 
@@ -230,7 +175,7 @@ class TableTask extends TableBase
                 lTaskComplete=1;
 
             String lSQL;
-            lSQL="UPDATE Tasks " + "SET sequenceNo = " + taskItem.sequenceNo + ", " + "    taskDescription = " + MyQuotedString(taskItem.taskDescription) + ", " + "    taskDateKnown = " + lDateKnown + ", " + "    taskDate = " + taskItem.taskDateInt + ", " + "    taskPicture = " + MyQuotedString(taskItem.taskPicture) + ", " + "    taskComplete = " + lTaskComplete + ", " + "    taskNotes = " + MyQuotedString(taskItem.taskNotes) + ", " + "    infoId = " + taskItem.infoId + ", " + "    noteId = " + taskItem.noteId + ", " + "    galleryId = " + taskItem.galleryId + ", " + "    sygicId = " + taskItem.sygicId + " " + "WHERE holidayId = " + taskItem.holidayId + " " + "AND taskId = " + taskItem.taskId;
+            lSQL="UPDATE Tasks " + "SET sequenceNo = " + taskItem.sequenceNo + ", " + "    taskDescription = " + MyQuotedString(taskItem.taskDescription) + ", " + "    taskDateKnown = " + lDateKnown + ", " + "    taskDate = " + taskItem.taskDateInt + ", " + "    taskPicture = " + MyQuotedString(taskItem.taskPicture) + ", " + "    taskComplete = " + lTaskComplete + ", " + "    taskNotes = " + MyQuotedString(taskItem.taskNotes) + ", " + "    infoId = " + taskItem.infoId + ", " + "    noteId = " + taskItem.noteId + ", " + "    galleryId = " + taskItem.galleryId + " " + "WHERE holidayId = " + taskItem.holidayId + " " + "AND taskId = " + taskItem.taskId;
             return (executeSQL("updateTaskItem", lSQL));
         }
         catch(Exception e)
@@ -241,42 +186,20 @@ class TableTask extends TableBase
 
     }
 
-    public boolean deleteTasks(int holidayId)
-    {
-        try
-        {
-            ArrayList<TaskItem> taskList=new ArrayList<>();
-
-            if(getTaskList(holidayId, taskList) == false)
-                return (false);
-
-            for(TaskItem taskItem : taskList)
-                if(deleteTaskItem(taskItem) == false)
-                    return (false);
-
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("deleteTasks", e.getMessage());
-        }
-        return (false);
-    }
-
     boolean deleteTaskItem(TaskItem taskItem)
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL="DELETE FROM Tasks " + "WHERE holidayId = " + taskItem.holidayId + " " + "AND taskId = " + taskItem.taskId;
 
-            if(taskItem.taskPicture.length() > 0)
-                if(removePicture(taskItem.holidayId, taskItem.taskPicture) == false)
+            if(!taskItem.taskPicture.isEmpty())
+                if(!removePicture(taskItem.holidayId, taskItem.taskPicture))
                     return (false);
 
-            if(executeSQL("deleteTaskItem", lSQL) == false)
+            if(!executeSQL("deleteTaskItem", lSQL))
                 return (false);
 
             return (true);
@@ -292,17 +215,17 @@ class TableTask extends TableBase
     {
         try
         {
-            if(IsValid() == false)
+            if(!IsValid())
                 return (false);
 
             String lSQL;
-            lSQL="SELECT holidayId, taskId, sequenceNo, taskDescription, " + "  taskDateKnown, taskDate, taskPicture, taskComplete, taskNotes, infoId, " + "  noteId, galleryId, sygicId " + "FROM Tasks " + "WHERE HolidayId = " + holidayId + " " + "AND TaskId = " + taskId;
+            lSQL="SELECT holidayId, taskId, sequenceNo, taskDescription, " + "  taskDateKnown, taskDate, taskPicture, taskComplete, taskNotes, infoId, " + "  noteId, galleryId " + "FROM Tasks " + "WHERE HolidayId = " + holidayId + " " + "AND TaskId = " + taskId;
 
             Cursor cursor=executeSQLOpenCursor("getTaskItem", lSQL);
             if(cursor != null)
             {
                 cursor.moveToFirst();
-                if(GetTaskItemFromQuery(cursor, taskItem) == false)
+                if(!GetTaskItemFromQuery(cursor, taskItem))
                     return (false);
             }
             executeSQLCloseCursor("getTaskItem");
@@ -317,7 +240,7 @@ class TableTask extends TableBase
 
     private boolean GetTaskItemFromQuery(Cursor cursor, TaskItem taskItem)
     {
-        if(IsValid() == false)
+        if(!IsValid())
             return (false);
 
         try
@@ -330,28 +253,23 @@ class TableTask extends TableBase
             taskItem.sequenceNo=Integer.parseInt(cursor.getString(2));
             taskItem.taskDescription=cursor.getString(3);
             int lDateKnown=Integer.parseInt(cursor.getString(4));
-            taskItem.taskDateKnown=false;
-            if(lDateKnown == 1)
-                taskItem.taskDateKnown=true;
+            taskItem.taskDateKnown= lDateKnown == 1;
             taskItem.taskDateInt=Long.parseLong(cursor.getString(5));
-            if(dateUtils.IntToDate(taskItem.taskDateInt, taskItem.taskDateDate) == false)
+            if(!dateUtils.IntToDate(taskItem.taskDateInt, taskItem.taskDateDate))
                 return (false);
 
             MyString myString=new MyString();
-            if(dateUtils.DateToStr(taskItem.taskDateDate, myString) == false)
+            if(!dateUtils.DateToStr(taskItem.taskDateDate, myString))
                 return (false);
             taskItem.taskDateString=myString.Value;
 
             taskItem.taskPicture=cursor.getString(6);
             int lTaskComplete=Integer.parseInt(cursor.getString(7));
-            taskItem.taskComplete=false;
-            if(lTaskComplete == 1)
-                taskItem.taskComplete=true;
+            taskItem.taskComplete= lTaskComplete == 1;
             taskItem.taskNotes=cursor.getString(8);
             taskItem.infoId=Integer.parseInt(cursor.getString(9));
             taskItem.noteId=Integer.parseInt(cursor.getString(10));
             taskItem.galleryId=Integer.parseInt(cursor.getString(11));
-            taskItem.sygicId=Integer.parseInt(cursor.getString(12));
 
             taskItem.origHolidayId=taskItem.holidayId;
             taskItem.origTaskId=taskItem.taskId;
@@ -367,10 +285,9 @@ class TableTask extends TableBase
             taskItem.origInfoId=taskItem.infoId;
             taskItem.origNoteId=taskItem.noteId;
             taskItem.origGalleryId=taskItem.galleryId;
-            taskItem.origSygicId=taskItem.sygicId;
             taskItem.pictureChanged=false;
 
-            if(taskItem.taskPicture.length() > 0)
+            if(!taskItem.taskPicture.isEmpty())
             {
                 taskItem.pictureAssigned=true;
                 taskItem.origPictureAssigned=true;
@@ -394,7 +311,7 @@ class TableTask extends TableBase
         {
             String lSQL="SELECT IFNULL(MAX(taskId),0) " + "FROM Tasks " + "WHERE holidayId = " + holidayId;
 
-            if(executeSQLGetInt("getNextTaskId", lSQL, retInt) == false)
+            if(!executeSQLGetInt("getNextTaskId", lSQL, retInt))
                 return (false);
             retInt.Value=retInt.Value + 1;
             return (true);
@@ -412,7 +329,7 @@ class TableTask extends TableBase
         {
             String lSQL="SELECT IFNULL(MAX(SequenceNo),0) " + "FROM Tasks " + "WHERE holidayId = " + holidayId;
 
-            if(executeSQLGetInt("getNextSequenceNo", lSQL, retInt) == false)
+            if(!executeSQLGetInt("getNextSequenceNo", lSQL, retInt))
                 return (false);
             retInt.Value=retInt.Value + 1;
             return (true);
@@ -429,7 +346,7 @@ class TableTask extends TableBase
     {
         try
         {
-            String lSql="SELECT holidayId, taskId, sequenceNo, taskDescription, " + "  taskDateKnown, taskDate, taskPicture, taskComplete, taskNotes, infoId, " + "  noteId, galleryId, sygicId " + "FROM Tasks " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
+            String lSql="SELECT holidayId, taskId, sequenceNo, taskDescription, " + "  taskDateKnown, taskDate, taskPicture, taskComplete, taskNotes, infoId, " + "  noteId, galleryId " + "FROM Tasks " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
 
             Cursor cursor=executeSQLOpenCursor("getTaskList", lSql);
             if(cursor == null)
@@ -438,7 +355,7 @@ class TableTask extends TableBase
             while(cursor.moveToNext())
             {
                 TaskItem taskItem=new TaskItem();
-                if(GetTaskItemFromQuery(cursor, taskItem) == false)
+                if(!GetTaskItemFromQuery(cursor, taskItem))
                     return (false);
 
                 al.add(taskItem);
@@ -452,64 +369,5 @@ class TableTask extends TableBase
         return (false);
     }
 
-    boolean clearNote(int holidayId, int noteId)
-    {
-        try
-        {
-            if(IsValid() == false)
-                return (false);
 
-            String l_SQL="UPDATE tasks SET noteId = 0 " + "WHERE holidayId = " + holidayId + " " + "AND noteId = " + noteId;
-
-            if(executeSQL("clearNote", l_SQL) == false)
-                return (false);
-
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("clearNote", e.getMessage());
-        }
-        return (false);
-    }
-
-    private String randomTaskDescription()
-    {
-        try
-        {
-            Random random=new Random();
-            int i=random.nextInt(10);
-            switch(i)
-            {
-                case 0:
-                    return ("Change Currency");
-                case 1:
-                    return ("Get Park Tickets");
-                case 2:
-                    return ("Book Cinema");
-                case 3:
-                    return ("Checkin");
-                case 4:
-                    return ("Check Park Times");
-                case 5:
-                    return ("Book Holiday");
-                case 6:
-                    return ("Check Passport");
-                case 7:
-                    return ("Check Parade Times");
-                case 8:
-                    return ("Book Time Off");
-            }
-            return ("Book VIP Room");
-        }
-        catch(Exception e)
-        {
-            ShowError("randomTaskDescription", e.getMessage());
-        }
-        return ("Spare Day");
-
-    }
-
-
-    
 }

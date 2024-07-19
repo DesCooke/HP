@@ -20,7 +20,6 @@
         android:layout_alignParentTop="true"
         android:cacheColorHint="#0000"
         android:scrollbars="vertical"
-        android:scrollingCache="false">
-    </androidx.recyclerview.widget.RecyclerView>
+        android:scrollingCache="false"></androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

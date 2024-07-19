@@ -1,10 +1,10 @@
 package com.example.des.hp.myutils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+//noinspection ExifInterface
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
-import androidx.core.content.ContextCompat;
 import android.widget.TimePicker;
 
 
@@ -19,6 +19,7 @@ import java.io.InputStream;
 //
 public class MyApiSpecific extends BaseActivity
 {
+    @SuppressLint("StaticFieldLeak")
     public static MyApiSpecific apiSpecific=null;
     public Context _context;
 
@@ -49,14 +50,10 @@ public class MyApiSpecific extends BaseActivity
         {
             InputStream input = _context.getContentResolver().openInputStream(imageUri);
             ExifInterface ei;
-            if (Build.VERSION.SDK_INT > 23)
-                ei = new ExifInterface(input);
-            else
-                ei = new ExifInterface(imageUri.getPath());
+            assert input != null;
+            ei = new ExifInterface(input);
 
-            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-            //myMessages().LogMessage("***ORIENTATION*** of " + imageUri.getPath() + " is " + String.valueOf(orientation));
-            return orientation;
+            return ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
         }
         catch(Exception e)
         {
@@ -69,12 +66,6 @@ public class MyApiSpecific extends BaseActivity
     {
         try
         {
-            if(Build.VERSION.SDK_INT < 23)
-            {
-                //noinspection deprecation
-                return (time.getCurrentHour());
-
-            }
             return (time.getHour());
         }
         catch(Exception e)
@@ -89,11 +80,6 @@ public class MyApiSpecific extends BaseActivity
     {
         try
         {
-            if(Build.VERSION.SDK_INT < 23)
-            {
-                //noinspection deprecation
-                return (time.getCurrentMinute());
-            }
             return (time.getMinute());
         }
         catch(Exception e)
@@ -107,15 +93,7 @@ public class MyApiSpecific extends BaseActivity
     {
         try
         {
-            if(Build.VERSION.SDK_INT < 23)
-            {
-                //noinspection deprecation
-                time.setCurrentMinute(minute);
-                return;
-            } else
-            {
-                time.setMinute(minute);
-            }
+            time.setMinute(minute);
         }
         catch(Exception e)
         {
@@ -128,15 +106,7 @@ public class MyApiSpecific extends BaseActivity
     {
         try
         {
-            if(Build.VERSION.SDK_INT < 23)
-            {
-                //noinspection deprecation
-                time.setCurrentHour(hour);
-                return;
-            } else
-            {
-                time.setHour(hour);
-            }
+            time.setHour(hour);
         }
         catch(Exception e)
         {
@@ -149,8 +119,6 @@ public class MyApiSpecific extends BaseActivity
     {
         try
         {
-            if(Build.VERSION.SDK_INT < 23)
-                return (ContextCompat.getColor(_context, resColor));
 
             return (_context.getColor(resColor));
         }

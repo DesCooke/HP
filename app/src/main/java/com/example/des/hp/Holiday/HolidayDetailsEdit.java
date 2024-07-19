@@ -1,5 +1,6 @@
 package com.example.des.hp.Holiday;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
@@ -27,6 +29,7 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
     public LinearLayout grpHolidayName;
     public TextView holidayName;
     public TextView txtStartDate;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch sw;
     public TextView lblKnownDates;
     public HolidayItem holidayItem;
@@ -34,12 +37,19 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
     public View.OnClickListener dwetOnOkClick;
     public ImageButton btnClear;
     public Button btnSave;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch swDays;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch swMaps;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch swTasks;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch swTips;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch swBudget;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch swAttractions;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch swContacts;
 
     //endregion
@@ -55,21 +65,21 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
             layoutName="activity_holiday_details_edit";
             setContentView(R.layout.activity_holiday_details_edit);
 
-            holidayName=(TextView) findViewById(R.id.txtHolidayName);
-            txtStartDate=(TextView) findViewById(R.id.txtStartDate);
-            sw=(Switch) findViewById(R.id.swKnownDates);
-            grpStartDate=(LinearLayout) findViewById(R.id.grpStartDate);
-            lblKnownDates=(TextView) findViewById(R.id.lblKnownDates);
-            grpHolidayName=(LinearLayout) findViewById(R.id.grpHolidayName);
-            btnClear=(ImageButton) findViewById(R.id.btnClear);
-            btnSave=(Button) findViewById(R.id.btnSave);
-            swDays=(Switch) findViewById(R.id.swDays);
-            swMaps=(Switch) findViewById(R.id.swMaps);
-            swTasks=(Switch) findViewById(R.id.swTasks);
-            swTips=(Switch) findViewById(R.id.swTips);
-            swBudget=(Switch) findViewById(R.id.swBudget);
-            swAttractions=(Switch) findViewById(R.id.swAttractions);
-            swContacts=(Switch) findViewById(R.id.swContacts);
+            holidayName= findViewById(R.id.txtHolidayName);
+            txtStartDate= findViewById(R.id.txtStartDate);
+            sw= findViewById(R.id.swKnownDates);
+            grpStartDate= findViewById(R.id.grpStartDate);
+            lblKnownDates= findViewById(R.id.lblKnownDates);
+            grpHolidayName= findViewById(R.id.grpHolidayName);
+            btnClear= findViewById(R.id.btnClear);
+            btnSave= findViewById(R.id.btnSave);
+            swDays= findViewById(R.id.swDays);
+            swMaps= findViewById(R.id.swMaps);
+            swTasks= findViewById(R.id.swTasks);
+            swTips= findViewById(R.id.swTips);
+            swBudget= findViewById(R.id.swBudget);
+            swAttractions= findViewById(R.id.swAttractions);
+            swContacts= findViewById(R.id.swContacts);
 
             holidayItem=new HolidayItem();
 
@@ -83,8 +93,11 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
                 datesAreUnknown();
             } else
             {
-                if(!databaseAccess().getHolidayItem(holidayId, holidayItem))
-                    return;
+                try(DatabaseAccess da = databaseAccess())
+                {
+                    if(!da.getHolidayItem(holidayId, holidayItem))
+                        return;
+                }
 
                 holidayName.setText(holidayItem.holidayName);
 
@@ -126,12 +139,9 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
     {
         try
         {
-            switch(view.getId())
-            {
-                case R.id.imageViewSmall:
-                    pickImage(view);
-                    break;
-            }
+            int id=view.getId();
+            if(id==R.id.imageViewSmall)
+                pickImage(view);
         }
         catch(Exception e)
         {
@@ -145,7 +155,7 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
         try
         {
             DialogDatePicker ddp=new DialogDatePicker(this);
-            ddp.txtStartDate=(TextView) findViewById(R.id.txtStartDate);
+            ddp.txtStartDate= findViewById(R.id.txtStartDate);
             Date date=new Date();
             if(!dateUtils().StrToDate(ddp.txtStartDate.getText().toString(), date))
                 return;
@@ -176,15 +186,9 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
     {
         try
         {
-            dwetOnOkClick=new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    HolidayNamePicked(view);
-                }
-            };
+            dwetOnOkClick= this::HolidayNamePicked;
 
-            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
                 "Holiday",    // form caption
                 "Description",             // form message
@@ -275,7 +279,7 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
             myMessages().ShowMessageShort("Saving Holiday");
 
             holidayItem.holidayPicture="";
-            if(internalImageFilename.length() > 0)
+            if(!internalImageFilename.isEmpty())
                 holidayItem.holidayPicture=internalImageFilename;
             holidayItem.pictureAssigned=imageSet;
             holidayItem.pictureChanged=imageChanged;
@@ -308,24 +312,27 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
             holidayItem.buttonAttractions = swAttractions.isChecked();
             holidayItem.buttonContacts = swContacts.isChecked();
 
-            if(action.equals("add"))
+            try(DatabaseAccess da = databaseAccess())
             {
-                MyInt myInt=new MyInt();
-                if(!databaseAccess().getNextHolidayId(myInt))
-                    return;
-                holidayItem.holidayId=myInt.Value;
+                if(action.equals("add"))
+                {
+                    MyInt myInt=new MyInt();
+                    if(!da.getNextHolidayId(myInt))
+                        return;
+                    holidayItem.holidayId=myInt.Value;
 
-                if(!databaseAccess().addHolidayItem(holidayItem))
-                    return;
+                    if(!da.addHolidayItem(holidayItem))
+                        return;
+                }
+
+                if(action.equals("modify"))
+                {
+                    holidayItem.holidayId=holidayId;
+                    if(!da.updateHolidayItem(holidayItem))
+                        return;
+                }
+
             }
-
-            if(action.equals("modify"))
-            {
-                holidayItem.holidayId=holidayId;
-                if(!databaseAccess().updateHolidayItem(holidayItem))
-                    return;
-            }
-
             finish();
         }
         catch(Exception e)

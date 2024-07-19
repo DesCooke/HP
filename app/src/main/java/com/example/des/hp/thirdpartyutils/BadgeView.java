@@ -25,6 +25,7 @@ import android.widget.TabWidget;
  * This class is intended to be instantiated at runtime rather than included in XML layouts.
  * 
  * @author Jeff Gilfelt
+ * @noinspection ALL
  */
 public class BadgeView extends androidx.appcompat.widget.AppCompatTextView {
 
@@ -68,9 +69,7 @@ public class BadgeView extends androidx.appcompat.widget.AppCompatTextView {
 	
 	/**
      * Constructor -
-     * 
      * create a new BadgeView instance attached to a target {@link android.view.View}.
-     *
      * @param context context for this view.
      * @param target the View to attach the badge to.
      */
@@ -80,18 +79,11 @@ public class BadgeView extends androidx.appcompat.widget.AppCompatTextView {
 	
 	/**
      * Constructor -
-     * 
-     * create a new BadgeView instance attached to a target {@link android.widget.TabWidget}
-     * tab at a given index.
-     *
+     * <p>
      * @param context context for this view.
      * @param target the TabWidget to attach the badge to.
      * @param index the position of the tab within the target.
      */
-	public BadgeView(Context context, TabWidget target, int index) {
-		this(context, null, android.R.attr.textViewStyle, target, index);
-	}
-	
 	public BadgeView(Context context, AttributeSet attrs, int defStyle) {
 		this(context, attrs, defStyle, null, 0);
 	}
@@ -382,8 +374,8 @@ public class BadgeView extends androidx.appcompat.widget.AppCompatTextView {
 
 	/**
      * Returns the positioning of this badge.
-     * 
-     * one of POSITION_TOP_LEFT, POSITION_TOP_RIGHT, POSITION_BOTTOM_LEFT, POSITION_BOTTOM_RIGHT, POSTION_CENTER.
+     * <p>
+     * one of POSITION_TOP_LEFT, POSITION_TOP_RIGHT, POSITION_BOTTOM_LEFT, POSITION_BOTTOM_RIGHT, POSITION_CENTER.
      * 
      */
 	public int getBadgePosition() {
@@ -393,7 +385,7 @@ public class BadgeView extends androidx.appcompat.widget.AppCompatTextView {
 	/**
      * Set the positioning of this badge.
      * 
-     * @param layoutPosition one of POSITION_TOP_LEFT, POSITION_TOP_RIGHT, POSITION_BOTTOM_LEFT, POSITION_BOTTOM_RIGHT, POSTION_CENTER.
+     * @param layoutPosition one of POSITION_TOP_LEFT, POSITION_TOP_RIGHT, POSITION_BOTTOM_LEFT, POSITION_BOTTOM_RIGHT, POSITION_CENTER.
      * 
      */
 	public void setBadgePosition(int layoutPosition) {

@@ -8,10 +8,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionDetailsEdit;
@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
+import androidx.annotation.NonNull;
 
 public class AttractionAreaDetailsView extends BaseActivity
 {
@@ -46,8 +48,8 @@ public class AttractionAreaDetailsView extends BaseActivity
             layoutName = "activity_attractionarea_details_view";
             setContentView(R.layout.activity_attractionarea_details_view);
             
-            txtAttractionAreaDescription = (TextView) findViewById(R.id.txtAttractionAreaDescription);
-            grpMenuFile = (LinearLayout) findViewById(R.id.grpMenuFile);
+            txtAttractionAreaDescription = findViewById(R.id.txtAttractionAreaDescription);
+            grpMenuFile = findViewById(R.id.grpMenuFile);
             
             afterCreate();
             
@@ -77,41 +79,33 @@ public class AttractionAreaDetailsView extends BaseActivity
     
     //region OnClick Events
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
-        boolean lv_return = false;
         try
         {
-            switch (item.getItemId())
-            {
-                case R.id.action_edit_attractionarea:
-                    showAttractionAreaEdit();
-                    return (true);
-                case R.id.action_delete_attractionarea:
-                    deleteAttractionArea();
-                    return (true);
-                case R.id.action_view_attractionarea:
-                    showAttractionAreaView();
-                    return (true);
-                case R.id.action_add_generalattraction:
-                    StartNewAddIntent(GeneralAttractionDetailsEdit.class);
-                    return (true);
-                default:
-                    lv_return = super.onOptionsItemSelected(item);
-            }
+            int id=item.getItemId();
+            if(id==R.id.action_edit_attractionarea)
+                showAttractionAreaEdit();
+            if(id==R.id.action_delete_attractionarea)
+                deleteAttractionArea();
+            if(id==R.id.action_view_attractionarea)
+                showAttractionAreaView();
+            if(id==R.id.action_add_generalattraction)
+                StartNewAddIntent();
+            return(true);
         }
         catch (Exception e)
         {
             ShowError("onOptionsItemSelected", e.getMessage());
+            return(false);
         }
-        return (lv_return);
     }
     
-    public void StartNewAddIntent(Class neededClass)
+    public void StartNewAddIntent()
     {
         try
         {
-            Intent intent = new Intent(getApplicationContext(), neededClass);
+            Intent intent = new Intent(getApplicationContext(), GeneralAttractionDetailsEdit.class);
             intent.putExtra("ACTION", "add");
             intent.putExtra("HOLIDAYID", holidayId);
             intent.putExtra("DAYID", 0);
@@ -134,16 +128,16 @@ public class AttractionAreaDetailsView extends BaseActivity
     public void showForm()
     {
         super.showForm();
-        try
+        try(DatabaseAccess da = databaseAccess())
         {
             allowCellMove = true;
             
             attractionAreaItem = new AttractionAreaItem();
-            if (!databaseAccess().getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
+            if (!da.getAttractionAreaItem(holidayId, attractionId, attractionAreaId, attractionAreaItem))
                 return;
             
             scheduleList = new ArrayList<>();
-            if (!databaseAccess().getScheduleList(holidayId, 0, attractionId, attractionAreaId, scheduleList))
+            if (!da.getScheduleList(holidayId, 0, attractionId, attractionAreaId, scheduleList))
                 return;
             
             SetImage(attractionAreaItem.attractionAreaPicture);
@@ -151,7 +145,7 @@ public class AttractionAreaDetailsView extends BaseActivity
             txtAttractionAreaDescription.setText(attractionAreaItem.attractionAreaDescription);
             
             subTitle = attractionAreaItem.attractionAreaDescription;
-            if (title.length() > 0)
+            if (!title.isEmpty())
             {
                 SetTitles(title, subTitle);
             } else
@@ -163,15 +157,10 @@ public class AttractionAreaDetailsView extends BaseActivity
             
             CreateRecyclerView(R.id.attractionAreaListView, scheduleAdapter);
             
-            scheduleAdapter.setOnItemClickListener(new ScheduleAdapter.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(View view, ScheduleItem obj)
+            scheduleAdapter.setOnItemClickListener((view, obj) -> {
+                if (obj.schedType == getResources().getInteger(R.integer.schedule_type_generalattraction))
                 {
-                    if (obj.schedType == getResources().getInteger(R.integer.schedule_type_generalattraction))
-                    {
-                        StartNewEditIntent(GeneralAttractionDetailsView.class, obj);
-                    }
+                    StartNewEditIntent(obj);
                 }
             });
             afterShow();
@@ -182,11 +171,11 @@ public class AttractionAreaDetailsView extends BaseActivity
         }
     }
     
-    public void StartNewEditIntent(Class neededClass, ScheduleItem obj)
+    public void StartNewEditIntent(ScheduleItem obj)
     {
         try
         {
-            Intent intent = new Intent(getApplicationContext(), neededClass);
+            Intent intent = new Intent(getApplicationContext(), GeneralAttractionDetailsView.class);
             intent.putExtra("ACTION", "view");
             intent.putExtra("HOLIDAYID", obj.holidayId);
             intent.putExtra("DAYID", obj.dayId);
@@ -225,7 +214,10 @@ public class AttractionAreaDetailsView extends BaseActivity
         try
         {
             attractionAreaItem.noteId = pNoteId;
-            databaseAccess().updateAttractionAreaItem(attractionAreaItem);
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateAttractionAreaItem(attractionAreaItem);
+            }
         }
         catch (Exception e)
         {
@@ -253,7 +245,10 @@ public class AttractionAreaDetailsView extends BaseActivity
         try
         {
             attractionAreaItem.infoId = pInfoId;
-            databaseAccess().updateAttractionAreaItem(attractionAreaItem);
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateAttractionAreaItem(attractionAreaItem);
+            }
         }
         catch (Exception e)
         {
@@ -300,8 +295,11 @@ public class AttractionAreaDetailsView extends BaseActivity
     {
         try
         {
-            if (!databaseAccess().deleteAttractionAreaItem(attractionAreaItem))
-                return;
+            try(DatabaseAccess da = databaseAccess())
+            {
+                if (!da.deleteAttractionAreaItem(attractionAreaItem))
+                    return;
+            }
             finish();
         }
         catch (Exception e)
@@ -330,7 +328,7 @@ public class AttractionAreaDetailsView extends BaseActivity
     {
         try
         {
-            scheduleAdapter.onItemMove(from, to);
+            scheduleAdapter.onItemMove();
         }
         catch (Exception e)
         {

@@ -1,10 +1,12 @@
 package com.example.des.hp.Dialog;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import androidx.appcompat.app.AlertDialog;
 
 class ErrorDialog
 {
+    @SuppressLint("StaticFieldLeak")
     private static Context myContext;
 
     static void SetContext(Context context)

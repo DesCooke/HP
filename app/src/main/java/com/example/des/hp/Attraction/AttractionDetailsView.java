@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 
@@ -35,11 +36,11 @@ public class AttractionDetailsView extends BaseActivity
             layoutName = "activity_attraction_details_view";
             setContentView(R.layout.activity_attraction_details_view);
             
-            txtAttractionDescription = (TextView) findViewById(R.id.txtAttractionDescription);
-            btnClear = (ImageButton) findViewById(R.id.btnClear);
-            btnSave = (Button) findViewById(R.id.btnSave);
-            grpMenuFile = (LinearLayout) findViewById(R.id.grpMenuFile);
-            grpAttractionDescription = (LinearLayout) findViewById(R.id.grpAttractionDescription);
+            txtAttractionDescription = findViewById(R.id.txtAttractionDescription);
+            btnClear = findViewById(R.id.btnClear);
+            btnSave = findViewById(R.id.btnSave);
+            grpMenuFile = findViewById(R.id.grpMenuFile);
+            grpAttractionDescription = findViewById(R.id.grpAttractionDescription);
             
             afterCreate();
             
@@ -83,14 +84,17 @@ public class AttractionDetailsView extends BaseActivity
                 SetImage("");
             } else
             {
-                if (!databaseAccess().getAttractionItem(holidayId, attractionId, attractionItem))
-                    return;
-                
+                try(DatabaseAccess da = databaseAccess())
+                {
+                    if (!da.getAttractionItem(holidayId, attractionId, attractionItem))
+                        return;
+                }
+
                 txtAttractionDescription.setText(attractionItem.attractionDescription);
                 
                 SetImage(attractionItem.attractionPicture);
             }
-            if (title.length() > 0)
+            if (!title.isEmpty())
             {
                 SetTitles(title, subTitle);
             } else
@@ -129,7 +133,10 @@ public class AttractionDetailsView extends BaseActivity
         try
         {
             attractionItem.noteId = noteId;
-            databaseAccess().updateAttractionItem(attractionItem);
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateAttractionItem(attractionItem);
+            }
         }
         catch (Exception e)
         {
@@ -157,7 +164,10 @@ public class AttractionDetailsView extends BaseActivity
         try
         {
             attractionItem.infoId = infoId;
-            databaseAccess().updateAttractionItem(attractionItem);
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateAttractionItem(attractionItem);
+            }
         }
         catch (Exception e)
         {

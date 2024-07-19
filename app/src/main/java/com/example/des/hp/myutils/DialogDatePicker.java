@@ -50,11 +50,11 @@ public class DialogDatePicker extends Dialog implements android.view.View.OnClic
             requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.dialog_date_picker);
 
-            Button ok=(Button) findViewById(R.id.btnOk);
-            datePicker=(DatePicker) findViewById(R.id.datePicker);
+            Button ok= findViewById(R.id.btnOk);
+            datePicker= findViewById(R.id.datePicker);
 
             ok.setOnClickListener(this);
-            dateUtils=new DateUtils(this.getContext());
+            dateUtils=new DateUtils();
             if(setInitialDate)
             {
                 Calendar calendar=Calendar.getInstance();
@@ -79,23 +79,19 @@ public class DialogDatePicker extends Dialog implements android.view.View.OnClic
     {
         try
         {
-            switch(v.getId())
-            {
-                case R.id.btnOk:
-                    MyString ms=new MyString();
-                    if(dateUtils.DatePickerToStr(datePicker, ms) == false)
-                        return;
-                    txtStartDate.setText(ms.Value);
-                    break;
-                default:
-                    break;
+            int id=v.getId();
+            if(id==R.id.btnOk){
+                MyString ms=new MyString();
+                if(!dateUtils.DatePickerToStr(datePicker, ms))
+                    return;
+                txtStartDate.setText(ms.Value);
             }
+
             dismiss();
         }
         catch(Exception e)
         {
             ShowError("onClick", e.getMessage());
-            return;
         }
     }
 

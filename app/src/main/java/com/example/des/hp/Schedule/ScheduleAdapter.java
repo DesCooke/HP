@@ -2,7 +2,8 @@ package com.example.des.hp.Schedule;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionItem;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
@@ -22,26 +24,15 @@ import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 /**
  * * Created by Des on 06/10/2016.
+ * @noinspection ClassEscapesDefinedScope
  */
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder>
 {
-    private Context context;
-    private int layoutResourceId;
-    public ArrayList<ScheduleItem> data=null;
+    private final Context context;
+    public ArrayList<ScheduleItem> data;
     private OnItemClickListener mOnItemClickListener;
-    private ImageUtils imageUtils;
-    private Drawable drawableAirplane;
-    private Drawable drawableHotel;
-    private Drawable drawableShow;
-    private Drawable drawableBus;
-    private Drawable drawableRestaurant;
-    private Drawable drawableCinema;
-    private Drawable drawablePark;
-    private Drawable drawableParade;
-    private Drawable drawableOther;
-    private Drawable drawableRide;
-    private Drawable drawableGeneralAttraction;
+    private final ImageUtils imageUtils;
 
 
     public interface OnItemClickListener
@@ -55,7 +46,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     }
 
 
-    class ViewHolder extends RecyclerView.ViewHolder
+    static class ViewHolder extends RecyclerView.ViewHolder
     {
         // each data item is just a string in this case
         ImageView scheduleImage;
@@ -71,14 +62,14 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         {
             super(v);
 
-            scheduleImage=(ImageView) v.findViewById(R.id.imgSchedule);
-            txtSchedName=(TextView) v.findViewById(R.id.txtSchedName);
-            txtTimeRange=(TextView) v.findViewById(R.id.txtTimeRange);
-            scheduleItemCell=(LinearLayout) v.findViewById(R.id.scheduleItemCell);
-            scenicRatingView=(RatingBar) v.findViewById(R.id.rbScenicRatingView);
-            heartRatingView=(RatingBar) v.findViewById(R.id.rbHeartRatingView);
-            thrillRatingView=(RatingBar) v.findViewById(R.id.rbThrillRatingView);
-            txtReservationType=(TextView) v.findViewById(R.id.txtReservationType);
+            scheduleImage= v.findViewById(R.id.imgSchedule);
+            txtSchedName= v.findViewById(R.id.txtSchedName);
+            txtTimeRange= v.findViewById(R.id.txtTimeRange);
+            scheduleItemCell= v.findViewById(R.id.scheduleItemCell);
+            scenicRatingView= v.findViewById(R.id.rbScenicRatingView);
+            heartRatingView= v.findViewById(R.id.rbHeartRatingView);
+            thrillRatingView= v.findViewById(R.id.rbThrillRatingView);
+            txtReservationType= v.findViewById(R.id.txtReservationType);
         }
 
     }
@@ -88,55 +79,18 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     {
         this.context=activity;
         imageUtils=new ImageUtils(activity);
-        DateUtils dateUtils=new DateUtils(activity);
         data=items;
-        drawableAirplane=context.getDrawable(R.drawable.airplane);
-        drawableHotel=context.getDrawable(R.drawable.hotel);
-        drawableBus=context.getDrawable(R.drawable.bus);
-        drawableRestaurant=context.getDrawable(R.drawable.restaurant);
-        drawableCinema=context.getDrawable(R.drawable.cinema);
-        drawablePark=context.getDrawable(R.drawable.park);
-        drawableParade=context.getDrawable(R.drawable.parade);
-        drawableOther=context.getDrawable(R.drawable.other);
-        drawableShow=context.getDrawable(R.drawable.show);
-        drawableRide=context.getDrawable(R.drawable.ride);
-        drawableGeneralAttraction=context.getDrawable(R.drawable.attraction);
     }
 
+    @NonNull
     @Override
-    public ScheduleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         // create a new view
         View v=LayoutInflater.from(parent.getContext()).inflate(R.layout.schedulelistitemrow, parent, false);
 
         // set the view's size, margins, padding and layout parameters
         return new ViewHolder(v);
-    }
-
-    private void setScheduleTypeIcon(int schedType, ImageView imageView)
-    {
-        if(schedType == context.getResources().getInteger(R.integer.schedule_type_flight))
-            imageView.setImageDrawable(drawableAirplane);
-        if(schedType == context.getResources().getInteger(R.integer.schedule_type_hotel))
-            imageView.setImageDrawable(drawableHotel);
-        if(schedType == context.getResources().getInteger(R.integer.schedule_type_bus))
-            imageView.setImageDrawable(drawableBus);
-        if(schedType == context.getResources().getInteger(R.integer.schedule_type_restaurant))
-            imageView.setImageDrawable(drawableRestaurant);
-        if(schedType == context.getResources().getInteger(R.integer.schedule_type_cinema))
-            imageView.setImageDrawable(drawableCinema);
-        if(schedType == context.getResources().getInteger(R.integer.schedule_type_parade))
-            imageView.setImageDrawable(drawableParade);
-        if(schedType == context.getResources().getInteger(R.integer.schedule_type_park))
-            imageView.setImageDrawable(drawablePark);
-        if(schedType == context.getResources().getInteger(R.integer.schedule_type_other))
-            imageView.setImageDrawable(drawableOther);
-        if(schedType == context.getResources().getInteger(R.integer.schedule_type_show))
-            imageView.setImageDrawable(drawableShow);
-        if(schedType == context.getResources().getInteger(R.integer.schedule_type_ride))
-            imageView.setImageDrawable(drawableRide);
-        if(schedType == context.getResources().getInteger(R.integer.schedule_type_generalattraction))
-            imageView.setImageDrawable(drawableGeneralAttraction);
     }
 
     private String formatTime(int hour, int minute)
@@ -172,9 +126,9 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         {
             GeneralAttractionItem g = c.generalAttractionItem;
 
-            if(g.AttractionType.length()>0)
+            if(!g.AttractionType.isEmpty())
             {
-                holder.txtSchedName.setText(c.schedName + " (" + g.AttractionType + ")");
+                holder.txtSchedName.setText(String.format("%s (%s)", c.schedName, g.AttractionType));
             }
             else
             {
@@ -195,7 +149,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             }
             else
             {
-                if(g.CheckInKnown && g.DepartsKnown && !g.ArrivalKnown)
+                if(g.CheckInKnown && g.DepartsKnown)
                 {
                     lString=formatTime(g.CheckInHour, g.CheckInMin) + " -> " +
                             formatTime(g.DepartsHour, g.DepartsMin) + " -> ";
@@ -290,11 +244,11 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
 
             String lString;
             lString="";
-            if(c.startTimeKnown == true)
+            if(c.startTimeKnown)
                 lString=lString + formatTime(c.startHour, c.startMin);
-            if(c.startTimeKnown == true || c.endTimeKnown == true)
+            if(c.startTimeKnown || c.endTimeKnown)
                 lString=lString + " - ";
-            if(c.endTimeKnown == true)
+            if(c.endTimeKnown)
                 lString=lString + formatTime(c.endHour, c.endMin);
             holder.txtTimeRange.setText(lString);
 
@@ -305,8 +259,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
                     holder.thrillRatingView.setVisibility(View.GONE);
         }
 
-        if(c.schedPicture.length() > 0) {
-            if (imageUtils.getListIcon(c.holidayId, context, c.schedPicture, holder.scheduleImage) == false)
+        if(!c.schedPicture.isEmpty()) {
+            if (!imageUtils.getListIcon(c.holidayId, context, c.schedPicture, holder.scheduleImage))
                 return;
             holder.scheduleImage.setVisibility(View.VISIBLE);
         }
@@ -315,15 +269,10 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             holder.scheduleImage.setVisibility(View.GONE);
         }
 
-        holder.scheduleItemCell.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
+        holder.scheduleItemCell.setOnClickListener(view -> {
+            if(mOnItemClickListener != null)
             {
-                if(mOnItemClickListener != null)
-                {
-                    mOnItemClickListener.onItemClick(view, c);
-                }
+                mOnItemClickListener.onItemClick(view, c);
             }
         });
 
@@ -338,10 +287,10 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     public void add(int position, ScheduleItem mail)
     {
         data.add(position, mail);
-        notifyDataSetChanged();
+        notifyItemInserted(position);
     }
 
-    public boolean onItemMove(int fromPosition, int toPosition)
+    public boolean onItemMove()
     {
         updateGlobalData(data);
         return true;
@@ -353,12 +302,13 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         {
             items.get(i).sequenceNo=i + 1;
         }
-        if(!databaseAccess().updateScheduleItems(items))
-            return;
-        notifyDataSetChanged();
+        try(DatabaseAccess da = databaseAccess())
+        {
+            if(!da.updateScheduleItems(items))
+                return;
+        }
+        notifyItemRangeChanged(0, items.size()-1);
     }
-
-    private int lastPosition=-1;
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override

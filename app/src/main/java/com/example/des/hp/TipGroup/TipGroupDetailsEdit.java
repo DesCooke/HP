@@ -2,9 +2,9 @@ package com.example.des.hp.TipGroup;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -47,30 +47,18 @@ public class TipGroupDetailsEdit extends TipGroupDetailsView implements View.OnC
 
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
-        /* disable the menu entirely */
-        return false;
-    }
     //endregion
 
     //region OnClick Events
     public void onClick(View view)
     {
-        try
-        {
-            switch(view.getId())
-            {
+        try {
+            int id = view.getId();
+            if (id == R.id.grpTipGroupDescription)
+                pickTipGroupDescription(view);
 
-                case R.id.grpTipGroupDescription:
-                    pickTipGroupDescription(view);
-                    break;
-
-                case R.id.imageViewSmall:
-                    pickImage(view);
-                    break;
-            }
+            if (id == R.id.imageViewSmall)
+                pickImage(view);
         }
         catch(Exception e)
         {
@@ -99,16 +87,10 @@ public class TipGroupDetailsEdit extends TipGroupDetailsView implements View.OnC
     {
         try
         {
-            dwetOnOkClick=new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    TipGroupDescriptionPicked(view);
-                }
-            };
+            dwetOnOkClick= this::TipGroupDescriptionPicked;
 
 
-            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getFragmentManager(),     // for the transaction bit
+            dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
                 "Tip Group",    // form caption
                 "Description",             // form message
@@ -129,14 +111,14 @@ public class TipGroupDetailsEdit extends TipGroupDetailsView implements View.OnC
     //region Saving
     public void saveSchedule(View view)
     {
-        try
+        try(DatabaseAccess da = databaseAccess())
         {
             myMessages().ShowMessageShort("Saving " + txtTipGroupDescription.getText().toString());
 
             tipGroupItem.tipGroupDescription=txtTipGroupDescription.getText().toString();
 
             tipGroupItem.tipGroupPicture="";
-            if(internalImageFilename.length() > 0)
+            if(!internalImageFilename.isEmpty())
                 tipGroupItem.tipGroupPicture=internalImageFilename;
             tipGroupItem.pictureAssigned=imageSet;
             tipGroupItem.pictureChanged=imageChanged;
@@ -152,22 +134,22 @@ public class TipGroupDetailsEdit extends TipGroupDetailsView implements View.OnC
 
                 tipGroupItem.holidayId=holidayId;
 
-                if(!databaseAccess().getNextTipGroupId(holidayId, myInt))
+                if(!da.getNextTipGroupId(holidayId, myInt))
                     return;
                 tipGroupItem.tipGroupId=myInt.Value;
 
-                if(!databaseAccess().getNextTipGroupSequenceNo(holidayId, myInt))
+                if(!da.getNextTipGroupSequenceNo(holidayId, myInt))
                     return;
 
                 tipGroupItem.sequenceNo=myInt.Value;
 
-                if(!databaseAccess().addTipGroupItem(tipGroupItem))
+                if(!da.addTipGroupItem(tipGroupItem))
                     return;
             }
 
             if(action.equals("modify"))
             {
-                if(!databaseAccess().updateTipGroupItem(tipGroupItem))
+                if(!da.updateTipGroupItem(tipGroupItem))
                     return;
             }
 

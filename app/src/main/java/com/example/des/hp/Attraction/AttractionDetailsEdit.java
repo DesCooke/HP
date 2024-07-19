@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
+import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -60,17 +61,11 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
     {
         try
         {
-            switch (view.getId())
-            {
-                
-                case R.id.grpAttractionDescription:
-                    pickAttractionDescription(view);
-                    break;
-                
-                case R.id.imageViewSmall:
-                    pickImage(view);
-                    break;
-            }
+            int id = view.getId();
+            if(id==R.id.grpAttractionDescription)
+                pickAttractionDescription(view);
+            if(id==R.id.imageViewSmall)
+                pickImage(view);
         }
         catch (Exception e)
         {
@@ -83,7 +78,7 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
         try
         {
             txtAttractionDescription.setText(dialogWithEditTextFragment.getFinalText());
-            
+
             dialogWithEditTextFragment.dismiss();
         }
         catch (Exception e)
@@ -97,19 +92,13 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
     {
         try
         {
-            dwetOnOkClick = new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    AttractionDescriptionPicked(view);
-                }
-            };
+            dwetOnOkClick = this::AttractionDescriptionPicked;
             
             
             dialogWithEditTextFragment =
                 DialogWithEditTextFragment.newInstance
                     (
-                        getFragmentManager(),     // for the transaction bit
+                        getSupportFragmentManager(),     // for the transaction bit
                         "hihi",            // unique name for this dialog type
                         "Attraction",    // form caption
                         "Description",             // form message
@@ -133,7 +122,7 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
     //region Saving
     public void saveSchedule(View view)
     {
-        try
+        try(DatabaseAccess da = databaseAccess())
         {
             MyInt retInt = new MyInt();
             
@@ -142,7 +131,7 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
             attractionItem.pictureAssigned = imageSet;
             attractionItem.pictureChanged = imageChanged;
             attractionItem.attractionPicture = "";
-            if (internalImageFilename.length() > 0)
+            if (!internalImageFilename.isEmpty())
                 attractionItem.attractionPicture = internalImageFilename;
             attractionItem.fileBitmap = null;
             if (imageSet)
@@ -154,19 +143,19 @@ public class AttractionDetailsEdit extends AttractionDetailsView implements View
             if (action.equals("add"))
             {
                 attractionItem.holidayId = holidayId;
-                if (!databaseAccess().getNextAttractionId(holidayId, retInt))
+                if (!da.getNextAttractionId(holidayId, retInt))
                     return;
                 attractionItem.attractionId = retInt.Value;
-                if (!databaseAccess().getNextAttractionSequenceNo(holidayId, retInt))
+                if (!da.getNextAttractionSequenceNo(holidayId, retInt))
                     return;
                 attractionItem.sequenceNo = retInt.Value;
-                if (!databaseAccess().addAttractionItem(attractionItem))
+                if (!da.addAttractionItem(attractionItem))
                     return;
             }
             
             if (action.equals("modify"))
             {
-                if (!databaseAccess().updateAttractionItem(attractionItem))
+                if (!da.updateAttractionItem(attractionItem))
                     return;
             }
             
