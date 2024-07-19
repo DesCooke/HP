@@ -12,12 +12,10 @@
         android:layout_height="wrap_content"/>
 
     <TextView
+        style="@style/MyTextHeading"
         android:id="@+id/lblTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Attraction Details"
-        android:textAlignment="center"
-        android:textSize="36sp"/>
+        android:text="@string/attraction_details"
+        />
 
     <include
         layout="@layout/included_schedule_header"
@@ -34,206 +32,140 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
             android:orientation="vertical"
             android:weightSum="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
                 android:orientation="vertical"
                 android:weightSum="1">
 
                 <LinearLayout
                     android:id="@+id/grpAttractionType"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    style="@style/MyTextBox" >
 
                     <TextView
                         android:id="@+id/txtAttractionTypeCaption"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="Type"
-                        android:textSize="14sp" />
+                        android:text="@string/type"
+                        style="@style/MyTextHint" />
 
                     <TextView
                         android:id="@+id/txtAttractionType"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="14sp" />
+                        style="@style/MyTextLine" />
+
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/grpSchedName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    style="@style/MyTextBox" >
 
                     <TextView
                         android:id="@+id/txtSchedNameCaption"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="Description"
-                        android:textSize="14sp" />
+                        style="@style/MyTextHint"
+                        android:text="@string/description" />
 
                     <TextView
                         android:id="@+id/txtSchedName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="14sp" />
+                        style="@style/MyTextLine"  />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/grpBookingReference"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    style="@style/MyTextBox">
 
                     <TextView
                         android:id="@+id/txtBookingReferenceCaption"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="Booking Ref"
-                        android:textSize="14sp" />
+                        android:text="@string/booking_ref"
+                        style="@style/MyTextHint" />
 
                     <TextView
                         android:id="@+id/txtBookingReference"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="14sp" />
+                        style="@style/MyTextLine" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/grpFlightNo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    style="@style/MyTextBox">
 
                     <TextView
                         android:id="@+id/txtFlightNoCaption"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="Flight No"
-                        android:textSize="14sp" />
+                        android:text="@string/flight_no"
+                        style="@style/MyTextHint" />
 
                     <TextView
                         android:id="@+id/txtFlightNo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="14sp" />
+                        style="@style/MyTextLine" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/grpTerminal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    style="@style/MyTextBox">
 
                     <TextView
                         android:id="@+id/txtTerminalCaption"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="Terminal"
-                        android:textSize="14sp" />
+                        android:text="@string/terminal"
+                        style="@style/MyTextHint"/>
 
                     <TextView
                         android:id="@+id/txtTerminal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="14sp" />
+                        style="@style/MyTextLine" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/grpCheckIn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    style="@style/MyTextBox">
 
                     <TextView
                         android:id="@+id/txtCheckInCaption"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="Check In Time"
-                        android:textSize="14sp" />
+                        android:text="@string/check_in_time"
+                        style="@style/MyTextHint" />
 
                     <TextView
                         android:id="@+id/txtCheckIn"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="14sp" />
+                        style="@style/MyTextLine" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/grpDeparts"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    style="@style/MyTextBox" >
 
                     <TextView
                         android:id="@+id/txtDepartsCaption"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="Departs"
-                        android:textSize="14sp" />
+                        android:text="@string/departs"
+                        style="@style/MyTextHint" />
 
                     <TextView
                         android:id="@+id/txtDeparts"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="14sp" />
+                        style="@style/MyTextLine" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/grpArrival"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    style="@style/MyTextBox" >
 
                     <TextView
                         android:id="@+id/txtArrivalCaption"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="Arrival Time"
-                        android:textSize="14sp" />
+                        android:text="@string/arrival_time"
+                        style="@style/MyTextHint"/>
 
                     <TextView
                         android:id="@+id/txtArrival"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="14sp" />
+                        style="@style/MyTextLine" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/grpReservationTypeId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/txtReservationTypeIdCaption"
                         android:layout_width="78dp"
                         android:layout_height="wrap_content"
-                        android:text="Reservation Type"
+                        android:text="@string/reservation_type"
                         android:textSize="14sp" />
 
                     <LinearLayout
@@ -374,112 +306,72 @@
 
                 <LinearLayout
                     android:id="@+id/grpShow"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    style="@style/MyTextBox" >
 
                     <TextView
                         android:id="@+id/txtShowCaption"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
                         android:text="Show Time"
-                        android:textSize="14sp" />
+                        style="@style/MyTextHint" />
 
                     <TextView
                         android:id="@+id/txtShow"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="14sp" />
+                        style="@style/MyTextLine" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/grpPickUp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    style="@style/MyTextBox">
 
                     <TextView
                         android:id="@+id/txtPickUpCaption"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="Pickup Time"
-                        android:textSize="14sp" />
+                        android:text="@string/pickup_time"
+                        style="@style/MyTextHint"/>
 
                     <TextView
                         android:id="@+id/txtPickUp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="14sp" />
+                        style="@style/MyTextLine" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/grpDropOff"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    style="@style/MyTextBox" >
 
                     <TextView
                         android:id="@+id/txtDropOffCaption"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="Drop Off Time"
-                        android:textSize="14sp" />
+                        style="@style/MyTextHint"
+                        android:text="@string/drop_off_time" />
 
                     <TextView
                         android:id="@+id/txtDropOff"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="14sp" />
+                        style="@style/MyTextLine" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/grpStartTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    style="@style/MyTextBox">
 
                     <TextView
                         android:id="@+id/txtStartTimeCaption"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
                         android:text="Start Time"
-                        android:textSize="14sp" />
+                        style="@style/MyTextHint"/>
 
                     <TextView
                         android:id="@+id/txtStart"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="14sp" />
+                        style="@style/MyTextLine"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/grpEndTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    style="@style/MyTextBox" >
 
                     <TextView
                         android:id="@+id/txtEndTimeCaption"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="End Time"
-                        android:textSize="14sp" />
+                        android:text="@string/end_time"
+                        style="@style/MyTextHint"/>
 
                     <TextView
                         android:id="@+id/txtEnd"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="14sp" />
+                        style="@style/MyTextLine" />
                 </LinearLayout>
 
                 <RatingBar
@@ -537,6 +429,7 @@
                         android:layout_height="64dp"
                         android:background="@android:drawable/alert_light_frame"
                         android:clickable="false"
+                        android:contentDescription="@string/todo"
                         android:onClick="showInfo"
                         android:scaleType="centerInside"
                         android:tint="@color/colorDisabled"
@@ -551,6 +444,7 @@
                         android:layout_width="64dp"
                         android:layout_height="64dp"
                         android:background="@android:drawable/alert_light_frame"
+                        android:contentDescription="@string/todo"
                         android:onClick="showNotes"
                         android:scaleType="centerInside"
                         android:tint="@color/colorDisabled"
@@ -607,28 +501,28 @@
                     android:id="@+id/chkCheckInKnown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="CheckBox"
+                    android:text="@string/checkbox"
                     android:visibility="gone" />
 
                 <CheckBox
                     android:id="@+id/chkArrivalKnown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="CheckBox"
+                    android:text="@string/checkbox"
                     android:visibility="gone" />
 
                 <CheckBox
                     android:id="@+id/chkStartKnown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="CheckBox"
+                    android:text="@string/checkbox"
                     android:visibility="gone" />
 
                 <CheckBox
                     android:id="@+id/chkEndKnown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="CheckBox"
+                    android:text="@string/checkbox"
                     android:visibility="gone" />
             </LinearLayout>
 

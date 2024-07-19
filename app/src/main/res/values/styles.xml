@@ -59,4 +59,34 @@
         <item name="android:maxHeight">25dip</item>
     </style>
 
+    <style name="MyTextHeading">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">48sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="MyTextBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/holidaylistitembox</item>
+        <item name="android:layout_marginVertical">10sp</item>
+    </style>
+
+    <style name="MyTextLine">
+        <item name="android:textSize">36sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginHorizontal">10sp</item>
+    </style>
+
+    <style name="MyTextHint">
+        <item name="android:textSize">10sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginHorizontal">10sp</item>
+    </style>
+
 </resources>

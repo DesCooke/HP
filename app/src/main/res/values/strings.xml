@@ -135,5 +135,17 @@
     <string name="ReservationTypeReserve180DaysInAdvance">Need to book in advance</string>
     <string name="ReservationTypeBooked">***Booked***</string>
     <string name="caption_budget_option">Budget Option</string>
+    <string name="type">Type</string>
+    <string name="todo">TODO</string>
+    <string name="attraction_details">Attraction Details</string>
+    <string name="reservation_type">Reservation Type</string>
+    <string name="flight_no">Flight No</string>
+    <string name="terminal">Terminal</string>
+    <string name="check_in_time">Check In Time</string>
+    <string name="departs">Departs</string>
+    <string name="arrival_time">Arrival Time</string>
+    <string name="pickup_time">Pickup Time</string>
+    <string name="drop_off_time">Drop Off Time</string>
+    <string name="end_time">End Time</string>
 
 </resources>
