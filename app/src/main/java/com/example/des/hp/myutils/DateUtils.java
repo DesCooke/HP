@@ -1,12 +1,9 @@
 package com.example.des.hp.myutils;
 
-import android.content.Context;
 import android.widget.DatePicker;
-import android.widget.TimePicker;
 
 
 import com.example.des.hp.Dialog.BaseActivity;
-import com.example.des.hp.MainActivity;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,9 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
-import static com.example.des.hp.myutils.MyApiSpecific.myApiSpecific;
-import static com.example.des.hp.myutils.MyMessages.myMessages;
 import static java.text.DateFormat.getDateInstance;
 
 //
@@ -25,29 +21,19 @@ import static java.text.DateFormat.getDateInstance;
 public class DateUtils extends BaseActivity
 {
     public static long unknownDate=2051222400000L;
-    public static long secondsInADay=86400;
-    public static long milliSecondsInADay=86400 * 1000;
     public static DateUtils myDateUtils=null;
 
     public static DateUtils dateUtils()
     {
         if(myDateUtils == null)
-            myDateUtils=new DateUtils(MainActivity.getInstance());
+            myDateUtils=new DateUtils();
 
         return (myDateUtils);
     }
 
 
-    public DateUtils(Context context)
+    public DateUtils()
     {
-        try
-        {
-            Context _context=context;
-        }
-        catch(Exception e)
-        {
-            ShowError("DateUtils", e.getMessage());
-        }
     }
 
 
@@ -126,9 +112,7 @@ public class DateUtils extends BaseActivity
     {
         try
         {
-            retBoolean.Value=false;
-            if(argDate.getTime() == unknownDate)
-                retBoolean.Value=true;
+            retBoolean.Value= argDate.getTime() == unknownDate;
             return (true);
         }
         catch(Exception e)
@@ -177,7 +161,7 @@ public class DateUtils extends BaseActivity
         try
         {
             DateFormat df=getDateInstance();
-            date.setTime(df.parse(string).getTime());
+            date.setTime(Objects.requireNonNull(df.parse(string)).getTime());
             return (true);
         }
         catch(ParseException e)
@@ -279,22 +263,18 @@ public class DateUtils extends BaseActivity
                 ldate2.setTime(date1.getTime());
             }
 
-            if(GetYear(ldate1, lyear1) == false)
+            if(!GetYear(ldate1, lyear1))
                 return (false);
-            if(GetYear(ldate2, lyear2) == false)
+            if(!GetYear(ldate2, lyear2))
                 return (false);
-            if(GetMonth(ldate1, lmonth1) == false)
+            if(!GetMonth(ldate1, lmonth1))
                 return (false);
-            if(GetMonth(ldate2, lmonth2) == false)
+            if(!GetMonth(ldate2, lmonth2))
                 return (false);
-            if(GetDay(ldate1, lday1) == false)
+            if(!GetDay(ldate1, lday1))
                 return (false);
-            if(GetDay(ldate2, lday2) == false)
+            if(!GetDay(ldate2, lday2))
                 return (false);
-
-            //myMessages().LogMessage("GetDiff Starts");
-            //myMessages().LogMessage("date 1 " + lyear1.Value + ", " + lmonth1.Value + ", " + lday1.Value);
-            //myMessages().LogMessage("date 2 " + lyear2.Value + ", " + lmonth2.Value + ", " + lday2.Value);
 
             myDateDiff.year=lyear2.Value - lyear1.Value;
             myDateDiff.month=lmonth2.Value - lmonth1.Value;
@@ -324,9 +304,6 @@ public class DateUtils extends BaseActivity
                 myDateDiff.month=12 + myDateDiff.month;
                 myDateDiff.year--;
             }
-            //myMessages().LogMessage("Diff " + myDateDiff.year + ", " + myDateDiff.month + ", " + myDateDiff.day);
-            //myMessages().LogMessage("GetDiff Ends");
-
         }
         catch(Exception e)
         {
@@ -349,7 +326,7 @@ public class DateUtils extends BaseActivity
             retString.Value="";
 
             Date date=new Date();
-            if(getDateFromDatePicker(datePicker, date) == false)
+            if(!getDateFromDatePicker(datePicker, date))
                 return (false);
 
             DateFormat df=getDateInstance();
@@ -405,34 +382,6 @@ public class DateUtils extends BaseActivity
         timeString=timeString + minute;
 
         return (timeString);
-    }
-
-    //
-    // DateToStr
-    //   Description: accepts a Date and returns the string equivalent through
-    //                MyString
-    //   Returns: true(worked)/false(failed)
-    //
-    public boolean TimePickerToStr(TimePicker timePicker, MyString retString)
-    {
-        try
-        {
-            String timeString;
-            int hour;
-            int minute;
-
-            hour=myApiSpecific().GetHour(timePicker);
-            minute=myApiSpecific().GetMinute(timePicker);
-
-            timeString=DateUtils.FormatTime(hour, minute);
-            retString.Value=timeString;
-            return (true);
-        }
-        catch(Exception e)
-        {
-            ShowError("TimePickerToStr", e.getMessage());
-            return (false);
-        }
     }
 
 }

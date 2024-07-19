@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.des.hp.Database.DatabaseAccess;
@@ -16,12 +15,13 @@ import com.example.des.hp.InternalImages.InternalImageItem;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.Holiday.*;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.ImageUtils.imageUtils;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
+
+import androidx.annotation.NonNull;
 
 public class MainActivity extends BaseActivity
 {
@@ -92,33 +92,20 @@ public class MainActivity extends BaseActivity
     
     //region OnClick Events
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
         boolean lv_result = false;
         
         try
         {
             if(MyPermissions.AccessAllowed()) {
-                switch (item.getItemId()) {
-                    case R.id.action_backup:
-                        // don't care about return code
-                        backup();
-                        // consume click here
-                        lv_result = true;
-                        break;
-                    case R.id.action_add_holiday:
-                        showHolidayAdd(null);
-                        // consume click here
-                        lv_result = true;
-                        break;
-                    case R.id.action_orphaned_images:
-                        handleOrphanedImages();
-                        // consume click here
-                        lv_result = true;
-                        break;
-                    default:
-                        lv_result = super.onOptionsItemSelected(item);
-                }
+                int id = item.getItemId();
+                if (id == R.id.action_backup)
+                    backup();
+                if (id == R.id.action_add_holiday)
+                    showHolidayAdd(null);
+                if (id == R.id.action_orphaned_images)
+                    handleOrphanedImages();
             }
         }
         catch (Exception e)
@@ -139,7 +126,7 @@ public class MainActivity extends BaseActivity
                 if (internalImageList != null) {
                     for (InternalImageItem item : internalImageList) {
 
-                        try(DatabaseAccess da = databaseAccess();)
+                        try(DatabaseAccess da = databaseAccess())
                         {
                             if(da.pictureUsageCount(item.internalImageFilename) == 0) {
                               da.removePicture(holidayId, item.internalImageFilename);
@@ -152,7 +139,7 @@ public class MainActivity extends BaseActivity
 
                 //myMessages().LogMessage("Identifying orphaned files....");
 
-                try(DatabaseAccess da = databaseAccess();)
+                try(DatabaseAccess da = databaseAccess())
                 {
                     int lCount2 = 0;
                     ArrayList<InternalFileItem> internalFileList = imageUtils().listInternalFiles(holidayId);
@@ -165,7 +152,7 @@ public class MainActivity extends BaseActivity
                         }
 
                         if (internalImageList != null)
-                            myMessages().ShowMessageLong("Images: Orphaned " + String.valueOf(lCount) + ", " + "Total " + String.valueOf(internalImageList.size()) + ", " + "Files: Orphaned " + String.valueOf(lCount2) + ", " + "Total " + String.valueOf(internalFileList.size()) + " ");
+                            myMessages().ShowMessageLong("Images: Orphaned " + lCount + ", " + "Total " + internalImageList.size() + ", " + "Files: Orphaned " + lCount2 + ", " + "Total " + internalFileList.size() + " ");
                     }
                 }
 
@@ -189,35 +176,25 @@ public class MainActivity extends BaseActivity
             SetTitles(getResources().getString(R.string.title_planner), "");
 
             if(MyPermissions.AccessAllowed()) {
-                File f = new File(MyFileUtils.MyDocuments() + "/" +
-                        getResources().getString(R.string.application_file_path) + "/" +
-                        getResources().getString(R.string.database_filename));
-                boolean needToCreateSampleDatabase = false;
-                if (!f.exists())
-                    needToCreateSampleDatabase = true;
-
                 accessGranted = true;
                 invalidateOptionsMenu();
 
                 holidayList = new ArrayList<>();
-                try(DatabaseAccess da = databaseAccess();)
+                try(DatabaseAccess da = databaseAccess())
                 {
                     if (!da.getHolidayList(holidayList))
                         return;
                 }
 
                 HolidayAdapter adapter = new HolidayAdapter(this, R.layout.holidaylistitemrow, holidayList);
-                ListView listView1 = (ListView) findViewById(R.id.holidayListView);
+                ListView listView1 = findViewById(R.id.holidayListView);
                 listView1.setOnItemClickListener
                         (
-                                new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        Intent intent = new Intent(getApplicationContext(), HolidayDetailsView.class);
-                                        intent.putExtra("ACTION", "view");
-                                        intent.putExtra("HOLIDAYID", holidayList.get(position).holidayId);
-                                        startActivity(intent);
-                                    }
+                                (parent, view, position, id) -> {
+                                    Intent intent = new Intent(getApplicationContext(), HolidayDetailsView.class);
+                                    intent.putExtra("ACTION", "view");
+                                    intent.putExtra("HOLIDAYID", holidayList.get(position).holidayId);
+                                    startActivity(intent);
                                 }
                         );
                 listView1.setDivider(null);
@@ -265,20 +242,8 @@ public class MainActivity extends BaseActivity
         }
     }
     
-    public boolean backup()
+    public void backup()
     {
-        boolean lv_result = false;
-        try
-        {
-            if(MyPermissions.AccessAllowed()) {
-                lv_result = archiveRestore.Archive();
-            }
-        }
-        catch (Exception e)
-        {
-            ShowError("backup", e.getMessage());
-        }
-        return (lv_result);
     }
     
     //endregion

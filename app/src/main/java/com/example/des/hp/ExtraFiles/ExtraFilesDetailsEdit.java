@@ -12,6 +12,7 @@ import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
 import java.io.File;
+import java.io.InputStream;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyFileUtils.myFileUtils;
@@ -77,15 +78,11 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
     {
         try
         {
-            switch(view.getId())
-            {
-                case R.id.imageViewSmall:
-                    pickImage(view);
-                    break;
-                case R.id.btnFile:
-                    pickPDF(view);
-                    break;
-            }
+            int id=view.getId();
+            if(id==R.id.imageViewSmall)
+                pickImage(view);
+            if(id==R.id.btnFile)
+                pickPDF(view);
         }
         catch(Exception e)
         {
@@ -132,20 +129,12 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
                 "SELECTFILELOCATION2",        // unique name for this dialog type
                 "Select File",            // unique name for this dialog type
                 "Yes=Device, No=Files already stored", // form message
-                R.drawable.attachment, new View.OnClickListener()
-                {
-                    public void onClick(View view)
-                    {
-                        dialogWithYesNoFragment.dismiss();
-                        pickDevicePDF(view);
-                    }
-                }, new View.OnClickListener()
-                {
-                    public void onClick(View view)
-                    {
-                        dialogWithYesNoFragment.dismiss();
-                        pickInternalPDF(view);
-                    }
+                R.drawable.attachment, view1 -> {
+                    dialogWithYesNoFragment.dismiss();
+                    pickDevicePDF(view1);
+                }, view12 -> {
+                    dialogWithYesNoFragment.dismiss();
+                    pickInternalPDF(view12);
                 }, this
             );
 
@@ -161,18 +150,18 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
     //region Saving
     public void SaveIt()
     {
-        try(DatabaseAccess da = databaseAccess();)
+        try(DatabaseAccess da = databaseAccess())
         {
             if(mySelectedFileChanged)
             {
-                if(mySelectedFileNameOnly.length() == 0)
+                if(mySelectedFileNameOnly.isEmpty())
                 {
                     myMessages().ShowMessageShort("Need to select a file first... ");
                     return;
                 }
             } else
             {
-                if(extraFilesItem != null && extraFilesItem.fileName != null && extraFilesItem.fileName.length() == 0)
+                if(extraFilesItem != null && extraFilesItem.fileName != null && extraFilesItem.fileName.isEmpty())
                 {
 
                     myMessages().ShowMessageShort("Need to select a file first... ");
@@ -190,13 +179,12 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
             extraFilesItem.fileBitmap=null;
             extraFilesItem.filePicture="";
             extraFilesItem.internalFilename="";
-            if(internalFilename.length() > 0)
+            if(!internalFilename.isEmpty())
                 extraFilesItem.internalFilename=internalFilename;
-            if(internalImageFilename.length() > 0)
+            if(!internalImageFilename.isEmpty())
                 extraFilesItem.filePicture=internalImageFilename;
             extraFilesItem.pictureAssigned=imageSet;
             extraFilesItem.pictureChanged=imageChanged;
-            extraFilesItem.fileBitmap=null;
             if(imageSet)
                 extraFilesItem.fileBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
@@ -239,12 +227,13 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
         {
             if(mySelectedFileUri != null)
             {
-                if(internalFilename.length() == 0)
+                if(internalFilename.isEmpty())
                 {
                     grantUriPermission("com.example.des.hp", mySelectedFileUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    try
+                    try(InputStream is = getContentResolver().openInputStream(mySelectedFileUri))
                     {
-                        getContentResolver().openInputStream(mySelectedFileUri);
+                        assert is != null;
+                        myMessages().LogMessage("URI is " + is.getClass().getName());
                     }
                     catch(Exception e)
                     {
@@ -253,7 +242,7 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
                     }
                     extraFilesItem.fileUri=mySelectedFileUri;
 
-                    //myMessages().LogMessage("URI is " + mySelectedFileUri.getPath());
+                    myMessages().LogMessage("URI is " + mySelectedFileUri.getPath());
 
                     MyString myString=new MyString();
                     if(!myFileUtils().BaseFilenameFromUri(mySelectedFileUri, myString))
@@ -312,13 +301,7 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
     {
         try
         {
-            dwetOnOkClick=new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    ExtraFilesNamePicked(view);
-                }
-            };
+            dwetOnOkClick= this::ExtraFilesNamePicked;
 
             dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
@@ -362,13 +345,7 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
         {
             dialogWithYesNoFragment.dismiss();
 
-            dwetOnOkClick=new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    dwetOnOkClickProc(view);
-                }
-            };
+            dwetOnOkClick= this::dwetOnOkClickProc;
 
             dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 dwetDialogTag,            // unique name for this dialog type
@@ -405,21 +382,9 @@ public class ExtraFilesDetailsEdit extends ExtraFilesDetailsView implements View
         try
         {
 
-            dwynOnYesClick=new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    dwynOnYesClickProc(view);
-                }
-            };
+            dwynOnYesClick= this::dwynOnYesClickProc;
             // create a no on-click listener to call your procedure
-            dwynOnNoClick=new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    dwynOnNoClickProc(view);
-                }
-            };
+            dwynOnNoClick= this::dwynOnNoClickProc;
 
 
             dialogWithYesNoFragment=DialogWithYesNoFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit

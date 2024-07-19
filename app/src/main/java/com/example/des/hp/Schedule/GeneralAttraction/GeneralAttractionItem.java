@@ -72,29 +72,6 @@ public class GeneralAttractionItem
     public int origArrivalHour;
     public int origArrivalMin;
 
-    public int GetStartTimeAsMinutes()
-    {
-        if(CheckInKnown && DepartsKnown && ArrivalKnown)
-            return( (CheckInHour*60) + CheckInMin);
-
-        if(PickUpKnown && DropOffKnown)
-            return( (PickUpHour*60) + PickUpMin);
-
-        if(DepartsKnown && ArrivalKnown)
-            return( (DepartsHour*60) + DepartsMin);
-
-        if (ShowKnown)
-            return( (ShowHour*60) + ShowMin);
-
-        if (CheckInKnown)
-            return( (CheckInHour*60) + CheckInMin);
-
-        if (DepartsKnown)
-            return( (DepartsHour*60) + DepartsMin);
-
-        return(0);
-    }
-
     public GeneralAttractionItem()
     {
         name="";

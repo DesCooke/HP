@@ -17,13 +17,15 @@ import java.util.Collections;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
+import androidx.annotation.NonNull;
+
 
 public class DayDetailsList extends BaseActivity
 {
     //region Member Variables
     public ArrayList<DayItem> dayList;
     public HolidayItem holidayItem;
-    public DayAdapter dayAdapter;
+    private DayAdapter dayAdapter;
     //endregion
 
     //region Constructors/Destructors
@@ -88,7 +90,7 @@ public class DayDetailsList extends BaseActivity
 
             holidayItem=new HolidayItem();
             dayList=new ArrayList<>();
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if(!da.getHolidayItem(holidayId, holidayItem))
                     return;
@@ -105,17 +107,12 @@ public class DayDetailsList extends BaseActivity
 
             CreateRecyclerView(R.id.dayListView, dayAdapter);
 
-            dayAdapter.setOnItemClickListener(new DayAdapter.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(View view, DayItem obj)
-                {
-                    Intent intent=new Intent(getApplicationContext(), DayDetailsView.class);
-                    intent.putExtra("ACTION", "view");
-                    intent.putExtra("HOLIDAYID", obj.holidayId);
-                    intent.putExtra("DAYID", obj.dayId);
-                    startActivity(intent);
-                }
+            dayAdapter.setOnItemClickListener((view, obj) -> {
+                Intent intent=new Intent(getApplicationContext(), DayDetailsView.class);
+                intent.putExtra("ACTION", "view");
+                intent.putExtra("HOLIDAYID", obj.holidayId);
+                intent.putExtra("DAYID", obj.dayId);
+                startActivity(intent);
             });
 
             afterShow();
@@ -174,18 +171,13 @@ public class DayDetailsList extends BaseActivity
 
     //region OnClick Events
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
         try
         {
-            switch(item.getItemId())
-            {
-                case R.id.action_add_day:
-                    showDayAdd(null);
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
+            int id=item.getItemId();
+            if(id==R.id.action_add_day)
+                showDayAdd(null);
         }
         catch(Exception e)
         {

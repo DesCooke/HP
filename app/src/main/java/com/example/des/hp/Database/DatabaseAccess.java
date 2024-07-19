@@ -87,7 +87,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
             tableContact = new TableContact(context, this);
             tableFileIds = new TableFileIds(context, this);
             tableNotes = new TableNotes(context, this);
-            dateUtils = new DateUtils(context);
+            dateUtils = new DateUtils();
             
             File f1 = new File(MyFileUtils.MyDocuments() + "/" + res.getString(R.string.application_file_path));
             if (!f1.exists())

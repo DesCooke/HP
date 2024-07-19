@@ -19,7 +19,7 @@ class TableTask extends TableBase
     TableTask(Context context, SQLiteOpenHelper dbHelper)
     {
         super(context, dbHelper);
-        dateUtils=new DateUtils(context);
+        dateUtils=new DateUtils();
     }
 
     public void ShowError(String argFunction, String argMessage)

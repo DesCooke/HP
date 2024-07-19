@@ -1,6 +1,5 @@
 package com.example.des.hp.ExtraFiles;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +17,8 @@ import java.util.Collections;
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyFileUtils.myFileUtils;
 
+import androidx.annotation.NonNull;
+
 /**
  * * Created by Des on 02/11/2016.
  */
@@ -26,7 +27,7 @@ public class ExtraFilesDetailsList extends BaseActivity
 {
 
     public ArrayList<ExtraFilesItem> extraFilesList;
-    public ExtraFilesAdapter extraFilesAdapter;
+    private ExtraFilesAdapter extraFilesAdapter;
 
     public void showMapAdd(View view)
     {
@@ -49,7 +50,7 @@ public class ExtraFilesDetailsList extends BaseActivity
             allowCellSwipe=true;
             allowDelete=true;
 
-            if(title.length() > 0)
+            if(!title.isEmpty())
             {
                 SetTitles(title, subTitle);
             } else
@@ -58,25 +59,20 @@ public class ExtraFilesDetailsList extends BaseActivity
             }
 
             extraFilesList=new ArrayList<>();
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if(!da.getExtraFilesList(fileGroupId, extraFilesList))
                     return;
             }
-            extraFilesAdapter=new ExtraFilesAdapter(this, extraFilesList);
+            extraFilesAdapter=new ExtraFilesAdapter(extraFilesList);
 
             CreateRecyclerView(R.id.extraFilesListView, extraFilesAdapter);
 
-            extraFilesAdapter.setOnItemClickListener(new ExtraFilesAdapter.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(View view, ExtraFilesItem obj)
+            extraFilesAdapter.setOnItemClickListener((view, obj) -> {
+                if(!obj.fileName.isEmpty())
                 {
-                    if(obj.fileName.length() > 0)
-                    {
-                        String lDir = ImageUtils.imageUtils().GetHolidayFileDir(holidayId);
-                        myFileUtils().OpenAFile(lDir + "/" + obj.fileName);
-                    }
+                    String lDir = ImageUtils.imageUtils().GetHolidayFileDir(holidayId);
+                    myFileUtils().OpenAFile(lDir + "/" + obj.fileName);
                 }
             });
 
@@ -138,26 +134,13 @@ public class ExtraFilesDetailsList extends BaseActivity
     {
         try
         {
-            extraFilesAdapter.onItemMove(from, to);
+            extraFilesAdapter.onItemMove();
         }
         catch(Exception e)
         {
             ShowError("OnItemMove", e.getMessage());
         }
 
-    }
-
-    @Override
-    public void NotifyDataSetChanged()
-    {
-        try
-        {
-            extraFilesAdapter.NotifyDataSetChanged();
-        }
-        catch(Exception e)
-        {
-            ShowError("NotifyDataSetChanged", e.getMessage());
-        }
     }
 
     @Override
@@ -211,21 +194,16 @@ public class ExtraFilesDetailsList extends BaseActivity
 
     //region OnClick Events
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
         boolean lv_result=false;
 
         try
         {
-            switch(item.getItemId())
-            {
-                case R.id.action_add_extra_files:
-                    showMapAdd(null);
-                    // consume click here
-                    lv_result=true;
-                    break;
-                default:
-                    lv_result=super.onOptionsItemSelected(item);
+            int id=item.getItemId();
+            if(id==R.id.action_add_extra_files) {
+                showMapAdd(null);
+                lv_result=true;
             }
         }
         catch(Exception e)

@@ -150,7 +150,7 @@ public class TipDetailsList extends BaseActivity
     {
         try
         {
-            tipAdapter.onItemMove(from, to);
+            tipAdapter.onItemMove();
         }
         catch(Exception e)
         {

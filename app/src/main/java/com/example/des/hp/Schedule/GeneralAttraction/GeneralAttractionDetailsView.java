@@ -16,6 +16,8 @@ import android.widget.RadioButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.example.des.hp.Budget.BudgetDetailsList;
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Holiday.HolidayItem;
@@ -28,8 +30,6 @@ import com.example.des.hp.TipGroup.TipGroupDetailsList;
 public class GeneralAttractionDetailsView extends BaseScheduleView
 {
 
-    //region Member variables
-    public LinearLayout grpStartDate;
     public String holidayName;
     public RatingBar heartRating;
     public RatingBar scenicRating;
@@ -95,53 +95,53 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
 
             noteItem = new NoteItem();
 
-            grpAttractionType = (LinearLayout) findViewById(R.id.grpAttractionType);
-            grpBookingReference = (LinearLayout) findViewById(R.id.grpBookingReference);
-            grpFlightNo = (LinearLayout) findViewById(R.id.grpFlightNo);
-            grpTerminal = (LinearLayout) findViewById(R.id.grpTerminal);
-            grpDeparts = (LinearLayout) findViewById(R.id.grpDeparts);
-            grpShow = (LinearLayout) findViewById(R.id.grpShow);
-            grpPickUp = (LinearLayout) findViewById(R.id.grpPickUp);
-            grpDropOff = (LinearLayout) findViewById(R.id.grpDropOff);
-            grpCheckIn = (LinearLayout) findViewById(R.id.grpCheckIn);
-            grpArrival = (LinearLayout) findViewById(R.id.grpArrival);
-            grpStartTime = (LinearLayout) findViewById(R.id.grpStartTime);
-            grpEndTime = (LinearLayout) findViewById(R.id.grpEndTime);
-            grpReservationTypeId = (LinearLayout) findViewById(R.id.grpReservationTypeId);
+            grpAttractionType = findViewById(R.id.grpAttractionType);
+            grpBookingReference = findViewById(R.id.grpBookingReference);
+            grpFlightNo = findViewById(R.id.grpFlightNo);
+            grpTerminal = findViewById(R.id.grpTerminal);
+            grpDeparts = findViewById(R.id.grpDeparts);
+            grpShow = findViewById(R.id.grpShow);
+            grpPickUp = findViewById(R.id.grpPickUp);
+            grpDropOff = findViewById(R.id.grpDropOff);
+            grpCheckIn = findViewById(R.id.grpCheckIn);
+            grpArrival = findViewById(R.id.grpArrival);
+            grpStartTime = findViewById(R.id.grpStartTime);
+            grpEndTime = findViewById(R.id.grpEndTime);
+            grpReservationTypeId = findViewById(R.id.grpReservationTypeId);
 
-            txtSchedName = (TextView) findViewById(R.id.txtSchedName);
-            heartRating = (RatingBar) findViewById(R.id.rbHeartRatingView);
-            scenicRating = (RatingBar) findViewById(R.id.rbScenicRatingView);
-            thrillRating = (RatingBar) findViewById(R.id.rbThrillRatingView);
-            txtAttractionType = (TextView) findViewById(R.id.txtAttractionType);
-            txtBookingReference = (TextView) findViewById(R.id.txtBookingReference);
-            txtFlightNo = (TextView) findViewById(R.id.txtFlightNo);
-            txtStart = (TextView) findViewById(R.id.txtStart);
-            txtEnd = (TextView) findViewById(R.id.txtEnd);
-            txtDeparts = (TextView) findViewById(R.id.txtDeparts);
-            txtTerminal = (TextView) findViewById(R.id.txtTerminal);
-            txtNotes = (TextView) findViewById(R.id.txtNotes);
-            radUnknown = (RadioButton) findViewById(R.id.radUnknown);
-            radWalkIn = (RadioButton) findViewById(R.id.radWalkIn);
-            radOnTheDay = (RadioButton) findViewById(R.id.radOnTheDay);
-            rad180Days = (RadioButton) findViewById(R.id.rad180Days);
-            radBooked = (RadioButton) findViewById(R.id.radBooked);
-            txtShow = (TextView) findViewById(R.id.txtShow);
-            txtPickUp = (TextView) findViewById(R.id.txtPickUp);
-            txtDropOff = (TextView) findViewById(R.id.txtDropOff);
-            txtCheckIn = (TextView) findViewById(R.id.txtCheckIn);
-            txtArrival = (TextView) findViewById(R.id.txtArrival);
-            chkDepartsKnown = (CheckBox) findViewById(R.id.chkDepartsKnown);
-            chkShowKnown = (CheckBox) findViewById(R.id.chkShowKnown);
-            chkPickUpKnown = (CheckBox) findViewById(R.id.chkPickUpKnown);
-            chkDropOffKnown = (CheckBox) findViewById(R.id.chkDropOffKnown);
-            chkCheckInKnown = (CheckBox) findViewById(R.id.chkCheckInKnown);
-            chkArrivalKnown = (CheckBox) findViewById(R.id.chkArrivalKnown);
-            chkStartKnown = (CheckBox) findViewById(R.id.chkStartKnown);
-            chkEndKnown = (CheckBox) findViewById(R.id.chkEndKnown);
+            txtSchedName = findViewById(R.id.txtSchedName);
+            heartRating = findViewById(R.id.rbHeartRatingView);
+            scenicRating = findViewById(R.id.rbScenicRatingView);
+            thrillRating = findViewById(R.id.rbThrillRatingView);
+            txtAttractionType = findViewById(R.id.txtAttractionType);
+            txtBookingReference = findViewById(R.id.txtBookingReference);
+            txtFlightNo = findViewById(R.id.txtFlightNo);
+            txtStart = findViewById(R.id.txtStart);
+            txtEnd = findViewById(R.id.txtEnd);
+            txtDeparts = findViewById(R.id.txtDeparts);
+            txtTerminal = findViewById(R.id.txtTerminal);
+            txtNotes = findViewById(R.id.txtNotes);
+            radUnknown = findViewById(R.id.radUnknown);
+            radWalkIn = findViewById(R.id.radWalkIn);
+            radOnTheDay = findViewById(R.id.radOnTheDay);
+            rad180Days = findViewById(R.id.rad180Days);
+            radBooked = findViewById(R.id.radBooked);
+            txtShow = findViewById(R.id.txtShow);
+            txtPickUp = findViewById(R.id.txtPickUp);
+            txtDropOff = findViewById(R.id.txtDropOff);
+            txtCheckIn = findViewById(R.id.txtCheckIn);
+            txtArrival = findViewById(R.id.txtArrival);
+            chkDepartsKnown = findViewById(R.id.chkDepartsKnown);
+            chkShowKnown = findViewById(R.id.chkShowKnown);
+            chkPickUpKnown = findViewById(R.id.chkPickUpKnown);
+            chkDropOffKnown = findViewById(R.id.chkDropOffKnown);
+            chkCheckInKnown = findViewById(R.id.chkCheckInKnown);
+            chkArrivalKnown = findViewById(R.id.chkArrivalKnown);
+            chkStartKnown = findViewById(R.id.chkStartKnown);
+            chkEndKnown = findViewById(R.id.chkEndKnown);
 
-            btnClear=(ImageButton) findViewById(R.id.btnClear);
-            btnSave=(Button) findViewById(R.id.btnSave);
+            btnClear= findViewById(R.id.btnClear);
+            btnSave= findViewById(R.id.btnSave);
 
             afterCreate();
 
@@ -175,7 +175,7 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
     {
         super.showForm();
         boolean viewOnlyForm=false;
-        try(DatabaseAccess da = databaseAccess();)
+        try(DatabaseAccess da = databaseAccess())
         {
             if(action != null)
             {
@@ -246,75 +246,75 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
 
             txtSchedName.setText(scheduleItem.schedName);
             grpSchedName.setVisibility(View.VISIBLE);
-            if(viewOnlyForm && scheduleItem.schedName.length()==0)
+            if(viewOnlyForm && scheduleItem.schedName.isEmpty())
                 grpSchedName.setVisibility(View.GONE);
 
             txtAttractionType.setText(scheduleItem.generalAttractionItem.AttractionType);
             grpAttractionType.setVisibility(View.VISIBLE);
-            if(viewOnlyForm && scheduleItem.generalAttractionItem.AttractionType.length()==0)
+            if(viewOnlyForm && scheduleItem.generalAttractionItem.AttractionType.isEmpty())
                 grpAttractionType.setVisibility(View.GONE);
 
             txtBookingReference.setText(scheduleItem.generalAttractionItem.BookingReference);
             grpBookingReference.setVisibility(View.VISIBLE);
-            if(viewOnlyForm && scheduleItem.generalAttractionItem.BookingReference.length()==0)
+            if(viewOnlyForm && scheduleItem.generalAttractionItem.BookingReference.isEmpty())
                 grpBookingReference.setVisibility(View.GONE);
 
             txtFlightNo.setText(scheduleItem.generalAttractionItem.FlightNo);
             grpFlightNo.setVisibility(View.VISIBLE);
-            if(viewOnlyForm && scheduleItem.generalAttractionItem.FlightNo.length()==0)
+            if(viewOnlyForm && scheduleItem.generalAttractionItem.FlightNo.isEmpty())
                 grpFlightNo.setVisibility(View.GONE);
 
             txtTerminal.setText(scheduleItem.generalAttractionItem.Terminal);
             grpTerminal.setVisibility(View.VISIBLE);
-            if(viewOnlyForm && scheduleItem.generalAttractionItem.Terminal.length()==0)
+            if(viewOnlyForm && scheduleItem.generalAttractionItem.Terminal.isEmpty())
                 grpTerminal.setVisibility(View.GONE);
 
             chkDepartsKnown.setChecked(scheduleItem.generalAttractionItem.DepartsKnown);
             setTimeText(txtDeparts, scheduleItem.generalAttractionItem.DepartsHour, scheduleItem.generalAttractionItem.DepartsMin);
             grpDeparts.setVisibility(View.VISIBLE);
-            if(viewOnlyForm && scheduleItem.generalAttractionItem.DepartsKnown==false)
+            if(viewOnlyForm && !scheduleItem.generalAttractionItem.DepartsKnown)
                 grpDeparts.setVisibility(View.GONE);
 
             chkStartKnown.setChecked(scheduleItem.startTimeKnown);
             setTimeText(txtStart, scheduleItem.startHour, scheduleItem.startMin);
             grpStartTime.setVisibility(View.VISIBLE);
-            if(viewOnlyForm && scheduleItem.startTimeKnown==false)
+            if(viewOnlyForm && !scheduleItem.startTimeKnown)
                 grpStartTime.setVisibility(View.GONE);
 
             chkEndKnown.setChecked(scheduleItem.endTimeKnown);
             setTimeText(txtEnd, scheduleItem.endHour, scheduleItem.endMin);
             grpEndTime.setVisibility(View.VISIBLE);
-            if(viewOnlyForm && scheduleItem.endTimeKnown==false)
+            if(viewOnlyForm && !scheduleItem.endTimeKnown)
                 grpEndTime.setVisibility(View.GONE);
 
             chkShowKnown.setChecked(scheduleItem.generalAttractionItem.ShowKnown);
             setTimeText(txtShow, scheduleItem.generalAttractionItem.ShowHour, scheduleItem.generalAttractionItem.ShowMin);
             grpShow.setVisibility(View.VISIBLE);
-            if(viewOnlyForm && scheduleItem.generalAttractionItem.ShowKnown==false)
+            if(viewOnlyForm && !scheduleItem.generalAttractionItem.ShowKnown)
                 grpShow.setVisibility(View.GONE);
 
             chkPickUpKnown.setChecked(scheduleItem.generalAttractionItem.PickUpKnown);
             setTimeText(txtPickUp, scheduleItem.generalAttractionItem.PickUpHour, scheduleItem.generalAttractionItem.PickUpMin);
             grpPickUp.setVisibility(View.VISIBLE);
-            if(viewOnlyForm && scheduleItem.generalAttractionItem.PickUpKnown==false)
+            if(viewOnlyForm && !scheduleItem.generalAttractionItem.PickUpKnown)
                 grpPickUp.setVisibility(View.GONE);
 
             chkDropOffKnown.setChecked(scheduleItem.generalAttractionItem.DropOffKnown);
             setTimeText(txtDropOff, scheduleItem.generalAttractionItem.DropOffHour, scheduleItem.generalAttractionItem.DropOffMin);
             grpDropOff.setVisibility(View.VISIBLE);
-            if(viewOnlyForm && scheduleItem.generalAttractionItem.DropOffKnown==false)
+            if(viewOnlyForm && !scheduleItem.generalAttractionItem.DropOffKnown)
                 grpDropOff.setVisibility(View.GONE);
 
             chkCheckInKnown.setChecked(scheduleItem.generalAttractionItem.CheckInKnown);
             setTimeText(txtCheckIn, scheduleItem.generalAttractionItem.CheckInHour, scheduleItem.generalAttractionItem.CheckInMin);
             grpCheckIn.setVisibility(View.VISIBLE);
-            if(viewOnlyForm && scheduleItem.generalAttractionItem.CheckInKnown==false)
+            if(viewOnlyForm && !scheduleItem.generalAttractionItem.CheckInKnown)
                 grpCheckIn.setVisibility(View.GONE);
 
             chkArrivalKnown.setChecked(scheduleItem.generalAttractionItem.ArrivalKnown);
             setTimeText(txtArrival, scheduleItem.generalAttractionItem.ArrivalHour, scheduleItem.generalAttractionItem.ArrivalMin);
             grpArrival.setVisibility(View.VISIBLE);
-            if(viewOnlyForm && scheduleItem.generalAttractionItem.ArrivalKnown==false)
+            if(viewOnlyForm && !scheduleItem.generalAttractionItem.ArrivalKnown)
                 grpArrival.setVisibility(View.GONE);
 
             afterShow();
@@ -379,33 +379,22 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
 
     //region OnClick Events
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
-        try
-        {
-            switch (item.getItemId())
-            {
-                case R.id.action_delete_generalattraction:
-                    deleteSchedule();
-                    return true;
-                case R.id.action_edit_generalattraction:
-                    editSchedule(GeneralAttractionDetailsEdit.class);
-                    return true;
-                case R.id.action_move:
-                    move();
-                    return true;
-                case R.id.action_task:
-                    showTasks();
-                    return true;
-                case R.id.action_budget:
-                    showBudget();
-                    return true;
-                case R.id.action_tips:
-                    showTipGroups();
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
+        try {
+            int id = item.getItemId();
+            if (id == R.id.action_delete_generalattraction)
+                deleteSchedule();
+            if (id == R.id.action_edit_generalattraction)
+                editSchedule(GeneralAttractionDetailsEdit.class);
+            if (id == R.id.action_move)
+                move();
+            if (id == R.id.action_task)
+                showTasks();
+            if (id == R.id.action_budget)
+                showBudget();
+            if (id == R.id.action_tips)
+                showTipGroups();
         }
         catch (Exception e)
         {

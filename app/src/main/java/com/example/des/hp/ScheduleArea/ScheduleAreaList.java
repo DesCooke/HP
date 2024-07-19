@@ -5,9 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
 
-import com.example.des.hp.Attraction.AttractionItem;
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
@@ -25,11 +23,9 @@ public class ScheduleAreaList extends BaseActivity
     public int attractionId;
     public int attractionAreaId;
     public int scheduleId;
-    public ScheduleAreaAdapter scheduleAreaAdapter;
     public String title;
     public String subtitle;
     public ActionBar actionBar;
-    public AttractionItem attractionItem;
 
     public void showForm()
     {
@@ -42,31 +38,26 @@ public class ScheduleAreaList extends BaseActivity
             }
 
             scheduleAreaList=new ArrayList<>();
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if(!da.getScheduleAreaList(holidayId, scheduleAreaList))
                     return;
             }
 
-            RecyclerView recyclerView=(RecyclerView) findViewById(R.id.scheduleAreaListView);
+            RecyclerView recyclerView= findViewById(R.id.scheduleAreaListView);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setHasFixedSize(true);
             //listView1.setDivider(null);
-            scheduleAreaAdapter=new ScheduleAreaAdapter(this, scheduleAreaList);
+            ScheduleAreaAdapter scheduleAreaAdapter = new ScheduleAreaAdapter(scheduleAreaList);
             recyclerView.setAdapter(scheduleAreaAdapter);
 
-            scheduleAreaAdapter.setOnItemClickListener(new ScheduleAreaAdapter.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(View view, ScheduleAreaItem obj)
-                {
-                    Intent intent=new Intent();
-                    intent.putExtra("DAYID", obj.dayId);
-                    intent.putExtra("ATTRACTIONID", obj.attractionId);
-                    intent.putExtra("ATTRACTIONAREAID", obj.attractionAreaId);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
+            scheduleAreaAdapter.setOnItemClickListener((view, obj) -> {
+                Intent intent=new Intent();
+                intent.putExtra("DAYID", obj.dayId);
+                intent.putExtra("ATTRACTIONID", obj.attractionId);
+                intent.putExtra("ATTRACTIONAREAID", obj.attractionAreaId);
+                setResult(RESULT_OK, intent);
+                finish();
             });
         }
         catch(Exception e)

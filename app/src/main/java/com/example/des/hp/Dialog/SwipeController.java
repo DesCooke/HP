@@ -1,9 +1,6 @@
 package com.example.des.hp.Dialog;
 
-import static androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE;
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,9 +16,6 @@ public class SwipeController extends ItemTouchHelper.Callback
 {
     public BaseActivity baseActivity;
 
-    private RecyclerView.ViewHolder currentItemViewHolder = null;
-
-    private RectF buttonInstance;
     private float lastDx=0.00f;
 
     private boolean swipeBack = false;
@@ -39,19 +33,19 @@ public class SwipeController extends ItemTouchHelper.Callback
     }
 
     @Override
-    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
+    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target)
     {
         return true;
     }
 
     @Override
-    public void onChildDraw(Canvas c,
-                            RecyclerView recyclerView,
-                            RecyclerView.ViewHolder viewHolder,
+    public void onChildDraw(@NonNull Canvas c,
+                            @NonNull RecyclerView recyclerView,
+                            @NonNull RecyclerView.ViewHolder viewHolder,
                             float dX, float dY,
                             int actionState, boolean isCurrentlyActive) {
         lastDx = dX;
-        setTouchListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        setTouchListener(recyclerView, dX);
         drawButtons(c, viewHolder);
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
@@ -64,10 +58,9 @@ public class SwipeController extends ItemTouchHelper.Callback
         View itemView = viewHolder.itemView;
         Paint p = new Paint();
 
-        buttonInstance = null;
         if (buttonShowedState == ButtonsState.LEFT_VISIBLE)
         {
-            RectF leftButton = null;
+            RectF leftButton;
             if(baseActivity.allowEdit) {
                 leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom());
                 p.setColor(Color.BLUE);
@@ -75,10 +68,9 @@ public class SwipeController extends ItemTouchHelper.Callback
                 drawText("EDIT", c, leftButton, p);
             }
 
-            buttonInstance = leftButton;
         }
         if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
-            RectF rightButton = null;
+            RectF rightButton;
             if(baseActivity.allowDelete) {
                 rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop(), itemView.getRight(), itemView.getBottom());
 
@@ -87,12 +79,11 @@ public class SwipeController extends ItemTouchHelper.Callback
                 drawText("DELETE", c, rightButton, p);
             }
 
-            buttonInstance = rightButton;
         }
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void setTouchListener(final Canvas c, @NonNull final RecyclerView recyclerView, final RecyclerView.ViewHolder viewHolder, final float dX, final float dY, final int actionState, final boolean isCurrentlyActive) {
+    private void setTouchListener(@NonNull final RecyclerView recyclerView, final float dX) {
         recyclerView.setOnTouchListener(new View.OnTouchListener()
         {
             @SuppressLint("ClickableViewAccessibility")
@@ -124,10 +115,10 @@ public class SwipeController extends ItemTouchHelper.Callback
     }
 
     @Override
-    public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
+    public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder)
     {
         int dragFlags=0;
-        int swipeFlags=0;
+        int swipeFlags;
 
         swipeFlags=ItemTouchHelper.START | ItemTouchHelper.END;
 
@@ -135,7 +126,7 @@ public class SwipeController extends ItemTouchHelper.Callback
     }
 
     @Override
-    public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+    public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
         if (lastDx < -500.0f) {
             int pos = viewHolder.getAdapterPosition();
 
@@ -143,7 +134,7 @@ public class SwipeController extends ItemTouchHelper.Callback
                 baseActivity.DeleteItemAtPos(pos);
             }
             if (baseActivity.allowEdit && direction == 32) {
-                baseActivity.EditItemAtPos(pos);
+                baseActivity.EditItemAtPos();
             }
         }
     }

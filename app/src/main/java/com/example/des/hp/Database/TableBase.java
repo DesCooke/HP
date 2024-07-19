@@ -37,7 +37,7 @@ public class TableBase
         _context=context;
         _dbHelper=dbHelper;
         _resources=_context.getResources();
-        _dateUtils=new DateUtils(_context);
+        _dateUtils=new DateUtils();
         _myFileUtils=new MyFileUtils(_context);
     }
     //endregion

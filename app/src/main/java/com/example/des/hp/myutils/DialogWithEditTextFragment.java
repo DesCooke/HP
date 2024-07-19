@@ -25,7 +25,6 @@ public class DialogWithEditTextFragment extends DialogFragment
     private String title;
     private String message;
     private int imageIcon;
-    private DialogWithEditTextFragment dialogWithEditTextFragment;
     private static String dialogTag;
     private static FragmentTransaction fragmentTransaction;
     private EditText editText;
@@ -83,26 +82,19 @@ public class DialogWithEditTextFragment extends DialogFragment
         // let's create a new one - giving all the defaults
         DialogWithEditTextFragment new1 = new DialogWithEditTextFragment();
         new1.context = context;
-        new1.myKeyboard = new MyKeyboard(context);
+        new1.myKeyboard = new MyKeyboard();
         new1.numericKeypad = numericKeypad;
 
         if(argOnOkClick==null)
         {
           // default the yes click
-            new1.okClick = new View.OnClickListener()
-          {
-              public void onClick(View view)
-              {
-                  new1.dismiss();
-              }
-          };
+            new1.okClick = view -> new1.dismiss();
         }
         else
         {
             new1.okClick = argOnOkClick;
         }
 
-        new1.imageIcon = -1;
         new1.title = argTitle;
         new1.message = argMessage;
         new1.imageIcon = argImageIcon;
@@ -144,7 +136,7 @@ public class DialogWithEditTextFragment extends DialogFragment
             View tm = v.findViewById(R.id.txtMessage);
             ((TextView) tm).setText(message);
 
-            editText = (EditText) v.findViewById(R.id.editText);
+            editText = v.findViewById(R.id.editText);
             editText.setText(initialText);
             editText.selectAll();
 
@@ -167,7 +159,7 @@ public class DialogWithEditTextFragment extends DialogFragment
             }
 
             // Watch for button clicks.
-            Button btnOk = (Button) v.findViewById(R.id.btnOk);
+            Button btnOk = v.findViewById(R.id.btnOk);
             btnOk.setOnClickListener(okClick);
         }
         catch (Exception e)

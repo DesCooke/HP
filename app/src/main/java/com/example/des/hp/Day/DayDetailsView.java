@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,13 +29,12 @@ import java.util.Locale;
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.DateUtils.dateUtils;
 import static com.example.des.hp.myutils.MyApiSpecific.myApiSpecific;
-import static com.example.des.hp.myutils.MyColor.myColor;
+
+import androidx.annotation.NonNull;
 
 public class DayDetailsView extends BaseActivity
 {
 
-    //region Member variables
-    public LinearLayout grpStartDate;
     public String holidayName;
     public DayItem dayItem;
     private TextView txtDayCat;
@@ -55,8 +53,8 @@ public class DayDetailsView extends BaseActivity
             layoutName="activity_day_details_view";
             setContentView(R.layout.activity_day_details_view);
 
-            txtDayCat=(TextView) findViewById(R.id.txtDayCat);
-            grpMenuFile=(LinearLayout) findViewById(R.id.grpMenuFile);
+            txtDayCat= findViewById(R.id.txtDayCat);
+            grpMenuFile= findViewById(R.id.grpMenuFile);
 
             afterCreate();
 
@@ -86,33 +84,23 @@ public class DayDetailsView extends BaseActivity
 
     //region OnClick Events
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
         try
         {
-            switch(item.getItemId())
-            {
-                case R.id.action_edit_day:
-                    editDay();
-                    return true;
-                case R.id.action_delete_day:
-                    deleteDay();
-                    return true;
-                case R.id.action_add_generalattraction:
-                    StartNewAddIntent(GeneralAttractionDetailsEdit.class);
-                    return true;
-                case R.id.action_task:
-                    showTasks();
-                    return true;
-                case R.id.action_budget:
-                    showBudget();
-                    return true;
-                case R.id.action_tips:
-                    showTipGroups();
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
+            int id=item.getItemId();
+            if(id==R.id.action_edit_day)
+                editDay();
+            if(id==R.id.action_delete_day)
+                deleteDay();
+            if(id==R.id.action_add_generalattraction)
+                StartNewAddIntent();
+            if(id==R.id.action_task)
+                showTasks();
+            if(id==R.id.action_budget)
+                showBudget();
+            if(id==R.id.action_tips)
+                showTipGroups();
         }
         catch(Exception e)
         {
@@ -132,7 +120,7 @@ public class DayDetailsView extends BaseActivity
 
             dayItem=new DayItem();
             HolidayItem holidayItem=new HolidayItem();
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if(!da.getDayItem(holidayId, dayId, dayItem))
                     return;
@@ -153,7 +141,7 @@ public class DayDetailsView extends BaseActivity
             {
                 Date lcurrdate=new Date();
 
-                // we subtract 1 because sequenceno starts at 1 - but we want to add 0 days for the
+                // we subtract 1 because sequence starts at 1 - but we want to add 0 days for the
                 // first element
                 if(!dateUtils().AddDays(DatabaseAccess.currentStartDate, (dayItem.sequenceNo - 1), lcurrdate))
                     return;
@@ -195,7 +183,7 @@ public class DayDetailsView extends BaseActivity
 
             scheduleList=new ArrayList<>();
 
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if(!da.getScheduleList(holidayId, dayId, attractionId, attractionAreaId, scheduleList))
                     return;
@@ -207,15 +195,10 @@ public class DayDetailsView extends BaseActivity
             if(lColor != -1)
                 recyclerView.setBackgroundColor(lColor);
 
-            scheduleAdapter.setOnItemClickListener(new ScheduleAdapter.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(View view, ScheduleItem obj)
+            scheduleAdapter.setOnItemClickListener((view, obj) -> {
+                if(obj.schedType == getResources().getInteger(R.integer.schedule_type_generalattraction))
                 {
-                    if(obj.schedType == getResources().getInteger(R.integer.schedule_type_generalattraction))
-                    {
-                        StartNewEditIntent(GeneralAttractionDetailsView.class, obj);
-                    }
+                    StartNewEditIntent(obj);
                 }
             });
             afterShow();
@@ -297,7 +280,7 @@ public class DayDetailsView extends BaseActivity
         try
         {
             dayItem.noteId=pNoteId;
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 da.updateDayItem(dayItem);
             }
@@ -329,7 +312,7 @@ public class DayDetailsView extends BaseActivity
         try
         {
             dayItem.infoId=pInfoId;
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 da.updateDayItem(dayItem);
             }
@@ -357,11 +340,11 @@ public class DayDetailsView extends BaseActivity
         }
     }
 
-    public void StartNewEditIntent(Class neededClass, ScheduleItem obj)
+    public void StartNewEditIntent(ScheduleItem obj)
     {
         try
         {
-            Intent intent=new Intent(getApplicationContext(), neededClass);
+            Intent intent=new Intent(getApplicationContext(), GeneralAttractionDetailsView.class);
             intent.putExtra("ACTION", "view");
             intent.putExtra("HOLIDAYID", obj.holidayId);
             intent.putExtra("DAYID", obj.dayId);
@@ -380,11 +363,11 @@ public class DayDetailsView extends BaseActivity
 
     }
 
-    public void StartNewAddIntent(Class neededClass)
+    public void StartNewAddIntent()
     {
         try
         {
-            Intent intent=new Intent(getApplicationContext(), neededClass);
+            Intent intent=new Intent(getApplicationContext(), GeneralAttractionDetailsEdit.class);
             intent.putExtra("ACTION", "add");
             intent.putExtra("HOLIDAYID", holidayId);
             intent.putExtra("DAYID", dayId);
@@ -404,7 +387,7 @@ public class DayDetailsView extends BaseActivity
     {
         try
         {
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if(!da.deleteDayItem(dayItem))
                     return;
@@ -436,7 +419,7 @@ public class DayDetailsView extends BaseActivity
     {
         try
         {
-            scheduleAdapter.onItemMove(from, to);
+            scheduleAdapter.onItemMove();
         }
         catch(Exception e)
         {

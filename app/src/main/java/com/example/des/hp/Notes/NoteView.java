@@ -2,39 +2,30 @@ package com.example.des.hp.Notes;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
-import com.example.des.hp.myutils.*;
-import com.example.des.hp.thirdpartyutils.BadgeView;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 public class NoteView extends BaseActivity
 {
 
-    private ImageView imageView;
     public int holidayId;
     public int noteId;
     public NoteItem noteItem;
-    private ImageUtils imageUtils;
     public TextView txtNoteView;
     public ActionBar actionBar;
-    public TextView txtBudgetTotal;
-    public TextView txtBudgetPaid;
-    public TextView txtBudgetUnpaid;
-    public TextView txtBudgetNotes;
     public ImageButton btnShowInfo;
-    public BadgeView btnShowInfoBadge;
-    public MyColor myColor;
 
     public void showForm()
     {
@@ -51,12 +42,12 @@ public class NoteView extends BaseActivity
                     noteItem=new NoteItem();
                     noteItem.holidayId=holidayId;
                     noteItem.noteId=noteId;
-                    try(DatabaseAccess da = databaseAccess();)
+                    try(DatabaseAccess da = databaseAccess())
                     {
                         if(!da.getNoteItem(holidayId, noteId, noteItem))
                             return;
                     }
-                    try(DatabaseAccess da = databaseAccess();)
+                    try(DatabaseAccess da = databaseAccess())
                     {
                         if(!da.getNoteItem(holidayId, noteId, noteItem))
                             return;
@@ -67,7 +58,7 @@ public class NoteView extends BaseActivity
                     {
                         String title=extras.getString("TITLE");
                         String subtitle=extras.getString("SUBTITLE");
-                        if(title != null && title.length() > 0)
+                        if(title != null && !title.isEmpty())
                         {
                             actionBar.setTitle(title);
                             actionBar.setSubtitle(subtitle);
@@ -96,7 +87,7 @@ public class NoteView extends BaseActivity
         try
         {
             setContentView(R.layout.activity_notes_view);
-            txtNoteView=(TextView) findViewById(R.id.txtNotes);
+            txtNoteView= findViewById(R.id.txtNotes);
             showForm();
         }
         catch(Exception e)
@@ -157,7 +148,7 @@ public class NoteView extends BaseActivity
         try
         {
             noteItem.notes="";
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if(!da.updateNoteItem(noteItem))
                     return;
@@ -171,21 +162,15 @@ public class NoteView extends BaseActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
         try
         {
-            switch(item.getItemId())
-            {
-                case R.id.action_edit_notes:
-                    editNotes();
-                    return true;
-                case R.id.action_delete_notes:
-                    deleteNotes();
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
+            int id = item.getItemId();
+            if(id==R.id.action_edit_notes)
+                editNotes();
+            if(id==R.id.action_delete_notes)
+                deleteNotes();
         }
         catch(Exception e)
         {

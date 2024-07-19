@@ -17,12 +17,11 @@ import java.util.Date;
 //
 public class MyLog
 {
-    private Resources res;
+    private final Resources res;
     private static MyLog log=null;
 
     private MyLog(Context context)
     {
-        Context _context=context;
         res=context.getResources();
     }
 
@@ -44,7 +43,7 @@ public class MyLog
 
             // create a File object from it
             File file=new File(logfilename);
-            if(file.exists() == false)
+            if(!file.exists())
                 if(!file.createNewFile())
                     throw new Exception("file.CreateNewFile() returned false");
 

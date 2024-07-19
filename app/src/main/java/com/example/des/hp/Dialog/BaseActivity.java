@@ -43,8 +43,6 @@ package com.example.des.hp.Dialog;
 **     afterShow() at the end of the onShow function, this will enable the button and set
 **       the badge if needed
 */
-
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -52,6 +50,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,7 +73,6 @@ import com.example.des.hp.InternalImages.InternalImageList;
 import com.example.des.hp.Notes.NoteEdit;
 import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.R;
-import com.example.des.hp.myutils.DialogWithYesNoFragment;
 import com.example.des.hp.myutils.MyBitmap;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyMessages;
@@ -82,6 +80,7 @@ import com.example.des.hp.thirdpartyutils.BadgeView;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Objects;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.ImageUtils.imageUtils;
@@ -89,6 +88,7 @@ import static com.example.des.hp.myutils.MyColor.myColor;
 import static com.example.des.hp.myutils.MyFileUtils.myFileUtils;
 import static com.example.des.hp.myutils.MyLog.myLog;
 
+/** @noinspection rawtypes*/
 public class BaseActivity extends AppCompatActivity
 {
     // Inter Intent variables
@@ -119,7 +119,6 @@ public class BaseActivity extends AppCompatActivity
     public TextView txtFilename;
 
     public Uri mySelectedFileUri;
-    public boolean FileSelected;
     public String mySelectedFileNameOnly;
     public String mySelectedFullFilePath;
     public boolean mySelectedFileChanged=false;
@@ -141,9 +140,7 @@ public class BaseActivity extends AppCompatActivity
     public ImageView imageView;
     public boolean imageSet=false;
     public boolean imageChanged=false;
-    public boolean origImageChanged=false;
     public Bitmap imageDefault;
-    public DialogWithYesNoFragment dialogWithYesNoFragment;
     public String internalImageFilename="";
 
     public String internalFilename="";
@@ -168,7 +165,7 @@ public class BaseActivity extends AppCompatActivity
             if(lNoteId == 0)
             {
                 MyInt myInt=new MyInt();
-                try(DatabaseAccess da = databaseAccess();)
+                try(DatabaseAccess da = databaseAccess())
                 {
                     if(!da.getNextNoteId(holidayId, myInt))
                         return;
@@ -233,20 +230,6 @@ public class BaseActivity extends AppCompatActivity
         }
     }
 
-    public void selectFileFromApplication(View view)
-    {
-/*        try
-        {
-            Intent intent=new Intent(getApplicationContext(), InternalImageList.class);
-            intent.putExtra("HOLIDAYID", holidayId);
-            startActivityForResult(intent, SELECT_INTERNAL_PHOTO);
-        }
-        catch(Exception e)
-        {
-            ShowError("showDayAdd", e.getMessage());
-        }
-  */  }
-
     public void pickImage(View view)
     {
         if(!imagePresent)
@@ -261,29 +244,7 @@ public class BaseActivity extends AppCompatActivity
                 return;
             }
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Choose an Option");
-            String[] options = {"Search phone for a new image", "Use an image already picked"};
-
-            builder.setItems(options, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
-                        case 0:
-                        {
-                            dialog.dismiss();
-                            selectFromDevice(view);
-                            break;
-                        }
-                        case 1:
-                        {
-                            dialog.dismiss();
-                            selectFromApplication(view);
-                            break;
-                        }
-                    }
-                }
-            });
+            AlertDialog.Builder builder = getBuilder(view);
             AlertDialog dialog = builder.create();
             dialog.show();
 
@@ -292,6 +253,30 @@ public class BaseActivity extends AppCompatActivity
         {
             ShowError("pickImage", e.getMessage());
         }
+    }
+
+    private AlertDialog.Builder getBuilder(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose an Option");
+        String[] options = {"Search phone for a new image", "Use an image already picked"};
+
+        builder.setItems(options, (dialog, which) -> {
+            switch (which) {
+                case 0:
+                {
+                    dialog.dismiss();
+                    selectFromDevice(view);
+                    break;
+                }
+                case 1:
+                {
+                    dialog.dismiss();
+                    selectFromApplication(view);
+                    break;
+                }
+            }
+        });
+        return builder;
     }
 
     public void pickFile(View view)
@@ -321,7 +306,7 @@ public class BaseActivity extends AppCompatActivity
                         {
                             MyBitmap myBitmap=new MyBitmap();
                             Uri luri=imageReturnedIntent.getData();
-                            Boolean lRetCode=imageUtils().ScaleBitmapFromUrl(luri, getContentResolver(), myBitmap);
+                            boolean lRetCode=imageUtils().ScaleBitmapFromUrl(luri, getContentResolver(), myBitmap);
                             if(!lRetCode)
                                 return;
 
@@ -347,8 +332,8 @@ public class BaseActivity extends AppCompatActivity
                         try
                         {
                             MyBitmap myBitmap=new MyBitmap();
-                            String lfile=imageReturnedIntent.getStringExtra("selectedfile");
-                            Boolean lRetCode=imageUtils().ScaleBitmapFromFile(holidayId, lfile, getContentResolver(), myBitmap);
+                            String file=imageReturnedIntent.getStringExtra("selectedfile");
+                            boolean lRetCode=imageUtils().ScaleBitmapFromFile(holidayId, file, getContentResolver(), myBitmap);
                             if(!lRetCode)
                                 return;
 
@@ -358,9 +343,9 @@ public class BaseActivity extends AppCompatActivity
                             imageSet=true;
                             reloadOnShow=false;
                             imageChanged=true;
-                            internalImageFilename=lfile;
+                            internalImageFilename=file;
                             if(txtPicture != null)
-                                txtPicture.setText(lfile);
+                                txtPicture.setText(file);
                         }
                         catch(Exception e)
                         {
@@ -374,14 +359,9 @@ public class BaseActivity extends AppCompatActivity
                         mySelectedFileUri=imageReturnedIntent.getData();
                         grantUriPermission("com.example.des.hp", mySelectedFileUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-                        String filename=GetFileName(mySelectedFileUri);
-
-                        mySelectedFileNameOnly=filename;
+                        mySelectedFileNameOnly= GetFileName(mySelectedFileUri);
 
                         mySelectedFullFilePath=myFileUtils().getMyFilePath(mySelectedFileUri);
-                        //myMessages().LogMessage("mySelectedFullFilePath = " + mySelectedFullFilePath);
-
-                        //myMessages().LogMessage("done");
                         mySelectedFileChanged=true;
                         reloadOnShow=false;
                         internalFilename="";
@@ -404,7 +384,7 @@ public class BaseActivity extends AppCompatActivity
                         {
                             MyInt myInt=new MyInt();
 
-                            try(DatabaseAccess da = databaseAccess();)
+                            try(DatabaseAccess da = databaseAccess())
                             {
                                 if(!da.getNextExtraFilesId(fileGroupId, myInt))
                                     return;
@@ -425,14 +405,14 @@ public class BaseActivity extends AppCompatActivity
                 case SELECT_INTERNAL_FILE:
                     try
                     {
-                        String lfile=imageReturnedIntent.getStringExtra("selectedfile");
+                        String file=imageReturnedIntent.getStringExtra("selectedfile");
 
                         reloadOnShow=false;
                         mySelectedFileChanged=true;
-                        internalFilename=lfile;
-                        mySelectedFileNameOnly=lfile;
+                        internalFilename=file;
+                        mySelectedFileNameOnly=file;
                         if(txtFilename != null)
-                            txtFilename.setText(lfile);
+                            txtFilename.setText(file);
                     }
                     catch(Exception e)
                     {
@@ -449,21 +429,18 @@ public class BaseActivity extends AppCompatActivity
 
     public String GetFileName(Uri uri) {
         String result = null;
-        if (uri.getScheme().equals("content")) {
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-            try {
+        if (Objects.requireNonNull(uri.getScheme()).equals("content")) {
+            try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)){
                 if (cursor != null && cursor.moveToFirst()) {
                     int colIndex=cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                     if(colIndex>=0)
-                    result = cursor.getString( colIndex );
+                        result = cursor.getString( colIndex );
                 }
-            } finally {
-                cursor.close();
             }
         }
         if (result == null) {
             result = uri.getPath();
-            int cut = result.lastIndexOf('/');
+            int cut = Objects.requireNonNull(result).lastIndexOf('/');
             if (cut != -1) {
                 result = result.substring(cut + 1);
             }
@@ -484,7 +461,7 @@ public class BaseActivity extends AppCompatActivity
         {
             clearImage(null);
 
-            if(picture != null && picture.length() > 0)
+            if(picture != null && !picture.isEmpty())
             {
                 if(txtPicture != null)
                     txtPicture.setText(picture);
@@ -529,12 +506,12 @@ public class BaseActivity extends AppCompatActivity
         try
         {
             showInfoEnabled=false;
-            btnShowInfo=(ImageButton) findViewById(R.id.btnShowInfo);
+            btnShowInfo= findViewById(R.id.btnShowInfo);
             if(btnShowInfo != null)
                 showInfoEnabled=true;
 
             showNotesEnabled=false;
-            btnShowNotes=(ImageButton) findViewById(R.id.btnShowNotes);
+            btnShowNotes= findViewById(R.id.btnShowNotes);
             if(btnShowNotes != null)
                 showNotesEnabled=true;
 
@@ -545,16 +522,16 @@ public class BaseActivity extends AppCompatActivity
                 btnShowInfoBadge.show();
             }
 
-            txtProgramInfo=(TextView) findViewById(R.id.txtProgramInfo);
-            txtPicture=(TextView) findViewById(R.id.txtPicture);
+            txtProgramInfo= findViewById(R.id.txtProgramInfo);
+            txtPicture= findViewById(R.id.txtPicture);
 
             imageDefault=BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing);
             imagePresent=false;
-            imageView=(ImageView) findViewById(R.id.imageViewSmall);
+            imageView= findViewById(R.id.imageViewSmall);
             if(imageView != null)
                 imagePresent=true;
 
-            txtFilename=(TextView) findViewById(R.id.txtFilename);
+            txtFilename= findViewById(R.id.txtFilename);
         }
         catch(Exception e)
         {
@@ -574,7 +551,7 @@ public class BaseActivity extends AppCompatActivity
             if(lInfoId == 0)
             {
                 MyInt myInt=new MyInt();
-                try(DatabaseAccess da = databaseAccess();)
+                try(DatabaseAccess da = databaseAccess())
                 {
                     if(!da.getNextFileGroupId(myInt))
                         return;
@@ -605,7 +582,7 @@ public class BaseActivity extends AppCompatActivity
                 int lInfoId=getInfoId();
                 if(lInfoId > 0)
                 {
-                    try(DatabaseAccess da = databaseAccess();)
+                    try(DatabaseAccess da = databaseAccess())
                     {
                         if(!da.getExtraFilesCount(lInfoId, lFileCount))
                             return;
@@ -638,12 +615,12 @@ public class BaseActivity extends AppCompatActivity
             {
                 int lNoteId=getNoteId();
                 NoteItem noteItem=new NoteItem();
-                try(DatabaseAccess da = databaseAccess();)
+                try(DatabaseAccess da = databaseAccess())
                 {
                     if(!da.getNoteItem(holidayId, lNoteId, noteItem))
                         return;
                 }
-                if(noteItem.notes.length() == 0)
+                if(noteItem.notes.isEmpty())
                 {
                     myColor().SetImageButtonTint(btnShowNotes, R.color.colorDisabled);
                 } else
@@ -697,7 +674,7 @@ public class BaseActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         ErrorDialog.SetContext(this);
-        MessageDialog.SetContext(this);
+        MessageDialog.SetContext();
         MyMessages.SetContext(this);
         imageChanged=false;
 
@@ -764,19 +741,6 @@ public class BaseActivity extends AppCompatActivity
         super.onPostCreate(savedInstanceState);
     }
 
-    public void ShowMessage(String title, String message)
-    {
-        try
-        {
-            MessageDialog.Show(title, message);
-        }
-        catch(Exception e)
-        {
-            ShowError("ShowMessage", e.getMessage());
-        }
-
-    }
-
     protected void ShowError(String argFunction, String argMessage)
     {
         String lv_title;
@@ -815,7 +779,7 @@ public class BaseActivity extends AppCompatActivity
         {
             super.onResume();
             ErrorDialog.SetContext(this);
-            MessageDialog.SetContext(this);
+            MessageDialog.SetContext();
             MyMessages.SetContext(this);
 
             if(reloadOnShow)
@@ -829,7 +793,7 @@ public class BaseActivity extends AppCompatActivity
             if(recyclerViewEnabled && mBundleRecyclerViewState != null)
             {
                 Parcelable listState=mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
-                recyclerView.getLayoutManager().onRestoreInstanceState(listState);
+                Objects.requireNonNull(recyclerView.getLayoutManager()).onRestoreInstanceState(listState);
             }
 
             reloadOnShow=true;
@@ -847,8 +811,8 @@ public class BaseActivity extends AppCompatActivity
     {
         try
         {
-            recyclerView=(RecyclerView) findViewById(pView);
-            if(gridLayout == false)
+            recyclerView= findViewById(pView);
+            if(!gridLayout)
             {
                 recyclerView.setLayoutManager(new LinearLayoutManager(this));
             } else
@@ -884,7 +848,7 @@ public class BaseActivity extends AppCompatActivity
     ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeController(this));
 
 
-    public void EditItemAtPos(int pos)
+    public void EditItemAtPos()
     {
 
     }
@@ -924,7 +888,7 @@ public class BaseActivity extends AppCompatActivity
             {
                 // save RecyclerView state
                 mBundleRecyclerViewState=new Bundle();
-                Parcelable listState=recyclerView.getLayoutManager().onSaveInstanceState();
+                Parcelable listState= Objects.requireNonNull(recyclerView.getLayoutManager()).onSaveInstanceState();
                 mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
             }
         }

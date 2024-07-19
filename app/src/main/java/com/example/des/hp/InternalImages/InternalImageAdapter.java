@@ -2,7 +2,8 @@ package com.example.des.hp.InternalImages;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +23,10 @@ import com.example.des.hp.R;
 
 class InternalImageAdapter extends RecyclerView.Adapter<InternalImageAdapter.ViewHolder>
 {
-    private Context context;
-    private int layoutResourceId;
-    public ArrayList<InternalImageItem> data=null;
+    private final Context context;
+    public ArrayList<InternalImageItem> data;
     private OnItemClickListener mOnItemClickListener;
-    private ImageUtils imageUtils;
+    private final ImageUtils imageUtils;
 
     interface OnItemClickListener
     {
@@ -38,7 +38,7 @@ class InternalImageAdapter extends RecyclerView.Adapter<InternalImageAdapter.Vie
         this.mOnItemClickListener=mItemClickListener;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder
+    static class ViewHolder extends RecyclerView.ViewHolder
     {
         // each data item is just a string in this case
         ImageView internalImage;
@@ -48,8 +48,8 @@ class InternalImageAdapter extends RecyclerView.Adapter<InternalImageAdapter.Vie
         {
             super(v);
 
-            internalImage=(ImageView) v.findViewById(R.id.internalImage);
-            txtFilename=(TextView) v.findViewById(R.id.txtFilename);
+            internalImage= v.findViewById(R.id.internalImage);
+            txtFilename= v.findViewById(R.id.txtFilename);
         }
 
     }
@@ -58,11 +58,11 @@ class InternalImageAdapter extends RecyclerView.Adapter<InternalImageAdapter.Vie
     InternalImageAdapter(Activity activity, ArrayList<InternalImageItem> items)
     {
         this.context=activity;
-        Resources res=this.context.getResources();
         imageUtils=new ImageUtils(activity);
         data=items;
     }
 
+    @NonNull
     @Override
     public InternalImageAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
@@ -74,26 +74,21 @@ class InternalImageAdapter extends RecyclerView.Adapter<InternalImageAdapter.Vie
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position)
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position)
     {
         final InternalImageItem c=data.get(position);
 
-        if(c.internalImageFilename.length() > 0)
+        if(!c.internalImageFilename.isEmpty())
         {
-            if(imageUtils.getGridIcon(c.holidayId, context, c.internalImageFilename, holder.internalImage) == false)
+            if(!imageUtils.getGridIcon(c.holidayId, context, c.internalImageFilename, holder.internalImage))
                 return;
             holder.txtFilename.setText(c.internalImageFilename);
         }
 
-        holder.internalImage.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
+        holder.internalImage.setOnClickListener(view -> {
+            if(mOnItemClickListener != null)
             {
-                if(mOnItemClickListener != null)
-                {
-                    mOnItemClickListener.onItemClick(view, c);
-                }
+                mOnItemClickListener.onItemClick(view, c);
             }
         });
 

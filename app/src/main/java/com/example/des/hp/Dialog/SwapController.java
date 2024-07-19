@@ -1,16 +1,5 @@
 package com.example.des.hp.Dialog;
 
-import static androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE;
-
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.view.MotionEvent;
-import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,7 +17,7 @@ public class SwapController extends ItemTouchHelper.SimpleCallback
     }
 
     @Override
-    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
+    public boolean onMove(@NonNull RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
     {
         int fromPosition=viewHolder.getAdapterPosition();
         int toPosition=target.getAdapterPosition();
@@ -65,9 +54,9 @@ public class SwapController extends ItemTouchHelper.SimpleCallback
     }
 
     @Override
-    public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
+    public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder)
     {
-        int dragFlags=0;
+        int dragFlags;
         int swipeFlags=0;
 
         dragFlags=ItemTouchHelper.UP | ItemTouchHelper.DOWN;
@@ -76,12 +65,12 @@ public class SwapController extends ItemTouchHelper.SimpleCallback
     }
 
     @Override
-    public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction)
+    public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction)
     {
     }
 
     @Override
-    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
+    public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder)
     {
         super.clearView(recyclerView, viewHolder);
 

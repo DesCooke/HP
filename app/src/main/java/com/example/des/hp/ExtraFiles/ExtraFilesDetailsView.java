@@ -18,18 +18,18 @@ import com.example.des.hp.R;
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyFileUtils.myFileUtils;
 
+import androidx.annotation.NonNull;
+
 public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickListener
 {
 
     //region Member variables
     public ExtraFilesItem extraFilesItem;
-    public LinearLayout grpStartDate;
     public TextView txtFileDescription;
     public LinearLayout grpFileDescription;
     public ImageButton btnClear;
     public Button btnSave;
     public ImageButton btnFile;
-    public TextView txtPDFFilename;
     //endregion
 
     //region Constructors/Destructors
@@ -44,11 +44,11 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
             layoutName="activity_extra_files_details_view";
             setContentView(R.layout.activity_extra_files_details_view);
 
-            txtFileDescription=(TextView) findViewById(R.id.txtFileDescription);
-            grpFileDescription=(LinearLayout) findViewById(R.id.grpFileDescription);
-            btnClear=(ImageButton) findViewById(R.id.btnClear);
-            btnSave=(Button) findViewById(R.id.btnSave);
-            btnFile=(ImageButton) findViewById(R.id.btnFile);
+            txtFileDescription= findViewById(R.id.txtFileDescription);
+            grpFileDescription= findViewById(R.id.grpFileDescription);
+            btnClear= findViewById(R.id.btnClear);
+            btnSave= findViewById(R.id.btnSave);
+            btnFile= findViewById(R.id.btnFile);
 
             afterCreate();
 
@@ -91,7 +91,7 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
                 SetImage("");
             } else
             {
-                try(DatabaseAccess da = databaseAccess();)
+                try(DatabaseAccess da = databaseAccess())
                 {
                     if(!da.getExtraFilesItem(fileGroupId, fileId, extraFilesItem))
                         return;
@@ -101,7 +101,7 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
                 txtFileDescription.setText(extraFilesItem.fileDescription);
                 SetImage(extraFilesItem.filePicture);
 
-                if(title.length() == 0)
+                if(title.isEmpty())
                     if(extraFilesItem.fileDescription != null)
                         SetTitles(extraFilesItem.fileDescription, "");
             }
@@ -123,15 +123,11 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
     {
         try
         {
-            switch(view.getId())
-            {
-                case R.id.imageViewSmall:
-                    pickImage(view);
-                    break;
-                case R.id.btnFile:
-                    ViewFile(view);
-                    break;
-            }
+            int id=view.getId();
+            if(id==R.id.imageViewSmall)
+                pickImage(view);
+            if(id==R.id.btnFile)
+                ViewFile(view);
         }
         catch(Exception e)
         {
@@ -140,21 +136,15 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
 
     }
 
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
         try
         {
-            switch(item.getItemId())
-            {
-                case R.id.action_delete_extra_files:
-                    deleteExtraFiles();
-                    return true;
-                case R.id.action_edit_extra_files:
-                    editExtraFiles();
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
+            int id=item.getItemId();
+            if(id==R.id.action_delete_extra_files)
+                deleteExtraFiles();
+            if(id==R.id.action_edit_extra_files)
+                editExtraFiles();
         }
         catch(Exception e)
         {
@@ -185,9 +175,9 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
     {
         try
         {
-            if(txtFilename.getText().toString().length() > 0)
+            if(!txtFilename.getText().toString().isEmpty())
             {
-                //myFileUtils().OpenAFile(txtFilename.getText().toString());
+                myFileUtils().OpenAFile(txtFilename.getText().toString());
             }
         }
         catch(Exception e)
@@ -200,7 +190,7 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
     {
         try
         {
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if(!da.deleteExtraFilesItem(extraFilesItem))
                     return;

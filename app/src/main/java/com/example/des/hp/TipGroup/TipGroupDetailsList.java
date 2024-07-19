@@ -138,7 +138,7 @@ public class TipGroupDetailsList extends BaseActivity
     {
         try
         {
-            tipGroupAdapter.onItemMove(from, to);
+            tipGroupAdapter.onItemMove();
         }
         catch(Exception e)
         {

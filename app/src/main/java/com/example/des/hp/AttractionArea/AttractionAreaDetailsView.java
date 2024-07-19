@@ -328,7 +328,7 @@ public class AttractionAreaDetailsView extends BaseActivity
     {
         try
         {
-            scheduleAdapter.onItemMove(from, to);
+            scheduleAdapter.onItemMove();
         }
         catch (Exception e)
         {

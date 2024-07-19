@@ -1,5 +1,6 @@
 package com.example.des.hp.myutils;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +9,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
-import android.media.ExifInterface;
+
+import androidx.annotation.NonNull;
+import androidx.exifinterface.media.ExifInterface;
 import android.net.Uri;
 import android.widget.ImageView;
 
@@ -25,16 +28,17 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyApiSpecific.myApiSpecific;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
+/** @noinspection ResultOfMethodCallIgnored*/
 public class ImageUtils
 {
-    private Context _context;
-    private Resources res;
+    private final Context _context;
+    private final Resources res;
+    @SuppressLint("StaticFieldLeak")
     private static ImageUtils myImageUtils = null;
     
     public ImageUtils(Context context)
@@ -66,11 +70,11 @@ public class ImageUtils
     public boolean getListIcon(int holidayId, Context context, String argFilename, ImageView destImageView)
     {
         MyBoolean lValid = new MyBoolean();
-        if (validFilename(holidayId, argFilename, lValid) == false)
+        if (!validFilename(holidayId, argFilename, lValid))
             return (false);
         try
         {
-            if (lValid.Value == true)
+            if (lValid.Value)
             {
                 Uri uri = Uri.fromFile(new File(GetHolidayImageDir(holidayId) + "/" + argFilename));
                 
@@ -92,11 +96,11 @@ public class ImageUtils
     public boolean getGridIcon(int holidayId, Context context, String argFilename, ImageView destImageView)
     {
         MyBoolean lValid = new MyBoolean();
-        if (validFilename(holidayId, argFilename, lValid) == false)
+        if (!validFilename(holidayId, argFilename, lValid))
             return (false);
         try
         {
-            if (lValid.Value == true)
+            if (lValid.Value)
             {
                 Uri uri = Uri.fromFile(new File(GetHolidayImageDir(holidayId) + "/" + argFilename));
                 
@@ -122,27 +126,11 @@ public class ImageUtils
     public String GetHolidayDir(int holidayId)
     {
         HolidayItem holidayItem = new HolidayItem();
-        try(DatabaseAccess da = databaseAccess();)
+        try(DatabaseAccess da = databaseAccess())
         {
             da.getHolidayItem(holidayId, holidayItem);
         }
-        String holidayDirName=holidayItem.holidayName.replace(' ', '_');
-        holidayDirName=holidayDirName.replace('#', '_');
-        holidayDirName=holidayDirName.replace('%', '_');
-        holidayDirName=holidayDirName.replace('&', '_');
-        holidayDirName=holidayDirName.replace('{', '_');
-        holidayDirName=holidayDirName.replace('}', '_');
-        holidayDirName=holidayDirName.replace('\\', '_');
-        holidayDirName=holidayDirName.replace('*', '_');
-        holidayDirName=holidayDirName.replace('?', '_');
-        holidayDirName=holidayDirName.replace('/', '_');
-        holidayDirName=holidayDirName.replace('$', '_');
-        holidayDirName=holidayDirName.replace('!', '_');
-        holidayDirName=holidayDirName.replace('"', '_');
-        holidayDirName=holidayDirName.replace('@', '_');
-        holidayDirName=holidayDirName.replace(':', '_');
-        holidayDirName=holidayDirName.replace('!', '_');
-        holidayDirName=holidayDirName.replace('=', '_');
+        String holidayDirName = getHolidayDirString(holidayItem);
 
         String lDirName = MyFileUtils.MyDocuments();
         File lFile = new File(lDirName);
@@ -163,6 +151,27 @@ public class ImageUtils
             lFile.mkdir();
 
         return(lDirName);
+    }
+
+    private static @NonNull String getHolidayDirString(HolidayItem holidayItem) {
+        String holidayDirName= holidayItem.holidayName.replace(' ', '_');
+        holidayDirName=holidayDirName.replace('#', '_');
+        holidayDirName=holidayDirName.replace('%', '_');
+        holidayDirName=holidayDirName.replace('&', '_');
+        holidayDirName=holidayDirName.replace('{', '_');
+        holidayDirName=holidayDirName.replace('}', '_');
+        holidayDirName=holidayDirName.replace('\\', '_');
+        holidayDirName=holidayDirName.replace('*', '_');
+        holidayDirName=holidayDirName.replace('?', '_');
+        holidayDirName=holidayDirName.replace('/', '_');
+        holidayDirName=holidayDirName.replace('$', '_');
+        holidayDirName=holidayDirName.replace('!', '_');
+        holidayDirName=holidayDirName.replace('"', '_');
+        holidayDirName=holidayDirName.replace('@', '_');
+        holidayDirName=holidayDirName.replace(':', '_');
+        holidayDirName=holidayDirName.replace('!', '_');
+        holidayDirName=holidayDirName.replace('=', '_');
+        return holidayDirName;
     }
 
     public String GetHolidayImageDir(int holidayId)
@@ -209,33 +218,27 @@ public class ImageUtils
             if (files.length == 0)
                 return (null);
             
-            Arrays.sort(files, new Comparator()
-            {
-                @Override
-                public int compare(Object o1, Object o2)
-                {
-                    File f1 = (File) o1;
-                    File f2 = (File) o2;
-                    
-                    String s1 = f1.getName();
-                    String s1a = s1.replace(".png", "");
-                    String[] sa1 = s1a.split("_");
-                    String n1 = sa1[1];
-                    int num1 = Integer.parseInt(n1);
-                    
-                    String s2 = f2.getName();
-                    String s2a = s2.replace(".png", "");
-                    String[] sa2 = s2a.split("_");
-                    String n2 = sa2[1];
-                    int num2 = Integer.parseInt(n2);
-                    
-                    return num1 - num2;
-                }
-            });
+            Arrays.sort(files,
+                    (o1, o2) -> {
+
+                        String s1 = o1.getName();
+                        String s1a = s1.replace(".png", "");
+                        String[] sa1 = s1a.split("_");
+                        String n1 = sa1[1];
+                        int num1 = Integer.parseInt(n1);
+
+                        String s2 = o2.getName();
+                        String s2a = s2.replace(".png", "");
+                        String[] sa2 = s2a.split("_");
+                        String n2 = sa2[1];
+                        int num2 = Integer.parseInt(n2);
+
+                        return num1 - num2;
+                    });
             
             for (File file : files)
             {
-                l_array.add(new InternalImageItem(file.getName(), 0, holidayId));
+                l_array.add(new InternalImageItem(file.getName(), holidayId));
             }
             return (l_array);
         }
@@ -285,7 +288,7 @@ public class ImageUtils
     {
         try
         {
-            if (filename.length() == 0)
+            if (filename.isEmpty())
                 return (false);
             File f = new File(GetHolidayImageDir(holidayId) + "/" + filename);
             retBoolean.Value = f.exists();
@@ -309,12 +312,12 @@ public class ImageUtils
     {
         MyBoolean lValid = new MyBoolean();
         
-        if (validFilename(holidayId, argFilename, lValid) == false)
+        if (!validFilename(holidayId, argFilename, lValid))
             return (false);
         
         try
         {
-            if (lValid.Value == true)
+            if (lValid.Value)
             {
                 Uri uri = Uri.fromFile(new File(GetHolidayImageDir(holidayId) + "/" + argFilename));
                 
@@ -342,15 +345,15 @@ public class ImageUtils
     {
         MyBoolean lValid = new MyBoolean();
         
-        if (argFilename.length() == 0)
+        if (argFilename.isEmpty())
             return (true);
         
-        if (validFilename(holidayId, argFilename, lValid) == false)
+        if (!validFilename(holidayId, argFilename, lValid))
             return (false);
         
         try
         {
-            if (lValid.Value == true)
+            if (lValid.Value)
             {
                 Uri uri = Uri.fromFile(new File(GetHolidayImageDir(holidayId) + "/" + argFilename));
                 
@@ -430,7 +433,7 @@ public class ImageUtils
             Point lCurrPoint = new Point(finalImage.getWidth(), finalImage.getHeight());
             Point lIdealPoint = new Point(512, 512);
             Point lNewPoint = new Point(0, 0);
-            if (ScaleKeepingAspectRatio(lCurrPoint, lIdealPoint, lNewPoint) == false)
+            if (!ScaleKeepingAspectRatio(lCurrPoint, lIdealPoint, lNewPoint))
                 return (false);
             retBitmap.Value = Bitmap.createScaledBitmap(finalImage, lNewPoint.x, lNewPoint.y, false);
             

@@ -17,7 +17,7 @@ public class StringUtils
         String lString;
 
         lString="0";
-        if(argString.length()>0)
+        if(!argString.isEmpty())
             lString = argString;
 
         int lInt;

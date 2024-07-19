@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,6 +30,8 @@ import com.example.des.hp.Tasks.TaskDetailsList;
 import com.example.des.hp.myutils.*;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
+import androidx.annotation.NonNull;
 
 public class HolidayDetailsView extends BaseActivity
 {
@@ -85,36 +86,36 @@ public class HolidayDetailsView extends BaseActivity
 
             context=this;
 
-            imageView=(ImageView) findViewById(R.id.imageViewSmall);
-            txtStartDate=(TextView) findViewById(R.id.txtStartDate);
-            grpStartDate=(LinearLayout) findViewById(R.id.grpStartDate);
-            btnShowItinerary=(ImageButton) findViewById(R.id.btnShowItinerary);
-            btnShowMaps=(ImageButton) findViewById(R.id.btnShowMaps);
-            btnShowTasks=(ImageButton) findViewById(R.id.btnShowTasks);
-            btnShowBudget=(ImageButton) findViewById(R.id.btnShowBudget);
-            btnShowTips=(ImageButton) findViewById(R.id.btnShowTips);
-            btnShowAttractions=(ImageButton) findViewById(R.id.btnShowAttractions);
-            btnShowContacts=(ImageButton) findViewById(R.id.btnShowContacts);
+            imageView= findViewById(R.id.imageViewSmall);
+            txtStartDate= findViewById(R.id.txtStartDate);
+            grpStartDate= findViewById(R.id.grpStartDate);
+            btnShowItinerary= findViewById(R.id.btnShowItinerary);
+            btnShowMaps= findViewById(R.id.btnShowMaps);
+            btnShowTasks= findViewById(R.id.btnShowTasks);
+            btnShowBudget= findViewById(R.id.btnShowBudget);
+            btnShowTips= findViewById(R.id.btnShowTips);
+            btnShowAttractions= findViewById(R.id.btnShowAttractions);
+            btnShowContacts= findViewById(R.id.btnShowContacts);
 
-            itineraryBadge=(TextView) findViewById(R.id.txtItineraryBadge);
-            mapBadge=(TextView) findViewById(R.id.txtMapBadge);
-            taskBadge=(TextView) findViewById(R.id.txtTaskBadge);
-            budgetBadge=(TextView) findViewById(R.id.txtBudgetBadge);
-            contactsBadge=(TextView) findViewById(R.id.txtContactBadge);
-            tipsBadge=(TextView) findViewById(R.id.txtTipsBadge);
-            attractionsBadge=(TextView) findViewById(R.id.txtAttractionBadge);
+            itineraryBadge= findViewById(R.id.txtItineraryBadge);
+            mapBadge= findViewById(R.id.txtMapBadge);
+            taskBadge= findViewById(R.id.txtTaskBadge);
+            budgetBadge= findViewById(R.id.txtBudgetBadge);
+            contactsBadge= findViewById(R.id.txtContactBadge);
+            tipsBadge= findViewById(R.id.txtTipsBadge);
+            attractionsBadge= findViewById(R.id.txtAttractionBadge);
 
-            row1=(LinearLayout)findViewById(R.id.row1);
-            row2=(LinearLayout)findViewById(R.id.row2);
-            row3=(LinearLayout)findViewById(R.id.row3);
+            row1= findViewById(R.id.row1);
+            row2= findViewById(R.id.row2);
+            row3= findViewById(R.id.row3);
 
-            btnGroupDays=(RelativeLayout)findViewById(R.id.btnGroupDays);
-            btnGroupMaps=(RelativeLayout)findViewById(R.id.btnGroupMaps);
-            btnGroupTasks=(RelativeLayout)findViewById(R.id.btnGroupTasks);
-            btnGroupTips=(RelativeLayout)findViewById(R.id.btnGroupTips);
-            btnGroupBudget=(RelativeLayout)findViewById(R.id.btnGroupBudget);
-            btnGroupAttractions=(RelativeLayout)findViewById(R.id.btnGroupAttractions);
-            btnGroupContacts=(RelativeLayout)findViewById(R.id.btnGroupContacts);
+            btnGroupDays= findViewById(R.id.btnGroupDays);
+            btnGroupMaps= findViewById(R.id.btnGroupMaps);
+            btnGroupTasks= findViewById(R.id.btnGroupTasks);
+            btnGroupTips= findViewById(R.id.btnGroupTips);
+            btnGroupBudget= findViewById(R.id.btnGroupBudget);
+            btnGroupAttractions= findViewById(R.id.btnGroupAttractions);
+            btnGroupContacts= findViewById(R.id.btnGroupContacts);
 
             afterCreate();
 
@@ -245,7 +246,7 @@ public class HolidayDetailsView extends BaseActivity
             if(holidayItem.mapFileGroupId == 0)
             {
                 MyInt myInt=new MyInt();
-                try(DatabaseAccess da = databaseAccess();)
+                try(DatabaseAccess da = databaseAccess())
                 {
                     if(!da.getNextFileGroupId(myInt))
                         return;
@@ -278,7 +279,7 @@ public class HolidayDetailsView extends BaseActivity
             MyInt myInt=new MyInt();
 
             holidayItem=new HolidayItem();
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
 
                 if(!da.getHolidayItem(holidayId, holidayItem))
@@ -289,37 +290,37 @@ public class HolidayDetailsView extends BaseActivity
                 if(!da.getDayCount(holidayId, myInt))
                     return;
                 int dayCount=myInt.Value;
-                itineraryBadge.setText("Days (" + Integer.toString(dayCount) + ")");
+                itineraryBadge.setText(String.format("Days (%s)", dayCount));
 
                 if(!da.getExtraFilesCount(holidayItem.mapFileGroupId, myInt))
                     return;
                 int mapCount=myInt.Value;
-                mapBadge.setText("Maps (" + Integer.toString(mapCount) + ")");
+                mapBadge.setText(String.format("Maps (%s)", mapCount));
 
                 if(!da.getTaskCount(holidayItem.holidayId, myInt))
                     return;
                 int taskCount=myInt.Value;
-                taskBadge.setText("Tasks (" + Integer.toString(taskCount) + ")");
+                taskBadge.setText(String.format("Tasks (%s)", taskCount));
 
                 if(!da.getBudgetCount(holidayItem.holidayId, myInt))
                     return;
                 int budgetCount=myInt.Value;
-                budgetBadge.setText("Budget (" + Integer.toString(budgetCount) + ")");
+                budgetBadge.setText(String.format("Budget (%s)", budgetCount));
 
                 if(!da.getTipsCount(holidayItem.holidayId, myInt))
                     return;
                 int tipsCount=myInt.Value;
-                tipsBadge.setText("Tips (" + Integer.toString(tipsCount) + ")");
+                tipsBadge.setText(String.format("Tips (%s)", tipsCount));
 
                 if(!da.getAttractionsCount(holidayItem.holidayId, myInt))
                     return;
                 int attractionsCount=myInt.Value;
-                attractionsBadge.setText("Attractions (" + Integer.toString(attractionsCount) + ")");
+                attractionsBadge.setText(String.format("Attractions (%s)", attractionsCount));
 
                 if(!da.getContactCount(holidayItem.holidayId, myInt))
                     return;
                 int contactCount=myInt.Value;
-                contactsBadge.setText("Contacts (" + Integer.toString(contactCount) + ")");
+                contactsBadge.setText(String.format("Contacts (%s)", contactCount));
 
             }
             SetImage(holidayItem.holidayPicture);
@@ -396,7 +397,7 @@ public class HolidayDetailsView extends BaseActivity
     {
         try
         {
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if(!da.deleteHolidayItem(holidayItem))
                     return;
@@ -425,21 +426,15 @@ public class HolidayDetailsView extends BaseActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
         try
         {
-            switch(item.getItemId())
-            {
-                case R.id.action_edit_holiday:
-                    editHoliday();
-                    return true;
-                case R.id.action_delete_holiday:
-                    deleteHoliday();
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
+            int id=item.getItemId();
+            if(id==R.id.action_edit_holiday)
+                editHoliday();
+            if(id==R.id.action_delete_holiday)
+                deleteHoliday();
         }
         catch(Exception e)
         {
@@ -468,7 +463,7 @@ public class HolidayDetailsView extends BaseActivity
         try
         {
             holidayItem.noteId=noteId;
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 da.updateHolidayItem(holidayItem);
             }
@@ -499,7 +494,7 @@ public class HolidayDetailsView extends BaseActivity
         try
         {
             holidayItem.infoId=infoId;
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 da.updateHolidayItem(holidayItem);
             }

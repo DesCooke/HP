@@ -14,10 +14,10 @@ import com.example.des.hp.ScheduleArea.ScheduleAreaList;
 import com.example.des.hp.myutils.DateUtils;
 import com.example.des.hp.myutils.DialogTimePicker;
 import com.example.des.hp.myutils.DialogWithEditTextFragment;
-import com.example.des.hp.thirdpartyutils.BadgeView;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
+/** @noinspection ALL*/
 public class BaseScheduleView extends BaseActivity
 {
     public DateUtils dateUtils;
@@ -28,7 +28,6 @@ public class BaseScheduleView extends BaseActivity
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
     public ImageButton btnShowInfo;
-    public BadgeView btnShowInfoBadge;
     public ImageButton btnShowNotes;
     public String scheduleTypeDescription="";
     public LinearLayout grpMenuFile;
@@ -51,13 +50,7 @@ public class BaseScheduleView extends BaseActivity
     {
         try
         {
-            dwetOnOkClick=new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    SchedNamePicked(view);
-                }
-            };
+            dwetOnOkClick= this::SchedNamePicked;
 
             dialogWithEditTextFragment=DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
                 "hihi",            // unique name for this dialog type
@@ -95,7 +88,7 @@ public class BaseScheduleView extends BaseActivity
         try
         {
             scheduleItem.noteId=noteId;
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 da.updateScheduleItem(scheduleItem);
             }
@@ -126,7 +119,7 @@ public class BaseScheduleView extends BaseActivity
         try
         {
             scheduleItem.infoId=infoId;
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 da.updateScheduleItem(scheduleItem);
             }
@@ -144,29 +137,25 @@ public class BaseScheduleView extends BaseActivity
         super.onActivityResult(requestCode, resultCode, data);
         try
         {
-            switch(requestCode)
-            {
-                case MOVEITEM:
-                    if(resultCode == RESULT_OK)
+            if(requestCode==MOVEITEM){
+                if(resultCode == RESULT_OK)
+                {
+                    try
                     {
-                        try
+                        scheduleItem.dayId=data.getIntExtra("DAYID", 0);
+                        scheduleItem.attractionId=data.getIntExtra("ATTRACTIONID", 0);
+                        scheduleItem.attractionAreaId=data.getIntExtra("ATTRACTIONAREAID", 0);
+                        try(DatabaseAccess da = databaseAccess())
                         {
-                            scheduleItem.dayId=data.getIntExtra("DAYID", 0);
-                            scheduleItem.attractionId=data.getIntExtra("ATTRACTIONID", 0);
-                            scheduleItem.attractionAreaId=data.getIntExtra("ATTRACTIONAREAID", 0);
-                            try(DatabaseAccess da = databaseAccess();)
-                            {
-                                da.updateScheduleItem(scheduleItem);
-                            }
-                            finish();
+                            da.updateScheduleItem(scheduleItem);
                         }
-                        catch(Exception e)
-                        {
-                            ShowError("onActivityResult-MOVEITEM", e.getMessage());
-                        }
+                        finish();
                     }
-                    break;
-
+                    catch(Exception e)
+                    {
+                        ShowError("onActivityResult-MOVEITEM", e.getMessage());
+                    }
+                }
             }
         }
         catch(Exception e)
@@ -182,10 +171,10 @@ public class BaseScheduleView extends BaseActivity
 
         try
         {
-            dateUtils=new DateUtils(this);
-            txtSchedName=(TextView) findViewById(R.id.txtSchedName);
-            grpSchedName=(LinearLayout) findViewById(R.id.grpSchedName);
-            grpMenuFile=(LinearLayout) findViewById(R.id.grpMenuFile);
+            dateUtils=new DateUtils();
+            txtSchedName= findViewById(R.id.txtSchedName);
+            grpSchedName= findViewById(R.id.grpSchedName);
+            grpMenuFile= findViewById(R.id.grpMenuFile);
         }
         catch(Exception e)
         {
@@ -207,7 +196,7 @@ public class BaseScheduleView extends BaseActivity
                 SetImage("");
             } else
             {
-                try(DatabaseAccess da = databaseAccess();)
+                try(DatabaseAccess da = databaseAccess())
                 {
                     if(!da.getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, scheduleItem))
                         return;
@@ -249,7 +238,7 @@ public class BaseScheduleView extends BaseActivity
     {
         try
         {
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if(!da.deleteScheduleItem(scheduleItem))
                     return;

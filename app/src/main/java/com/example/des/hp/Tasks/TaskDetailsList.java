@@ -144,7 +144,7 @@ public class TaskDetailsList extends BaseActivity
     {
         try
         {
-            taskAdapter.onItemMove(from, to);
+            taskAdapter.onItemMove();
         }
         catch(Exception e)
         {

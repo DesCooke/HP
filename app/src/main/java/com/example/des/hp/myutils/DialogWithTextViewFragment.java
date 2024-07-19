@@ -60,6 +60,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.Fragment;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -80,6 +82,7 @@ public class DialogWithTextViewFragment extends DialogFragment
     private String title;
     private String message;
     private int imageIcon;
+    @SuppressLint("StaticFieldLeak")
     private static DialogWithTextViewFragment dialogWithTextViewFragment;
     private static String dialogTag;
     private static FragmentTransaction fragmentTransaction;
@@ -115,19 +118,12 @@ public class DialogWithTextViewFragment extends DialogFragment
         if(argOnOkClick == null)
         {
             // default the yes click
-            dialogWithTextViewFragment.okClick=new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    dialogWithTextViewFragment.dismiss();
-                }
-            };
+            dialogWithTextViewFragment.okClick= view -> dialogWithTextViewFragment.dismiss();
         } else
         {
             dialogWithTextViewFragment.okClick=argOnOkClick;
         }
 
-        dialogWithTextViewFragment.imageIcon=-1;
         dialogWithTextViewFragment.title=argTitle;
         dialogWithTextViewFragment.message=argMessage;
         dialogWithTextViewFragment.imageIcon=argImageIcon;
@@ -173,7 +169,7 @@ public class DialogWithTextViewFragment extends DialogFragment
             }
 
             // Watch for button clicks.
-            Button btnOk=(Button) v.findViewById(R.id.btnOk);
+            Button btnOk= v.findViewById(R.id.btnOk);
             btnOk.setOnClickListener(okClick);
         }
         catch(Exception e)

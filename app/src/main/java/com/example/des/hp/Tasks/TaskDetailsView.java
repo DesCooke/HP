@@ -1,5 +1,6 @@
 package com.example.des.hp.Tasks;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,6 +20,8 @@ import com.example.des.hp.R;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
+import androidx.annotation.NonNull;
+
 public class TaskDetailsView extends BaseActivity
 {
 
@@ -35,6 +38,7 @@ public class TaskDetailsView extends BaseActivity
     public TextView lblTaskDate;
     public TextView lblKnownDate;
     public LinearLayout grpKnownDate;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch swKnownDate;
     //endregion
 
@@ -48,18 +52,18 @@ public class TaskDetailsView extends BaseActivity
             layoutName="activity_task_details_view";
             setContentView(R.layout.activity_task_details_view);
 
-            txtTaskDescription=(TextView) findViewById(R.id.txtTaskName);
-            grpTaskDate=(LinearLayout) findViewById(R.id.grpTaskDate);
-            txtTaskDate=(TextView) findViewById(R.id.txtTaskDate);
-            chkTaskComplete=(CheckBox) findViewById(R.id.chkTaskComplete);
-            btnClear=(ImageButton) findViewById(R.id.btnClear);
-            btnSave=(Button) findViewById(R.id.btnSave);
-            grpMenuFile=(LinearLayout) findViewById(R.id.grpMenuFile);
-            grpTaskName=(LinearLayout) findViewById(R.id.grpTaskName);
-            lblTaskDate=(TextView) findViewById(R.id.lblTaskDate);
-            lblKnownDate=(TextView) findViewById(R.id.lblKnownDate);
-            grpKnownDate=(LinearLayout) findViewById(R.id.grpKnownDate);
-            swKnownDate=(Switch) findViewById(R.id.swKnownDate);
+            txtTaskDescription= findViewById(R.id.txtTaskName);
+            grpTaskDate= findViewById(R.id.grpTaskDate);
+            txtTaskDate= findViewById(R.id.txtTaskDate);
+            chkTaskComplete= findViewById(R.id.chkTaskComplete);
+            btnClear= findViewById(R.id.btnClear);
+            btnSave= findViewById(R.id.btnSave);
+            grpMenuFile= findViewById(R.id.grpMenuFile);
+            grpTaskName= findViewById(R.id.grpTaskName);
+            lblTaskDate= findViewById(R.id.lblTaskDate);
+            lblKnownDate= findViewById(R.id.lblKnownDate);
+            grpKnownDate= findViewById(R.id.grpKnownDate);
+            swKnownDate= findViewById(R.id.swKnownDate);
 
             afterCreate();
 
@@ -89,21 +93,14 @@ public class TaskDetailsView extends BaseActivity
 
     //region OnClick Events
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
-        try
-        {
-            switch(item.getItemId())
-            {
-                case R.id.action_delete_task:
-                    deleteTask();
-                    return true;
-                case R.id.action_edit_task:
-                    editTask();
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
+        try {
+            int id = item.getItemId();
+            if (id == R.id.action_delete_task)
+                deleteTask();
+            if (id == R.id.action_edit_task)
+                editTask();
         }
         catch(Exception e)
         {
@@ -121,13 +118,13 @@ public class TaskDetailsView extends BaseActivity
         try
         {
             taskItem=new TaskItem();
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if(!da.getTaskItem(holidayId, taskId, taskItem))
                     return;
             }
 
-            if(title == null || (title.length() == 0))
+            if(title == null || (title.isEmpty()))
             {
                 SetTitles(taskItem.taskDescription, "");
             } else
@@ -180,7 +177,7 @@ public class TaskDetailsView extends BaseActivity
         try
         {
             taskItem.noteId=pNoteId;
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 da.updateTaskItem(taskItem);
             }
@@ -212,7 +209,7 @@ public class TaskDetailsView extends BaseActivity
         try
         {
             taskItem.infoId=pInfoId;
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 da.updateTaskItem(taskItem);
             }
@@ -247,7 +244,7 @@ public class TaskDetailsView extends BaseActivity
     {
         try
         {
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if(!da.deleteTaskItem(taskItem))
                     return;

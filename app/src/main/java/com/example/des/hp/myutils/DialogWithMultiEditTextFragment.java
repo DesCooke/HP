@@ -4,6 +4,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.Fragment;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,6 +24,7 @@ public class DialogWithMultiEditTextFragment extends DialogFragment
     public View.OnClickListener okClick;
 
     private String title;
+    @SuppressLint("StaticFieldLeak")
     private static DialogWithMultiEditTextFragment dialogWithMultiEditTextFragment;
     private static String dialogTag;
     private static FragmentTransaction fragmentTransaction;
@@ -43,12 +46,12 @@ public class DialogWithMultiEditTextFragment extends DialogFragment
         return (editText.getText().toString());
     }
 
-    private void ShowError(String argFunction, String argMessage)
+    private void ShowError(String argMessage)
     {
-        myMessages().ShowError("Error in DialogWithMultiEditTextFragment::" + argFunction, argMessage);
+        myMessages().ShowError("Error in DialogWithMultiEditTextFragment::" + "onCreateView", argMessage);
     }
 
-    public static DialogWithMultiEditTextFragment newInstance(FragmentManager fm, String tag, String argTitle, String argMessage, int argImageIcon, String argInitialText, View.OnClickListener argOnOkClick, Context context
+    public static DialogWithMultiEditTextFragment newInstance(FragmentManager fm, String tag, String argTitle, String argInitialText, View.OnClickListener argOnOkClick, Context context
     )
     {
         // Look for an existing dialog with same tag
@@ -64,19 +67,13 @@ public class DialogWithMultiEditTextFragment extends DialogFragment
         // let's create a new one - giving all the defaults
         dialogWithMultiEditTextFragment=new DialogWithMultiEditTextFragment();
         dialogWithMultiEditTextFragment.context=context;
-        dialogWithMultiEditTextFragment.myKeyboard=new MyKeyboard(context);
+        dialogWithMultiEditTextFragment.myKeyboard=new MyKeyboard();
 
 
         if(argOnOkClick == null)
         {
             // default the yes click
-            dialogWithMultiEditTextFragment.okClick=new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    dialogWithMultiEditTextFragment.dismiss();
-                }
-            };
+            dialogWithMultiEditTextFragment.okClick= view -> dialogWithMultiEditTextFragment.dismiss();
         } else
         {
             dialogWithMultiEditTextFragment.okClick=argOnOkClick;
@@ -109,23 +106,21 @@ public class DialogWithMultiEditTextFragment extends DialogFragment
             View tv=v.findViewById(R.id.txtTitle);
             ((TextView) tv).setText(title);
 
-            View tm=v.findViewById(R.id.txtMessage);
-
-            editText=(EditText) v.findViewById(R.id.editText);
+            editText= v.findViewById(R.id.editText);
             editText.setText(initialText);
             editText.requestFocus();
 
-            if(myKeyboard.show(getDialog()) == false)
+            if(!myKeyboard.show(getDialog()))
                 return v;
 
 
             // Watch for button clicks.
-            Button btnOk=(Button) v.findViewById(R.id.btnOk);
+            Button btnOk= v.findViewById(R.id.btnOk);
             btnOk.setOnClickListener(okClick);
         }
         catch(Exception e)
         {
-            ShowError("onCreateView", e.getMessage());
+            ShowError(e.getMessage());
         }
 
         return v;

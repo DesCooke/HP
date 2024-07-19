@@ -41,9 +41,9 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
             {
                 grpMenuFile.setVisibility(View.GONE);
                 txtSchedName.setText("");
-                heartRating.setRating(Float.valueOf(getString(R.string.default_rating)));
-                scenicRating.setRating(Float.valueOf(getString(R.string.default_rating)));
-                thrillRating.setRating(Float.valueOf(getString(R.string.default_rating)));
+                heartRating.setRating(Float.parseFloat(getString(R.string.default_rating)));
+                scenicRating.setRating(Float.parseFloat(getString(R.string.default_rating)));
+                thrillRating.setRating(Float.parseFloat(getString(R.string.default_rating)));
             }
 
             grpSchedName.setOnClickListener(this);
@@ -85,69 +85,46 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
     //region OnClick Events
     public void onClick(View view)
     {
-        try
-        {
-            switch(view.getId())
-            {
-
-                case R.id.grpSchedName:
-                    pickSchedName(view);
-                    break;
-                case R.id.grpAttractionType:
-                    EnterString("Attraction Type", "Enter Attraction Type", txtAttractionType);
-                    break;
-                case R.id.grpBookingReference:
-                    EnterString("Booking Reference", "Enter Booking Reference", txtBookingReference);
-                    break;
-                case R.id.grpFlightNo:
-                    EnterString("Flight NO", "Enter Flight No", txtFlightNo);
-                    break;
-                case R.id.grpTerminal:
-                    EnterString("Terminal", "Enter Terminal", txtTerminal);
-                    break;
-                case R.id.grpDeparts:
-                    handleTime(txtDeparts, chkDepartsKnown, "Select Departure Time");
-                    break;
-                case R.id.grpShow:
-                    handleTime(txtShow, chkShowKnown, "Select Show Time");
-                    break;
-                case R.id.grpStartTime:
-                    handleTime(txtStart, chkStartKnown, "Select Start Time");
-                    break;
-                case R.id.grpEndTime:
-                    handleTime(txtEnd, chkEndKnown, "Select End Time");
-                    break;
-                case R.id.grpPickUp:
-                    handleTime(txtPickUp, chkPickUpKnown, "Select PickUp Time");
-                    break;
-                case R.id.grpDropOff:
-                    handleTime(txtDropOff, chkDropOffKnown, "Select DropOff Time");
-                    break;
-                case R.id.grpCheckIn:
-                    handleTime(txtCheckIn, chkCheckInKnown, "Select CheckIn Time");
-                    break;
-                case R.id.grpArrival:
-                    handleTime(txtArrival, chkArrivalKnown, "Select Arrival Time");
-                    break;
-                case R.id.imageViewSmall:
-                    pickImage(view);
-                    break;
-                case R.id.radUnknown:
-                    selectReservationType(view);
-                    break;
-                case R.id.radWalkIn:
-                    selectReservationType(view);
-                    break;
-                case R.id.radOnTheDay:
-                    selectReservationType(view);
-                    break;
-                case R.id.rad180Days:
-                    selectReservationType(view);
-                    break;
-                case R.id.radBooked:
-                    selectReservationType(view);
-                    break;
-            }
+        try {
+            int id = view.getId();
+            if (id == R.id.grpSchedName)
+                pickSchedName(view);
+            if (id == R.id.grpAttractionType)
+                EnterString("Attraction Type", "Enter Attraction Type", txtAttractionType);
+            if (id == R.id.grpBookingReference)
+                EnterString("Booking Reference", "Enter Booking Reference", txtBookingReference);
+            if (id == R.id.grpFlightNo)
+                EnterString("Flight NO", "Enter Flight No", txtFlightNo);
+            if (id == R.id.grpTerminal)
+                EnterString("Terminal", "Enter Terminal", txtTerminal);
+            if (id == R.id.grpDeparts)
+                handleTime(txtDeparts, chkDepartsKnown, "Select Departure Time");
+            if (id == R.id.grpShow)
+                handleTime(txtShow, chkShowKnown, "Select Show Time");
+            if (id == R.id.grpStartTime)
+                handleTime(txtStart, chkStartKnown, "Select Start Time");
+            if (id == R.id.grpEndTime)
+                handleTime(txtEnd, chkEndKnown, "Select End Time");
+            if (id == R.id.grpPickUp)
+                handleTime(txtPickUp, chkPickUpKnown, "Select PickUp Time");
+            if (id == R.id.grpDropOff)
+                handleTime(txtDropOff, chkDropOffKnown, "Select DropOff Time");
+            if (id == R.id.grpCheckIn)
+                handleTime(txtCheckIn, chkCheckInKnown, "Select CheckIn Time");
+            if (id == R.id.grpArrival)
+                handleTime(txtArrival, chkArrivalKnown, "Select Arrival Time");
+            if (id == R.id.imageViewSmall)
+                pickImage(view);
+            if (id == R.id.radUnknown)
+                selectReservationType(view);
+            if (id == R.id.radWalkIn)
+                selectReservationType(view);
+            if (id == R.id.radOnTheDay)
+                selectReservationType(view);
+            if (id == R.id.rad180Days)
+                selectReservationType(view);
+            if (id == R.id.radBooked)
+                selectReservationType(view);
         }
         catch(Exception e)
         {
@@ -182,13 +159,9 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
                         formMessage,             // form message
                         R.drawable.attachment,
                         textView.getText().toString(), // initial text
-                        new View.OnClickListener()
-                        {
-                            public void onClick(View view)
-                            {
-                                textView.setText(dialogWithEditTextFragment.getFinalText());
-                                dialogWithEditTextFragment.dismiss();
-                            }
+                        view -> {
+                            textView.setText(dialogWithEditTextFragment.getFinalText());
+                            dialogWithEditTextFragment.dismiss();
                         },
                         this,
                         false
@@ -201,7 +174,7 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
     //region Saving
     public void saveSchedule(View view)
     {
-        try(DatabaseAccess da = databaseAccess();)
+        try(DatabaseAccess da = databaseAccess())
         {
             myMessages().ShowMessageShort("Saving Schedule");
 
@@ -211,7 +184,7 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
 
             if(imageChanged) {
                 scheduleItem.schedPicture = "";
-                if (internalImageFilename.length() > 0)
+                if (!internalImageFilename.isEmpty())
                     scheduleItem.schedPicture = internalImageFilename;
             }
             scheduleItem.pictureAssigned=imageSet;

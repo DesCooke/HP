@@ -1,22 +1,16 @@
 package com.example.des.hp.myutils;
 
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.Fragment;
-
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.MainActivity;
 import com.example.des.hp.R;
 
-import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.view.View;
 import android.widget.Toast;
 import android.content.Context;
 import android.app.AlertDialog;
-import android.app.Activity;
 import java.util.Arrays;
 
 import static com.example.des.hp.myutils.MyLog.myLog;
@@ -24,14 +18,14 @@ import static com.example.des.hp.myutils.MyLog.myLog;
 public class MyMessages extends BaseActivity
 {
     public static Boolean answerYes;
-    public static Boolean answerNo;
+    @SuppressLint("StaticFieldLeak")
     public static Context lcontext;
     public static Resources lres;
+    @SuppressLint("StaticFieldLeak")
     public static MyMessages messages=null;
 
     public DialogWithTextViewFragment dialogWithTextViewFragment;
     public String dwtvDialogTag;
-    public View.OnClickListener dwtvOnOkClick;
     public View.OnClickListener onError;
 
     public static MyMessages myMessages()
@@ -100,12 +94,8 @@ public class MyMessages extends BaseActivity
 
         myLog().WriteLogMessage(message);
 
-        new AlertDialog.Builder(lcontext).setTitle(argTitle).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
-        {
-            public void onClick(DialogInterface dialog, int which)
-            {
-                //
-            }
+        new AlertDialog.Builder(lcontext).setTitle(argTitle).setPositiveButton(android.R.string.ok, (dialog, which) -> {
+            //
         }).setMessage(message).setIcon(android.R.drawable.ic_dialog_alert).show();
     }
 
