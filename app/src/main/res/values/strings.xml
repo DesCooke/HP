@@ -26,7 +26,7 @@
     <string name="action_add_task">Add Task</string>
     <string name="action_add_tip">Add Tip</string>
     <string name="action_add_tipgroup">Add Tip Group</string>
-    <string name="action_add_generalattraction">Add Attraction</string>
+    <string name="action_add_generalattraction">Add Event</string>
     <string name="action_add_extra_files">Add</string>
     <string name="action_delete_holiday">Delete Holiday</string>
     <string name="action_delete_flight">Delete Flight</string>
@@ -39,7 +39,7 @@
     <string name="action_delete_parade">Delete Parade</string>
     <string name="action_delete_other">Delete Other</string>
     <string name="action_delete_ride">Delete Ride</string>
-    <string name="action_delete_generalattraction">Delete Attraction</string>
+    <string name="action_delete_generalattraction">Delete Event</string>
     <string name="action_delete_extra_files">Delete</string>
     <string name="action_delete_show">Delete Show</string>
     <string name="action_delete_task">Delete Task</string>
@@ -66,7 +66,7 @@
     <string name="action_edit_restaurantfull">Edit Restaurant</string>
     <string name="action_edit_budget">Edit Budget</string>
     <string name="action_edit_ride">Edit Ride</string>
-    <string name="action_edit_generalattraction">Edit Attraction</string>
+    <string name="action_edit_generalattraction">Edit Event</string>
     <string name="action_edit_show">Edit Show</string>
     <string name="action_edit_tipgroup">Edit Tip Group</string>
     <string name="action_edit_tip">Edit Tip</string>
@@ -78,7 +78,7 @@
     <string name="action_view_tipgroup">View Tip Group</string>
     <string name="action_view_attraction">View Attraction</string>
     <string name="action_view_attractionarea">View Attraction Area</string>
-    <string name="action_move">Move to Another Area</string>
+    <string name="action_move">Move to Another Day</string>
     <string name="action_tasks">View Tasks</string>
     <string name="action_budget">View Budget</string>
     <string name="action_tips">View Tips</string>
@@ -137,7 +137,7 @@
     <string name="caption_budget_option">Budget Option</string>
     <string name="type">Type</string>
     <string name="todo">TODO</string>
-    <string name="attraction_details">Attraction Details</string>
+    <string name="attraction_details">Event</string>
     <string name="reservation_type">Reservation Type</string>
     <string name="flight_no">Flight No</string>
     <string name="terminal">Terminal</string>
@@ -147,5 +147,13 @@
     <string name="pickup_time">Pickup Time</string>
     <string name="drop_off_time">Drop Off Time</string>
     <string name="end_time">End Time</string>
+    <string name="unknown">Unknown</string>
+    <string name="no_need_to_book">No Need to Book</string>
+    <string name="book_on_same_day">Book on Same Day</string>
+    <string name="book_in_advance">Book in Advance</string>
+    <string name="booked">Booked</string>
+    <string name="start_time">Start Time</string>
+    <string name="imageviewsmall">imageViewSmall</string>
+    <string name="btnshowinfo">btnShowInfo</string>
 
 </resources>

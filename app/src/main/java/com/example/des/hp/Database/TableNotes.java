@@ -82,7 +82,7 @@ class TableNotes extends TableBase
                 return (false);
 
             noteItem.notes="";
-            String lSQL="UPDATE notes SET notes=" + MyQuotedString(noteItem.notes) + " " + "WHERE holidayId = " + noteItem.holidayId + " " + "AND noteId = " + noteItem.noteId;
+            String lSQL="DELETE FROM notes WHERE holidayId = " + noteItem.holidayId + " " + "AND noteId = " + noteItem.noteId;
 
             return executeSQL("deleteNoteItem", lSQL);
         }
