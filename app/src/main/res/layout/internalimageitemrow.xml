@@ -5,29 +5,27 @@
               android:layout_height="wrap_content"
               android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.2">
+    <TextView
+        android:id="@+id/txtFilename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/background_light"
+        android:elevation="1dp"
+        android:text="@string/textview"
+        android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/txtFilename"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/internalImage"
-            android:background="@android:color/background_light"
-            android:elevation="1dp"
-            android:text="TextView"
-            android:visibility="gone" />
+    <LinearLayout
+        android:layout_margin="2dp"
+        style="@style/MyBox">
 
         <ImageView
             android:id="@+id/internalImage"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.2"
-            android:textAlignment="center"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:contentDescription="@string/internalimage"
             app:srcCompat="@drawable/imagemissing" />
-    </RelativeLayout>
+
+    </LinearLayout>
+
 
 </LinearLayout>

@@ -853,7 +853,7 @@ public class BaseActivity extends AppCompatActivity
                 recyclerView.setLayoutManager(new LinearLayoutManager(this));
             } else
             {
-                recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
+                recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
             }
             recyclerView.setHasFixedSize(true);
             //listView1.setDivider(null);
