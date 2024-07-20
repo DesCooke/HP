@@ -104,12 +104,14 @@ public class ImageUtils
             {
                 Uri uri = Uri.fromFile(new File(GetHolidayImageDir(holidayId) + "/" + argFilename));
                 
-                Picasso.with(context).load(uri).resize(150, 150)
+                Picasso.with(context).load(uri)
+                    //    .resize(150, 150)
                     //.transform(new CircleTransform())
                     .into(destImageView);
             } else
             {
-                Picasso.with(context).load(R.drawable.imagemissing).resize(150, 150)
+                Picasso.with(context).load(R.drawable.imagemissing)
+                    //    .resize(150, 150)
                     //.transform(new CircleTransform())
                     .into(destImageView);
             }
