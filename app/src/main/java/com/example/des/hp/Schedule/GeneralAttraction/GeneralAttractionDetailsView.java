@@ -55,6 +55,7 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
     public LinearLayout grpReservationTypeId;
     public LinearLayout grpStartTime;
     public LinearLayout grpEndTime;
+    public LinearLayout grpNotes;
 
     public ImageButton btnClear;
     public Button btnSave;
@@ -104,6 +105,7 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
             radBooked = findViewById(R.id.radBooked);
             chkStartKnown = findViewById(R.id.chkStartKnown);
             chkEndKnown = findViewById(R.id.chkEndKnown);
+            grpNotes = findViewById(R.id.grpNotes);
 
             btnClear= findViewById(R.id.btnClear);
             btnSave= findViewById(R.id.btnSave);
@@ -164,16 +166,16 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
                 if(da.getNoteItem(holidayId, lNoteId, noteItem))
                 {
                     txtNotes.setText(noteItem.notes);
-                    txtNotes.setVisibility(View.VISIBLE);
+                    grpNotes.setVisibility(View.VISIBLE);
                 }
                 else
                 {
-                    txtNotes.setVisibility(View.GONE);
+                    grpNotes.setVisibility(View.GONE);
                 }
             }
             else
             {
-                txtNotes.setVisibility(View.GONE);
+                grpNotes.setVisibility(View.GONE);
             }
             heartRating.setVisibility(View.VISIBLE);
             if(viewOnlyForm && scheduleItem.generalAttractionItem.heartRating < 0.25)

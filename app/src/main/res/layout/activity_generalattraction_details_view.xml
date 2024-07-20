@@ -357,11 +357,21 @@
                 android:rating="3.5"
                 android:stepSize="0.1" />
 
-            <TextView
-                android:id="@+id/txtNotes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp" />
+            <LinearLayout
+                android:id="@+id/grpNotes"
+                style="@style/MyBox" >
+
+                <TextView
+                    android:id="@+id/lblNotes"
+                    android:text="@string/caption_notes"
+                    style="@style/MyTextHint" />
+
+                <TextView
+                    android:id="@+id/txtNotes"
+                    style="@style/MyTextLine" />
+
+            </LinearLayout>
+
 
             <CheckBox
                 android:id="@+id/picturePicked"
