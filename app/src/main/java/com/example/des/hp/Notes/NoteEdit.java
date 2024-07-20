@@ -77,21 +77,31 @@ public class NoteEdit extends BaseActivity
     {
         try
         {
-            noteItem.notes=edtNote.getText().toString();
+            noteItem.notes=edtNote.getText().toString().trim();
 
             MyBoolean noteExists=new MyBoolean();
             try(DatabaseAccess da = databaseAccess())
             {
+                // does the note exist?
                 if(!da.noteExists(holidayId, noteItem.noteId, noteExists))
                     return;
-                if(!noteExists.Value)
-                {
-                    if(!da.addNoteItem(noteItem))
-                        return;
-                } else
-                {
-                    if(!da.updateNoteItem(noteItem))
-                        return;
+
+                if (noteExists.Value) {
+                    // if the note exists, but the new value is empty - then delete it
+                    if(noteItem.notes.isEmpty()){
+                        if(!da.deleteNoteItem(noteItem))
+                            return;
+                    }
+                    else {
+                        // If the note exists and the new value is not empty - update it
+                        if (!da.updateNoteItem(noteItem))
+                            return;
+                    }
+                } else {
+                    // if the note does not exist, and the new value is not empty - add it
+                    if(!noteItem.notes.isEmpty())
+                        if(!da.addNoteItem(noteItem))
+                            return;
                 }
             }
 

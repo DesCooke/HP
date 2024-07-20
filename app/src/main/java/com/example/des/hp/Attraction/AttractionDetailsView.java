@@ -23,6 +23,7 @@ public class AttractionDetailsView extends BaseActivity
     public Button btnSave;
     public LinearLayout grpMenuFile;
     public LinearLayout grpAttractionDescription;
+    public LinearLayout grpToolBar;
     //endregion
     
     //region Constructors/Destructors
@@ -40,6 +41,7 @@ public class AttractionDetailsView extends BaseActivity
             btnClear = findViewById(R.id.btnClear);
             btnSave = findViewById(R.id.btnSave);
             grpMenuFile = findViewById(R.id.grpMenuFile);
+            grpToolBar = findViewById(R.id.grpToolBar);
             grpAttractionDescription = findViewById(R.id.grpAttractionDescription);
             
             afterCreate();
@@ -101,9 +103,9 @@ public class AttractionDetailsView extends BaseActivity
             {
                 SetTitles(attractionItem.attractionDescription, "");
             }
-            
+
             afterShow();
-            
+
         }
         catch (Exception e)
         {

@@ -63,6 +63,7 @@ import android.provider.OpenableColumns;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
@@ -108,6 +109,8 @@ public class BaseActivity extends AppCompatActivity
     public int tipId=0;
     public int budgetId=0;
     public int contactId=0;
+    public boolean hasNotes;
+    public boolean hasInfo;
 
     public boolean reloadOnShow=true;
     public boolean hideImageIfEmpty=false;
@@ -115,6 +118,9 @@ public class BaseActivity extends AppCompatActivity
     public boolean showInfoEnabled;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
+
+    public LinearLayout grpToolBar;
+    public boolean alwaysShowToolBar;
 
     public TextView txtFilename;
 
@@ -515,6 +521,8 @@ public class BaseActivity extends AppCompatActivity
             if(btnShowNotes != null)
                 showNotesEnabled=true;
 
+            grpToolBar=findViewById(R.id.grpToolBar);
+
             if(showInfoEnabled)
             {
                 btnShowInfoBadge=new BadgeView(this, btnShowInfo);
@@ -592,10 +600,12 @@ public class BaseActivity extends AppCompatActivity
 
                 if(lFileCount.Value == 0)
                 {
+                    hasInfo=false;
                     btnShowInfoBadge.setVisibility(View.INVISIBLE);
                     myColor().SetImageButtonTint(btnShowInfo, R.color.colorDisabled);
                 } else
                 {
+                    hasInfo=true;
                     btnShowInfoBadge.setVisibility(View.VISIBLE);
                     myColor().SetImageButtonTint(btnShowInfo, R.color.colorEnabled);
                 }
@@ -619,13 +629,19 @@ public class BaseActivity extends AppCompatActivity
                 {
                     if(!da.getNoteItem(holidayId, lNoteId, noteItem))
                         return;
-                }
-                if(noteItem.notes.isEmpty())
-                {
-                    myColor().SetImageButtonTint(btnShowNotes, R.color.colorDisabled);
-                } else
-                {
-                    myColor().SetImageButtonTint(btnShowNotes, R.color.colorEnabled);
+
+                    if(noteItem.notes.isEmpty())
+                    {
+                        myColor().SetImageButtonTint(btnShowNotes, R.color.colorDisabled);
+                        hasNotes=false;
+                        setNoteId(0);
+                        if(noteItem.noteId!=0)
+                            da.deleteNoteItem(noteItem);
+                    } else
+                    {
+                        myColor().SetImageButtonTint(btnShowNotes, R.color.colorEnabled);
+                        hasNotes=true;
+                    }
                 }
             }
         }
@@ -641,12 +657,32 @@ public class BaseActivity extends AppCompatActivity
         {
             displayShowInfo();
             displayShowNotes();
+            handleToolBar();
             handleImage();
         }
         catch(Exception e)
         {
             ShowError("afterShow", e.getMessage());
         }
+    }
+
+    public void handleToolBar()
+    {
+        try
+        {
+            if(grpToolBar==null)
+                return;
+            grpToolBar.setVisibility(View.VISIBLE);
+            if(alwaysShowToolBar)
+                return;
+            if(!hasInfo && !hasNotes)
+                grpToolBar.setVisibility(View.GONE);
+        }
+        catch(Exception e)
+        {
+            ShowError("handleImage", e.getMessage());
+        }
+
     }
 
     public void handleImage()

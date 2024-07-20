@@ -1959,7 +1959,21 @@ public class DatabaseAccess extends SQLiteOpenHelper
         return (false);
         
     }
-    
+
+    public boolean deleteNoteItem(NoteItem noteItem)
+    {
+        try
+        {
+            return (tableNotes.deleteNoteItem(noteItem));
+        }
+        catch (Exception e)
+        {
+            ShowError("deleteNoteItem", e.getMessage());
+        }
+        return (false);
+
+    }
+
     public boolean getNoteItem(int holidayId, int noteId, NoteItem item)
     {
         try
