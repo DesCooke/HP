@@ -98,10 +98,10 @@ public class AttractionDetailsView extends BaseActivity
             }
             if (!title.isEmpty())
             {
-                SetTitles(title, subTitle);
+                SetToolbarTitles(title, subTitle);
             } else
             {
-                SetTitles(attractionItem.attractionDescription, "");
+                SetToolbarTitles(attractionItem.attractionDescription, "");
             }
 
             afterShow();

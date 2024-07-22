@@ -153,7 +153,7 @@ public class DayDetailsView extends BaseActivity
             }
 
 
-            SetTitles(holidayItem.holidayName, dayItem.dayName + " / " + lSubTitle);
+            SetToolbarTitles(holidayItem.holidayName, dayItem.dayName + " / " + lSubTitle);
 
 
             int lColor=-1;

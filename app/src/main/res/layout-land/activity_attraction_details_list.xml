@@ -8,11 +8,6 @@
               tools:context="com.example.des.hp.MainActivity">
 
 
-    <include
-        layout="@layout/included_program_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/attractionListView"
         android:layout_width="match_parent"

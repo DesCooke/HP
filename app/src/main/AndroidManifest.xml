@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
         android:requestRawExternalStorageAccess="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -62,7 +62,6 @@
         <activity android:name=".Contact.ContactDetailsEdit" />
         <activity android:name=".ScheduleArea.ScheduleAreaList" />
         <activity android:name=".Notes.NoteEdit" />
-        <activity android:name=".Notes.NoteView" />
         <activity android:name=".InternalImages.InternalImageList" />
         <activity android:name=".InternalFiles.InternalFileList" />
         <provider

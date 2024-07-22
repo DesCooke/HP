@@ -77,10 +77,10 @@ public class TipGroupDetailsView extends BaseActivity
 
             if(title == null || (title.isEmpty()))
             {
-                SetTitles(tipGroupItem.tipGroupDescription, "");
+                SetToolbarTitles(tipGroupItem.tipGroupDescription, "");
             } else
             {
-                SetTitles(title, subTitle);
+                SetToolbarTitles(title, subTitle);
             }
 
             SetImage(tipGroupItem.tipGroupPicture);

@@ -34,7 +34,7 @@ public class TipGroupDetailsEdit extends TipGroupDetailsView implements View.OnC
             if(action != null && action.equals("add"))
             {
                 txtTipGroupDescription.setText("");
-                SetTitles("Add a Tip", "");
+                SetToolbarTitles("Add a Tip", "");
                 grpMenuFile.setVisibility(View.GONE);
             }
             grpTipGroupDescription.setOnClickListener(this);

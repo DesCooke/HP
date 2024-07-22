@@ -123,10 +123,10 @@ public class BudgetDetailsView extends BaseActivity
 
             if (title == null || (title.isEmpty()))
             {
-                SetTitles(budgetItem.budgetDescription, "");
+                SetToolbarTitles(budgetItem.budgetDescription, "");
             } else
             {
-                SetTitles(title, subTitle);
+                SetToolbarTitles(title, subTitle);
             }
             
             SetImage(budgetItem.budgetPicture);

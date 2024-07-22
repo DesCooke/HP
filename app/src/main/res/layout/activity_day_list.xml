@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/activity_main"
@@ -8,10 +8,7 @@
               android:orientation="vertical"
               tools:context="com.example.des.hp.MainActivity">
 
-    <include
-        layout="@layout/included_program_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <include layout="@layout/my_toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/dayListView"
@@ -22,6 +19,7 @@
         android:layout_alignParentTop="true"
         android:cacheColorHint="#0000"
         android:scrollbars="vertical"
+        android:layout_marginVertical="?attr/actionBarSize"
         android:scrollingCache="false"/>
 
-</LinearLayout>
+</RelativeLayout>

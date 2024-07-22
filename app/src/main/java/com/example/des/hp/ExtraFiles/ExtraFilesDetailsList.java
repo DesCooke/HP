@@ -10,6 +10,7 @@ import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.ImageUtils;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +29,8 @@ public class ExtraFilesDetailsList extends BaseActivity
 
     public ArrayList<ExtraFilesItem> extraFilesList;
     private ExtraFilesAdapter extraFilesAdapter;
+    public FloatingActionButton fab;
+
 
     public void showMapAdd(View view)
     {
@@ -52,10 +55,10 @@ public class ExtraFilesDetailsList extends BaseActivity
 
             if(!title.isEmpty())
             {
-                SetTitles(title, subTitle);
+                SetToolbarTitles(title, subTitle);
             } else
             {
-                SetTitles("File Group", "Extra Files");
+                SetToolbarTitles("File Group", "Extra Files");
             }
 
             extraFilesList=new ArrayList<>();
@@ -65,6 +68,11 @@ public class ExtraFilesDetailsList extends BaseActivity
                     return;
             }
             extraFilesAdapter=new ExtraFilesAdapter(extraFilesList);
+
+            fab=findViewById(R.id.fab);
+            if(fab!=null)
+                fab.setOnClickListener(this::showMapAdd);
+
 
             CreateRecyclerView(R.id.extraFilesListView, extraFilesAdapter);
 
@@ -191,29 +199,6 @@ public class ExtraFilesDetailsList extends BaseActivity
         }
         return true;
     }
-
-    //region OnClick Events
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item)
-    {
-        boolean lv_result=false;
-
-        try
-        {
-            int id=item.getItemId();
-            if(id==R.id.action_add_extra_files) {
-                showMapAdd(null);
-                lv_result=true;
-            }
-        }
-        catch(Exception e)
-        {
-            ShowError("onOptionsItemSelected", e.getMessage());
-        }
-        return (lv_result);
-    }
-    //endregion
-
 
 }
 

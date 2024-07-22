@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HP</string>
+    <string name="app_name">Holiday Planner</string>
     <string name="title_activity_main2">Main2Activity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -85,7 +85,8 @@
 
     <string name="settings_date_format">dd/MM/yyyy</string>
 
-    <string name="title_planner">Planner</string>
+    <string name="title_planner">Holiday Planner</string>
+    <string name="title_version">v1.0</string>
     <string name="title_waitingforpermission">Waiting for Permission</string>
 
     <string name="tab_schedule">Schedule</string>
@@ -157,5 +158,12 @@
     <string name="btnshowinfo">btnShowInfo</string>
     <string name="textview">TextView</string>
     <string name="internalimage">internalImage</string>
+    <string name="imgicon">imgIcon</string>
+    <string name="floatingactionbutton">floatingActionButton</string>
+    <string name="mylogo">mylogo</string>
+    <string name="main_title">Main Title</string>
+    <string name="sub_title">Sub Title</string>
+    <string name="notes">Notes</string>
+    <string name="edit_notes">Edit Notes</string>
 
 </resources>

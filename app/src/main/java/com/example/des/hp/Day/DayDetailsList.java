@@ -95,7 +95,7 @@ public class DayDetailsList extends BaseActivity
                 if(!da.getHolidayItem(holidayId, holidayItem))
                     return;
 
-                SetTitles(holidayItem.holidayName, "Itinerary");
+                SetToolbarTitles(holidayItem.holidayName, "Itinerary");
 
                 DatabaseAccess.currentStartDate=holidayItem.startDateDate;
 

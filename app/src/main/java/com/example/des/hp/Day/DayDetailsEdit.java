@@ -71,7 +71,7 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
                     holidayId=extras.getInt("HOLIDAYID");
                     holidayName=extras.getString("HOLIDAYNAME");
                     dayName.setText("");
-                    SetTitles(holidayName, "Add a Day");
+                    SetToolbarTitles(holidayName, "Add a Day");
                 }
                 if(action != null && action.equals("modify"))
                 {
@@ -85,7 +85,7 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
                             return;
                     }
 
-                    SetTitles(holidayName, dayItem.dayName);
+                    SetToolbarTitles(holidayName, dayItem.dayName);
 
                 }
             }

@@ -109,10 +109,10 @@ public class TipDetailsView extends BaseActivity
 
             if(title == null || (title.isEmpty()))
             {
-                SetTitles(tipItem.tipDescription, "");
+                SetToolbarTitles(tipItem.tipDescription, "");
             } else
             {
-                SetTitles(title, subTitle);
+                SetToolbarTitles(title, subTitle);
             }
 
             SetImage(tipItem.tipPicture);

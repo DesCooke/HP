@@ -51,7 +51,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -132,7 +131,6 @@ public class BaseActivity extends AppCompatActivity
     public boolean showNotesEnabled;
     public ImageButton btnShowNotes;
 
-    public TextView txtProgramInfo;
     public String layoutName="";
 
     public TextView txtPicture;
@@ -530,7 +528,6 @@ public class BaseActivity extends AppCompatActivity
                 btnShowInfoBadge.show();
             }
 
-            txtProgramInfo= findViewById(R.id.txtProgramInfo);
             txtPicture= findViewById(R.id.txtPicture);
 
             imageDefault=BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing);
@@ -736,33 +733,47 @@ public class BaseActivity extends AppCompatActivity
         }
     }
 
-    public void SetTitles(String pTitle, String pSubTitle)
+    public void SetToolbarTitles(String pTitle, String pSubTitle)
     {
         try
         {
             title=pTitle;
             subTitle=pSubTitle;
 
-            ActionBar actionBar=getSupportActionBar();
-            if(actionBar != null)
-            {
-                actionBar.setTitle(title);
-                actionBar.setSubtitle(subTitle);
-            }
+            TextView tvTitle = findViewById(R.id.my_main_title);
+            TextView tvSubtitle = findViewById(R.id.my_sub_title);
+            tvTitle.setText(title);
+            tvSubtitle.setText(subTitle);
+
         }
         catch(Exception e)
         {
-            ShowError("SetTitles", e.getMessage());
+            ShowError("SetToolbarTitles", e.getMessage());
         }
 
     }
+
+    public void ShowToolbarEdit()
+    {
+        try
+        {
+            ImageView tbMenu = findViewById(R.id.my_toolbar_edit);
+            tbMenu.setVisibility(View.VISIBLE);
+        }
+        catch(Exception e)
+        {
+            ShowError("SetToolbarTitles", e.getMessage());
+        }
+
+    }
+
 
     public void showForm()
     {
         try
         {
             clearImage(null);
-            SetTitles(title, subTitle);
+            SetToolbarTitles(title, subTitle);
         }
         catch(Exception e)
         {

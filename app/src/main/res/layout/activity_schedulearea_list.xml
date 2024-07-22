@@ -11,6 +11,8 @@
                 android:paddingTop="@dimen/activity_vertical_margin"
                 tools:context="com.example.des.hp.MainActivity">
 
+    <include layout="@layout/my_toolbar" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/scheduleAreaListView"
         android:scrollingCache="false"
@@ -19,6 +21,7 @@
         android:scrollbars="vertical"
         android:layout_height="400dp"
         android:layout_above="@+id/imageButton"
+        android:layout_marginVertical="?attr/actionBarSize"
         android:layout_alignParentTop="true" />
 
 </RelativeLayout>

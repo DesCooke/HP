@@ -47,21 +47,9 @@ public class NoteEdit extends BaseActivity
                             return;
                     }
 
-                    actionBar=getSupportActionBar();
-                    if(actionBar != null)
-                    {
-                        String title=extras.getString("TITLE");
-                        String subtitle=extras.getString("SUBTITLE");
-                        if(title != null && !title.isEmpty())
-                        {
-                            actionBar.setTitle(title);
-                            actionBar.setSubtitle(subtitle);
-                        } else
-                        {
-                            actionBar.setTitle("Notes");
-                            actionBar.setSubtitle("");
-                        }
-                    }
+                    String title = extras.getString("TITLE");
+                    String subtitle = extras.getString("SUBTITLE");
+                    SetToolbarTitles(title, subtitle);
 
                     edtNote.setText(noteItem.notes);
                 }

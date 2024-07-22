@@ -147,10 +147,10 @@ public class AttractionAreaDetailsView extends BaseActivity
             subTitle = attractionAreaItem.attractionAreaDescription;
             if (!title.isEmpty())
             {
-                SetTitles(title, subTitle);
+                SetToolbarTitles(title, subTitle);
             } else
             {
-                SetTitles("ATTRACTIONS", "");
+                SetToolbarTitles("ATTRACTIONS", "");
             }
             
             scheduleAdapter = new ScheduleAdapter(this, scheduleList);

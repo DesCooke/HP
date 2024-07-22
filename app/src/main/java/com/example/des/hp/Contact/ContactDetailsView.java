@@ -108,10 +108,10 @@ public class ContactDetailsView extends BaseActivity
 
             if (title == null || (title.isEmpty()))
             {
-                SetTitles(contactItem.contactDescription, "");
+                SetToolbarTitles(contactItem.contactDescription, "");
             } else
             {
-                SetTitles(title, subTitle);
+                SetToolbarTitles(title, subTitle);
             }
             
             SetImage(contactItem.contactPicture);

@@ -88,7 +88,7 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
 
             if(action != null && action.equals("add"))
             {
-                SetTitles(getString(R.string.title_planner), "Add a Holiday");
+                SetToolbarTitles(getString(R.string.title_planner), "Add a Holiday");
                 holidayName.setText("");
                 datesAreUnknown();
             } else

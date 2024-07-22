@@ -17,7 +17,6 @@ import com.example.des.hp.Attraction.AttractionItem;
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
-import com.example.des.hp.Notes.NoteView;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
 
@@ -125,10 +124,10 @@ public class AttractionAreaDetailsList extends BaseActivity
             subTitle = attractionItem.attractionDescription;
             if (!title.isEmpty())
             {
-                SetTitles(title, subTitle);
+                SetToolbarTitles(title, subTitle);
             } else
             {
-                SetTitles("ATTRACTIONS", "");
+                SetToolbarTitles("ATTRACTIONS", "");
             }
             
             attractionAreaAdapter = new AttractionAreaAdapter(this, attractionAreaList);
@@ -257,36 +256,6 @@ public class AttractionAreaDetailsList extends BaseActivity
         catch (Exception e)
         {
             ShowError("showInfo", e.getMessage());
-        }
-    }
-    
-    public void showNotes(View view)
-    {
-        try
-        {
-            Intent intent2 = new Intent(getApplicationContext(), NoteView.class);
-            if (attractionItem.noteId == 0)
-            {
-                MyInt myInt = new MyInt();
-                try(DatabaseAccess da = databaseAccess())
-                {
-                    if (!da.getNextNoteId(holidayId, myInt))
-                        return;
-                    attractionItem.noteId = myInt.Value;
-                    if (!da.updateAttractionItem(attractionItem))
-                        return;
-                }
-            }
-            intent2.putExtra("ACTION", "view");
-            intent2.putExtra("HOLIDAYID", attractionItem.holidayId);
-            intent2.putExtra("NOTEID", attractionItem.noteId);
-            intent2.putExtra("TITLE", attractionItem.attractionDescription);
-            intent2.putExtra("SUBTITLE", "Notes");
-            startActivity(intent2);
-        }
-        catch (Exception e)
-        {
-            ShowError("showNotes", e.getMessage());
         }
     }
     

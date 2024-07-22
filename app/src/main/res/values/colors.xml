@@ -12,5 +12,6 @@
     <color name="colorUnknown">#f7f1f1</color>
     <color name="colorEnabled">#40a6ce</color>
     <color name="colorDisabled">#bdbec2</color>
+    <color name="colorText">#ffffff</color>
     <color name="BadgeColour">#ad40a6ce</color>
 </resources>

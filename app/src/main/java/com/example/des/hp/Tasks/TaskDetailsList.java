@@ -86,8 +86,8 @@ public class TaskDetailsList extends BaseActivity
         {
             allowCellMove=true;
 
-            if(title.length() == 0)
-                SetTitles("Task", "Tasks");
+            if(title.isEmpty())
+                SetToolbarTitles("Task", "Tasks");
 
             taskList=new ArrayList<>();
             try(DatabaseAccess da = databaseAccess();)

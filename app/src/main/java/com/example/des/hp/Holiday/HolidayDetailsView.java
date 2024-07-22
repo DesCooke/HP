@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -65,6 +66,7 @@ public class HolidayDetailsView extends BaseActivity
     public LinearLayout row1;
     public LinearLayout row2;
     public LinearLayout row3;
+    public ImageView editHoliday;
 
 
     // EditText Dialog
@@ -104,6 +106,9 @@ public class HolidayDetailsView extends BaseActivity
             contactsBadge= findViewById(R.id.txtContactBadge);
             tipsBadge= findViewById(R.id.txtTipsBadge);
             attractionsBadge= findViewById(R.id.txtAttractionBadge);
+
+            editHoliday=findViewById(R.id.my_toolbar_edit);
+            editHoliday.setOnClickListener(view -> editHoliday());
 
             row1= findViewById(R.id.row1);
             row2= findViewById(R.id.row2);
@@ -285,7 +290,8 @@ public class HolidayDetailsView extends BaseActivity
                 if(!da.getHolidayItem(holidayId, holidayItem))
                     return;
 
-                SetTitles(holidayItem.holidayName, "Holiday");
+                SetToolbarTitles(holidayItem.holidayName, "Holiday");
+                ShowToolbarEdit();
 
                 if(!da.getDayCount(holidayId, myInt))
                     return;

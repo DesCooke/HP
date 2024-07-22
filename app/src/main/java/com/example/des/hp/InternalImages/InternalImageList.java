@@ -21,7 +21,7 @@ public class InternalImageList extends BaseActivity
         super.showForm();
         try
         {
-            SetTitles("Internal Images", "please select one");
+            SetToolbarTitles("Internal Images", "please select one");
 
             Bundle extras=getIntent().getExtras();
             if(extras != null) {

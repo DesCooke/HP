@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyFileUtils.myFileUtils;
@@ -30,6 +31,7 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
     public ImageButton btnClear;
     public Button btnSave;
     public ImageButton btnFile;
+
     //endregion
 
     //region Constructors/Destructors
@@ -62,19 +64,6 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
         }
     }
 
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        try
-        {
-            MenuInflater inflater=getMenuInflater();
-            inflater.inflate(R.menu.extrafilesdetailsformmenu, menu);
-        }
-        catch(Exception e)
-        {
-            ShowError("onCreateOptionsMenu", e.getMessage());
-        }
-        return true;
-    }
     //endregion
 
     //region Regular Form Activities
@@ -103,7 +92,7 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
 
                 if(title.isEmpty())
                     if(extraFilesItem.fileDescription != null)
-                        SetTitles(extraFilesItem.fileDescription, "");
+                        SetToolbarTitles(extraFilesItem.fileDescription, "");
             }
 
 

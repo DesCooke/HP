@@ -126,10 +126,10 @@ public class TaskDetailsView extends BaseActivity
 
             if(title == null || (title.isEmpty()))
             {
-                SetTitles(taskItem.taskDescription, "");
+                SetToolbarTitles(taskItem.taskDescription, "");
             } else
             {
-                SetTitles(title, subTitle);
+                SetToolbarTitles(title, subTitle);
             }
 
             SetImage(taskItem.taskPicture);

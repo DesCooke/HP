@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <TextView
-        style="@style/MyTextHeading"
-        android:id="@+id/lblTitle"
-        android:text="@string/attraction_details"
-        />
+    <include layout="@layout/my_toolbar" />
 
-    <ImageButton
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageButton
         android:id="@+id/imageViewSmall"
         style="@style/MyBox"
         android:layout_width="wrap_content"
@@ -20,6 +21,7 @@
         android:layout_gravity="center"
         android:contentDescription="@string/imageviewsmall"
         android:visibility="visible"
+        android:layout_marginVertical="?attr/actionBarSize"
         app:srcCompat="@drawable/imagemissing" />
 
     <TextView
@@ -405,4 +407,6 @@
 
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
