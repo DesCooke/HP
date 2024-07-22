@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginVertical="?attr/actionBarSize"
+        android:layout_marginTop="?attr/actionBarSize"
         android:orientation="vertical">
 
         <include
@@ -20,26 +20,28 @@
 
         <LinearLayout
             android:id="@+id/grpStartDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false"
+            android:layout_margin="10dp"
+            style="@style/MyBox">
 
-            <TextView
-                android:id="@+id/lblStartDate"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/grpStartTime"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Start Date"
-                android:textSize="18sp" />
+                android:orientation="vertical"
+                android:layout_weight="1">
 
-            <TextView
-                android:id="@+id/txtStartDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView"
-                android:textAlignment="textEnd"
-                android:textSize="18sp" />
+                <TextView
+                    android:id="@+id/lblStartDate"
+                    android:text="@string/dates"
+                    style="@style/MyTextHint"/>
+
+                <TextView
+                    android:id="@+id/txtStartDate"
+                    style="@style/MyTextLine"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

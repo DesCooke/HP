@@ -8,14 +8,17 @@
 
     <ImageButton
         android:id="@+id/imageViewSmall"
-        android:layout_width="match_parent"
-        android:layout_height="176dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_alignParentTop="true"
-        android:background="@android:drawable/screen_background_light_transparent"
+        android:layout_centerInParent="true"
+        android:background="@drawable/holidaylistitembox"
+        android:contentDescription="@string/todo"
+        android:padding="10dp"
+        android:layout_margin="10dp"
         android:scaleType="fitCenter"
         android:visibility="visible"
-        app:srcCompat="@drawable/imagemissing"
-        tools:ignore="ContentDescription,RtlHardcoded" />
+        app:srcCompat="@drawable/imagemissing" />
 
     <ImageButton
         android:id="@+id/btnClear"

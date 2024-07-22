@@ -125,6 +125,32 @@ public class ImageUtils
         
     }
 
+    public String GetHolidayDirFromHolidayItem(HolidayItem holidayItem)
+    {
+        String holidayDirName = getHolidayDirString(holidayItem);
+
+        String lDirName = MyFileUtils.MyDocuments();
+        File lFile = new File(lDirName);
+        if (!lFile.isDirectory())
+            lFile.mkdir();
+
+        lDirName = MyFileUtils.MyDocuments() + "/" +
+                res.getString(R.string.application_file_path);
+        lFile = new File(lDirName);
+        if (!lFile.isDirectory())
+            lFile.mkdir();
+
+        lDirName = MyFileUtils.MyDocuments() + "/" +
+                res.getString(R.string.application_file_path) + "/" +
+                holidayDirName;
+        lFile = new File(lDirName);
+        if (!lFile.isDirectory())
+            lFile.mkdir();
+
+        return(lDirName);
+    }
+
+
     public String GetHolidayDir(int holidayId)
     {
         HolidayItem holidayItem = new HolidayItem();

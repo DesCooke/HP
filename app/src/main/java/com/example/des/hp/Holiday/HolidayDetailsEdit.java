@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
 
+import java.io.File;
 import java.util.Date;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
@@ -51,6 +53,9 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
     public Switch swAttractions;
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch swContacts;
+    public ImageView deleteHoliday;
+
+
 
     //endregion
 
@@ -81,6 +86,9 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
             swAttractions= findViewById(R.id.swAttractions);
             swContacts= findViewById(R.id.swContacts);
 
+            deleteHoliday=findViewById(R.id.my_toolbar_delete);
+            deleteHoliday.setOnClickListener(view -> deleteHoliday());
+
             holidayItem=new HolidayItem();
 
             btnClear.setVisibility(View.VISIBLE);
@@ -102,6 +110,8 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
                 holidayName.setText(holidayItem.holidayName);
 
                 txtStartDate.setText(holidayItem.startDateStr);
+
+                ShowToolbarDelete();
 
                 if(holidayItem.startDateInt == DateUtils.unknownDate)
                 {
@@ -278,12 +288,30 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
         {
             myMessages().ShowMessageShort("Saving Holiday");
 
-            holidayItem.holidayPicture="";
-            if(!internalImageFilename.isEmpty())
-                holidayItem.holidayPicture=internalImageFilename;
-            holidayItem.pictureAssigned=imageSet;
-            holidayItem.pictureChanged=imageChanged;
             holidayItem.holidayName=holidayName.getText().toString();
+            holidayItem.pictureChanged = imageChanged;
+            if(imageChanged) {
+                holidayItem.holidayPicture = "";
+                if (!internalImageFilename.isEmpty())
+                    holidayItem.holidayPicture = internalImageFilename;
+                holidayItem.pictureAssigned = imageSet;
+            }
+
+            // if holiday name has changed - then rename directory asap
+            if(holidayItem.origHolidayName.compareTo(holidayItem.holidayName)!=0){
+                String oldname=holidayItem.origHolidayName;
+                String newname=holidayItem.holidayName;
+                holidayItem.holidayName=oldname;
+                // holiday name changes - so rename directory
+                String oldDirname=ImageUtils.imageUtils().GetHolidayDirFromHolidayItem(holidayItem);
+                holidayItem.holidayName=newname;
+                String newDirname=ImageUtils.imageUtils().GetHolidayDirFromHolidayItem(holidayItem);
+                File file=new File(oldDirname);
+                boolean res = file.renameTo(new File(newDirname));
+                if(!res)
+                    throw new Exception("Hmmm - error renaming holiday directory");
+            }
+
             if(sw.isChecked())
             {
                 holidayItem.startDateDate=new Date();
@@ -341,5 +369,23 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
         }
     }
     //endregion
+
+    public void deleteHoliday()
+    {
+        try
+        {
+            try(DatabaseAccess da = databaseAccess())
+            {
+                if(!da.deleteHolidayItem(holidayItem))
+                    return;
+            }
+            finish();
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteHoliday", e.getMessage());
+        }
+    }
+
 
 }

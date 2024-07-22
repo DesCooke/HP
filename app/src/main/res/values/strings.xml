@@ -165,5 +165,6 @@
     <string name="sub_title">Sub Title</string>
     <string name="notes">Notes</string>
     <string name="edit_notes">Edit Notes</string>
+    <string name="dates">Dates</string>
 
 </resources>

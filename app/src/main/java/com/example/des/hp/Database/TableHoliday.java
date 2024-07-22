@@ -1,5 +1,7 @@
 package com.example.des.hp.Database;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -274,6 +276,29 @@ class TableHoliday extends TableBase
             if(!_dateUtils.DateToStr(retHolidayItem.startDateDate, myString))
                 return (false);
             retHolidayItem.startDateStr=myString.Value;
+
+            try(DatabaseAccess da = databaseAccess()) {
+                MyInt myInt=new MyInt();
+                if (!da.getDayCount(retHolidayItem.holidayId, myInt))
+                    return(false);
+                int dayCount = myInt.Value;
+                if(dayCount==0) {
+                    retHolidayItem.endDateDate=retHolidayItem.startDateDate;
+                    retHolidayItem.endDateStr=retHolidayItem.startDateStr;
+                }
+                else {
+                    Date retDate = new Date();
+                    _dateUtils.AddDays(retHolidayItem.startDateDate, dayCount-1, retDate);
+                    retHolidayItem.endDateDate = retDate;
+
+                    MyString myString2 = new MyString();
+                    if (!_dateUtils.DateToStr(retHolidayItem.endDateDate, myString2))
+                        return (false);
+                    retHolidayItem.endDateStr = myString.Value;
+                }
+            }
+
+
 
             retHolidayItem.dateKnown=retHolidayItem.startDateInt != DateUtils.unknownDate;
             retHolidayItem.infoId=Integer.parseInt(cursor.getString(5));

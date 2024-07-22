@@ -767,6 +767,19 @@ public class BaseActivity extends AppCompatActivity
 
     }
 
+    public void ShowToolbarDelete()
+    {
+        try
+        {
+            ImageView tbDelete = findViewById(R.id.my_toolbar_delete);
+            tbDelete.setVisibility(View.VISIBLE);
+        }
+        catch(Exception e)
+        {
+            ShowError("SetToolbarTitles", e.getMessage());
+        }
+
+    }
 
     public void showForm()
     {

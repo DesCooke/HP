@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -31,8 +30,6 @@ import com.example.des.hp.Tasks.TaskDetailsList;
 import com.example.des.hp.myutils.*;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
-
-import androidx.annotation.NonNull;
 
 public class HolidayDetailsView extends BaseActivity
 {
@@ -328,17 +325,23 @@ public class HolidayDetailsView extends BaseActivity
                 int contactCount=myInt.Value;
                 contactsBadge.setText(String.format("Contacts (%s)", contactCount));
 
+                if(!holidayItem.dateKnown)
+                {
+                    grpStartDate.setVisibility(View.INVISIBLE);
+                } else
+                {
+                    grpStartDate.setVisibility(View.VISIBLE);
+                    if(dayCount==0) {
+                        txtStartDate.setText(holidayItem.startDateStr);
+                    }
+                    else{
+                        txtStartDate.setText(String.format("%s -> %s", holidayItem.startDateStr, holidayItem.endDateStr));
+                    }
+                }
+
+
             }
             SetImage(holidayItem.holidayPicture);
-
-            if(!holidayItem.dateKnown)
-            {
-                grpStartDate.setVisibility(View.INVISIBLE);
-            } else
-            {
-                grpStartDate.setVisibility(View.VISIBLE);
-                txtStartDate.setText(holidayItem.startDateStr);
-            }
 
             buttonCount=0;
             showOrHideButton(btnGroupDays, holidayItem.buttonDays);
@@ -399,54 +402,29 @@ public class HolidayDetailsView extends BaseActivity
         }
     }
 
-    public void deleteHoliday()
-    {
-        try
-        {
-            try(DatabaseAccess da = databaseAccess())
-            {
-                if(!da.deleteHolidayItem(holidayItem))
-                    return;
-            }
-            finish();
-        }
-        catch(Exception e)
-        {
-            ShowError("deleteHoliday", e.getMessage());
-        }
-    }
-
     @Override
     protected void onResume()
     {
         super.onResume();
         try
         {
-            showForm();
+            try(DatabaseAccess da = databaseAccess())
+            {
+                if(!da.getHolidayItem(holidayId, holidayItem)) {
+                   finish();
+                }
+                if(holidayItem!=null){
+                    if(holidayItem.holidayId==0){
+                        finish();
+                    }
+                }
+            }
         }
         catch(Exception e)
         {
             ShowError("onResume", e.getMessage());
         }
 
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item)
-    {
-        try
-        {
-            int id=item.getItemId();
-            if(id==R.id.action_edit_holiday)
-                editHoliday();
-            if(id==R.id.action_delete_holiday)
-                deleteHoliday();
-        }
-        catch(Exception e)
-        {
-            ShowError("onOptionsItemSelected", e.getMessage());
-        }
-        return (true);
     }
 
     @Override
