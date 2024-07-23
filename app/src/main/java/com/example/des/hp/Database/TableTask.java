@@ -346,7 +346,43 @@ class TableTask extends TableBase
     {
         try
         {
-            String lSql="SELECT holidayId, taskId, sequenceNo, taskDescription, " + "  taskDateKnown, taskDate, taskPicture, taskComplete, taskNotes, infoId, " + "  noteId, galleryId " + "FROM Tasks " + "WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
+            String lSql="SELECT holidayId, taskId, sequenceNo, taskDescription, " +
+                    "  taskDateKnown, taskDate, taskPicture, taskComplete, taskNotes, infoId, " +
+                    "  noteId, galleryId " + "FROM Tasks " +
+                    " WHERE holidayId = " + holidayId + " " + "ORDER BY SequenceNo ";
+
+            Cursor cursor=executeSQLOpenCursor("getTaskList", lSql);
+            if(cursor == null)
+                return (false);
+
+            while(cursor.moveToNext())
+            {
+                TaskItem taskItem=new TaskItem();
+                if(!GetTaskItemFromQuery(cursor, taskItem))
+                    return (false);
+
+                al.add(taskItem);
+            }
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("getTaskList", e.getMessage());
+        }
+        return (false);
+    }
+
+    boolean getOSTaskList(int holidayId, ArrayList<TaskItem> al)
+    {
+        try
+        {
+            String lSql="SELECT holidayId, taskId, sequenceNo, taskDescription, " +
+                    "  taskDateKnown, taskDate, taskPicture, taskComplete, taskNotes, infoId, " +
+                    "  noteId, galleryId " +
+                    " FROM Tasks " +
+                    " WHERE holidayId = " + holidayId + " " +
+                    " AND taskComplete = 0 " +
+                    "ORDER BY SequenceNo ";
 
             Cursor cursor=executeSQLOpenCursor("getTaskList", lSql);
             if(cursor == null)

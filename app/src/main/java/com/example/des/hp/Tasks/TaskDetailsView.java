@@ -144,6 +144,7 @@ public class TaskDetailsView extends BaseActivity
             if(action.compareTo("view")==0)
                 ShowToolbarEdit();
 
+            swKnownDate.setChecked(taskItem.taskDateKnown);
             if(taskItem.taskDateKnown)
             {
                 grpTaskDate.setVisibility(View.VISIBLE);
@@ -154,6 +155,17 @@ public class TaskDetailsView extends BaseActivity
             }
 
             chkTaskComplete.setChecked(taskItem.taskComplete);
+
+            if(action.compareTo("view")==0){
+                swKnownDate.setEnabled(false);
+                grpTaskDate.setEnabled(false);
+                chkTaskComplete.setEnabled(false);
+            }
+            else{
+                swKnownDate.setEnabled(true);
+                grpTaskDate.setEnabled(true);
+                chkTaskComplete.setEnabled(true);
+            }
 
             afterShow();
         }

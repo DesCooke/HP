@@ -182,5 +182,7 @@
     <string name="known_date">Known Date</string>
     <string name="task_date">Task Date</string>
     <string name="task_complete">Task Complete</string>
+    <string name="only_outstanding_tasks">Only Outstanding Tasks</string>
+    <string name="task_description">Task Description</string>
 
 </resources>

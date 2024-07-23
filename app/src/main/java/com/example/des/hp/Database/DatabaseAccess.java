@@ -1038,7 +1038,21 @@ public class DatabaseAccess extends SQLiteOpenHelper
         return (false);
         
     }
-    
+
+    public boolean getOSTaskList(int holidayId, ArrayList<TaskItem> al)
+    {
+        try
+        {
+            return (tableTask.getOSTaskList(holidayId, al));
+        }
+        catch (Exception e)
+        {
+            ShowError("getTaskList", e.getMessage());
+        }
+        return (false);
+
+    }
+
     //endregion
     
     //region BUDGET functions

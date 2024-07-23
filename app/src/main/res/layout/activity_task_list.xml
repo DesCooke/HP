@@ -10,6 +10,32 @@
 
     <include layout="@layout/my_toolbar" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginVertical="?attr/actionBarSize">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        style="@style/MyBox"
+        android:layout_marginHorizontal="10dp">
+
+        <TextView
+            android:id="@+id/lblTaskDate"
+            android:text="@string/only_outstanding_tasks"
+            style="@style/MyTextHint"/>
+
+        <Switch
+            android:id="@+id/swToggleOutstanding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/taskListView"
         android:layout_width="match_parent"
@@ -18,9 +44,10 @@
         android:layout_alignParentTop="true"
         android:cacheColorHint="#0000"
         android:scrollbars="vertical"
-        android:layout_marginVertical="?attr/actionBarSize"
-        android:scrollingCache="false"/>
+        android:scrollingCache="false"
+        android:layout_marginHorizontal="10dp"/>
 
+    </LinearLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="match_parent"
@@ -34,5 +61,4 @@
         app:backgroundTint="@color/colorPrimary"
         app:maxImageSize="48dp"
         app:srcCompat="@android:drawable/ic_menu_add" />
-
 </RelativeLayout>

@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Switch;
 
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
@@ -24,6 +25,7 @@ public class TaskDetailsList extends BaseActivity
     public ArrayList<TaskItem> taskList;
     public TaskAdapter taskAdapter;
     public FloatingActionButton fab;
+    public Switch swToggleOutstanding;
     //endregion
 
     //region Constructors/Destructors
@@ -47,6 +49,11 @@ public class TaskDetailsList extends BaseActivity
             fab=findViewById(R.id.fab);
             fab.setOnClickListener(this::showTaskAdd);
             afterCreate();
+
+            swToggleOutstanding = findViewById(R.id.swToggleOutstanding);
+            swToggleOutstanding.setOnClickListener(this::toggleOutstanding);
+            swToggleOutstanding.setChecked(true);
+
 
             showForm();
         }
@@ -103,8 +110,14 @@ public class TaskDetailsList extends BaseActivity
             taskList=new ArrayList<>();
             try(DatabaseAccess da = databaseAccess();)
             {
-                if(!da.getTaskList(holidayId, taskList))
-                    return;
+                if(swToggleOutstanding.isChecked()){
+                    if(!da.getOSTaskList(holidayId, taskList))
+                        return;
+                }
+                else{
+                    if(!da.getTaskList(holidayId, taskList))
+                        return;
+                }
             }
 
             taskAdapter=new TaskAdapter(this, taskList);
@@ -120,8 +133,8 @@ public class TaskDetailsList extends BaseActivity
                     intent.putExtra("ACTION", "view");
                     intent.putExtra("HOLIDAYID", obj.holidayId);
                     intent.putExtra("TASKID", obj.taskId);
-                    intent.putExtra("TITLE", title + "/" + subTitle);
-                    intent.putExtra("SUBTITLE", obj.taskDescription);
+                    intent.putExtra("TITLE", obj.taskDescription);
+                    intent.putExtra("SUBTITLE", subTitle);
                     startActivity(intent);
                 }
             });
@@ -134,6 +147,10 @@ public class TaskDetailsList extends BaseActivity
             ShowError("showForm", e.getMessage());
         }
 
+    }
+
+    public void toggleOutstanding(View view){
+        showForm();
     }
 
     @Override

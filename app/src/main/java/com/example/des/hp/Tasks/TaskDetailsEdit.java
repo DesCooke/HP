@@ -239,14 +239,16 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
 
             taskItem.taskDescription=txtTaskDescription.getText().toString();
 
-            taskItem.taskPicture="";
-            if(!internalImageFilename.isEmpty())
-                taskItem.taskPicture=internalImageFilename;
-            taskItem.pictureAssigned=imageSet;
-            taskItem.pictureChanged=imageChanged;
-            taskItem.fileBitmap=null;
-            if(imageSet)
-                taskItem.fileBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            if(imageChanged) {
+                taskItem.taskPicture = "";
+                if (!internalImageFilename.isEmpty())
+                    taskItem.taskPicture = internalImageFilename;
+                taskItem.pictureAssigned = imageSet;
+                taskItem.pictureChanged = imageChanged;
+                taskItem.fileBitmap = null;
+                if (imageSet)
+                    taskItem.fileBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            }
 
 
             if(swKnownDate.isChecked())
