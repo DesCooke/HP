@@ -6,10 +6,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Switch;
 
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +26,8 @@ public class BudgetDetailsList extends BaseActivity
     //region Member Variables
     public ArrayList<BudgetItem> budgetList;
     private BudgetAdapter budgetAdapter;
+    public FloatingActionButton fab;
+    public Switch swToggleOutstanding;
     //endregion
     
     //region Constructors/Destructors
@@ -37,7 +41,21 @@ public class BudgetDetailsList extends BaseActivity
             
             layoutName = "activity_budget_list";
             setContentView(R.layout.activity_budget_list);
-            
+
+            fab=findViewById(R.id.fab);
+            if(fab!=null)
+                fab.setOnClickListener(this::showBudgetAdd);
+
+            swToggleOutstanding=findViewById(R.id.swToggleOutstanding);
+            swToggleOutstanding.setChecked(true);
+            swToggleOutstanding.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showForm();
+                }
+            });
+
+
             afterCreate();
             
             showForm();
@@ -73,6 +91,8 @@ public class BudgetDetailsList extends BaseActivity
             Intent intent = new Intent(getApplicationContext(), BudgetDetailsEdit.class);
             intent.putExtra("ACTION", "add");
             intent.putExtra("HOLIDAYID", holidayId);
+            intent.putExtra("TITLE", getString(R.string.add_a_budget));
+            intent.putExtra("SUBTITLE", subTitle);
             startActivity(intent);
         }
         catch (Exception e)
@@ -91,8 +111,14 @@ public class BudgetDetailsList extends BaseActivity
             budgetList = new ArrayList<>();
             try(DatabaseAccess da = databaseAccess())
             {
-                if (!da.getBudgetList(holidayId, budgetList))
-                    return;
+                if(swToggleOutstanding.isChecked()){
+                    if (!da.getOSBudgetList(holidayId, budgetList))
+                        return;
+                }
+                else {
+                    if (!da.getBudgetList(holidayId, budgetList))
+                        return;
+                }
             }
             budgetAdapter = new BudgetAdapter(this, budgetList);
             
@@ -103,12 +129,12 @@ public class BudgetDetailsList extends BaseActivity
                 intent.putExtra("ACTION", "view");
                 intent.putExtra("HOLIDAYID", obj.holidayId);
                 intent.putExtra("BUDGETID", obj.budgetId);
-                intent.putExtra("TITLE", title + "/" + subTitle);
-                intent.putExtra("SUBTITLE", obj.budgetDescription);
+                intent.putExtra("TITLE", obj.budgetDescription);
+                intent.putExtra("SUBTITLE", subTitle);
 
                 startActivity(intent);
             });
-            
+
             afterShow();
         }
         catch (Exception e)

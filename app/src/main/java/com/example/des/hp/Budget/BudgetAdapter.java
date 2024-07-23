@@ -7,6 +7,9 @@ import android.graphics.BitmapFactory;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.graphics.Color;
+import android.provider.CalendarContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,6 +106,7 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
                 if (imageTotal == null)
                     imageTotal = BitmapFactory.decodeResource(context.getResources(), R.drawable.sum);
                 holder.budgetImage.setImageBitmap(imageTotal);
+                holder.budgetItemCell.setBackgroundColor(context.getResources().getColor(R.color.colorEasy));
             } else
             {
                 holder.budgetImage.setVisibility(View.INVISIBLE);

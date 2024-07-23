@@ -423,6 +423,58 @@ class TableBudget extends TableBase
         }
     }
 
+
+    private void getOSBudgetTotal(int holidayId, MyInt retInt)
+    {
+        try
+        {
+            String lSQL="SELECT IFNULL(SUM(budgetTotal),0) " +
+                    "FROM Budget " +
+                    "WHERE holidayId = " + holidayId + " " +
+                    "AND (budgetUnpaid < -0.001 OR budgetUnpaid > 0.001) ";
+
+            executeSQLGetInt("getBudgetTotal", lSQL, retInt);
+        }
+        catch(Exception e)
+        {
+            ShowError("getBudgetTotal", e.getMessage());
+        }
+    }
+
+    private void getOSBudgetUnpaid(int holidayId, MyInt retInt)
+    {
+        try
+        {
+            String lSQL="SELECT IFNULL(SUM(budgetUnpaid),0) " +
+                    "FROM Budget " +
+                    "WHERE holidayId = " + holidayId + " " +
+                    "AND (budgetUnpaid < -0.001 OR budgetUnpaid > 0.001) ";
+
+            executeSQLGetInt("getBudgetUnpaid", lSQL, retInt);
+        }
+        catch(Exception e)
+        {
+            ShowError("getBudgetUnpaid", e.getMessage());
+        }
+    }
+
+    private void getOSBudgetPaid(int holidayId, MyInt retInt)
+    {
+        try
+        {
+            String lSQL="SELECT IFNULL(SUM(budgetPaid),0) " +
+                    "FROM Budget " +
+                    "WHERE holidayId = " + holidayId + " " +
+                    "AND (budgetUnpaid < -0.001 OR budgetUnpaid > 0.001) ";
+
+            executeSQLGetInt("getBudgetPaid", lSQL, retInt);
+        }
+        catch(Exception e)
+        {
+            ShowError("getBudgetPaid", e.getMessage());
+        }
+    }
+
     boolean getNextBudgetSequenceNo(int holidayId, MyInt retInt)
     {
         try
@@ -492,6 +544,69 @@ class TableBudget extends TableBase
             totalBudgetItem.budgetUnpaid=myInt.Value;
 
             getBudgetTotal(holidayId, myInt);
+            totalBudgetItem.budgetTotal=myInt.Value;
+
+            al.add(totalBudgetItem);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("getBudgetList", e.getMessage());
+        }
+        return (false);
+
+    }
+
+
+    boolean getOSBudgetList(int holidayId, ArrayList<BudgetItem> al)
+    {
+        try
+        {
+            String lSql=
+                    "SELECT " +
+                            "  holidayId, " +
+                            "  budgetId, " +
+                            "  sequenceNo, " +
+                            "  budgetDescription, " +
+                            "  budgetTotal, " +
+                            "  budgetPaid, " +
+                            "  budgetUnpaid, " +
+                            "  budgetPicture, " +
+                            "  budgetNotes, " +
+                            "  infoId, " +
+                            "  noteId, " +
+                            "  galleryId " +
+                            "FROM budget " +
+                            "WHERE HolidayId = " + holidayId + " " +
+                            "AND (budgetUnpaid < -0.001 OR budgetUnpaid > 0.001) " +
+                            "ORDER BY SequenceNo ";
+
+            Cursor cursor=executeSQLOpenCursor("getBudgetList", lSql);
+            if(cursor == null)
+                return (false);
+
+            while(cursor.moveToNext())
+            {
+                BudgetItem budgetItem=new BudgetItem();
+                if(!GetBudgetItemFromQuery(cursor, budgetItem))
+                    return (false);
+
+                al.add(budgetItem);
+            }
+            BudgetItem totalBudgetItem=new BudgetItem();
+            totalBudgetItem.sequenceNo=9999;
+
+            totalBudgetItem.budgetDescription=_context.getString(R.string.caption_budget_total_marker);
+            MyInt myInt=new MyInt();
+
+            getOSBudgetPaid(holidayId, myInt);
+            totalBudgetItem.budgetPaid=myInt.Value;
+
+            getOSBudgetUnpaid(holidayId, myInt);
+            totalBudgetItem.budgetUnpaid=myInt.Value;
+
+            getOSBudgetTotal(holidayId, myInt);
             totalBudgetItem.budgetTotal=myInt.Value;
 
             al.add(totalBudgetItem);

@@ -1187,7 +1187,20 @@ public class DatabaseAccess extends SQLiteOpenHelper
         return (false);
         
     }
-    
+
+    public boolean getOSBudgetList(int holidayId, ArrayList<BudgetItem> al)
+    {
+        try
+        {
+            return (tableBudget.getOSBudgetList(holidayId, al));
+        }
+        catch (Exception e)
+        {
+            ShowError("getBudgetList", e.getMessage());
+        }
+        return (false);
+
+    }
     //endregion
 
     //region TIP functions

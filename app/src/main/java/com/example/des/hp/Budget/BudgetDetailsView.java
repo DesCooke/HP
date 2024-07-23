@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,6 +38,8 @@ public class BudgetDetailsView extends BaseActivity
     public LinearLayout grpBudgetTotal;
     public LinearLayout grpBudgetPaid;
     public LinearLayout grpBudgetUnpaid;
+    public ImageView btnEdit;
+    public ImageView btnDelete;
     //endregion
     
     //region Constructors/Destructors
@@ -62,6 +66,10 @@ public class BudgetDetailsView extends BaseActivity
             grpBudgetTotal = findViewById(R.id.grpBudgetTotal);
             grpBudgetPaid = findViewById(R.id.grpBudgetPaid);
             grpBudgetUnpaid = findViewById(R.id.grpBudgetUnpaid);
+            btnEdit = findViewById(R.id.my_toolbar_edit);
+            btnDelete = findViewById(R.id.my_toolbar_delete);
+            btnEdit.setOnClickListener(view -> editBudget());
+            btnDelete.setOnClickListener(view -> deleteBudget());
 
             afterCreate();
             
@@ -121,14 +129,16 @@ public class BudgetDetailsView extends BaseActivity
                     return;
             }
 
-            if (title == null || (title.isEmpty()))
-            {
-                SetToolbarTitles(budgetItem.budgetDescription, "");
-            } else
-            {
-                SetToolbarTitles(title, subTitle);
+            SetToolbarTitles(title, subTitle);
+
+            if(action.compareTo("view")==0){
+                ShowToolbarEdit();
             }
-            
+            else{
+                if(action.compareTo("modify")==0){
+                    ShowToolbarDelete();
+                }
+            }
             SetImage(budgetItem.budgetPicture);
             
             txtBudgetDescription.setText(budgetItem.budgetDescription);
@@ -244,4 +254,30 @@ public class BudgetDetailsView extends BaseActivity
         }
     }
     //endregion
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        try
+        {
+            try(DatabaseAccess da = databaseAccess())
+            {
+                if(!da.getBudgetItem(holidayId, budgetId, budgetItem)) {
+                    finish();
+                }
+                if(action.compareTo("add")!=0)
+                    if(budgetItem!=null)
+                        if(budgetItem.budgetId==0)
+                            finish();
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("onResume", e.getMessage());
+        }
+
+    }
+
 }
+

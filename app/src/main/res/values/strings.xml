@@ -184,5 +184,11 @@
     <string name="task_complete">Task Complete</string>
     <string name="only_outstanding_tasks">Only Outstanding Tasks</string>
     <string name="task_description">Task Description</string>
+    <string name="budget_description">Budget Description</string>
+    <string name="total">Total</string>
+    <string name="paid">Paid</string>
+    <string name="unpaid">Unpaid</string>
+    <string name="add_a_budget">Add a Budget</string>
+    <string name="only_outstanding_budgets">Only Outstanding Budgets</string>
 
 </resources>
