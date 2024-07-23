@@ -35,6 +35,10 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
 
+            alwaysShowBtnShowNotes=true;
+            alwaysShowBtnShowInfo=true;
+            alwaysShowBtnClearImage=true;
+
             heartRating.setIsIndicator(false);
             scenicRating.setIsIndicator(false);
             thrillRating.setIsIndicator(false);

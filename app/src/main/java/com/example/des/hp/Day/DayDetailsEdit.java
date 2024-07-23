@@ -67,6 +67,10 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
             deleteDay=findViewById(R.id.my_toolbar_delete);
             deleteDay.setOnClickListener(view -> deleteDay());
 
+            alwaysShowBtnShowNotes=true;
+            alwaysShowBtnShowInfo=true;
+            alwaysShowBtnClearImage=true;
+
             btnClearImage(null);
 
             Bundle extras=getIntent().getExtras();
@@ -302,5 +306,72 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
             ShowError("deleteDay", e.getMessage());
         }
     }
+
+    @Override
+    public void setNoteId(int pNoteId)
+    {
+        try
+        {
+            dayItem.noteId=pNoteId;
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateDayItem(dayItem);
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("setNoteId", e.getMessage());
+        }
+
+    }
+
+    @Override
+    public int getNoteId()
+    {
+        try
+        {
+            return (dayItem.noteId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNoteId", e.getMessage());
+        }
+        return (0);
+    }
+
+    @Override
+    public void setInfoId(int pInfoId)
+    {
+        try
+        {
+            dayItem.infoId=pInfoId;
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateDayItem(dayItem);
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("setInfoId", e.getMessage());
+        }
+
+    }
+
+    @Override
+    public int getInfoId()
+    {
+        try
+        {
+            return (dayItem.infoId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getInfoId", e.getMessage());
+        }
+        return (0);
+
+    }
+
+
 
 }

@@ -169,7 +169,8 @@ public class BudgetDetailsView extends BaseActivity
         }
         return (0);
     }
-    
+
+    @Override
     public void setNoteId(int pNoteId)
     {
         try
@@ -278,6 +279,7 @@ public class BudgetDetailsView extends BaseActivity
         }
 
     }
+
 
 }
 

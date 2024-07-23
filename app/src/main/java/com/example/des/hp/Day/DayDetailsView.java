@@ -236,21 +236,6 @@ public class DayDetailsView extends BaseActivity
     //endregion
 
     //region form Functions
-    @Override
-    public int getInfoId()
-    {
-        try
-        {
-            return (dayItem.infoId);
-        }
-        catch(Exception e)
-        {
-            ShowError("getInfoId", e.getMessage());
-        }
-        return (0);
-
-    }
-
     public void showBudget()
     {
         try
@@ -299,6 +284,7 @@ public class DayDetailsView extends BaseActivity
         }
     }
 
+    @Override
     public void setNoteId(int pNoteId)
     {
         try
@@ -347,6 +333,23 @@ public class DayDetailsView extends BaseActivity
         }
 
     }
+
+    @Override
+    public int getInfoId()
+    {
+        try
+        {
+            return (dayItem.infoId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getInfoId", e.getMessage());
+        }
+        return (0);
+
+    }
+
+
 
     public void editDay()
     {

@@ -46,6 +46,10 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
                 }
             });
 
+            alwaysShowBtnShowNotes=true;
+            alwaysShowBtnShowInfo=true;
+            alwaysShowBtnClearImage=true;
+
             if(action != null && action.equals("add"))
             {
                 grpMenuFile.setVisibility(View.GONE);
@@ -302,6 +306,72 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
         }
 
     }
+
+    @Override
+    public int getInfoId()
+    {
+        try
+        {
+            return (taskItem.infoId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getInfoId", e.getMessage());
+        }
+        return (0);
+
+    }
+
+    @Override
+    public void setNoteId(int pNoteId)
+    {
+        try
+        {
+            taskItem.noteId=pNoteId;
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateTaskItem(taskItem);
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("setNoteId", e.getMessage());
+        }
+
+    }
+
+    @Override
+    public int getNoteId()
+    {
+        try
+        {
+            return (taskItem.noteId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNoteId", e.getMessage());
+        }
+        return (0);
+    }
+
+    @Override
+    public void setInfoId(int pInfoId)
+    {
+        try
+        {
+            taskItem.infoId=pInfoId;
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateTaskItem(taskItem);
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("setInfoId", e.getMessage());
+        }
+
+    }
+
     //endregion
 
 }

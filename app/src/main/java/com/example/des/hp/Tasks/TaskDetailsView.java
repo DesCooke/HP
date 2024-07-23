@@ -192,6 +192,7 @@ public class TaskDetailsView extends BaseActivity
 
     }
 
+    @Override
     public void setNoteId(int pNoteId)
     {
         try

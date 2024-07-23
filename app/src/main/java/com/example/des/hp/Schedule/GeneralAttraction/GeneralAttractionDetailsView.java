@@ -369,4 +369,68 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
 
     }
 
+    public int getNoteId()
+    {
+        try
+        {
+            return (scheduleItem.noteId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getNoteId", e.getMessage());
+        }
+        return (0);
+    }
+
+    @Override
+    public void setNoteId(int noteId)
+    {
+        try
+        {
+            scheduleItem.noteId=noteId;
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateScheduleItem(scheduleItem);
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("setNoteId", e.getMessage());
+        }
+    }
+
+    @Override
+    public int getInfoId()
+    {
+        try
+        {
+            return (scheduleItem.infoId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getInfoId", e.getMessage());
+        }
+        return (0);
+    }
+
+    @Override
+    public void setInfoId(int infoId)
+    {
+        try
+        {
+            scheduleItem.infoId=infoId;
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateScheduleItem(scheduleItem);
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("setInfoId", e.getMessage());
+        }
+
+    }
+
+
+
 }
