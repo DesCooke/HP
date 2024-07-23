@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fullPage"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include layout="@layout/my_toolbar" />
 
     <LinearLayout
+        android:id="@+id/topBit"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="?attr/actionBarSize"
-        android:layout_weight="1">
+        android:layout_marginVertical="?attr/actionBarSize">
 
         <include
             layout="@layout/included_schedule_header"
@@ -26,42 +28,6 @@
             android:textAlignment="center"
             android:textSize="24sp" />
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/grpMenuFile">
-
-            <ImageButton
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                app:srcCompat="@android:drawable/ic_menu_info_details"
-                android:id="@+id/btnShowInfo"
-                android:scaleType="centerInside"
-                android:clickable="false"
-                android:background="@android:drawable/alert_light_frame"
-                android:tint="@color/colorDisabled"
-                android:onClick="showInfo"/>
-
-            <Space
-                android:layout_width="20dp"
-                android:layout_height="match_parent" />
-
-            <ImageButton
-                app:srcCompat="@drawable/notepad"
-                android:id="@+id/btnShowNotes"
-                android:background="@android:drawable/alert_light_frame"
-                android:tint="@color/colorDisabled"
-                android:scaleType="centerInside"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:onClick="showNotes"/>
-
-            <Space
-                android:layout_width="20dp"
-                android:layout_height="match_parent" />
-        </LinearLayout>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/dayListView"
         android:scrollingCache="false"
@@ -73,4 +39,19 @@
 
     </LinearLayout>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:contentDescription="@string/floatingactionbutton"
+        android:elevation="1dp"
+        android:translationZ="1dp"
+        app:backgroundTint="@color/colorPrimary"
+        app:maxImageSize="48dp"
+        app:srcCompat="@android:drawable/ic_menu_add" />
+
+
+</RelativeLayout>

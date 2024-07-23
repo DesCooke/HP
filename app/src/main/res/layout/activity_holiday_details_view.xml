@@ -46,43 +46,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/grpMenuFile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/btnShowInfo"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:background="@android:drawable/alert_light_frame"
-                android:clickable="false"
-                android:onClick="showInfo"
-                android:scaleType="centerInside"
-                android:tint="@color/colorDisabled"
-                app:srcCompat="@android:drawable/ic_menu_info_details"/>
-
-            <Space
-                android:layout_width="20dp"
-                android:layout_height="match_parent"/>
-
-            <ImageButton
-                android:id="@+id/btnShowNotes"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:background="@android:drawable/alert_light_frame"
-                android:onClick="showNotes"
-                android:scaleType="centerInside"
-                android:tint="@color/colorDisabled"
-                app:srcCompat="@drawable/notepad"/>
-
-            <Space
-                android:layout_width="20dp"
-                android:layout_height="match_parent"/>
-        </LinearLayout>
-
-
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"

@@ -270,7 +270,6 @@ public class HolidayDetailsView extends BaseActivity
     }
 
 
-
     @Override
     public void showForm()
     {

@@ -10,75 +10,154 @@
 
     <include layout="@layout/my_toolbar" />
 
-    <include
-        layout="@layout/included_schedule_header"
-        android:layout_width="match_parent"
-        android:layout_marginVertical="?attr/actionBarSize"
-        android:layout_height="wrap_content"/>
-
     <LinearLayout
-        android:id="@+id/grpDayName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:onClick="pickDayName"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginRight="8dp"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/txtDayNameCaption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.12"
-            android:gravity="center_vertical"
-            android:text="@string/caption_dayname"
-            android:textSize="18sp"/>
-
-        <TextView
-            android:id="@+id/txtDayName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@android:string/unknownName"
-            android:textSize="18sp"/>
-    </LinearLayout>
-
-        <GridLayout
+        <include
+            android:id="@+id/topBit"
+            layout="@layout/included_schedule_header"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="?attr/actionBarSize" />
 
-            <RadioButton
-                android:id="@+id/radUnknown"
-                android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/grpDayName"
+            style="@style/MyBox"
+            android:layout_margin="10dp"
+            android:baselineAligned="false"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtDayNameCaption"
+                style="@style/MyTextHint"
+                android:text="@string/day_name" />
+
+            <TextView
+                android:id="@+id/txtDayName"
+                style="@style/MyTextLine" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/grpSwitches"
+            style="@style/MyBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:baselineAligned="false"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/grpSwitchLine1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="handleDayCatOnClick"
-                android:text="@string/schedule_unknown"/>
+                android:orientation="horizontal">
 
-            <RadioButton
-                android:id="@+id/radEasy"
-                android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lblUnknown"
+                        style="@style/MyTextHint"
+                        android:text="@string/unknown" />
+
+                    <Switch
+                        android:id="@+id/radUnknown"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="handleDayCatOnClick"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lblEasy"
+                        style="@style/MyTextHint"
+                        android:text="@string/schedule_easy" />
+
+                    <Switch
+                        android:id="@+id/radEasy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="handleDayCatOnClick"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/grpSwitchLine2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="handleDayCatOnClick"
-                android:text="@string/schedule_easy"/>
+                android:orientation="horizontal">
 
-            <RadioButton
-                android:id="@+id/radModerate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="handleDayCatOnClick"
-                android:text="@string/schedule_moderate"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-            <RadioButton
-                android:id="@+id/radBusy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="handleDayCatOnClick"
-                android:text="@string/schedule_vbusy"/>
-        </GridLayout>
+                    <TextView
+                        android:id="@+id/lblModerate"
+                        style="@style/MyTextHint"
+                        android:text="@string/schedule_moderate" />
 
-    <include
-        layout="@layout/included_schedule_footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+                    <Switch
+                        android:id="@+id/radModerate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="handleDayCatOnClick"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lblBusy"
+                        style="@style/MyTextHint"
+                        android:text="@string/busy" />
+
+                    <Switch
+                        android:id="@+id/radBusy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="handleDayCatOnClick"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/included_schedule_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 </RelativeLayout>

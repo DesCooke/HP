@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RatingBar;
@@ -56,6 +57,7 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
     public LinearLayout grpStartTime;
     public LinearLayout grpEndTime;
     public LinearLayout grpNotes;
+    public ImageView btnEdit;
 
     public ImageButton btnClear;
     public Button btnSave;
@@ -109,6 +111,13 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
 
             btnClear= findViewById(R.id.btnClear);
             btnSave= findViewById(R.id.btnSave);
+            btnEdit=findViewById(R.id.my_toolbar_edit);
+            btnEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    editSchedule(GeneralAttractionDetailsEdit.class);
+                }
+            });
 
             afterCreate();
 
@@ -146,8 +155,10 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
         {
             if(action != null)
             {
-                if(action.equals("view"))
-                    viewOnlyForm=true;
+                if(action.equals("view")) {
+                    ShowToolbarEdit();
+                    viewOnlyForm = true;
+                }
                 if(action.equals("add"))
                     if(scheduleItem.generalAttractionItem == null)
                         scheduleItem.generalAttractionItem=new GeneralAttractionItem();
@@ -159,6 +170,7 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
                     scenicRating.setRating(scheduleItem.generalAttractionItem.scenicRating);
                 }
             }
+
 
             int lNoteId = scheduleItem.noteId;
             if(lNoteId != 0)
@@ -334,5 +346,26 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
         return true;
     }
     //endregion
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        try
+        {
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, scheduleItem))
+                    return;
+                if(scheduleItem.scheduleId==0)
+                    finish();
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("onResume", e.getMessage());
+        }
+
+    }
 
 }

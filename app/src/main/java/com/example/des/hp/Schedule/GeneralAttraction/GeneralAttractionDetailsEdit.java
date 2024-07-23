@@ -4,6 +4,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
     //region Member variables
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
+    public ImageView btnDelete;
     //endregion
 
     //region Constructors/Destructors
@@ -30,7 +32,6 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
         try
         {
             imageChanged=false;
-            alwaysShowToolBar=true;
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
 
@@ -40,7 +41,6 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
 
             if(action != null && action.equals("add"))
             {
-                alwaysShowToolBar=false;
                 txtSchedName.setText("");
                 heartRating.setRating(Float.parseFloat(getString(R.string.default_rating)));
                 scenicRating.setRating(Float.parseFloat(getString(R.string.default_rating)));
@@ -60,6 +60,20 @@ public class GeneralAttractionDetailsEdit extends GeneralAttractionDetailsView i
             radOnTheDay.setOnClickListener(this);
             rad180Days.setOnClickListener(this);
             radBooked.setOnClickListener(this);
+
+            btnDelete = findViewById(R.id.my_toolbar_delete);
+            btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    deleteSchedule();
+                }
+            });
+            ShowToolbarDelete();
+
+            alwaysShowBtnClearImage=true;
+            alwaysShowBtnShowNotes=true;
+            alwaysShowBtnShowInfo=true;
+
         }
         catch(Exception e)
         {

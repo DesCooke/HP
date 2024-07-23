@@ -7,21 +7,15 @@
     android:id="@+id/dayItemCell">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="10dp" />
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/alert_light_frame"
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/dayFullCell2"
             android:layout_width="match_parent"
             android:layout_height="77dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:orientation="horizontal">
 
@@ -29,9 +23,9 @@
                 android:id="@+id/imgIcon"
                 android:layout_width="0dp"
                 android:layout_height="55dp"
+                android:paddingStart="8dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.2"
-                android:textAlignment="center"
                 app:srcCompat="@drawable/imagemissing" />
 
             <LinearLayout
@@ -102,11 +96,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:layout_weight="1" />
 
     </LinearLayout>
 

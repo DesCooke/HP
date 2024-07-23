@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
+import com.example.des.hp.Holiday.HolidayItem;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -23,15 +26,16 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
     public TextView dayName;
     public String holidayName;
     public DayItem dayItem;
-    private RadioButton radUnknown;
-    private RadioButton radEasy;
-    private RadioButton radModerate;
-    private RadioButton radBusy;
+    private Switch radUnknown;
+    private Switch radEasy;
+    private Switch radModerate;
+    private Switch radBusy;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
     public LinearLayout grpDayName;
     public ImageButton btnClear;
     public Button btnSave;
+    public ImageView deleteDay;
     //endregion
 
     //region Constructors/Destructors
@@ -60,6 +64,9 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
 
+            deleteDay=findViewById(R.id.my_toolbar_delete);
+            deleteDay.setOnClickListener(view -> deleteDay());
+
             btnClearImage(null);
 
             Bundle extras=getIntent().getExtras();
@@ -71,21 +78,24 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
                     holidayId=extras.getInt("HOLIDAYID");
                     holidayName=extras.getString("HOLIDAYNAME");
                     dayName.setText("");
-                    SetToolbarTitles(holidayName, "Add a Day");
+                    SetToolbarTitles("Add a Day", holidayName);
                 }
                 if(action != null && action.equals("modify"))
                 {
                     holidayId=extras.getInt("HOLIDAYID");
                     dayId=extras.getInt("DAYID");
-                    holidayName=extras.getString("HOLIDAYNAME");
 
                     try(DatabaseAccess da = databaseAccess())
                     {
                         if(!da.getDayItem(holidayId, dayId, dayItem))
                             return;
+                        HolidayItem holidayItem=new HolidayItem();
+                        if(!da.getHolidayItem(holidayId, holidayItem))
+                            return;
+                        SetToolbarTitles(dayItem.dayName, holidayItem.holidayName);
                     }
 
-                    SetToolbarTitles(holidayName, dayItem.dayName);
+                    ShowToolbarDelete();
 
                 }
             }
@@ -275,4 +285,22 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
     }
 
     //endregion
+
+    public void deleteDay()
+    {
+        try
+        {
+            try(DatabaseAccess da = databaseAccess())
+            {
+                if(!da.deleteDayItem(dayItem))
+                    return;
+            }
+            finish();
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteDay", e.getMessage());
+        }
+    }
+
 }

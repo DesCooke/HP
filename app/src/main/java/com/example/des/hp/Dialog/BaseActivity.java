@@ -117,9 +117,11 @@ public class BaseActivity extends AppCompatActivity
     public boolean showInfoEnabled;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
+    public ImageButton btnClearImage;
 
-    public LinearLayout grpToolBar;
-    public boolean alwaysShowToolBar;
+    public boolean alwaysShowBtnClearImage;
+    public boolean alwaysShowBtnShowInfo;
+    public boolean alwaysShowBtnShowNotes;
 
     public TextView txtFilename;
 
@@ -180,8 +182,8 @@ public class BaseActivity extends AppCompatActivity
             intent2.putExtra("ACTION", "modify");
             intent2.putExtra("HOLIDAYID", holidayId);
             intent2.putExtra("NOTEID", lNoteId);
-            intent2.putExtra("TITLE", subTitle);
-            intent2.putExtra("SUBTITLE", "Notes");
+            intent2.putExtra("TITLE", "Notes");
+            intent2.putExtra("SUBTITLE", title);
             startActivity(intent2);
         }
         catch(Exception e)
@@ -514,12 +516,12 @@ public class BaseActivity extends AppCompatActivity
             if(btnShowInfo != null)
                 showInfoEnabled=true;
 
+            btnClearImage=findViewById(R.id.btnClear);
+
             showNotesEnabled=false;
             btnShowNotes= findViewById(R.id.btnShowNotes);
             if(btnShowNotes != null)
                 showNotesEnabled=true;
-
-            grpToolBar=findViewById(R.id.grpToolBar);
 
             if(showInfoEnabled)
             {
@@ -565,8 +567,8 @@ public class BaseActivity extends AppCompatActivity
                 setInfoId(lInfoId);
             }
             intent2.putExtra("FILEGROUPID", lInfoId);
-            intent2.putExtra("TITLE", subTitle);
-            intent2.putExtra("SUBTITLE", "Info");
+            intent2.putExtra("TITLE", "Info");
+            intent2.putExtra("SUBTITLE", title);
             intent2.putExtra("HOLIDAYID", holidayId);
             startActivity(intent2);
         }
@@ -667,13 +669,27 @@ public class BaseActivity extends AppCompatActivity
     {
         try
         {
-            if(grpToolBar==null)
-                return;
-            grpToolBar.setVisibility(View.VISIBLE);
-            if(alwaysShowToolBar)
-                return;
-            if(!hasInfo && !hasNotes)
-                grpToolBar.setVisibility(View.GONE);
+            if(btnShowInfo!=null) {
+                btnShowInfo.setVisibility(View.GONE);
+                if (alwaysShowBtnShowInfo || (!alwaysShowBtnShowInfo && hasInfo)) {
+                    btnShowInfo.setVisibility(View.VISIBLE);
+                }
+            }
+
+            if(btnShowNotes!=null) {
+                btnShowNotes.setVisibility(View.GONE);
+                if (alwaysShowBtnShowNotes || (!alwaysShowBtnShowNotes && hasNotes)) {
+                    btnShowNotes.setVisibility(View.VISIBLE);
+                }
+            }
+
+            if(btnClearImage!=null) {
+                btnClearImage.setVisibility(View.GONE);
+                if (alwaysShowBtnClearImage) {
+                    btnClearImage.setVisibility(View.VISIBLE);
+                }
+            }
+
         }
         catch(Exception e)
         {

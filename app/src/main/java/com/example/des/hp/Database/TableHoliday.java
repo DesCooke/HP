@@ -294,7 +294,7 @@ class TableHoliday extends TableBase
                     MyString myString2 = new MyString();
                     if (!_dateUtils.DateToStr(retHolidayItem.endDateDate, myString2))
                         return (false);
-                    retHolidayItem.endDateStr = myString.Value;
+                    retHolidayItem.endDateStr = myString2.Value;
                 }
             }
 

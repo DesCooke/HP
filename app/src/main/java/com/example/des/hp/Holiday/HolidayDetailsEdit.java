@@ -69,6 +69,9 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
         {
             layoutName="activity_holiday_details_edit";
             setContentView(R.layout.activity_holiday_details_edit);
+            alwaysShowBtnShowNotes=true;
+            alwaysShowBtnShowInfo=true;
+            alwaysShowBtnClearImage=true;
 
             holidayName= findViewById(R.id.txtHolidayName);
             txtStartDate= findViewById(R.id.txtStartDate);
@@ -94,6 +97,13 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
 
+            txtStartDate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    pickDateTime(view);
+                }
+            });
+
             if(action != null && action.equals("add"))
             {
                 SetToolbarTitles(getString(R.string.title_planner), "Add a Holiday");
@@ -111,6 +121,7 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
 
                 txtStartDate.setText(holidayItem.startDateStr);
 
+                SetToolbarTitles(holidayItem.holidayName, "Holiday");
                 ShowToolbarDelete();
 
                 if(holidayItem.startDateInt == DateUtils.unknownDate)
@@ -233,6 +244,7 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
         {
             grpStartDate.setVisibility(View.VISIBLE);
             lblKnownDates.setText(getString(R.string.dates_known));
+            txtStartDate.setText(holidayItem.startDateStr);
         }
         catch(Exception e)
         {
@@ -369,6 +381,26 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
         }
     }
     //endregion
+
+    public int getNoteId()
+    {
+        return holidayItem.noteId;
+    }
+
+    public void setNoteId(int noteId)
+    {
+        holidayItem.noteId = noteId;
+    }
+
+    public int getInfoId()
+    {
+        return holidayItem.infoId;
+    }
+
+    public void setInfoId(int infoId)
+    {
+        holidayItem.infoId = infoId;
+    }
 
     public void deleteHoliday()
     {

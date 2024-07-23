@@ -5,6 +5,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,7 +24,6 @@ public class AttractionDetailsView extends BaseActivity
     public Button btnSave;
     public LinearLayout grpMenuFile;
     public LinearLayout grpAttractionDescription;
-    public LinearLayout grpToolBar;
     //endregion
     
     //region Constructors/Destructors
@@ -41,9 +41,9 @@ public class AttractionDetailsView extends BaseActivity
             btnClear = findViewById(R.id.btnClear);
             btnSave = findViewById(R.id.btnSave);
             grpMenuFile = findViewById(R.id.grpMenuFile);
-            grpToolBar = findViewById(R.id.grpToolBar);
             grpAttractionDescription = findViewById(R.id.grpAttractionDescription);
-            
+
+
             afterCreate();
             
             showForm();
@@ -79,7 +79,9 @@ public class AttractionDetailsView extends BaseActivity
             allowCellMove = true;
             
             attractionItem = new AttractionItem();
-            
+
+            ShowToolbarEdit();
+
             if (action != null && action.equals("add"))
             {
                 txtAttractionDescription.setText("");

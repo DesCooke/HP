@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.des.hp.Budget.BudgetDetailsList;
@@ -20,6 +23,7 @@ import com.example.des.hp.Schedule.ScheduleItem;
 import com.example.des.hp.Tasks.TaskDetailsList;
 import com.example.des.hp.TipGroup.TipGroupDetailsList;
 import com.example.des.hp.myutils.*;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +45,11 @@ public class DayDetailsView extends BaseActivity
     public LinearLayout grpMenuFile;
     public ArrayList<ScheduleItem> scheduleList;
     public ScheduleAdapter scheduleAdapter;
+    public LinearLayout topBit;
+    public RelativeLayout fullPage;
+    public ImageView btnEditDay;
+    public FloatingActionButton fab;
+
     //endregion
 
     //region Constructors/Destructors
@@ -55,6 +64,10 @@ public class DayDetailsView extends BaseActivity
 
             txtDayCat= findViewById(R.id.txtDayCat);
             grpMenuFile= findViewById(R.id.grpMenuFile);
+            topBit= findViewById(R.id.topBit);
+            fullPage=findViewById(R.id.fullPage);
+            btnEditDay=findViewById(R.id.my_toolbar_edit);
+            btnEditDay.setOnClickListener(view -> editDay());
 
             afterCreate();
 
@@ -130,13 +143,23 @@ public class DayDetailsView extends BaseActivity
 
             SetImage(dayItem.dayPicture);
 
-            String lSubTitle;
+            fab=findViewById(R.id.fab);
+            if(fab!=null)
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        StartNewAddIntent();
+                    }
+                });
+
+
+            String lTitle;
             MyBoolean isUnknown=new MyBoolean();
             if(!dateUtils().IsUnknown(DatabaseAccess.currentStartDate, isUnknown))
                 return;
             if(isUnknown.Value)
             {
-                lSubTitle=String.format(Locale.ENGLISH, getResources().getString(R.string.fmt_day_line), dayItem.sequenceNo);
+                lTitle=String.format(Locale.ENGLISH, getResources().getString(R.string.fmt_day_line), dayItem.sequenceNo);
             } else
             {
                 Date lcurrdate=new Date();
@@ -149,12 +172,12 @@ public class DayDetailsView extends BaseActivity
                 MyString myString=new MyString();
                 if(!dateUtils().DateToStr(lcurrdate, myString))
                     return;
-                lSubTitle=String.format(Locale.ENGLISH, getResources().getString(R.string.fmt_date_line), myString.Value);
+                lTitle=String.format(Locale.ENGLISH, getResources().getString(R.string.fmt_date_line), myString.Value);
             }
 
 
-            SetToolbarTitles(holidayItem.holidayName, dayItem.dayName + " / " + lSubTitle);
-
+            SetToolbarTitles(dayItem.dayName, holidayItem.holidayName);
+            ShowToolbarEdit();
 
             int lColor=-1;
             String lDayCat="Day Category: <unknown>";
@@ -178,7 +201,8 @@ public class DayDetailsView extends BaseActivity
             if(lColor != -1)
             {
                 txtDayCat.setBackgroundColor(lColor);
-                grpMenuFile.setBackgroundColor(lColor);
+                topBit.setBackgroundColor(lColor);
+                fullPage.setBackgroundColor(lColor);
             }
 
             scheduleList=new ArrayList<>();
@@ -441,6 +465,32 @@ public class DayDetailsView extends BaseActivity
         }
 
     }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        try
+        {
+            try(DatabaseAccess da = databaseAccess())
+            {
+                if(!da.getDayItem(holidayId, dayId, dayItem)) {
+                    finish();
+                }
+                if(dayItem!=null){
+                    if(dayItem.dayId==0){
+                        finish();
+                    }
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("onResume", e.getMessage());
+        }
+
+    }
+
 
     //endregion
 }
