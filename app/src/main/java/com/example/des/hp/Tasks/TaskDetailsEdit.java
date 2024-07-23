@@ -4,6 +4,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
@@ -21,6 +22,7 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
     //region Member variables
     public View.OnClickListener dwetOnOkClick;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
+    public ImageView btnDelete;
     //endregion
 
     //region Constructors/Destructors
@@ -33,8 +35,16 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
         {
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
-            grpKnownDate.setVisibility(View.VISIBLE);
+            grpTaskDate.setVisibility(View.VISIBLE);
             chkTaskComplete.setClickable(true);
+
+            btnDelete=findViewById(R.id.my_toolbar_delete);
+            btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    deleteTask();
+                }
+            });
 
             if(action != null && action.equals("add"))
             {
@@ -55,8 +65,8 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
                 }
             }
 
-            grpTaskDate.setOnClickListener(this);
-            grpTaskName.setOnClickListener(this);
+            txtTaskDate.setOnClickListener(this);
+            txtTaskDescription.setOnClickListener(this);
             imageView.setOnClickListener(this);
         }
         catch(Exception e)
@@ -78,9 +88,9 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
     {
         try {
             int id = view.getId();
-            if (id == R.id.grpTaskDate)
+            if (id == R.id.txtTaskDate)
                 pickDateTime(view);
-            if (id == R.id.grpTaskName)
+            if (id == R.id.txtTaskDescription)
                 pickTaskName(view);
             if (id == R.id.imageViewSmall)
                 pickImage(view);
@@ -90,6 +100,20 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
             ShowError("onClick", e.getMessage());
         }
 
+    }
+
+    //region showForm
+    public void showForm()
+    {
+        super.showForm();
+        try
+        {
+            ShowToolbarDelete();
+        }
+        catch(Exception e)
+        {
+            ShowError("showForm", e.getMessage());
+        }
     }
 
     public void TaskDescriptionPicked(View view)
@@ -159,7 +183,7 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
         try
         {
             grpTaskDate.setVisibility(View.INVISIBLE);
-            lblKnownDate.setText(getString(R.string.date_not_known));
+            txtKnownDate.setText(getString(R.string.date_not_known));
         }
         catch(Exception e)
         {
@@ -173,7 +197,7 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
         try
         {
             grpTaskDate.setVisibility(View.VISIBLE);
-            lblKnownDate.setText(getString(R.string.date_known));
+            txtKnownDate.setText(getString(R.string.date_known));
         }
         catch(Exception e)
         {

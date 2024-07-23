@@ -21,4 +21,18 @@
         android:layout_marginVertical="?attr/actionBarSize"
         android:scrollingCache="false"/>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:contentDescription="@string/floatingactionbutton"
+        android:elevation="1dp"
+        android:translationZ="1dp"
+        app:backgroundTint="@color/colorPrimary"
+        app:maxImageSize="48dp"
+        app:srcCompat="@android:drawable/ic_menu_add" />
+
 </RelativeLayout>

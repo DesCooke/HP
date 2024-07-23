@@ -307,8 +307,8 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
         {
             Intent intent2=new Intent(getApplicationContext(), TaskDetailsList.class);
             intent2.putExtra("HOLIDAYID", scheduleItem.holidayId);
-            intent2.putExtra("TITLE", holidayName);
-            intent2.putExtra("SUBTITLE", "Tasks");
+            intent2.putExtra("TITLE", "Tasks");
+            intent2.putExtra("SUBTITLE", holidayName);
             startActivity(intent2);
         }
         catch(Exception e)
@@ -357,8 +357,9 @@ public class GeneralAttractionDetailsView extends BaseScheduleView
             {
                 if(!da.getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, scheduleItem))
                     return;
-                if(scheduleItem.scheduleId==0)
-                    finish();
+                if(action.compareTo("add")!=0)
+                    if(scheduleItem.scheduleId==0)
+                        finish();
             }
         }
         catch(Exception e)

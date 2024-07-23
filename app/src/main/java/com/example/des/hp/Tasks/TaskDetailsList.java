@@ -10,6 +10,7 @@ import android.view.View;
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +23,7 @@ public class TaskDetailsList extends BaseActivity
     //region Member Variables
     public ArrayList<TaskItem> taskList;
     public TaskAdapter taskAdapter;
+    public FloatingActionButton fab;
     //endregion
 
     //region Constructors/Destructors
@@ -34,6 +36,16 @@ public class TaskDetailsList extends BaseActivity
             layoutName="activity_task_list";
             setContentView(R.layout.activity_task_list);
 
+            Bundle extras=getIntent().getExtras();
+            if(extras != null)
+            {
+                holidayId=extras.getInt("HOLIDAYID", 0);
+                title=extras.getString("TITLE", "");
+                subTitle=extras.getString("SUBTITLE", "");
+            }
+
+            fab=findViewById(R.id.fab);
+            fab.setOnClickListener(this::showTaskAdd);
             afterCreate();
 
             showForm();
@@ -69,8 +81,8 @@ public class TaskDetailsList extends BaseActivity
             Intent intent=new Intent(getApplicationContext(), TaskDetailsEdit.class);
             intent.putExtra("ACTION", "add");
             intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("TITLE", title);
-            intent.putExtra("SUBTITLE", "Add a Task");
+            intent.putExtra("TITLE", "Add a Task");
+            intent.putExtra("SUBTITLE", title);
             startActivity(intent);
         }
         catch(Exception e)
@@ -86,8 +98,7 @@ public class TaskDetailsList extends BaseActivity
         {
             allowCellMove=true;
 
-            if(title.isEmpty())
-                SetToolbarTitles("Task", "Tasks");
+            SetToolbarTitles(title, subTitle);
 
             taskList=new ArrayList<>();
             try(DatabaseAccess da = databaseAccess();)

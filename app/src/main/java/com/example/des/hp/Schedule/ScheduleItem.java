@@ -146,6 +146,6 @@ public class ScheduleItem
         scheduleBitmap=null;
         pictureChanged=false;
 
-        generalAttractionItem=null;
+        generalAttractionItem=new GeneralAttractionItem();
     }
 }

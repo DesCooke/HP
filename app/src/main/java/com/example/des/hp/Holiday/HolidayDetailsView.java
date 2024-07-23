@@ -166,8 +166,8 @@ public class HolidayDetailsView extends BaseActivity
         {
             Intent intent2=new Intent(getApplicationContext(), TaskDetailsList.class);
             intent2.putExtra("HOLIDAYID", holidayItem.holidayId);
-            intent2.putExtra("TITLE", holidayItem.holidayName);
-            intent2.putExtra("SUBTITLE", "Tasks");
+            intent2.putExtra("TITLE", "Tasks");
+            intent2.putExtra("SUBTITLE", holidayItem.holidayName);
             startActivity(intent2);
         }
         catch(Exception e)

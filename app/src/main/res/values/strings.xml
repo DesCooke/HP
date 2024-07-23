@@ -178,5 +178,9 @@
     <string name="contacts">Contacts</string>
     <string name="day_name">Day Name</string>
     <string name="busy">Busy</string>
+    <string name="task_name">Task Name</string>
+    <string name="known_date">Known Date</string>
+    <string name="task_date">Task Date</string>
+    <string name="task_complete">Task Complete</string>
 
 </resources>

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
+import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionDetailsEdit;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
@@ -34,12 +36,10 @@ public class TaskDetailsView extends BaseActivity
     public ImageButton btnClear;
     public Button btnSave;
     public LinearLayout grpMenuFile;
-    public LinearLayout grpTaskName;
-    public TextView lblTaskDate;
-    public TextView lblKnownDate;
-    public LinearLayout grpKnownDate;
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch swKnownDate;
+    public TextView txtKnownDate;
+    public ImageView btnEdit;
     //endregion
 
     //region Constructors/Destructors
@@ -52,18 +52,23 @@ public class TaskDetailsView extends BaseActivity
             layoutName="activity_task_details_view";
             setContentView(R.layout.activity_task_details_view);
 
-            txtTaskDescription= findViewById(R.id.txtTaskName);
-            grpTaskDate= findViewById(R.id.grpTaskDate);
+            txtKnownDate=findViewById(R.id.txtKnownDate);
+            txtTaskDescription= findViewById(R.id.txtTaskDescription);
             txtTaskDate= findViewById(R.id.txtTaskDate);
             chkTaskComplete= findViewById(R.id.chkTaskComplete);
             btnClear= findViewById(R.id.btnClear);
             btnSave= findViewById(R.id.btnSave);
             grpMenuFile= findViewById(R.id.grpMenuFile);
-            grpTaskName= findViewById(R.id.grpTaskName);
-            lblTaskDate= findViewById(R.id.lblTaskDate);
-            lblKnownDate= findViewById(R.id.lblKnownDate);
-            grpKnownDate= findViewById(R.id.grpKnownDate);
             swKnownDate= findViewById(R.id.swKnownDate);
+            grpTaskDate=findViewById(R.id.grpTaskDate);
+
+            btnEdit=findViewById(R.id.my_toolbar_edit);
+            btnEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    editTask();
+                }
+            });
 
             afterCreate();
 
@@ -135,6 +140,9 @@ public class TaskDetailsView extends BaseActivity
             SetImage(taskItem.taskPicture);
 
             txtTaskDescription.setText(taskItem.taskDescription);
+
+            if(action.compareTo("view")==0)
+                ShowToolbarEdit();
 
             if(taskItem.taskDateKnown)
             {
@@ -257,6 +265,28 @@ public class TaskDetailsView extends BaseActivity
         }
 
     }
+
+    protected void onResume()
+    {
+        super.onResume();
+        try
+        {
+            try(DatabaseAccess da = databaseAccess();)
+            {
+                if(!da.getTaskItem(holidayId, taskId, taskItem))
+                    return;
+                if(action.compareTo("add")!=0)
+                    if(taskItem.taskId==0)
+                        finish();
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("onResume", e.getMessage());
+        }
+
+    }
+
     //endregion
 
 }

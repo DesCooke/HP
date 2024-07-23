@@ -694,15 +694,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
             if (!tableSchedule.getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, item))
                 return (false);
             
-            item.generalAttractionItem = null;
-            
-            if (item.schedType == res.getInteger(R.integer.schedule_type_generalattraction))
-            {
-                item.generalAttractionItem = new GeneralAttractionItem();
-                return getGeneralAttractionItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, item.generalAttractionItem);
-            }
-            
-            return (true);
+            return getGeneralAttractionItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, item.generalAttractionItem);
         }
         catch (Exception e)
         {
