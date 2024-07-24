@@ -136,7 +136,16 @@ class TableTipGroup extends TableBase
             }
 
             String lSQL;
-            lSQL="UPDATE TipGroup " + "SET sequenceNo = " + tipGroupItem.sequenceNo + ", " + "    tipGroupDescription = " + MyQuotedString(tipGroupItem.tipGroupDescription) + ", " + "    tipGroupPicture = " + MyQuotedString(tipGroupItem.tipGroupPicture) + ", " + "    tipGroupNotes = " + MyQuotedString(tipGroupItem.tipGroupNotes) + ", " + "    infoId = " + tipGroupItem.infoId + ", " + "    noteId = " + tipGroupItem.noteId + ", " + "    galleryId = " + tipGroupItem.galleryId + ", " + "WHERE holidayId = " + tipGroupItem.holidayId + " " + "AND tipGroupId = " + tipGroupItem.tipGroupId;
+            lSQL="UPDATE TipGroup " +
+                    "SET sequenceNo = " + tipGroupItem.sequenceNo + ", " +
+                    "    tipGroupDescription = " + MyQuotedString(tipGroupItem.tipGroupDescription) + ", " +
+                    "    tipGroupPicture = " + MyQuotedString(tipGroupItem.tipGroupPicture) + ", " +
+                    "    tipGroupNotes = " + MyQuotedString(tipGroupItem.tipGroupNotes) + ", " +
+                    "    infoId = " + tipGroupItem.infoId + ", " +
+                    "    noteId = " + tipGroupItem.noteId + ", " +
+                    "    galleryId = " + tipGroupItem.galleryId + " " +
+                    "WHERE holidayId = " + tipGroupItem.holidayId + " " +
+                    "AND tipGroupId = " + tipGroupItem.tipGroupId;
 
             return (executeSQL("updateTipGroupItem", lSQL));
         }

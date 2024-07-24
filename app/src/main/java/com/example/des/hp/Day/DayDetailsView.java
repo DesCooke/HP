@@ -259,7 +259,7 @@ public class DayDetailsView extends BaseActivity
             Intent intent2=new Intent(getApplicationContext(), TipGroupDetailsList.class);
             intent2.putExtra("HOLIDAYID", dayItem.holidayId);
             intent2.putExtra("TITLE", holidayName);
-            intent2.putExtra("SUBTITLE", "Tips");
+            intent2.putExtra("SUBTITLE", "Tip Groups");
             startActivity(intent2);
         }
         catch(Exception e)

@@ -11,6 +11,7 @@ import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.Tip.TipDetailsList;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +24,7 @@ public class TipGroupDetailsList extends BaseActivity
     //region Member Variables
     public ArrayList<TipGroupItem> tipGroupList;
     public TipGroupAdapter tipGroupAdapter;
+    public FloatingActionButton fab;
     //endregion
 
     //region Constructors/Destructors
@@ -34,6 +36,9 @@ public class TipGroupDetailsList extends BaseActivity
         {
             layoutName="activity_tipgroup_list";
             setContentView(R.layout.activity_tipgroup_list);
+
+            fab=findViewById(R.id.fab);
+            fab.setOnClickListener(this::showTipGroupAdd);
 
             afterCreate();
 

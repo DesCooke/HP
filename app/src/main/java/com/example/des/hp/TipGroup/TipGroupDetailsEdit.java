@@ -117,15 +117,16 @@ public class TipGroupDetailsEdit extends TipGroupDetailsView implements View.OnC
 
             tipGroupItem.tipGroupDescription=txtTipGroupDescription.getText().toString();
 
-            tipGroupItem.tipGroupPicture="";
-            if(!internalImageFilename.isEmpty())
-                tipGroupItem.tipGroupPicture=internalImageFilename;
-            tipGroupItem.pictureAssigned=imageSet;
-            tipGroupItem.pictureChanged=imageChanged;
-            tipGroupItem.fileBitmap=null;
-            if(imageSet)
-                tipGroupItem.fileBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
-
+            if(imageChanged) {
+                tipGroupItem.tipGroupPicture = "";
+                if (!internalImageFilename.isEmpty())
+                    tipGroupItem.tipGroupPicture = internalImageFilename;
+                tipGroupItem.pictureAssigned = imageSet;
+                tipGroupItem.pictureChanged = imageChanged;
+                tipGroupItem.fileBitmap = null;
+                if (imageSet)
+                    tipGroupItem.fileBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            }
             tipGroupItem.tipGroupNotes="";
 
             if(action.equals("add"))

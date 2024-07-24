@@ -8,78 +8,37 @@
 
     <include layout="@layout/my_toolbar" />
 
-    <include
-        layout="@layout/included_schedule_header"
+    <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginVertical="?attr/actionBarSize"
-        android:layout_height="wrap_content"/>
+        android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/grpTipGroupDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/txtTipGroupDescriptionCaption"
+        <include
+            layout="@layout/included_schedule_header"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:gravity="center_vertical"
-            android:text="@string/caption_tipgroupdescription"
-            android:textSize="18sp"/>
+            android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/txtTipGroupDescription"
+        <LinearLayout
+            android:id="@+id/grpTipGroupDescription"
+            style="@style/MyBox" >
+
+            <TextView
+                android:id="@+id/lblTipGroupDescription"
+                android:text="@string/caption_tipgroupdescription"
+                style="@style/MyTextHint" />
+
+            <TextView
+                android:id="@+id/txtTipGroupDescription"
+                style="@style/MyTextLine" />
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/included_schedule_footer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@android:string/unknownName"
-            android:textSize="18sp"/>
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/grpMenuFile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/btnShowInfo"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:background="@android:drawable/alert_light_frame"
-            android:clickable="false"
-            android:contentDescription="@android:string/unknownName"
-            android:onClick="showInfo"
-            android:scaleType="centerInside"
-            android:tint="@color/colorDisabled"
-            app:srcCompat="@android:drawable/ic_menu_info_details"/>
-
-        <Space
-            android:layout_width="20dp"
-            android:layout_height="match_parent"/>
-
-        <ImageButton
-            android:id="@+id/btnShowNotes"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:background="@android:drawable/alert_light_frame"
-            android:contentDescription="@android:string/unknownName"
-            android:onClick="showNotes"
-            android:scaleType="centerInside"
-            android:tint="@color/colorDisabled"
-            app:srcCompat="@drawable/notepad"/>
-
-        <Space
-            android:layout_width="20dp"
-            android:layout_height="match_parent"/>
-    </LinearLayout>
-
-    <include
-        layout="@layout/included_schedule_footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

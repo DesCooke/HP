@@ -444,7 +444,12 @@ public class TableBase
                 return (false);
 
             String lSQL;
-            lSQL="UPDATE fileIds " + "SET nextId = " + argNextFileId + " " + "WHERE fileType='" + argType + "'";
+            if(argNextFileId==1){
+                lSQL = "INSERT INTO fileIds (fileType, nextId) values ('" + argType + "', " + argNextFileId + ")";
+            }
+            else {
+                lSQL = "UPDATE fileIds " + "SET nextId = " + argNextFileId + " " + "WHERE fileType='" + argType + "'";
+            }
 
             return (executeSQL("setNextFileId", lSQL));
         }
