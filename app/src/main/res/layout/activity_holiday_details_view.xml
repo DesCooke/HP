@@ -250,20 +250,18 @@
                 </RelativeLayout>
             </LinearLayout>
 
-
             <LinearLayout
                 android:id="@+id/row3"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
-                android:orientation="horizontal"
-                tools:ignore="DisableBaselineAlignment">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
                 <RelativeLayout
                     android:id="@+id/btnGroupContacts"
-                    android:layout_width="0dp"
+                    android:layout_width="120dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0"
-                    tools:ignore="UselessParent">
+                    android:layout_weight="0">
 
                     <ImageButton
                         android:id="@+id/btnShowContacts"
@@ -289,7 +287,40 @@
                         tools:ignore="RelativeOverlap,SmallSp" />
 
                 </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/btnGroupPoi"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0">
+
+                    <ImageButton
+                        android:id="@+id/btnShowPoi"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:drawable/alert_light_frame"
+                        android:onClick="showPoi"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/poi"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/txtPoiBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:background="@android:drawable/alert_light_frame"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/_99"
+                        android:textAlignment="gravity"
+                        android:textSize="10sp"
+                        tools:ignore="RelativeOverlap,SmallSp" />
+
+                </RelativeLayout>
+
             </LinearLayout>
+
 
         </LinearLayout>
 

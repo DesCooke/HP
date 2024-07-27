@@ -62,6 +62,7 @@
         <activity android:name=".Notes.NoteEdit" />
         <activity android:name=".InternalImages.InternalImageList" />
         <activity android:name=".InternalFiles.InternalFileList" />
+        <activity android:name=".Poi.PoiList" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

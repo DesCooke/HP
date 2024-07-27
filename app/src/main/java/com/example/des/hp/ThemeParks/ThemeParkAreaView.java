@@ -73,19 +73,6 @@ public class ThemeParkAreaView extends BaseActivity
         
     }
     
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        try
-        {
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.attractionareadetailsformmenu, menu);
-        }
-        catch (Exception e)
-        {
-            ShowError("onCreateOptionsMenu", e.getMessage());
-        }
-        return true;
-    }
     //endregion
     
     //region OnClick Events
@@ -108,10 +95,10 @@ public class ThemeParkAreaView extends BaseActivity
             ShowError("StartNewAddIntent", e.getMessage());
         }
     }
-    
-    
+
+
     //endregion
-    
+
     //region showForm
     public void showForm()
     {

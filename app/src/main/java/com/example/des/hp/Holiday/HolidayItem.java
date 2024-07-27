@@ -34,6 +34,7 @@ public class HolidayItem
     public boolean buttonBudget;
     public boolean buttonAttractions;
     public boolean buttonContacts;
+    public boolean buttonPoi;
 
     // Original Fields
     public int origHolidayId;
@@ -56,6 +57,7 @@ public class HolidayItem
     public boolean origButtonBudget;
     public boolean origButtonAttractions;
     public boolean origButtonContacts;
+    public boolean origButtonPoi;
 
     public String ToGo;
 

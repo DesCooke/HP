@@ -21,6 +21,8 @@ import com.example.des.hp.Budget.BudgetDetailsList;
 import com.example.des.hp.Contact.ContactDetailsList;
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
+import com.example.des.hp.Event.EventScheduleItem;
+import com.example.des.hp.Poi.PoiList;
 import com.example.des.hp.TipGroup.*;
 import com.example.des.hp.ThemeParks.*;
 import com.example.des.hp.Day.DayDetailsList;
@@ -30,6 +32,8 @@ import com.example.des.hp.Tasks.TaskDetailsList;
 import com.example.des.hp.myutils.*;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
+import java.util.ArrayList;
 
 public class HolidayDetailsView extends BaseActivity
 {
@@ -45,6 +49,7 @@ public class HolidayDetailsView extends BaseActivity
     public ImageButton btnShowTips;
     public ImageButton btnShowThemeParks;
     public ImageButton btnShowContacts;
+    public ImageButton btnShowPoi;
     public TextView itineraryBadge;
     public TextView mapBadge;
     public TextView taskBadge;
@@ -52,6 +57,7 @@ public class HolidayDetailsView extends BaseActivity
     public TextView tipsBadge;
     public TextView themeParksBadge;
     public TextView contactsBadge;
+    public TextView poiBadge;
     private int buttonCount;
     public RelativeLayout btnGroupDays;
     public RelativeLayout btnGroupMaps;
@@ -60,6 +66,7 @@ public class HolidayDetailsView extends BaseActivity
     public RelativeLayout btnGroupBudget;
     public RelativeLayout btnGroupAttractions;
     public RelativeLayout btnGroupContacts;
+    public RelativeLayout btnGroupPoi;
     public LinearLayout row1;
     public LinearLayout row2;
     public LinearLayout row3;
@@ -95,12 +102,14 @@ public class HolidayDetailsView extends BaseActivity
             btnShowTips= findViewById(R.id.btnShowTips);
             btnShowThemeParks = findViewById(R.id.btnShowThemeParks);
             btnShowContacts= findViewById(R.id.btnShowContacts);
+            btnShowPoi= findViewById(R.id.btnShowPoi);
 
             itineraryBadge= findViewById(R.id.txtItineraryBadge);
             mapBadge= findViewById(R.id.txtMapBadge);
             taskBadge= findViewById(R.id.txtTaskBadge);
             budgetBadge= findViewById(R.id.txtBudgetBadge);
             contactsBadge= findViewById(R.id.txtContactBadge);
+            poiBadge= findViewById(R.id.txtPoiBadge);
             tipsBadge= findViewById(R.id.txtTipsBadge);
             themeParksBadge = findViewById(R.id.txtThemeParksBadge);
 
@@ -118,6 +127,7 @@ public class HolidayDetailsView extends BaseActivity
             btnGroupBudget= findViewById(R.id.btnGroupBudget);
             btnGroupAttractions= findViewById(R.id.btnGroupThemeParks);
             btnGroupContacts= findViewById(R.id.btnGroupContacts);
+            btnGroupPoi= findViewById(R.id.btnGroupPoi);
 
             afterCreate();
 
@@ -224,6 +234,23 @@ public class HolidayDetailsView extends BaseActivity
         }
     }
 
+    public void showPoi(View view)
+    {
+        try
+        {
+            Intent intent2=new Intent(getApplicationContext(), PoiList.class);
+            intent2.putExtra("HOLIDAYID", holidayItem.holidayId);
+            intent2.putExtra("TITLE", "Points of Interest");
+            intent2.putExtra("SUBTITLE", holidayItem.holidayName);
+            startActivity(intent2);
+        }
+        catch(Exception e)
+        {
+            ShowError("showTipGroups", e.getMessage());
+        }
+    }
+
+
     public void showThemeParks(View view)
     {
         try
@@ -324,6 +351,11 @@ public class HolidayDetailsView extends BaseActivity
                 int contactCount=myInt.Value;
                 contactsBadge.setText(String.format("Contacts (%s)", contactCount));
 
+                ArrayList<EventScheduleItem> scheduleList = new ArrayList<>();
+                if (!da.getScheduleList(holidayId, 0, 0, 0, scheduleList))
+                    return;
+                poiBadge.setText(String.format("POIs (%s)", scheduleList.size()));
+
                 if(!holidayItem.dateKnown)
                 {
                     grpStartDate.setVisibility(View.INVISIBLE);
@@ -350,6 +382,7 @@ public class HolidayDetailsView extends BaseActivity
             showOrHideButton(btnGroupBudget, holidayItem.buttonBudget);
             showOrHideButton(btnGroupAttractions, holidayItem.buttonAttractions);
             showOrHideButton(btnGroupContacts, holidayItem.buttonContacts);
+            showOrHideButton(btnGroupPoi, holidayItem.buttonPoi);
 
             afterShow();
         }

@@ -36,7 +36,7 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 public class DatabaseAccess extends SQLiteOpenHelper
 {
     //region MEMBERVARIABLES
-    public static final int DATABASE_VERSION = 72;
+    public static final int DATABASE_VERSION = 74;
     public static Date currentStartDate;
     public static DatabaseAccess database = null;
     
@@ -170,8 +170,12 @@ public class DatabaseAccess extends SQLiteOpenHelper
         try
         {
             myMessages().ShowMessageShort("Upgrading from " + oldVersion + " to " + newVersion);
-            
-            //myMessages().LogMessage("Finished onUpgrade");
+            if(oldVersion==73 && newVersion==74){
+                String l_SQL=
+                        "UPDATE holiday SET buttonPoi=0";
+                db.execSQL(l_SQL);
+            }
+            myMessages().LogMessage("Finished onUpgrade");
         }
         catch (Exception e)
         {

@@ -52,6 +52,7 @@ class TableHoliday extends TableBase
                             "  buttonTasks    INT(5),  " +
                             "  buttonTips     INT(5),  " +
                             "  buttonBudget   INT(5),  " +
+                            "  buttonPoi      INT(5),  " +
                             "  buttonAttractions INT(5),  " +
                             "  buttonContacts INT(5)   " +
                             ") ";
@@ -92,7 +93,7 @@ class TableHoliday extends TableBase
                             "  (holidayName, holidayId, startDate, holidayPicture, infoId, " +
                             "   noteId, galleryId, buttonDays, buttonDay, " +
                             "   buttonMaps, buttonTasks, buttonTips, buttonBudget, " +
-                            "   buttonAttractions, buttonContacts) " +
+                            "   buttonAttractions, buttonContacts, buttonPoi) " +
                             "VALUES " +
                             "(" +
                             MyQuotedString(holidayItem.holidayName) + "," +
@@ -109,7 +110,8 @@ class TableHoliday extends TableBase
                             booleanToString(holidayItem.buttonTips)+ ", " +
                             booleanToString(holidayItem.buttonBudget)+ ", " +
                             booleanToString(holidayItem.buttonAttractions)+ ", " +
-                            booleanToString(holidayItem.buttonContacts)+ " " +
+                            booleanToString(holidayItem.buttonContacts) + ", " +
+                            booleanToString(holidayItem.buttonPoi) + " " +
                             ")";
 
             return (executeSQL("addHolidayItem", lSql));
@@ -181,7 +183,8 @@ class TableHoliday extends TableBase
                             "      buttonTips = " + booleanToString(holidayItem.buttonTips) + ", " +
                             "      buttonBudget = " + booleanToString(holidayItem.buttonBudget) + ", " +
                             "      buttonAttractions = " + booleanToString(holidayItem.buttonAttractions) + ", " +
-                            "      buttonContacts = " + booleanToString(holidayItem.buttonContacts) + " " +
+                            "      buttonContacts = " + booleanToString(holidayItem.buttonContacts) + ", " +
+                            "      buttonPoi = " + booleanToString(holidayItem.buttonPoi) + " " +
                             "WHERE holidayId = " + holidayItem.holidayId;
             return (executeSQL("updateHolidayItem", l_SQL));
         }
@@ -230,7 +233,8 @@ class TableHoliday extends TableBase
             lSQL=
                     "SELECT HolidayId, HolidayName, HolidayPicture, StartDate, mapFileGroupId, infoId, " +
                     " noteId, galleryId, buttonDays, buttonDay, buttonMaps, " +
-                    " buttonTasks, buttonTips, buttonBudget, buttonAttractions, buttonContacts " +
+                    " buttonTasks, buttonTips, buttonBudget, buttonAttractions, buttonContacts, " +
+                    " buttonPoi " +
                     "FROM Holiday " +
                     "WHERE HolidayId = " + id + " ";
 
@@ -312,6 +316,7 @@ class TableHoliday extends TableBase
             retHolidayItem.buttonBudget=booleanFromString(cursor.getString(13));
             retHolidayItem.buttonAttractions=booleanFromString(cursor.getString(14));
             retHolidayItem.buttonContacts=booleanFromString(cursor.getString(15));
+            retHolidayItem.buttonPoi=booleanFromString(cursor.getString(16));
             retHolidayItem.pictureChanged=false;
 
 
@@ -334,6 +339,7 @@ class TableHoliday extends TableBase
             retHolidayItem.origButtonBudget=retHolidayItem.buttonBudget;
             retHolidayItem.origButtonAttractions=retHolidayItem.buttonAttractions;
             retHolidayItem.origButtonContacts=retHolidayItem.buttonContacts;
+            retHolidayItem.origButtonPoi=retHolidayItem.buttonPoi;
 
             if(!retHolidayItem.holidayPicture.isEmpty())
             {
@@ -451,7 +457,8 @@ class TableHoliday extends TableBase
             String lSql=
                     "SELECT holidayId, holidayName, holidayPicture, startDate, mapFileGroupId, infoId, " +
                     " noteId, galleryId, buttonDays, buttonDay, buttonMaps, buttonTasks, " +
-                    " buttonTips, buttonBudget, buttonAttractions, buttonContacts " +
+                    " buttonTips, buttonBudget, buttonAttractions, buttonContacts, " +
+                    " buttonPoi " +
                     "FROM holiday " +
                     "ORDER BY startDate DESC";
 

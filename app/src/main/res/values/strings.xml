@@ -195,5 +195,7 @@
     <string name="theme_park_area">Theme Park Area</string>
     <string name="theme_park_areas">Theme Park Areas</string>
     <string name="theme_parks">Theme Parks</string>
+    <string name="poi">POI</string>
+    <string name="points_of_interest">Points of Interest</string>
 
 </resources>

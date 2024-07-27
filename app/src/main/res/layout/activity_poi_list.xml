@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/my_toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="?attr/actionBarSize"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/grpPOIs"
+            style="@style/MyBox"
+            android:layout_marginHorizontal="10dp">
+
+            <TextView
+                android:id="@+id/txtPoi"
+                android:text="@string/points_of_interest"
+                style="@style/MyTextHint" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/poiListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:cacheColorHint="#0000"
+                android:scrollbars="vertical"
+                android:scrollingCache="false"/>
+        </LinearLayout>
+
+
+        <include
+            layout="@layout/included_schedule_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:contentDescription="@string/floatingactionbutton"
+        android:elevation="1dp"
+        android:translationZ="1dp"
+        app:backgroundTint="@color/colorPrimary"
+        app:maxImageSize="48dp"
+        app:srcCompat="@android:drawable/ic_menu_add" />
+
+</RelativeLayout>

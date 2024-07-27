@@ -53,6 +53,8 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
     public Switch swAttractions;
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch swContacts;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
+    public Switch swPoi;
     public ImageView deleteHoliday;
 
 
@@ -88,6 +90,7 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
             swBudget= findViewById(R.id.swBudget);
             swAttractions= findViewById(R.id.swAttractions);
             swContacts= findViewById(R.id.swContacts);
+            swPoi= findViewById(R.id.swPoi);
 
             deleteHoliday=findViewById(R.id.my_toolbar_delete);
             deleteHoliday.setOnClickListener(view -> deleteHoliday());
@@ -140,6 +143,7 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
                 swBudget.setChecked(holidayItem.buttonBudget);
                 swAttractions.setChecked(holidayItem.buttonAttractions);
                 swContacts.setChecked(holidayItem.buttonContacts);
+                swPoi.setChecked(holidayItem.buttonPoi);
 
                 setTitle(holidayItem.holidayName);
                 SetImage(holidayItem.holidayPicture);
@@ -351,6 +355,7 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
             holidayItem.buttonBudget = swBudget.isChecked();
             holidayItem.buttonAttractions = swAttractions.isChecked();
             holidayItem.buttonContacts = swContacts.isChecked();
+            holidayItem.buttonPoi = swPoi.isChecked();
 
             try(DatabaseAccess da = databaseAccess())
             {
