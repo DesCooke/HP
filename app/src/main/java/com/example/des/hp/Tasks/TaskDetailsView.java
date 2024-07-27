@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
-import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionDetailsEdit;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
@@ -284,13 +283,14 @@ public class TaskDetailsView extends BaseActivity
         super.onResume();
         try
         {
-            try(DatabaseAccess da = databaseAccess();)
-            {
-                if(!da.getTaskItem(holidayId, taskId, taskItem))
-                    return;
-                if(action.compareTo("add")!=0)
-                    if(taskItem.taskId==0)
-                        finish();
+            if(action.compareTo("add")!=0) {
+                try (DatabaseAccess da = databaseAccess();) {
+                    if (!da.getTaskItem(holidayId, taskId, taskItem))
+                        return;
+                    if (action.compareTo("add") != 0)
+                        if (taskItem.taskId == 0)
+                            finish();
+                }
             }
         }
         catch(Exception e)

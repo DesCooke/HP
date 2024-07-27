@@ -190,5 +190,10 @@
     <string name="unpaid">Unpaid</string>
     <string name="add_a_budget">Add a Budget</string>
     <string name="only_outstanding_budgets">Only Outstanding Budgets</string>
+    <string name="_99">99</string>
+    <string name="theme_park">Theme Park</string>
+    <string name="theme_park_area">Theme Park Area</string>
+    <string name="theme_park_areas">Theme Park Areas</string>
+    <string name="theme_parks">Theme Parks</string>
 
 </resources>

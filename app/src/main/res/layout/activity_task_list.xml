@@ -48,6 +48,7 @@
         android:layout_marginHorizontal="10dp"/>
 
     </LinearLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="match_parent"
@@ -61,4 +62,5 @@
         app:backgroundTint="@color/colorPrimary"
         app:maxImageSize="48dp"
         app:srcCompat="@android:drawable/ic_menu_add" />
+
 </RelativeLayout>

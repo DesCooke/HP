@@ -2,7 +2,7 @@
 Shows a list of attraction items (seaworld, magic kingdom etc)
 for the current holiday to pick from
  */
-package com.example.des.hp.Attraction;
+package com.example.des.hp.ThemeParks;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,10 +11,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.des.hp.AttractionArea.AttractionAreaDetailsList;
+//import com.example.des.hp.AttractionArea.AttractionAreaDetailsList;
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,12 +24,13 @@ import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 import androidx.annotation.NonNull;
 
-public class AttractionDetailsList extends BaseActivity
+public class ThemeParkList extends BaseActivity
 {
     
     //region Member Variables
-    public ArrayList<AttractionItem> attractionList;
-    private AttractionAdapter attractionAdapter;
+    public ArrayList<ThemeParkItem> attractionList;
+    private ThemeParkAdapter themeParkAdapter;
+    private FloatingActionButton fab;
     //endregion
     
     //region Constructors/Destructors
@@ -40,8 +42,10 @@ public class AttractionDetailsList extends BaseActivity
         try
         {
             layoutName = "activity_attraction_details_list";
-            setContentView(R.layout.activity_attraction_details_list);
-            
+            setContentView(R.layout.activity_themepark_details_list);
+
+            fab=findViewById(R.id.fab);
+            fab.setOnClickListener(this::showThemeParkAdd);
             afterCreate();
             
             showForm();
@@ -70,11 +74,11 @@ public class AttractionDetailsList extends BaseActivity
     //endregion
     
     //region Form Functions
-    public void showAttractionAdd(View view)
+    public void showThemeParkAdd(View view)
     {
         try
         {
-            Intent intent = new Intent(getApplicationContext(), AttractionDetailsEdit.class);
+            Intent intent = new Intent(getApplicationContext(), ThemeParkEdit.class);
             intent.putExtra("ACTION", "add");
             intent.putExtra("HOLIDAYID", holidayId);
             startActivity(intent);
@@ -95,17 +99,17 @@ public class AttractionDetailsList extends BaseActivity
             attractionList = new ArrayList<>();
             if (!da.getAttractionList(holidayId, attractionList))
                 return;
-            attractionAdapter = new AttractionAdapter(this, attractionList);
+            themeParkAdapter = new ThemeParkAdapter(this, attractionList);
             
-            CreateRecyclerView(R.id.attractionListView, attractionAdapter);
+            CreateRecyclerView(R.id.attractionListView, themeParkAdapter);
             
-            attractionAdapter.setOnItemClickListener((view, obj) -> {
-                Intent intent = new Intent(getApplicationContext(), AttractionAreaDetailsList.class);
+            themeParkAdapter.setOnItemClickListener((view, obj) -> {
+                Intent intent = new Intent(getApplicationContext(), ThemeParkView.class);
                 intent.putExtra("ACTION", "view");
                 intent.putExtra("HOLIDAYID", obj.holidayId);
                 intent.putExtra("ATTRACTIONID", obj.attractionId);
-                intent.putExtra("TITLE", title + "/" + subTitle);
-                intent.putExtra("SUBTITLE", obj.attractionDescription);
+                intent.putExtra("TITLE", obj.attractionDescription);
+                intent.putExtra("SUBTITLE", subTitle);
                 startActivity(intent);
             });
             
@@ -122,7 +126,7 @@ public class AttractionDetailsList extends BaseActivity
     {
         try
         {
-            Collections.swap(attractionAdapter.data, from, to);
+            Collections.swap(themeParkAdapter.data, from, to);
         }
         catch (Exception e)
         {
@@ -135,7 +139,7 @@ public class AttractionDetailsList extends BaseActivity
     {
         try
         {
-            attractionAdapter.onItemMove();
+            themeParkAdapter.onItemMove();
         }
         catch (Exception e)
         {
@@ -148,7 +152,7 @@ public class AttractionDetailsList extends BaseActivity
     {
         try
         {
-            attractionAdapter.notifyItemMoved(from, to);
+            themeParkAdapter.notifyItemMoved(from, to);
         }
         catch (Exception e)
         {
@@ -164,7 +168,7 @@ public class AttractionDetailsList extends BaseActivity
         try
         {
             if (item.getItemId() == R.id.action_add_attraction) {
-                showAttractionAdd(null);
+                showThemeParkAdd(null);
                 return true;
             }
             return super.onOptionsItemSelected(item);

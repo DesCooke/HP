@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Day.DayItem;
-import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionItem;
-import com.example.des.hp.Schedule.ScheduleItem;
+import com.example.des.hp.Event.EventScheduleDetailItem;
+import com.example.des.hp.Event.EventScheduleItem;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
@@ -408,7 +408,7 @@ class TableDay extends TableBase
     {
         try
         {
-            ArrayList<ScheduleItem> al = new ArrayList<>();
+            ArrayList<EventScheduleItem> al = new ArrayList<>();
             database.getScheduleList(dayItem.holidayId, dayItem.dayId, 0,0,al);
 
             int lMinMinutes=86400;
@@ -428,10 +428,10 @@ class TableDay extends TableBase
                 //   check-in and departs, but not arrival - set end date to midnight
                 // the day after will show
                 //   arrival but not check-in or departs- set start date to 00:00
-                GeneralAttractionItem gai = al.get(al.size()-1).generalAttractionItem;
+                EventScheduleDetailItem gai = al.get(al.size()-1).eventScheduleDetailItem;
                 if(gai.CheckInKnown && gai.DepartsKnown && !gai.ArrivalKnown)
                     lMaxMinutes = 24 * 60;
-                gai = al.get(0).generalAttractionItem;
+                gai = al.get(0).eventScheduleDetailItem;
                 if(!gai.CheckInKnown && !gai.DepartsKnown && gai.ArrivalKnown)
                     lMinMinutes = 0;
             }

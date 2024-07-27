@@ -225,7 +225,7 @@
                     <TextView
                         android:id="@+id/lblAttractions"
                         style="@style/MyTextHint"
-                        android:text="@string/attractions" />
+                        android:text="@string/theme_parks" />
 
                     <Switch
                         android:id="@+id/swAttractions"

@@ -16,10 +16,10 @@ import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.Holiday.*;
-import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionDetailsEdit;
-import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionDetailsView;
-import com.example.des.hp.Schedule.ScheduleAdapter;
-import com.example.des.hp.Schedule.ScheduleItem;
+import com.example.des.hp.Event.EventDetailsEdit;
+import com.example.des.hp.Event.EventDetailsView;
+import com.example.des.hp.Event.EventAdapter;
+import com.example.des.hp.Event.EventScheduleItem;
 import com.example.des.hp.Tasks.TaskDetailsList;
 import com.example.des.hp.TipGroup.TipGroupDetailsList;
 import com.example.des.hp.myutils.*;
@@ -43,8 +43,8 @@ public class DayDetailsView extends BaseActivity
     public DayItem dayItem;
     private TextView txtDayCat;
     public LinearLayout grpMenuFile;
-    public ArrayList<ScheduleItem> scheduleList;
-    public ScheduleAdapter scheduleAdapter;
+    public ArrayList<EventScheduleItem> scheduleList;
+    public EventAdapter eventAdapter;
     public LinearLayout topBit;
     public RelativeLayout fullPage;
     public ImageView btnEditDay;
@@ -213,13 +213,13 @@ public class DayDetailsView extends BaseActivity
                     return;
             }
 
-            scheduleAdapter=new ScheduleAdapter(this, scheduleList);
+            eventAdapter =new EventAdapter(this, scheduleList);
 
-            CreateRecyclerView(R.id.dayListView, scheduleAdapter);
+            CreateRecyclerView(R.id.dayListView, eventAdapter);
             if(lColor != -1)
                 recyclerView.setBackgroundColor(lColor);
 
-            scheduleAdapter.setOnItemClickListener((view, obj) -> {
+            eventAdapter.setOnItemClickListener((view, obj) -> {
                 if(obj.schedType == getResources().getInteger(R.integer.schedule_type_generalattraction))
                 {
                     StartNewEditIntent(obj);
@@ -367,11 +367,11 @@ public class DayDetailsView extends BaseActivity
         }
     }
 
-    public void StartNewEditIntent(ScheduleItem obj)
+    public void StartNewEditIntent(EventScheduleItem obj)
     {
         try
         {
-            Intent intent=new Intent(getApplicationContext(), GeneralAttractionDetailsView.class);
+            Intent intent=new Intent(getApplicationContext(), EventDetailsView.class);
             intent.putExtra("ACTION", "view");
             intent.putExtra("HOLIDAYID", obj.holidayId);
             intent.putExtra("DAYID", obj.dayId);
@@ -394,7 +394,7 @@ public class DayDetailsView extends BaseActivity
     {
         try
         {
-            Intent intent=new Intent(getApplicationContext(), GeneralAttractionDetailsEdit.class);
+            Intent intent=new Intent(getApplicationContext(), EventDetailsEdit.class);
             intent.putExtra("ACTION", "add");
             intent.putExtra("HOLIDAYID", holidayId);
             intent.putExtra("DAYID", dayId);
@@ -432,7 +432,7 @@ public class DayDetailsView extends BaseActivity
     {
         try
         {
-            Collections.swap(scheduleAdapter.data, from, to);
+            Collections.swap(eventAdapter.data, from, to);
         }
         catch(Exception e)
         {
@@ -446,7 +446,7 @@ public class DayDetailsView extends BaseActivity
     {
         try
         {
-            scheduleAdapter.onItemMove();
+            eventAdapter.onItemMove();
         }
         catch(Exception e)
         {
@@ -460,7 +460,7 @@ public class DayDetailsView extends BaseActivity
     {
         try
         {
-            scheduleAdapter.notifyItemMoved(from, to);
+            eventAdapter.notifyItemMoved(from, to);
         }
         catch(Exception e)
         {
@@ -475,14 +475,15 @@ public class DayDetailsView extends BaseActivity
         super.onResume();
         try
         {
-            try(DatabaseAccess da = databaseAccess())
-            {
-                if(!da.getDayItem(holidayId, dayId, dayItem)) {
-                    finish();
-                }
-                if(dayItem!=null){
-                    if(dayItem.dayId==0){
+            if(action.compareTo("add")!=0) {
+                try (DatabaseAccess da = databaseAccess()) {
+                    if (!da.getDayItem(holidayId, dayId, dayItem)) {
                         finish();
+                    }
+                    if (dayItem != null) {
+                        if (dayItem.dayId == 0) {
+                            finish();
+                        }
                     }
                 }
             }

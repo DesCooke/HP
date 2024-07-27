@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.des.hp.Attraction.AttractionItem;
+import com.example.des.hp.ThemeParks.ThemeParkItem;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
@@ -59,7 +59,7 @@ class TableAttraction extends TableBase
 
     }
 
-    boolean addAttractionItem(AttractionItem attractionItem)
+    boolean addAttractionItem(ThemeParkItem themeParkItem)
     {
         try
         {
@@ -68,21 +68,21 @@ class TableAttraction extends TableBase
 
 
             //myMessages().LogMessage("addAttractionItem:Handling Image");
-            if(attractionItem.pictureAssigned)
+            if(themeParkItem.pictureAssigned)
             {
             /* if picture name has something in it - it means it came from internal folder */
-                if(attractionItem.attractionPicture.isEmpty())
+                if(themeParkItem.attractionPicture.isEmpty())
                 {
                         //myMessages().LogMessage("  - Save new image and get a filename...");
                         MyString myString=new MyString();
-                        if(!savePicture(attractionItem.holidayId, attractionItem.fileBitmap, myString))
+                        if(!savePicture(themeParkItem.holidayId, themeParkItem.fileBitmap, myString))
                             return (false);
-                        attractionItem.attractionPicture=myString.Value;
+                        themeParkItem.attractionPicture=myString.Value;
                         //myMessages().LogMessage("  - New filename " + attractionItem.attractionPicture);
                 }
             }
 
-            String lSql="INSERT INTO Attraction " + "  (holidayId, attractionId, sequenceNo, attractionDescription, " + "   attractionPicture, attractionNotes, infoId, noteId, galleryId) " + "VALUES " + "(" + attractionItem.holidayId + "," + attractionItem.attractionId + "," + attractionItem.sequenceNo + ", " + MyQuotedString(attractionItem.attractionDescription) + ", " + MyQuotedString(attractionItem.attractionPicture) + ", " + MyQuotedString(attractionItem.attractionNotes) + ", " + attractionItem.infoId + ", " + attractionItem.noteId + ", " + attractionItem.galleryId + ")";
+            String lSql="INSERT INTO Attraction " + "  (holidayId, attractionId, sequenceNo, attractionDescription, " + "   attractionPicture, attractionNotes, infoId, noteId, galleryId) " + "VALUES " + "(" + themeParkItem.holidayId + "," + themeParkItem.attractionId + "," + themeParkItem.sequenceNo + ", " + MyQuotedString(themeParkItem.attractionDescription) + ", " + MyQuotedString(themeParkItem.attractionPicture) + ", " + MyQuotedString(themeParkItem.attractionNotes) + ", " + themeParkItem.infoId + ", " + themeParkItem.noteId + ", " + themeParkItem.galleryId + ")";
 
             return (executeSQL("addAttractionItem", lSql));
         }
@@ -94,7 +94,7 @@ class TableAttraction extends TableBase
 
     }
 
-    boolean updateAttractionItems(ArrayList<AttractionItem> items)
+    boolean updateAttractionItems(ArrayList<ThemeParkItem> items)
     {
         try
         {
@@ -122,7 +122,7 @@ class TableAttraction extends TableBase
 
     }
 
-    boolean updateAttractionItem(AttractionItem attractionItem)
+    boolean updateAttractionItem(ThemeParkItem themeParkItem)
     {
         try
         {
@@ -130,28 +130,28 @@ class TableAttraction extends TableBase
                 return (false);
 
             //myMessages().LogMessage("updateAttractionItem:Handling Image");
-            if(attractionItem.pictureChanged)
+            if(themeParkItem.pictureChanged)
             {
-                if (!attractionItem.origPictureAssigned || attractionItem.attractionPicture.isEmpty() || attractionItem.attractionPicture.compareTo(attractionItem.origAttractionPicture) != 0) {
+                if (!themeParkItem.origPictureAssigned || themeParkItem.attractionPicture.isEmpty() || themeParkItem.attractionPicture.compareTo(themeParkItem.origAttractionPicture) != 0) {
 
-                    if(attractionItem.origPictureAssigned)
+                    if(themeParkItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(!removePicture(attractionItem.holidayId, attractionItem.origAttractionPicture))
+                        if(!removePicture(themeParkItem.holidayId, themeParkItem.origAttractionPicture))
                             return (false);
                     }
 
                 /* if picture name has something in it - it means it came from internal folder */
-                    if(attractionItem.attractionPicture.isEmpty())
+                    if(themeParkItem.attractionPicture.isEmpty())
                     {
                         //myMessages().LogMessage("  - New Image was not from internal folder...");
-                        if(attractionItem.pictureAssigned)
+                        if(themeParkItem.pictureAssigned)
                         {
                             //myMessages().LogMessage("  - Save new image and get a filename...");
                             MyString myString=new MyString();
-                            if(!savePicture(attractionItem.holidayId, attractionItem.fileBitmap, myString))
+                            if(!savePicture(themeParkItem.holidayId, themeParkItem.fileBitmap, myString))
                                 return (false);
-                            attractionItem.attractionPicture=myString.Value;
+                            themeParkItem.attractionPicture=myString.Value;
                             //myMessages().LogMessage("  - New filename " + attractionItem.attractionPicture);
                         }
                     }
@@ -160,7 +160,7 @@ class TableAttraction extends TableBase
 
 
             String lSQL;
-            lSQL="UPDATE Attraction " + "SET sequenceNo = " + attractionItem.sequenceNo + ", " + "    attractionDescription = " + MyQuotedString(attractionItem.attractionDescription) + ", " + "    attractionPicture = " + MyQuotedString(attractionItem.attractionPicture) + ", " + "    attractionNotes = " + MyQuotedString(attractionItem.attractionNotes) + ", " + "    infoId = " + attractionItem.infoId + ", " + "    noteId = " + attractionItem.noteId + ", " + "    galleryId = " + attractionItem.galleryId + " WHERE holidayId = " + attractionItem.holidayId + " " + "AND attractionId = " + attractionItem.attractionId;
+            lSQL="UPDATE Attraction " + "SET sequenceNo = " + themeParkItem.sequenceNo + ", " + "    attractionDescription = " + MyQuotedString(themeParkItem.attractionDescription) + ", " + "    attractionPicture = " + MyQuotedString(themeParkItem.attractionPicture) + ", " + "    attractionNotes = " + MyQuotedString(themeParkItem.attractionNotes) + ", " + "    infoId = " + themeParkItem.infoId + ", " + "    noteId = " + themeParkItem.noteId + ", " + "    galleryId = " + themeParkItem.galleryId + " WHERE holidayId = " + themeParkItem.holidayId + " " + "AND attractionId = " + themeParkItem.attractionId;
 
             return (executeSQL("updateAttractionItem", lSQL));
         }
@@ -172,17 +172,17 @@ class TableAttraction extends TableBase
 
     }
 
-    boolean deleteAttractionItem(AttractionItem attractionItem)
+    boolean deleteAttractionItem(ThemeParkItem themeParkItem)
     {
         try
         {
             if(!IsValid())
                 return (false);
 
-            String lSQL="DELETE FROM Attraction " + "WHERE holidayId = " + attractionItem.holidayId + " " + "AND attractionId = " + attractionItem.attractionId;
+            String lSQL="DELETE FROM Attraction " + "WHERE holidayId = " + themeParkItem.holidayId + " " + "AND attractionId = " + themeParkItem.attractionId;
 
-            if(!attractionItem.attractionPicture.isEmpty())
-                if(!removePicture(attractionItem.holidayId, attractionItem.attractionPicture))
+            if(!themeParkItem.attractionPicture.isEmpty())
+                if(!removePicture(themeParkItem.holidayId, themeParkItem.attractionPicture))
                     return (false);
 
             return executeSQL("deleteAttractionItem", lSQL);
@@ -195,7 +195,7 @@ class TableAttraction extends TableBase
 
     }
 
-    boolean getAttractionItem(int holidayId, int attractionId, AttractionItem attractionItem)
+    boolean getAttractionItem(int holidayId, int attractionId, ThemeParkItem themeParkItem)
     {
         try
         {
@@ -209,7 +209,7 @@ class TableAttraction extends TableBase
             if(cursor != null)
             {
                 cursor.moveToFirst();
-                if(!GetAttractionItemFromQuery(cursor, attractionItem))
+                if(!GetAttractionItemFromQuery(cursor, themeParkItem))
                     return (false);
             }
             executeSQLCloseCursor("getAttractionItem");
@@ -223,7 +223,7 @@ class TableAttraction extends TableBase
 
     }
 
-    private boolean GetAttractionItemFromQuery(Cursor cursor, AttractionItem attractionItem)
+    private boolean GetAttractionItemFromQuery(Cursor cursor, ThemeParkItem themeParkItem)
     {
         if(!IsValid())
             return (false);
@@ -233,36 +233,36 @@ class TableAttraction extends TableBase
             if(cursor.getCount() == 0)
                 return (false);
 
-            attractionItem.holidayId=Integer.parseInt(cursor.getString(0));
-            attractionItem.attractionId=Integer.parseInt(cursor.getString(1));
-            attractionItem.sequenceNo=Integer.parseInt(cursor.getString(2));
-            attractionItem.attractionDescription=cursor.getString(3);
-            attractionItem.attractionPicture=cursor.getString(4);
-            attractionItem.attractionNotes=cursor.getString(5);
-            attractionItem.infoId=Integer.parseInt(cursor.getString(6));
-            attractionItem.noteId=Integer.parseInt(cursor.getString(7));
-            attractionItem.galleryId=Integer.parseInt(cursor.getString(8));
+            themeParkItem.holidayId=Integer.parseInt(cursor.getString(0));
+            themeParkItem.attractionId=Integer.parseInt(cursor.getString(1));
+            themeParkItem.sequenceNo=Integer.parseInt(cursor.getString(2));
+            themeParkItem.attractionDescription=cursor.getString(3);
+            themeParkItem.attractionPicture=cursor.getString(4);
+            themeParkItem.attractionNotes=cursor.getString(5);
+            themeParkItem.infoId=Integer.parseInt(cursor.getString(6));
+            themeParkItem.noteId=Integer.parseInt(cursor.getString(7));
+            themeParkItem.galleryId=Integer.parseInt(cursor.getString(8));
 
-            attractionItem.origHolidayId=attractionItem.holidayId;
-            attractionItem.origAttractionId=attractionItem.attractionId;
-            attractionItem.origSequenceNo=attractionItem.sequenceNo;
-            attractionItem.origAttractionDescription=attractionItem.attractionDescription;
-            attractionItem.origAttractionPicture=attractionItem.attractionPicture;
-            attractionItem.origAttractionNotes=attractionItem.attractionNotes;
-            attractionItem.origInfoId=attractionItem.infoId;
-            attractionItem.origNoteId=attractionItem.noteId;
-            attractionItem.origGalleryId=attractionItem.galleryId;
+            themeParkItem.origHolidayId= themeParkItem.holidayId;
+            themeParkItem.origAttractionId= themeParkItem.attractionId;
+            themeParkItem.origSequenceNo= themeParkItem.sequenceNo;
+            themeParkItem.origAttractionDescription= themeParkItem.attractionDescription;
+            themeParkItem.origAttractionPicture= themeParkItem.attractionPicture;
+            themeParkItem.origAttractionNotes= themeParkItem.attractionNotes;
+            themeParkItem.origInfoId= themeParkItem.infoId;
+            themeParkItem.origNoteId= themeParkItem.noteId;
+            themeParkItem.origGalleryId= themeParkItem.galleryId;
 
-            attractionItem.pictureChanged=false;
+            themeParkItem.pictureChanged=false;
 
-            if(!attractionItem.attractionPicture.isEmpty())
+            if(!themeParkItem.attractionPicture.isEmpty())
             {
-                attractionItem.pictureAssigned=true;
-                attractionItem.origPictureAssigned=true;
+                themeParkItem.pictureAssigned=true;
+                themeParkItem.origPictureAssigned=true;
             } else
             {
-                attractionItem.pictureAssigned=false;
-                attractionItem.origPictureAssigned=false;
+                themeParkItem.pictureAssigned=false;
+                themeParkItem.origPictureAssigned=false;
             }
 
             return (true);
@@ -319,7 +319,7 @@ class TableAttraction extends TableBase
     }
 
 
-    boolean getAttractionList(int holidayId, ArrayList<AttractionItem> al)
+    boolean getAttractionList(int holidayId, ArrayList<ThemeParkItem> al)
     {
         try
         {
@@ -331,11 +331,11 @@ class TableAttraction extends TableBase
 
             while(cursor.moveToNext())
             {
-                AttractionItem attractionItem=new AttractionItem();
-                if(!GetAttractionItemFromQuery(cursor, attractionItem))
+                ThemeParkItem themeParkItem =new ThemeParkItem();
+                if(!GetAttractionItemFromQuery(cursor, themeParkItem))
                     return (false);
 
-                al.add(attractionItem);
+                al.add(themeParkItem);
             }
             return (true);
         }

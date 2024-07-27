@@ -22,7 +22,7 @@ import com.example.des.hp.Contact.ContactDetailsList;
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.TipGroup.*;
-import com.example.des.hp.Attraction.*;
+import com.example.des.hp.ThemeParks.*;
 import com.example.des.hp.Day.DayDetailsList;
 import com.example.des.hp.ExtraFiles.*;
 import com.example.des.hp.R;
@@ -43,14 +43,14 @@ public class HolidayDetailsView extends BaseActivity
     public ImageButton btnShowTasks;
     public ImageButton btnShowBudget;
     public ImageButton btnShowTips;
-    public ImageButton btnShowAttractions;
+    public ImageButton btnShowThemeParks;
     public ImageButton btnShowContacts;
     public TextView itineraryBadge;
     public TextView mapBadge;
     public TextView taskBadge;
     public TextView budgetBadge;
     public TextView tipsBadge;
-    public TextView attractionsBadge;
+    public TextView themeParksBadge;
     public TextView contactsBadge;
     private int buttonCount;
     public RelativeLayout btnGroupDays;
@@ -93,7 +93,7 @@ public class HolidayDetailsView extends BaseActivity
             btnShowTasks= findViewById(R.id.btnShowTasks);
             btnShowBudget= findViewById(R.id.btnShowBudget);
             btnShowTips= findViewById(R.id.btnShowTips);
-            btnShowAttractions= findViewById(R.id.btnShowAttractions);
+            btnShowThemeParks = findViewById(R.id.btnShowThemeParks);
             btnShowContacts= findViewById(R.id.btnShowContacts);
 
             itineraryBadge= findViewById(R.id.txtItineraryBadge);
@@ -102,7 +102,7 @@ public class HolidayDetailsView extends BaseActivity
             budgetBadge= findViewById(R.id.txtBudgetBadge);
             contactsBadge= findViewById(R.id.txtContactBadge);
             tipsBadge= findViewById(R.id.txtTipsBadge);
-            attractionsBadge= findViewById(R.id.txtAttractionBadge);
+            themeParksBadge = findViewById(R.id.txtThemeParksBadge);
 
             editHoliday=findViewById(R.id.my_toolbar_edit);
             editHoliday.setOnClickListener(view -> editHoliday());
@@ -116,7 +116,7 @@ public class HolidayDetailsView extends BaseActivity
             btnGroupTasks= findViewById(R.id.btnGroupTasks);
             btnGroupTips= findViewById(R.id.btnGroupTips);
             btnGroupBudget= findViewById(R.id.btnGroupBudget);
-            btnGroupAttractions= findViewById(R.id.btnGroupAttractions);
+            btnGroupAttractions= findViewById(R.id.btnGroupThemeParks);
             btnGroupContacts= findViewById(R.id.btnGroupContacts);
 
             afterCreate();
@@ -224,14 +224,14 @@ public class HolidayDetailsView extends BaseActivity
         }
     }
 
-    public void showAttractions(View view)
+    public void showThemeParks(View view)
     {
         try
         {
-            Intent intent2=new Intent(getApplicationContext(), AttractionDetailsList.class);
+            Intent intent2=new Intent(getApplicationContext(), ThemeParkList.class);
             intent2.putExtra("HOLIDAYID", holidayItem.holidayId);
-            intent2.putExtra("TITLE", holidayItem.holidayName);
-            intent2.putExtra("SUBTITLE", "Attractions");
+            intent2.putExtra("TITLE", "Theme Parks");
+            intent2.putExtra("SUBTITLE", holidayItem.holidayName);
             startActivity(intent2);
         }
         catch(Exception e)
@@ -316,8 +316,8 @@ public class HolidayDetailsView extends BaseActivity
 
                 if(!da.getAttractionsCount(holidayItem.holidayId, myInt))
                     return;
-                int attractionsCount=myInt.Value;
-                attractionsBadge.setText(String.format("Attractions (%s)", attractionsCount));
+                int themeParksCount=myInt.Value;
+                themeParksBadge.setText(String.format("Theme Parks (%s)", themeParksCount));
 
                 if(!da.getContactCount(holidayItem.holidayId, myInt))
                     return;
@@ -407,14 +407,15 @@ public class HolidayDetailsView extends BaseActivity
         super.onResume();
         try
         {
-            try(DatabaseAccess da = databaseAccess())
-            {
-                if(!da.getHolidayItem(holidayId, holidayItem)) {
-                   finish();
-                }
-                if(holidayItem!=null){
-                    if(holidayItem.holidayId==0){
+            if(action.compareTo("add")!=0) {
+                try (DatabaseAccess da = databaseAccess()) {
+                    if (!da.getHolidayItem(holidayId, holidayItem)) {
                         finish();
+                    }
+                    if (holidayItem != null) {
+                        if (holidayItem.holidayId == 0) {
+                            finish();
+                        }
                     }
                 }
             }

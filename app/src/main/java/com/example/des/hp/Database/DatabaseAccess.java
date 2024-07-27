@@ -10,16 +10,15 @@ import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.R;
 import com.example.des.hp.Holiday.*;
 import com.example.des.hp.Day.*;
-import com.example.des.hp.Schedule.*;
-import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionItem;
+import com.example.des.hp.Event.*;
+import com.example.des.hp.Event.EventScheduleDetailItem;
 import com.example.des.hp.ExtraFiles.*;
 import com.example.des.hp.ScheduleArea.ScheduleAreaItem;
 import com.example.des.hp.Tasks.TaskItem;
 import com.example.des.hp.Budget.*;
 import com.example.des.hp.TipGroup.*;
 import com.example.des.hp.Tip.*;
-import com.example.des.hp.Attraction.*;
-import com.example.des.hp.AttractionArea.*;
+import com.example.des.hp.ThemeParks.*;
 import com.example.des.hp.Contact.*;
 import com.example.des.hp.myutils.DateUtils;
 import com.example.des.hp.myutils.MyBoolean;
@@ -317,11 +316,11 @@ public class DatabaseAccess extends SQLiteOpenHelper
                 return (false);
             
             // AttractionItem
-            ArrayList<AttractionItem> attractionList = new ArrayList<>();
+            ArrayList<ThemeParkItem> attractionList = new ArrayList<>();
             if (!getAttractionList(holidayItem.holidayId, attractionList))
                 return (false);
-            for (AttractionItem attractionItem : attractionList)
-                deleteAttractionItem(attractionItem);
+            for (ThemeParkItem themeParkItem : attractionList)
+                deleteAttractionItem(themeParkItem);
             
             // BudgetItem
             ArrayList<BudgetItem> budgetList = new ArrayList<>();
@@ -479,11 +478,11 @@ public class DatabaseAccess extends SQLiteOpenHelper
         try
         {
             // ScheduleItem
-            ArrayList<ScheduleItem> scheduleList = new ArrayList<>();
+            ArrayList<EventScheduleItem> scheduleList = new ArrayList<>();
             if (!getScheduleList(dayItem.holidayId, dayItem.dayId, 0, 0, scheduleList))
                 return (false);
-            for (ScheduleItem scheduleItem : scheduleList)
-                deleteScheduleItem(scheduleItem);
+            for (EventScheduleItem eventScheduleItem : scheduleList)
+                deleteScheduleItem(eventScheduleItem);
             
             // ExtraFilesItem for maps
             if (!removeExtraFiles(dayItem.infoId))
@@ -561,7 +560,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
     //endregion;
 
     //region GENERAL ATTRACTION functions
-    private boolean updateGeneralAttractionItem(GeneralAttractionItem item)
+    private boolean updateGeneralAttractionItem(EventScheduleDetailItem item)
     {
         try
         {
@@ -575,7 +574,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    private boolean deleteGeneralAttractionItem(GeneralAttractionItem item)
+    private boolean deleteGeneralAttractionItem(EventScheduleDetailItem item)
     {
         try
         {
@@ -589,7 +588,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    private boolean getGeneralAttractionItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, GeneralAttractionItem item)
+    private boolean getGeneralAttractionItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, EventScheduleDetailItem item)
     {
         try
         {
@@ -606,15 +605,15 @@ public class DatabaseAccess extends SQLiteOpenHelper
     //endregion
 
     //region SCHEDULE functions
-    public boolean addScheduleItem(ScheduleItem scheduleItem)
+    public boolean addScheduleItem(EventScheduleItem eventScheduleItem)
     {
         try
         {
-            if (!tableSchedule.addScheduleItem(scheduleItem))
+            if (!tableSchedule.addScheduleItem(eventScheduleItem))
                 return (false);
             
-            if (scheduleItem.generalAttractionItem != null)
-                return tableGeneralAttraction.addGeneralAttractionItem(scheduleItem.generalAttractionItem);
+            if (eventScheduleItem.eventScheduleDetailItem != null)
+                return tableGeneralAttraction.addGeneralAttractionItem(eventScheduleItem.eventScheduleDetailItem);
             
             return (true);
         }
@@ -626,7 +625,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
     }
     
     
-    public boolean updateScheduleItems(ArrayList<ScheduleItem> items)
+    public boolean updateScheduleItems(ArrayList<EventScheduleItem> items)
     {
         try
         {
@@ -640,15 +639,15 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    public boolean updateScheduleItem(ScheduleItem scheduleItem)
+    public boolean updateScheduleItem(EventScheduleItem eventScheduleItem)
     {
         try
         {
-            if (!tableSchedule.updateScheduleItem(scheduleItem))
+            if (!tableSchedule.updateScheduleItem(eventScheduleItem))
                 return (false);
             
-            if (scheduleItem.generalAttractionItem != null)
-                return updateGeneralAttractionItem(scheduleItem.generalAttractionItem);
+            if (eventScheduleItem.eventScheduleDetailItem != null)
+                return updateGeneralAttractionItem(eventScheduleItem.eventScheduleDetailItem);
             return (true);
         }
         catch (Exception e)
@@ -659,23 +658,23 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    public boolean deleteScheduleItem(ScheduleItem scheduleItem)
+    public boolean deleteScheduleItem(EventScheduleItem eventScheduleItem)
     {
         try
         {
-            if (scheduleItem != null)
+            if (eventScheduleItem != null)
             {
-                if (!removeExtraFiles(scheduleItem.infoId))
+                if (!removeExtraFiles(eventScheduleItem.infoId))
                     return (false);
                 
-                if (!removeNote(scheduleItem.holidayId, scheduleItem.noteId))
+                if (!removeNote(eventScheduleItem.holidayId, eventScheduleItem.noteId))
                     return (false);
                 
-                if (scheduleItem.generalAttractionItem != null)
-                    if (!deleteGeneralAttractionItem(scheduleItem.generalAttractionItem))
+                if (eventScheduleItem.eventScheduleDetailItem != null)
+                    if (!deleteGeneralAttractionItem(eventScheduleItem.eventScheduleDetailItem))
                         return (false);
 
-                return tableSchedule.deleteScheduleItem(scheduleItem);
+                return tableSchedule.deleteScheduleItem(eventScheduleItem);
             }
             return (true);
         }
@@ -687,14 +686,14 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    public boolean getScheduleItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, ScheduleItem item)
+    public boolean getScheduleItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, EventScheduleItem item)
     {
         try
         {
             if (!tableSchedule.getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, item))
                 return (false);
             
-            return getGeneralAttractionItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, item.generalAttractionItem);
+            return getGeneralAttractionItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, item.eventScheduleDetailItem);
         }
         catch (Exception e)
         {
@@ -732,21 +731,21 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    public boolean getScheduleList(int holidayId, int dayId, int attractionId, int attractionAreaId, ArrayList<ScheduleItem> al)
+    public boolean getScheduleList(int holidayId, int dayId, int attractionId, int attractionAreaId, ArrayList<EventScheduleItem> al)
     {
         try
         {
             if (!tableSchedule.getScheduleList(holidayId, dayId, attractionId, attractionAreaId, al))
                 return (false);
             
-            for (ScheduleItem item : al)
+            for (EventScheduleItem item : al)
             {
-                item.generalAttractionItem = null;
+                item.eventScheduleDetailItem = null;
                 
                 if (item.schedType == res.getInteger(R.integer.schedule_type_generalattraction))
                 {
-                    item.generalAttractionItem = new GeneralAttractionItem();
-                    if (!getGeneralAttractionItem(holidayId, dayId, attractionId, attractionAreaId, item.scheduleId, item.generalAttractionItem))
+                    item.eventScheduleDetailItem = new EventScheduleDetailItem();
+                    if (!getGeneralAttractionItem(holidayId, dayId, attractionId, attractionAreaId, item.scheduleId, item.eventScheduleDetailItem))
                         return (false);
                 }
             }
@@ -1480,11 +1479,11 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    public boolean addAttractionItem(AttractionItem attractionItem)
+    public boolean addAttractionItem(ThemeParkItem themeParkItem)
     {
         try
         {
-            return (tableAttraction.addAttractionItem(attractionItem));
+            return (tableAttraction.addAttractionItem(themeParkItem));
         }
         catch (Exception e)
         {
@@ -1494,7 +1493,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    public boolean updateAttractionItems(ArrayList<AttractionItem> items)
+    public boolean updateAttractionItems(ArrayList<ThemeParkItem> items)
     {
         try
         {
@@ -1508,11 +1507,11 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    public boolean updateAttractionItem(AttractionItem attractionItem)
+    public boolean updateAttractionItem(ThemeParkItem themeParkItem)
     {
         try
         {
-            return (tableAttraction.updateAttractionItem(attractionItem));
+            return (tableAttraction.updateAttractionItem(themeParkItem));
         }
         catch (Exception e)
         {
@@ -1522,24 +1521,24 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    public boolean deleteAttractionItem(AttractionItem attractionItem)
+    public boolean deleteAttractionItem(ThemeParkItem themeParkItem)
     {
         try
         {
             // AttractionAreaItem
-            ArrayList<AttractionAreaItem> attractionAreaList = new ArrayList<>();
-            if (!getAttractionAreaList(attractionItem.holidayId, attractionItem.attractionId, attractionAreaList))
+            ArrayList<ThemeParkAreaItem> attractionAreaList = new ArrayList<>();
+            if (!getThemeParkAreaList(themeParkItem.holidayId, themeParkItem.attractionId, attractionAreaList))
                 return (false);
-            for (AttractionAreaItem attractionAreaItem : attractionAreaList)
-                deleteAttractionAreaItem(attractionAreaItem);
+            for (ThemeParkAreaItem themeParkAreaItem : attractionAreaList)
+                deleteAttractionAreaItem(themeParkAreaItem);
             
-            if (!removeExtraFiles(attractionItem.infoId))
-                return (false);
-            
-            if (!removeNote(attractionItem.holidayId, attractionItem.noteId))
+            if (!removeExtraFiles(themeParkItem.infoId))
                 return (false);
             
-            return (tableAttraction.deleteAttractionItem(attractionItem));
+            if (!removeNote(themeParkItem.holidayId, themeParkItem.noteId))
+                return (false);
+            
+            return (tableAttraction.deleteAttractionItem(themeParkItem));
         }
         catch (Exception e)
         {
@@ -1549,7 +1548,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    public boolean getAttractionItem(int holidayId, int attractionId, AttractionItem item)
+    public boolean getAttractionItem(int holidayId, int attractionId, ThemeParkItem item)
     {
         try
         {
@@ -1591,7 +1590,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    public boolean getAttractionList(int holidayId, ArrayList<AttractionItem> item)
+    public boolean getAttractionList(int holidayId, ArrayList<ThemeParkItem> item)
     {
         try
         {
@@ -1608,11 +1607,11 @@ public class DatabaseAccess extends SQLiteOpenHelper
     //endregion
     
     //region ATTRACTIONAREA functions
-    public boolean addAttractionAreaItem(AttractionAreaItem attractionAreaItem)
+    public boolean addAttractionAreaItem(ThemeParkAreaItem themeParkAreaItem)
     {
         try
         {
-            return (tableAttractionArea.addAttractionAreaItem(attractionAreaItem));
+            return (tableAttractionArea.addAttractionAreaItem(themeParkAreaItem));
         }
         catch (Exception e)
         {
@@ -1622,7 +1621,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    public boolean updateAttractionAreaItems(ArrayList<AttractionAreaItem> items)
+    public boolean updateAttractionAreaItems(ArrayList<ThemeParkAreaItem> items)
     {
         try
         {
@@ -1636,11 +1635,11 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    public boolean updateAttractionAreaItem(AttractionAreaItem attractionAreaItem)
+    public boolean updateAttractionAreaItem(ThemeParkAreaItem themeParkAreaItem)
     {
         try
         {
-            return (tableAttractionArea.updateAttractionAreaItem(attractionAreaItem));
+            return (tableAttractionArea.updateAttractionAreaItem(themeParkAreaItem));
         }
         catch (Exception e)
         {
@@ -1650,24 +1649,24 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    public boolean deleteAttractionAreaItem(AttractionAreaItem attractionAreaItem)
+    public boolean deleteAttractionAreaItem(ThemeParkAreaItem themeParkAreaItem)
     {
         try
         {
             // ScheduleItem
-            ArrayList<ScheduleItem> scheduleList = new ArrayList<>();
-            if (!getScheduleList(attractionAreaItem.holidayId, 0, attractionAreaItem.attractionId, attractionAreaItem.attractionAreaId, scheduleList))
+            ArrayList<EventScheduleItem> scheduleList = new ArrayList<>();
+            if (!getScheduleList(themeParkAreaItem.holidayId, 0, themeParkAreaItem.attractionId, themeParkAreaItem.attractionAreaId, scheduleList))
                 return (false);
-            for (ScheduleItem scheduleItem : scheduleList)
-                deleteScheduleItem(scheduleItem);
+            for (EventScheduleItem eventScheduleItem : scheduleList)
+                deleteScheduleItem(eventScheduleItem);
             
-            if (!removeExtraFiles(attractionAreaItem.infoId))
+            if (!removeExtraFiles(themeParkAreaItem.infoId))
                 return (false);
             
-            if (!removeNote(attractionAreaItem.holidayId, attractionAreaItem.noteId))
+            if (!removeNote(themeParkAreaItem.holidayId, themeParkAreaItem.noteId))
                 return (false);
 
-            return tableAttractionArea.deleteAttractionAreaItem(attractionAreaItem);
+            return tableAttractionArea.deleteAttractionAreaItem(themeParkAreaItem);
         }
         catch (Exception e)
         {
@@ -1677,7 +1676,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    public boolean getAttractionAreaItem(int holidayId, int attractionId, int attractionAreaId, AttractionAreaItem item)
+    public boolean getAttractionAreaItem(int holidayId, int attractionId, int attractionAreaId, ThemeParkAreaItem item)
     {
         try
         {
@@ -1719,7 +1718,7 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    public boolean getAttractionAreaList(int holidayId, int attractionId, ArrayList<AttractionAreaItem> al)
+    public boolean getThemeParkAreaList(int holidayId, int attractionId, ArrayList<ThemeParkAreaItem> al)
     {
         try
         {
@@ -1918,23 +1917,23 @@ public class DatabaseAccess extends SQLiteOpenHelper
             }
             
             
-            ArrayList<AttractionItem> lAttractionList = new ArrayList<>();
+            ArrayList<ThemeParkItem> lAttractionList = new ArrayList<>();
             if (!getAttractionList(holidayId, lAttractionList))
                 return (false);
-            for (AttractionItem attractionItem : lAttractionList)
+            for (ThemeParkItem themeParkItem : lAttractionList)
             {
-                ArrayList<AttractionAreaItem> lAttractionAreaList = new ArrayList<>();
-                if (!getAttractionAreaList(attractionItem.holidayId, attractionItem.attractionId, lAttractionAreaList))
+                ArrayList<ThemeParkAreaItem> lAttractionAreaList = new ArrayList<>();
+                if (!getThemeParkAreaList(themeParkItem.holidayId, themeParkItem.attractionId, lAttractionAreaList))
                     return (false);
-                for (AttractionAreaItem attractionAreaItem : lAttractionAreaList)
+                for (ThemeParkAreaItem themeParkAreaItem : lAttractionAreaList)
                 {
                     ScheduleAreaItem si = new ScheduleAreaItem();
-                    si.holidayId = attractionAreaItem.holidayId;
-                    si.attractionId = attractionAreaItem.attractionId;
-                    si.attractionAreaId = attractionAreaItem.attractionAreaId;
+                    si.holidayId = themeParkAreaItem.holidayId;
+                    si.attractionId = themeParkAreaItem.attractionId;
+                    si.attractionAreaId = themeParkAreaItem.attractionAreaId;
                     si.dayId = 0;
                     si.schedName = "Attraction Area";
-                    si.schedDesc = attractionItem.attractionDescription + "/" + attractionAreaItem.attractionAreaDescription;
+                    si.schedDesc = themeParkItem.attractionDescription + "/" + themeParkAreaItem.attractionAreaDescription;
                     al.add(si);
                 }
             }

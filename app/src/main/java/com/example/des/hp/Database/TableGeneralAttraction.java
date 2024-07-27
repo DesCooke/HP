@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionItem;
+import com.example.des.hp.Event.EventScheduleDetailItem;
 
 class TableGeneralAttraction extends TableBase
 {
@@ -83,7 +83,7 @@ class TableGeneralAttraction extends TableBase
         return value.compareTo("1") == 0;
     }
 
-    boolean addGeneralAttractionItem(GeneralAttractionItem item)
+    boolean addGeneralAttractionItem(EventScheduleDetailItem item)
     {
         try
         {
@@ -145,7 +145,7 @@ class TableGeneralAttraction extends TableBase
 
     }
 
-    boolean updateGeneralAttractionItem(GeneralAttractionItem item)
+    boolean updateGeneralAttractionItem(EventScheduleDetailItem item)
     {
         try
         {
@@ -208,7 +208,7 @@ class TableGeneralAttraction extends TableBase
 
     }
 
-    boolean deleteGeneralAttractionItem(GeneralAttractionItem item)
+    boolean deleteGeneralAttractionItem(EventScheduleDetailItem item)
     {
         try
         {
@@ -233,7 +233,7 @@ class TableGeneralAttraction extends TableBase
 
     }
 
-    boolean getGeneralAttractionItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, GeneralAttractionItem item)
+    boolean getGeneralAttractionItem(int holidayId, int dayId, int attractionId, int attractionAreaId, int scheduleId, EventScheduleDetailItem item)
     {
         try
         {
@@ -285,7 +285,7 @@ class TableGeneralAttraction extends TableBase
 
     }
 
-    private boolean GetGeneralAttractionItemFromQuery(Cursor cursor, GeneralAttractionItem item)
+    private boolean GetGeneralAttractionItemFromQuery(Cursor cursor, EventScheduleDetailItem item)
     {
         if(!IsValid())
             return (false);
@@ -373,7 +373,7 @@ class TableGeneralAttraction extends TableBase
         return (false);
     }
 
-    private boolean ItemExists(GeneralAttractionItem item)
+    private boolean ItemExists(EventScheduleDetailItem item)
     {
         if(!IsValid())
             return (false);
