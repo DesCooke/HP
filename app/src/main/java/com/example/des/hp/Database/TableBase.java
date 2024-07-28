@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
+import com.example.des.hp.Holiday.HolidayItem;
 import com.example.des.hp.myutils.DateUtils;
 import com.example.des.hp.myutils.ImageUtils;
 import com.example.des.hp.myutils.MyFileUtils;
@@ -17,6 +18,7 @@ import com.example.des.hp.myutils.MyString;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
 public class TableBase
@@ -89,26 +91,32 @@ public class TableBase
         myMessages().ShowError("Error in DatabaseAccess::" + argFunction, argMessage);
     }
 
+    public boolean removePictureByHolidayId(int holidayId, String argFilename) {
+        try (DatabaseAccess da = databaseAccess()) {
+            HolidayItem holidayItem = new HolidayItem();
+            da.getHolidayItem(holidayId, holidayItem);
+
+            if (!removePicture(holidayItem.holidayName, argFilename))
+                return (false);
+        }
+        return true;
+    }
 
     // returns true/false
-    public boolean removePicture(int holidayId, String argFilename)
+    public boolean removePicture(String holidayName, String argFilename)
     {
         try
         {
-            //myMessages().LogMessage("  - removePicture " + argFilename);
             if(argFilename.isEmpty())
                 return (true);
 
             int lUsageCount=totalUsageCount(argFilename);
-            //myMessages().LogMessage("  Total Usage Count " + String.valueOf(lUsageCount));
 
-            File file=new File(ImageUtils.imageUtils().GetHolidayImageDir(holidayId) + "/" + argFilename);
+            File file=new File(ImageUtils.imageUtils().GetHolidayImageDir(holidayName) + "/" + argFilename);
             if(lUsageCount < 2)
             {
                 if(file.exists())
                 {
-                    //myMessages().LogMessage("  Deleting " + file.getAbsolutePath());
-
                     if(!file.delete())
                         throw new Exception("unable to delete " + file.getAbsolutePath());
                 }
@@ -214,14 +222,16 @@ public class TableBase
     // returns true/false
     boolean removeExtraFile(int holidayId, String argFilename)
     {
-        try
-        {
+        try(DatabaseAccess da = databaseAccess()){
+            HolidayItem holidayItem = new HolidayItem();
+            da.getHolidayItem(holidayId, holidayItem);
+
             if(argFilename.isEmpty())
                 return (true);
 
             if(fileUsageCount(holidayId, argFilename) < 2)
             {
-                File file=new File(ImageUtils.imageUtils().GetHolidayFileDir(holidayId) + "/" + argFilename);
+                File file=new File(ImageUtils.imageUtils().GetHolidayFileDir(holidayItem.holidayName) + "/" + argFilename);
                 if(file.exists())
                     if(!file.delete())
                         throw new Exception("unable to delete " + file.getAbsolutePath());
@@ -236,12 +246,12 @@ public class TableBase
     }
 
     // returns true/false
-    private boolean saveImageToInternalStorage(int holidayId, Bitmap image, String argFilename)
+    private boolean saveImageToInternalStorage(String holidayName, Bitmap image, String argFilename)
     {
         FileOutputStream out;
         try
         {
-            out=new FileOutputStream(ImageUtils.imageUtils().GetHolidayImageDir(holidayId) + "/" + argFilename);
+            out=new FileOutputStream(ImageUtils.imageUtils().GetHolidayImageDir(holidayName) + "/" + argFilename);
             image.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
         }
         catch(Exception e)
@@ -264,9 +274,10 @@ public class TableBase
 
     boolean saveExtraFile(int holidayId, Uri uri, String newName)
     {
-        try
-        {
-            return (_myFileUtils.CopyFileToLocalDir(holidayId, uri, newName));
+        try(DatabaseAccess da = databaseAccess()){
+            HolidayItem holidayItem = new HolidayItem();
+            da.getHolidayItem(holidayId, holidayItem);
+            return (_myFileUtils.CopyFileToLocalDir(holidayItem.holidayName, uri, newName));
         }
         catch(Exception e)
         {
@@ -278,8 +289,10 @@ public class TableBase
     // returns true/false
     public boolean savePicture(int holidayId, Bitmap bm, MyString retString)
     {
-        try
-        {
+        try(DatabaseAccess da = databaseAccess()){
+            HolidayItem holidayItem = new HolidayItem();
+            da.getHolidayItem(holidayId, holidayItem);
+
             String lFilename;
             MyInt myInt=new MyInt();
             if(!getNextFileId("picture", myInt))
@@ -290,7 +303,7 @@ public class TableBase
 
             lFilename="pic_" + myInt.Value + ".png";
 
-            if(!saveImageToInternalStorage(holidayId, bm, lFilename))
+            if(!saveImageToInternalStorage(holidayItem.holidayName, bm, lFilename))
                 return (false);
 
             retString.Value=lFilename;

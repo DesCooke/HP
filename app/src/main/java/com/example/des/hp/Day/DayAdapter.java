@@ -106,8 +106,8 @@ class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
     {
         final DayItem c=data.get(position);
         holder.txtTitle.setText(c.dayName);
-        holder.txtStartAt.setText(c.start_at);
-        holder.txtEndAt.setText(c.end_at);
+        holder.txtStartAt.setText("");
+        holder.txtEndAt.setText("");
 
         MyBoolean isUnknown=new MyBoolean();
         if(!dateUtils.IsUnknown(DatabaseAccess.currentStartDate, isUnknown))

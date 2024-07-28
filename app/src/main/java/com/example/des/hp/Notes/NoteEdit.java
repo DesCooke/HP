@@ -1,11 +1,9 @@
 package com.example.des.hp.Notes;
 
 import android.os.Bundle;
-import androidx.appcompat.app.ActionBar;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
@@ -21,8 +19,6 @@ public class NoteEdit extends BaseActivity
     public int noteId;
     public NoteItem noteItem;
     public EditText edtNote;
-    public ActionBar actionBar;
-    public ImageButton btnShowInfo;
 
     public void showForm()
     {

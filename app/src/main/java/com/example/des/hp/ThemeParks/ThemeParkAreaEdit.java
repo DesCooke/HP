@@ -19,7 +19,6 @@ public class ThemeParkAreaEdit extends ThemeParkAreaView implements View.OnClick
     //region Member variables
     public View.OnClickListener dwetOnOkClick;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
-    public ImageView btnEdit;
     //endregion
     
     //region Constructors/Destructors

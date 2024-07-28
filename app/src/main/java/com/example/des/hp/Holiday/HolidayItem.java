@@ -18,7 +18,6 @@ public class HolidayItem
     public long startDateInt;
     public Date startDateDate;
     public String startDateStr;
-    public Date endDateInt;
     public Date endDateDate;
     public String endDateStr;
     public boolean dateKnown;

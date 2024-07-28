@@ -145,7 +145,7 @@ class TableHoliday extends TableBase
                     if(holidayItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(!removePicture(holidayItem.holidayId, holidayItem.origHolidayPicture))
+                        if(!removePictureByHolidayId(holidayItem.holidayId, holidayItem.origHolidayPicture))
                             return (false);
                     }
 
@@ -206,7 +206,7 @@ class TableHoliday extends TableBase
             String l_SQL="DELETE FROM holiday WHERE holidayId = " + holidayItem.holidayId;
 
             if(!holidayItem.holidayPicture.isEmpty())
-                if(!removePicture(holidayItem.holidayId, holidayItem.holidayPicture))
+                if(!removePictureByHolidayId(holidayItem.holidayId, holidayItem.holidayPicture))
                     return (false);
 
             if(!executeSQL("deleteHolidayItem", l_SQL))

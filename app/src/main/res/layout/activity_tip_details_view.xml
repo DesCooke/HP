@@ -8,93 +8,68 @@
 
     <include layout="@layout/my_toolbar" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="?attr/actionBarSize"
+        android:orientation="vertical">
+
     <include
         layout="@layout/included_schedule_header"
         android:layout_width="match_parent"
-        android:layout_marginVertical="?attr/actionBarSize"
         android:layout_height="wrap_content"/>
 
+        <LinearLayout
+            android:id="@+id/grpTipDescription"
+            style="@style/MyBox"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/lblTipDescription"
+                android:text="@string/description"
+                style="@style/MyTextHint" />
+
+            <TextView
+                android:id="@+id/txtTipDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints=""
+                android:hint="@string/description"
+                android:gravity="start"
+                android:ems="10"
+                style="@style/MyTextListLine" />
+
+        </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/grpTipDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:id="@+id/grpTipNotes"
+        style="@style/MyBox"
+        android:layout_marginHorizontal="10dp"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txtTipDescriptionCaption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:gravity="center_vertical"
-            android:text="@string/caption_tipdescription"
-            android:textSize="18sp"/>
+            android:id="@+id/lblTipNotes"
+            android:text="@string/notes"
+            style="@style/MyTextHint" />
 
         <TextView
-            android:id="@+id/txtTipDescription"
+            android:id="@+id/txtTipNotes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@android:string/unknownName"
-            android:textSize="18sp"/>
+            android:autofillHints=""
+            android:hint="@string/edit_notes"
+            android:gravity="start"
+            android:ems="10"
+            style="@style/MyTextListLine"/>
+
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/grpMenuFile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/btnShowInfo"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:background="@android:drawable/alert_light_frame"
-            android:clickable="false"
-            android:onClick="showInfo"
-            android:scaleType="centerInside"
-            android:tint="@color/colorDisabled"
-            app:srcCompat="@android:drawable/ic_menu_info_details"
-            android:contentDescription="@android:string/unknownName"/>
-
-        <Space
-            android:layout_width="20dp"
-            android:layout_height="match_parent"/>
-
-        <ImageButton
-            android:id="@+id/btnShowNotes"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:background="@android:drawable/alert_light_frame"
-            android:onClick="showNotes"
-            android:scaleType="centerInside"
-            android:tint="@color/colorDisabled"
-            app:srcCompat="@drawable/notepad"
-            android:contentDescription="@android:string/unknownName"/>
-
-        <Space
-            android:layout_width="20dp"
-            android:layout_height="match_parent"/>
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/lblNotes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/caption_notes"/>
-
-    <TextView
-        android:id="@+id/txtTipNotes"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.08"
-        android:text="@android:string/unknownName"
-        android:textSize="18sp"/>
 
     <include
         layout="@layout/included_schedule_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    </LinearLayout>
 </RelativeLayout>

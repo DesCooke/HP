@@ -3,7 +3,6 @@ package com.example.des.hp.ExtraFiles;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.example.des.hp.Database.DatabaseAccess;
@@ -17,8 +16,6 @@ import java.util.Collections;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyFileUtils.myFileUtils;
-
-import androidx.annotation.NonNull;
 
 /**
  * * Created by Des on 02/11/2016.
@@ -79,7 +76,7 @@ public class ExtraFilesDetailsList extends BaseActivity
             extraFilesAdapter.setOnItemClickListener((view, obj) -> {
                 if(!obj.fileName.isEmpty())
                 {
-                    String lDir = ImageUtils.imageUtils().GetHolidayFileDir(holidayId);
+                    String lDir = ImageUtils.imageUtils().GetHolidayFileDir(getHolidayName(holidayId));
                     myFileUtils().OpenAFile(lDir + "/" + obj.fileName);
                 }
             });

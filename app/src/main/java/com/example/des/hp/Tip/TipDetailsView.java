@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,6 +30,8 @@ public class TipDetailsView extends BaseActivity
     public Button btnSave;
     public LinearLayout grpTipDescription;
     public LinearLayout grpMenuFile;
+    public ImageView btnEdit;
+    public ImageView btnDelete;
     //endregion
 
     //region Constructors/Destructors
@@ -47,6 +50,10 @@ public class TipDetailsView extends BaseActivity
             btnSave= findViewById(R.id.btnSave);
             grpTipDescription= findViewById(R.id.grpTipDescription);
             grpMenuFile= findViewById(R.id.grpMenuFile);
+            btnEdit=findViewById(R.id.my_toolbar_edit);
+            btnDelete=findViewById(R.id.my_toolbar_delete);
+            btnEdit.setOnClickListener(view -> editTip());
+            btnDelete.setOnClickListener(view -> deleteTip());
 
             afterCreate();
 
@@ -106,7 +113,6 @@ public class TipDetailsView extends BaseActivity
                     return;
             }
 
-
             if(title == null || (title.isEmpty()))
             {
                 SetToolbarTitles(tipItem.tipDescription, "");
@@ -119,6 +125,14 @@ public class TipDetailsView extends BaseActivity
             txtTipDescription.setText(tipItem.tipDescription);
 
             txtTipNotes.setText(tipItem.tipNotes);
+
+            if(action.compareTo("view")==0){
+
+                ShowToolbarEdit();
+            }
+            if(action.compareTo("modify")==0){
+                ShowToolbarDelete();
+            }
 
             afterShow();
         }
@@ -149,11 +163,10 @@ public class TipDetailsView extends BaseActivity
     {
         try
         {
-            tipItem.noteId=pNoteId;
-            try(DatabaseAccess da = databaseAccess())
-            {
-                da.updateTipItem(tipItem);
-            }
+                tipItem.noteId = pNoteId;
+                try (DatabaseAccess da = databaseAccess()) {
+                    da.updateTipItem(tipItem);
+                }
         }
         catch(Exception e)
         {
@@ -233,5 +246,32 @@ public class TipDetailsView extends BaseActivity
 
     }
     //endregion
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        try
+        {
+            if(action.compareTo("add")!=0) {
+                try (DatabaseAccess da = databaseAccess()) {
+                    if (!da.getTipItem(holidayId, tipGroupId, tipId, tipItem)) {
+                        finish();
+                    }
+                    if (tipItem != null) {
+                        if (tipItem.holidayId == 0) {
+                            finish();
+                        }
+                    }
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("onResume", e.getMessage());
+        }
+
+    }
+
 
 }

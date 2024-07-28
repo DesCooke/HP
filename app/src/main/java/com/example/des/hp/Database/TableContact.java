@@ -132,7 +132,7 @@ class TableContact extends TableBase
                     if(contactItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(!removePicture(contactItem.holidayId, contactItem.origContactPicture))
+                        if(!removePictureByHolidayId(contactItem.holidayId, contactItem.origContactPicture))
                             return (false);
                     }
 
@@ -176,7 +176,7 @@ class TableContact extends TableBase
             String lSQL="DELETE FROM Contact " + "WHERE holidayId = " + contactItem.holidayId + " " + "AND contactId = " + contactItem.contactId;
 
             if(!contactItem.contactPicture.isEmpty())
-                if(!removePicture(contactItem.holidayId, contactItem.contactPicture))
+                if(!removePictureByHolidayId(contactItem.holidayId, contactItem.contactPicture))
                     return (false);
 
             if(!executeSQL("deleteContactItem", lSQL))

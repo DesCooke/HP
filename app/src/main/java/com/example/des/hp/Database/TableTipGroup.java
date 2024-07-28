@@ -114,7 +114,7 @@ class TableTipGroup extends TableBase
                     if(tipGroupItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(!removePicture(tipGroupItem.holidayId, tipGroupItem.origTipGroupPicture))
+                        if(!removePictureByHolidayId(tipGroupItem.holidayId, tipGroupItem.origTipGroupPicture))
                             return (false);
                     }
 
@@ -167,7 +167,7 @@ class TableTipGroup extends TableBase
             String lSQL="DELETE FROM TipGroup " + "WHERE holidayId = " + tipGroupItem.holidayId + " " + "AND tipGroupId = " + tipGroupItem.tipGroupId;
 
             if(!tipGroupItem.tipGroupPicture.isEmpty())
-                if(!removePicture(tipGroupItem.holidayId, tipGroupItem.tipGroupPicture))
+                if(!removePictureByHolidayId(tipGroupItem.holidayId, tipGroupItem.tipGroupPicture))
                     return (false);
 
             if(!executeSQL("deleteTipGroupItem", lSQL))

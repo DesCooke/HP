@@ -21,6 +21,7 @@
 
         <LinearLayout
             android:id="@+id/grpTipGroupDescription"
+            android:layout_margin="10dp"
             style="@style/MyBox" >
 
             <TextView
@@ -34,11 +35,45 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_margin="10dp"
+            style="@style/MyBox" >
+
+            <TextView
+                android:id="@+id/lblTipList"
+                android:text="@string/tips"
+                style="@style/MyTextHint" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/tipListView"
+                android:scrollingCache="false"
+                android:cacheColorHint="#0000"
+                android:layout_width="match_parent"
+                android:scrollbars="vertical"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
         <include
             layout="@layout/included_schedule_footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:contentDescription="@string/floatingactionbutton"
+        android:elevation="1dp"
+        android:translationZ="1dp"
+        app:backgroundTint="@color/colorPrimary"
+        app:maxImageSize="48dp"
+        app:srcCompat="@android:drawable/ic_menu_add" />
+
 
 </RelativeLayout>

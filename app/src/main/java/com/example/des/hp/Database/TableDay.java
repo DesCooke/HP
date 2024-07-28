@@ -8,12 +8,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.des.hp.Day.DayItem;
 import com.example.des.hp.Event.EventScheduleDetailItem;
 import com.example.des.hp.Event.EventScheduleItem;
+import com.example.des.hp.Holiday.HolidayItem;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
 
 import static com.example.des.hp.Database.DatabaseAccess.database;
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static java.lang.Math.abs;
 
 class TableDay extends TableBase
@@ -77,8 +79,12 @@ class TableDay extends TableBase
                 if (dayItem.dayPicture.isEmpty()) {
                     //myMessages().LogMessage("  - Save new image and get a filename...");
                     MyString myString = new MyString();
-                    if (!savePicture(dayItem.holidayId, dayItem.dayBitmap, myString))
-                        return (false);
+                    try(DatabaseAccess da = databaseAccess()){
+                        HolidayItem holidayItem = new HolidayItem();
+                        da.getHolidayItem(dayItem.holidayId, holidayItem);
+                        if (!savePicture(holidayItem.holidayId, dayItem.dayBitmap, myString))
+                            return (false);
+                    }
                     dayItem.dayPicture = myString.Value;
                     //myMessages().LogMessage("  - New filename " + dayItem.dayPicture);
                 }
@@ -131,14 +137,15 @@ class TableDay extends TableBase
             if(!IsValid())
                 return (false);
 
-            //myMessages().LogMessage("updateDayItem:Handling Image");
             if(dayItem.pictureChanged)
             {
-                if (!dayItem.origPictureAssigned || dayItem.dayPicture.isEmpty() || dayItem.dayPicture.compareTo(dayItem.origDayPicture) != 0) {
+                if (!dayItem.origPictureAssigned ||
+                        dayItem.dayPicture.isEmpty() ||
+                        dayItem.dayPicture.compareTo(dayItem.origDayPicture) != 0) {
+
                     if(dayItem.origPictureAssigned)
                     {
-                        //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(!removePicture(dayItem.holidayId, dayItem.origDayPicture))
+                        if (!removePictureByHolidayId(dayItem.holidayId, dayItem.origDayPicture))
                             return (false);
                     }
 
@@ -182,7 +189,7 @@ class TableDay extends TableBase
             String lSQL="DELETE FROM day " + "WHERE holidayId = " + dayItem.holidayId + " " + "AND dayId = " + dayItem.dayId;
 
             if(!dayItem.dayPicture.isEmpty())
-                if(!removePicture(dayItem.holidayId, dayItem.dayPicture))
+                if(!removePictureByHolidayId(dayItem.holidayId, dayItem.dayPicture))
                     return (false);
 
             if(!executeSQL("deleteDayItem", lSQL))

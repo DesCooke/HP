@@ -26,7 +26,6 @@ public class MainActivity extends BaseActivity
         
     //region Member variables
     public ArrayList<HolidayItem> holidayList;
-    public ArchiveRestore archiveRestore;
     public boolean accessGranted = false;
     public FloatingActionButton fab;
 
@@ -58,8 +57,6 @@ public class MainActivity extends BaseActivity
             MyPermissions.EnsureAccessToExternalDrive(this);
             if(MyPermissions.AccessAllowed())
             {
-                archiveRestore = new ArchiveRestore(this);
-
                 myMessages().ClearLog();
 
                 afterCreate();

@@ -120,7 +120,7 @@ class TableAttractionArea extends TableBase
                     if(item.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(!removePicture(item.holidayId, item.origAttractionAreaPicture))
+                        if(!removePictureByHolidayId(item.holidayId, item.origAttractionAreaPicture))
                             return (false);
                     }
 
@@ -165,7 +165,7 @@ class TableAttractionArea extends TableBase
             String lSQL="DELETE FROM AttractionArea " + "WHERE holidayId = " + themeParkAreaItem.holidayId + " " + "AND attractionId = " + themeParkAreaItem.attractionId + " " + "AND attractionAreaId = " + themeParkAreaItem.attractionAreaId;
 
             if(!themeParkAreaItem.attractionAreaPicture.isEmpty())
-                if(!removePicture(themeParkAreaItem.holidayId, themeParkAreaItem.attractionAreaPicture))
+                if(!removePictureByHolidayId(themeParkAreaItem.holidayId, themeParkAreaItem.attractionAreaPicture))
                     return (false);
 
             return executeSQL("deleteAttractionAreaItem", lSQL);

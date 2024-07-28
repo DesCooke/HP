@@ -14,11 +14,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
-
-import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 class ThemeParkAreaAdapter extends RecyclerView.Adapter<ThemeParkAreaAdapter.ViewHolder>
 {
@@ -110,25 +107,6 @@ class ThemeParkAreaAdapter extends RecyclerView.Adapter<ThemeParkAreaAdapter.Vie
     {
         data.add(position, mail);
         notifyItemInserted(position);
-    }
-    
-    void onItemMove()
-    {
-        updateGlobalData(data);
-    }
-    
-    private void updateGlobalData(ArrayList<ThemeParkAreaItem> items)
-    {
-        for (int i = 0; i < items.size(); i++)
-        {
-            items.get(i).sequenceNo = i + 1;
-        }
-        try(DatabaseAccess da = databaseAccess())
-        {
-            if (!da.updateAttractionAreaItems(items))
-                return;
-        }
-        notifyItemRangeChanged(0,items.size()-1);
     }
     
     // Return the size of your dataset (invoked by the layout manager)

@@ -62,12 +62,7 @@ public class TaskDetailsView extends BaseActivity
             grpTaskDate=findViewById(R.id.grpTaskDate);
 
             btnEdit=findViewById(R.id.my_toolbar_edit);
-            btnEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    editTask();
-                }
-            });
+            btnEdit.setOnClickListener(view -> editTask());
 
             afterCreate();
 
@@ -284,7 +279,7 @@ public class TaskDetailsView extends BaseActivity
         try
         {
             if(action.compareTo("add")!=0) {
-                try (DatabaseAccess da = databaseAccess();) {
+                try (DatabaseAccess da = databaseAccess()) {
                     if (!da.getTaskItem(holidayId, taskId, taskItem))
                         return;
                     if (action.compareTo("add") != 0)

@@ -39,16 +39,7 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
             chkTaskComplete.setClickable(true);
 
             btnDelete=findViewById(R.id.my_toolbar_delete);
-            btnDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    deleteTask();
-                }
-            });
-
-            alwaysShowBtnShowNotes=true;
-            alwaysShowBtnShowInfo=true;
-            alwaysShowBtnClearImage=true;
+            btnDelete.setOnClickListener(view -> deleteTask());
 
             if(action != null && action.equals("add"))
             {
@@ -248,7 +239,7 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
                 if (!internalImageFilename.isEmpty())
                     taskItem.taskPicture = internalImageFilename;
                 taskItem.pictureAssigned = imageSet;
-                taskItem.pictureChanged = imageChanged;
+                taskItem.pictureChanged = true;
                 taskItem.fileBitmap = null;
                 if (imageSet)
                     taskItem.fileBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
@@ -308,21 +299,6 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
     }
 
     @Override
-    public int getInfoId()
-    {
-        try
-        {
-            return (taskItem.infoId);
-        }
-        catch(Exception e)
-        {
-            ShowError("getInfoId", e.getMessage());
-        }
-        return (0);
-
-    }
-
-    @Override
     public void setNoteId(int pNoteId)
     {
         try
@@ -338,20 +314,6 @@ public class TaskDetailsEdit extends TaskDetailsView implements View.OnClickList
             ShowError("setNoteId", e.getMessage());
         }
 
-    }
-
-    @Override
-    public int getNoteId()
-    {
-        try
-        {
-            return (taskItem.noteId);
-        }
-        catch(Exception e)
-        {
-            ShowError("getNoteId", e.getMessage());
-        }
-        return (0);
     }
 
     @Override

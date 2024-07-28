@@ -144,7 +144,7 @@ class TableTask extends TableBase
                     if(taskItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(!removePicture(taskItem.holidayId, taskItem.origTaskPicture))
+                        if(!removePictureByHolidayId(taskItem.holidayId, taskItem.origTaskPicture))
                             return (false);
                     }
 
@@ -196,7 +196,7 @@ class TableTask extends TableBase
             String lSQL="DELETE FROM Tasks " + "WHERE holidayId = " + taskItem.holidayId + " " + "AND taskId = " + taskItem.taskId;
 
             if(!taskItem.taskPicture.isEmpty())
-                if(!removePicture(taskItem.holidayId, taskItem.taskPicture))
+                if(!removePictureByHolidayId(taskItem.holidayId, taskItem.taskPicture))
                     return (false);
 
             if(!executeSQL("deleteTaskItem", lSQL))

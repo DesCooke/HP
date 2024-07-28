@@ -28,7 +28,7 @@ public class InternalImageList extends BaseActivity
                 holidayId = extras.getInt("HOLIDAYID", 0);
             }
 
-            internalImageList=imageUtils().listInternalImages(holidayId);
+            internalImageList=imageUtils().listInternalImages(getHolidayName(holidayId));
 
             InternalImageAdapter internalImageAdapter = new InternalImageAdapter(this, internalImageList);
 

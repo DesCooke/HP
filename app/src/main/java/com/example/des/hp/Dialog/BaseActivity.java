@@ -62,12 +62,12 @@ import android.provider.OpenableColumns;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
 import com.example.des.hp.ExtraFiles.ExtraFilesItem;
+import com.example.des.hp.Holiday.HolidayItem;
 import com.example.des.hp.InternalImages.InternalImageItem;
 import com.example.des.hp.InternalImages.InternalImageList;
 import com.example.des.hp.Notes.NoteEdit;
@@ -118,10 +118,6 @@ public class BaseActivity extends AppCompatActivity
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
     public ImageButton btnClearImage;
-
-    public boolean alwaysShowBtnClearImage;
-    public boolean alwaysShowBtnShowInfo;
-    public boolean alwaysShowBtnShowNotes;
 
     public TextView txtFilename;
 
@@ -243,7 +239,7 @@ public class BaseActivity extends AppCompatActivity
 
         try
         {
-            ArrayList<InternalImageItem> internalImageList=imageUtils().listInternalImages(holidayId);
+            ArrayList<InternalImageItem> internalImageList=imageUtils().listInternalImages(getHolidayName(holidayId));
             if(internalImageList == null)
             {
                 selectFromDevice(view);
@@ -297,6 +293,15 @@ public class BaseActivity extends AppCompatActivity
         }
     }
 
+    public String getHolidayName(int holidayId) {
+        try (DatabaseAccess da = databaseAccess()) {
+            HolidayItem holidayItem = new HolidayItem();
+            da.getHolidayItem(holidayId, holidayItem);
+
+            return(holidayItem.holidayName);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent)
     {
@@ -339,7 +344,7 @@ public class BaseActivity extends AppCompatActivity
                         {
                             MyBitmap myBitmap=new MyBitmap();
                             String file=imageReturnedIntent.getStringExtra("selectedfile");
-                            boolean lRetCode=imageUtils().ScaleBitmapFromFile(holidayId, file, getContentResolver(), myBitmap);
+                            boolean lRetCode=imageUtils().ScaleBitmapFromFile(getHolidayName(holidayId), file, getContentResolver(), myBitmap);
                             if(!lRetCode)
                                 return;
 
@@ -471,7 +476,7 @@ public class BaseActivity extends AppCompatActivity
             {
                 if(txtPicture != null)
                     txtPicture.setText(picture);
-                if(!imageUtils().getPageHeaderImage(holidayId, this, picture, imageView))
+                if(!imageUtils().getPageHeaderImage(getHolidayName(holidayId), this, picture, imageView))
                     return;
                 imageSet=true;
             }
@@ -667,29 +672,37 @@ public class BaseActivity extends AppCompatActivity
 
     public void handleToolBar()
     {
+        // handle the displaying of the icons (notes, info and image clear)
+        // never info and notes during add (nothing to attach them to)
+        // always show info and notes during modify
+        // show info and notes during view if there is any content
         try
         {
             if(btnShowInfo!=null) {
                 btnShowInfo.setVisibility(View.GONE);
-                if (alwaysShowBtnShowInfo || (!alwaysShowBtnShowInfo && hasInfo)) {
+                if(action.compareTo("modify")==0)
                     btnShowInfo.setVisibility(View.VISIBLE);
-                }
+                if(action.compareTo("view")==0)
+                    if (hasInfo)
+                        btnShowInfo.setVisibility(View.VISIBLE);
             }
 
             if(btnShowNotes!=null) {
                 btnShowNotes.setVisibility(View.GONE);
-                if (alwaysShowBtnShowNotes || (!alwaysShowBtnShowNotes && hasNotes)) {
+                if(action.compareTo("modify")==0)
                     btnShowNotes.setVisibility(View.VISIBLE);
-                }
+                if(action.compareTo("view")==0)
+                    if (hasNotes)
+                        btnShowNotes.setVisibility(View.VISIBLE);
             }
 
             if(btnClearImage!=null) {
                 btnClearImage.setVisibility(View.GONE);
-                if (alwaysShowBtnClearImage) {
+                if(action.compareTo("add")==0)
                     btnClearImage.setVisibility(View.VISIBLE);
-                }
+                if(action.compareTo("modify")==0)
+                    btnClearImage.setVisibility(View.VISIBLE);
             }
-
         }
         catch(Exception e)
         {

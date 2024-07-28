@@ -181,7 +181,7 @@ class TableBudget extends TableBase
                     if (budgetItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if (!removePicture(budgetItem.holidayId, budgetItem.origBudgetPicture))
+                        if (!removePictureByHolidayId(budgetItem.holidayId, budgetItem.origBudgetPicture))
                             return (false);
                     }
 
@@ -238,7 +238,7 @@ class TableBudget extends TableBase
             String lSQL="DELETE FROM Budget " + "WHERE holidayId = " + budgetItem.holidayId + " " + "AND budgetId = " + budgetItem.budgetId;
 
             if(!budgetItem.budgetPicture.isEmpty())
-                if(!removePicture(budgetItem.holidayId, budgetItem.budgetPicture))
+                if(!removePictureByHolidayId(budgetItem.holidayId, budgetItem.budgetPicture))
                     return (false);
 
             if(!executeSQL("deleteBudgetItem", lSQL))

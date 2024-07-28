@@ -203,31 +203,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
         return (false);
     }
 
-    public boolean removePicture(int holidayId, String picture)
-    {
-        try
-        {
-            return (tableNotes.removePicture(holidayId, picture));
-        }
-        catch (Exception e)
-        {
-            ShowError("removePicture", e.getMessage());
-        }
-        return (false);
-    }
-    
-    public void removeExtraFile(int holidayId, String file)
-    {
-        try
-        {
-            tableNotes.removeExtraFile(holidayId, file);
-        }
-        catch (Exception e)
-        {
-            ShowError("removeExtraFile", e.getMessage());
-        }
-    }
-    
     private boolean removeNote(int holidayId, int noteId)
     {
         try
@@ -250,33 +225,6 @@ public class DatabaseAccess extends SQLiteOpenHelper
         return (false);
     }
     
-    public int pictureUsageCount(String argFilename)
-    {
-        try
-        {
-            // can use any of the tables actually - they all do the same thing
-            return (tableAttraction.totalUsageCount(argFilename));
-        }
-        catch (Exception e)
-        {
-            ShowError("pictureUsageCount", e.getMessage());
-        }
-        return (0);
-    }
-    
-    public int fileUsageCount(int holidayId, String argFilename)
-    {
-        try
-        {
-            // can use any of the tables actually - they all do the same thing
-            return (tableAttraction.fileUsageCount(holidayId, argFilename));
-        }
-        catch (Exception e)
-        {
-            ShowError("fileUsageCount", e.getMessage());
-        }
-        return (0);
-    }
     //endregion
     
     //region HOLIDAY functions

@@ -137,7 +137,7 @@ class TableSchedule extends TableBase
                     if(eventScheduleItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(!removePicture(eventScheduleItem.holidayId, eventScheduleItem.origSchedPicture))
+                        if(!removePictureByHolidayId(eventScheduleItem.holidayId, eventScheduleItem.origSchedPicture))
                             return (false);
                     }
 
@@ -197,7 +197,7 @@ class TableSchedule extends TableBase
             String lSQL="DELETE FROM schedule " + "WHERE holidayId = " + eventScheduleItem.holidayId + " " + "AND dayId = " + eventScheduleItem.dayId + " " + "AND attractionId = " + eventScheduleItem.attractionId + " " + "AND attractionAreaId = " + eventScheduleItem.attractionAreaId + " " + "AND scheduleId = " + eventScheduleItem.scheduleId;
 
             if(!eventScheduleItem.schedPicture.isEmpty())
-                if(!removePicture(eventScheduleItem.holidayId, eventScheduleItem.schedPicture))
+                if(!removePictureByHolidayId(eventScheduleItem.holidayId, eventScheduleItem.schedPicture))
                     return (false);
 
             if(!executeSQL("deleteScheduleItem", lSQL))

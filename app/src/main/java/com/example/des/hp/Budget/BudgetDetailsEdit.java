@@ -39,10 +39,6 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
                 txtBudgetTotal.setText(getString(R.string.caption_zero));
             }
 
-            alwaysShowBtnShowNotes=true;
-            alwaysShowBtnShowInfo=true;
-            alwaysShowBtnClearImage=true;
-
             grpBudgetDescription.setOnClickListener(this);
             grpBudgetTotal.setOnClickListener(this);
             grpBudgetPaid.setOnClickListener(this);
@@ -311,7 +307,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
                 if (!internalImageFilename.isEmpty())
                     budgetItem.budgetPicture = internalImageFilename;
                 budgetItem.pictureAssigned = imageSet;
-                budgetItem.pictureChanged = imageChanged;
+                budgetItem.pictureChanged = true;
                 budgetItem.fileBitmap = null;
                 if (imageSet)
                     budgetItem.fileBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
@@ -347,21 +343,6 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
     //endregion
 
     @Override
-    public int getInfoId()
-    {
-        try
-        {
-            return (budgetItem.infoId);
-        }
-        catch(Exception e)
-        {
-            ShowError("getInfoId", e.getMessage());
-        }
-        return (0);
-
-    }
-
-    @Override
     public void setNoteId(int pNoteId)
     {
         try
@@ -377,20 +358,6 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             ShowError("setNoteId", e.getMessage());
         }
 
-    }
-
-    @Override
-    public int getNoteId()
-    {
-        try
-        {
-            return (budgetItem.noteId);
-        }
-        catch(Exception e)
-        {
-            ShowError("getNoteId", e.getMessage());
-        }
-        return (0);
     }
 
     @Override

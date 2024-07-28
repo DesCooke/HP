@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -28,7 +27,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Locale;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.DateUtils.dateUtils;
@@ -145,23 +143,13 @@ public class DayDetailsView extends BaseActivity
 
             fab=findViewById(R.id.fab);
             if(fab!=null)
-                fab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        StartNewAddIntent();
-                    }
-                });
+                fab.setOnClickListener(view -> StartNewAddIntent());
 
 
-            String lTitle;
             MyBoolean isUnknown=new MyBoolean();
             if(!dateUtils().IsUnknown(DatabaseAccess.currentStartDate, isUnknown))
                 return;
-            if(isUnknown.Value)
-            {
-                lTitle=String.format(Locale.ENGLISH, getResources().getString(R.string.fmt_day_line), dayItem.sequenceNo);
-            } else
-            {
+            if (!isUnknown.Value) {
                 Date lcurrdate=new Date();
 
                 // we subtract 1 because sequence starts at 1 - but we want to add 0 days for the
@@ -172,7 +160,6 @@ public class DayDetailsView extends BaseActivity
                 MyString myString=new MyString();
                 if(!dateUtils().DateToStr(lcurrdate, myString))
                     return;
-                lTitle=String.format(Locale.ENGLISH, getResources().getString(R.string.fmt_date_line), myString.Value);
             }
 
 

@@ -1,5 +1,6 @@
 package com.example.des.hp.Day;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -7,7 +8,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -26,9 +26,13 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
     public TextView dayName;
     public String holidayName;
     public DayItem dayItem;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch radUnknown;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch radEasy;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch radModerate;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch radBusy;
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
@@ -66,10 +70,6 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
 
             deleteDay=findViewById(R.id.my_toolbar_delete);
             deleteDay.setOnClickListener(view -> deleteDay());
-
-            alwaysShowBtnShowNotes=true;
-            alwaysShowBtnShowInfo=true;
-            alwaysShowBtnClearImage=true;
 
             btnClearImage(null);
 

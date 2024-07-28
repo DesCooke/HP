@@ -54,12 +54,7 @@ public class ThemeParkView extends BaseActivity
 
 
             fab = findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showThemeParkAreaAdd();
-                }
-            });
+            fab.setOnClickListener(view -> showThemeParkAreaAdd());
             btnEdit=findViewById(R.id.my_toolbar_edit);
             btnEdit.setOnClickListener(view -> editThemePark());
 

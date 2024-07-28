@@ -30,7 +30,6 @@ public class ThemeParkList extends BaseActivity
     //region Member Variables
     public ArrayList<ThemeParkItem> attractionList;
     private ThemeParkAdapter themeParkAdapter;
-    private FloatingActionButton fab;
     //endregion
     
     //region Constructors/Destructors
@@ -44,7 +43,7 @@ public class ThemeParkList extends BaseActivity
             layoutName = "activity_attraction_details_list";
             setContentView(R.layout.activity_themepark_details_list);
 
-            fab=findViewById(R.id.fab);
+            FloatingActionButton fab = findViewById(R.id.fab);
             fab.setOnClickListener(this::showThemeParkAdd);
             afterCreate();
             

@@ -35,10 +35,6 @@ public class EventDetailsEdit extends EventDetailsView implements View.OnClickLi
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
 
-            alwaysShowBtnShowNotes=true;
-            alwaysShowBtnShowInfo=true;
-            alwaysShowBtnClearImage=true;
-
             heartRating.setIsIndicator(false);
             scenicRating.setIsIndicator(false);
             thrillRating.setIsIndicator(false);
@@ -66,17 +62,8 @@ public class EventDetailsEdit extends EventDetailsView implements View.OnClickLi
             radBooked.setOnClickListener(this);
 
             btnDelete = findViewById(R.id.my_toolbar_delete);
-            btnDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    deleteSchedule();
-                }
-            });
+            btnDelete.setOnClickListener(view -> deleteSchedule());
             ShowToolbarDelete();
-
-            alwaysShowBtnClearImage=true;
-            alwaysShowBtnShowNotes=true;
-            alwaysShowBtnShowInfo=true;
 
         }
         catch(Exception e)

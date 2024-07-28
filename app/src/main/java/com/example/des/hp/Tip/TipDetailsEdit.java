@@ -34,10 +34,11 @@ public class TipDetailsEdit extends TipDetailsView implements View.OnClickListen
 
             if(action != null && action.equals("add"))
             {
-                grpMenuFile.setVisibility(View.GONE);
                 txtTipDescription.setText("");
                 txtTipNotes.setText("");
+                title = "Add a Tip";
             }
+
             grpTipDescription.setOnClickListener(this);
             txtTipNotes.setOnClickListener(this);
             imageView.setOnClickListener(this);
@@ -212,5 +213,41 @@ public class TipDetailsEdit extends TipDetailsView implements View.OnClickListen
         }
 
     }
+
+    public void setNoteId(int pNoteId)
+    {
+        try
+        {
+            tipItem.noteId = pNoteId;
+            try (DatabaseAccess da = databaseAccess()) {
+                da.updateTipItem(tipItem);
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("setNoteId", e.getMessage());
+        }
+
+    }
+
+    @Override
+    public void setInfoId(int pInfoId)
+    {
+        try
+        {
+            tipItem.infoId=pInfoId;
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateTipItem(tipItem);
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("setInfoId", e.getMessage());
+        }
+
+    }
+
+
 
 }

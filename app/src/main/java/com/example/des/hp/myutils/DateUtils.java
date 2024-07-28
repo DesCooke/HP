@@ -161,6 +161,10 @@ public class DateUtils extends BaseActivity
         try
         {
             DateFormat df=getDateInstance();
+            if(string==null || string.isEmpty()) {
+                GetToday(date);
+                return true;
+            }
             date.setTime(Objects.requireNonNull(df.parse(string)).getTime());
             return (true);
         }

@@ -1,5 +1,6 @@
 package com.example.des.hp.Budget;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -27,6 +28,7 @@ public class BudgetDetailsList extends BaseActivity
     public ArrayList<BudgetItem> budgetList;
     private BudgetAdapter budgetAdapter;
     public FloatingActionButton fab;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch swToggleOutstanding;
     //endregion
     
@@ -48,12 +50,7 @@ public class BudgetDetailsList extends BaseActivity
 
             swToggleOutstanding=findViewById(R.id.swToggleOutstanding);
             swToggleOutstanding.setChecked(true);
-            swToggleOutstanding.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showForm();
-                }
-            });
+            swToggleOutstanding.setOnClickListener(view -> showForm());
 
 
             afterCreate();

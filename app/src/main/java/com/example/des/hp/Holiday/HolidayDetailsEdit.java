@@ -71,9 +71,6 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
         {
             layoutName="activity_holiday_details_edit";
             setContentView(R.layout.activity_holiday_details_edit);
-            alwaysShowBtnShowNotes=true;
-            alwaysShowBtnShowInfo=true;
-            alwaysShowBtnClearImage=true;
 
             holidayName= findViewById(R.id.txtHolidayName);
             txtStartDate= findViewById(R.id.txtStartDate);
@@ -100,12 +97,7 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
 
-            txtStartDate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    pickDateTime(view);
-                }
-            });
+            txtStartDate.setOnClickListener(this::pickDateTime);
 
             if(action != null && action.equals("add"))
             {
@@ -150,6 +142,8 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
             }
             afterCreate();
             imageView.setOnClickListener(this);
+            holidayName.setOnClickListener(this);
+
         }
         catch(Exception e)
         {
@@ -165,8 +159,16 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
         try
         {
             int id=view.getId();
-            if(id==R.id.imageViewSmall)
-                pickImage(view);
+            if(id==R.id.imageViewSmall) {
+                if(action.compareTo("add")==0) {
+                    myMessages().ShowMessageShort("Please save the holiday before assigning a picture");
+                }
+                else {
+                    pickImage(view);
+                }
+            }
+            if(id==R.id.txtHolidayName)
+                pickHolidayName(view);
         }
         catch(Exception e)
         {
@@ -314,18 +316,20 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
             }
 
             // if holiday name has changed - then rename directory asap
-            if(holidayItem.origHolidayName.compareTo(holidayItem.holidayName)!=0){
-                String oldname=holidayItem.origHolidayName;
-                String newname=holidayItem.holidayName;
-                holidayItem.holidayName=oldname;
-                // holiday name changes - so rename directory
-                String oldDirname=ImageUtils.imageUtils().GetHolidayDirFromHolidayItem(holidayItem);
-                holidayItem.holidayName=newname;
-                String newDirname=ImageUtils.imageUtils().GetHolidayDirFromHolidayItem(holidayItem);
-                File file=new File(oldDirname);
-                boolean res = file.renameTo(new File(newDirname));
-                if(!res)
-                    throw new Exception("Hmmm - error renaming holiday directory");
+            if(action.compareTo("add")!=0) {
+                if (holidayItem.origHolidayName.compareTo(holidayItem.holidayName) != 0) {
+                    String oldname = holidayItem.origHolidayName;
+                    String newname = holidayItem.holidayName;
+                    holidayItem.holidayName = oldname;
+                    // holiday name changes - so rename directory
+                    String oldDirname = ImageUtils.imageUtils().GetHolidayDirFromHolidayItem(holidayItem);
+                    holidayItem.holidayName = newname;
+                    String newDirname = ImageUtils.imageUtils().GetHolidayDirFromHolidayItem(holidayItem);
+                    File file = new File(oldDirname);
+                    boolean res = file.renameTo(new File(newDirname));
+                    if (!res)
+                        throw new Exception("Hmmm - error renaming holiday directory");
+                }
             }
 
             if(sw.isChecked())

@@ -111,12 +111,7 @@ public class EventDetailsView extends EventBase
             btnClear= findViewById(R.id.btnClear);
             btnSave= findViewById(R.id.btnSave);
             btnEdit=findViewById(R.id.my_toolbar_edit);
-            btnEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    editSchedule(EventDetailsEdit.class);
-                }
-            });
+            btnEdit.setOnClickListener(view -> editSchedule(EventDetailsEdit.class));
 
             afterCreate();
 
@@ -353,7 +348,7 @@ public class EventDetailsView extends EventBase
         try
         {
             if(action.compareTo("add")!=0) {
-                try (DatabaseAccess da = databaseAccess();) {
+                try (DatabaseAccess da = databaseAccess()) {
                     if (!da.getScheduleItem(holidayId, dayId, attractionId, attractionAreaId, scheduleId, eventScheduleItem))
                         return;
                     if (action.compareTo("add") != 0)
@@ -367,19 +362,6 @@ public class EventDetailsView extends EventBase
             ShowError("onResume", e.getMessage());
         }
 
-    }
-
-    public int getNoteId()
-    {
-        try
-        {
-            return (eventScheduleItem.noteId);
-        }
-        catch(Exception e)
-        {
-            ShowError("getNoteId", e.getMessage());
-        }
-        return (0);
     }
 
     @Override
@@ -397,20 +379,6 @@ public class EventDetailsView extends EventBase
         {
             ShowError("setNoteId", e.getMessage());
         }
-    }
-
-    @Override
-    public int getInfoId()
-    {
-        try
-        {
-            return (eventScheduleItem.infoId);
-        }
-        catch(Exception e)
-        {
-            ShowError("getInfoId", e.getMessage());
-        }
-        return (0);
     }
 
     @Override

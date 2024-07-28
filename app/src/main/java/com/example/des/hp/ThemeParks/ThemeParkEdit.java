@@ -31,14 +31,9 @@ public class ThemeParkEdit extends ThemeParkView implements View.OnClickListener
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
 
-            alwaysShowBtnClearImage=true;
             if (action != null && action.equals("add")){
                 txtThemeParkName.setText("");
                 title = "Add a Theme Park";
-            }
-            else {
-                alwaysShowBtnShowInfo=true;
-                alwaysShowBtnShowNotes=true;
             }
 
             txtThemeParkName.setOnClickListener(this);
