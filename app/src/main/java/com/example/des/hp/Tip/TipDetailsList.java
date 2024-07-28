@@ -4,14 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
 
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
-import com.example.des.hp.TipGroup.TipGroupDetailsEdit;
-import com.example.des.hp.TipGroup.TipGroupDetailsView;
 import com.example.des.hp.TipGroup.TipGroupItem;
 
 import java.util.ArrayList;
@@ -66,24 +62,6 @@ public class TipDetailsList extends BaseActivity
     }
     //endregion
 
-    //region Form Functions
-    public void showTipAdd(View view)
-    {
-        try
-        {
-            Intent intent=new Intent(getApplicationContext(), TipDetailsEdit.class);
-            intent.putExtra("ACTION", "add");
-            intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("TIPGROUPID", tipGroupId);
-            startActivity(intent);
-        }
-        catch(Exception e)
-        {
-            ShowError("showTipAdd", e.getMessage());
-        }
-
-    }
-
     public void showForm()
     {
         super.showForm();
@@ -93,7 +71,7 @@ public class TipDetailsList extends BaseActivity
 
             tipGroupItem=new TipGroupItem();
             tipList=new ArrayList<>();
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if(!da.getTipGroupItem(holidayId, tipGroupId, tipGroupItem))
                     return;
@@ -105,20 +83,15 @@ public class TipDetailsList extends BaseActivity
 
             CreateRecyclerView(R.id.tipListView, tipAdapter);
 
-            tipAdapter.setOnItemClickListener(new TipAdapter.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(View view, TipItem obj)
-                {
-                    Intent intent=new Intent(getApplicationContext(), TipDetailsView.class);
-                    intent.putExtra("ACTION", "view");
-                    intent.putExtra("HOLIDAYID", obj.holidayId);
-                    intent.putExtra("TIPGROUPID", obj.tipGroupId);
-                    intent.putExtra("TIPID", obj.tipId);
-                    intent.putExtra("TITLE", title + "/" + subTitle);
-                    intent.putExtra("SUBTITLE", obj.tipDescription);
-                    startActivity(intent);
-                }
+            tipAdapter.setOnItemClickListener((view, obj) -> {
+                Intent intent=new Intent(getApplicationContext(), TipDetailsView.class);
+                intent.putExtra("ACTION", "view");
+                intent.putExtra("HOLIDAYID", obj.holidayId);
+                intent.putExtra("TIPGROUPID", obj.tipGroupId);
+                intent.putExtra("TIPID", obj.tipId);
+                intent.putExtra("TITLE", title + "/" + subTitle);
+                intent.putExtra("SUBTITLE", obj.tipDescription);
+                startActivity(intent);
             });
 
             SetImage(tipGroupItem.tipGroupPicture);
@@ -169,95 +142,6 @@ public class TipDetailsList extends BaseActivity
         catch(Exception e)
         {
             ShowError("NotifyItemMoved", e.getMessage());
-        }
-
-    }
-    //endregion
-
-    //region OnClick Events
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        try
-        {
-            switch(item.getItemId())
-            {
-                case R.id.action_delete_tipgroup:
-                    deleteTipGroup();
-                    return true;
-                case R.id.action_view_tipgroup:
-                    viewTipGroup();
-                    return true;
-                case R.id.action_edit_tipgroup:
-                    editTipGroup();
-                    return true;
-                case R.id.action_add_tip:
-                    showTipAdd(null);
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
-        }
-        catch(Exception e)
-        {
-            ShowError("onOptionsItemSelected", e.getMessage());
-        }
-        return true;
-
-    }
-
-    public void editTipGroup()
-    {
-        try
-        {
-            Intent intent=new Intent(getApplicationContext(), TipGroupDetailsEdit.class);
-            intent.putExtra("ACTION", "modify");
-            intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("TIPGROUPID", tipGroupId);
-            intent.putExtra("TITLE", title);
-            intent.putExtra("SUBTITLE", subTitle);
-            startActivity(intent);
-        }
-        catch(Exception e)
-        {
-            ShowError("editTipGroup", e.getMessage());
-        }
-
-    }
-
-    public void viewTipGroup()
-    {
-        try
-        {
-            Intent intent=new Intent(getApplicationContext(), TipGroupDetailsView.class);
-            intent.putExtra("ACTION", "view");
-            intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("TIPGROUPID", tipGroupId);
-            intent.putExtra("TITLE", title);
-            intent.putExtra("SUBTITLE", subTitle);
-            startActivity(intent);
-        }
-        catch(Exception e)
-        {
-            ShowError("viewTipGroup", e.getMessage());
-        }
-
-    }
-
-    public void deleteTipGroup()
-    {
-        try
-        {
-            try(DatabaseAccess da = databaseAccess();)
-            {
-                if(!da.deleteTipGroupItem(tipGroupItem))
-                    return;
-            }
-            finish();
-        }
-        catch(Exception e)
-        {
-            ShowError("deleteTipGroup", e.getMessage());
         }
 
     }

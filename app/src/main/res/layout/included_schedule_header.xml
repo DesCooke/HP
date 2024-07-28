@@ -8,33 +8,58 @@
 
     <ImageButton
         android:id="@+id/imageViewSmall"
-        android:layout_width="match_parent"
-        android:layout_height="176dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_alignParentTop="true"
-        android:background="@android:drawable/screen_background_light_transparent"
+        android:layout_centerInParent="true"
+        android:background="@drawable/holidaylistitembox"
+        android:contentDescription="@string/todo"
+        android:padding="10dp"
+        android:layout_margin="10dp"
         android:scaleType="fitCenter"
         android:visibility="visible"
-        app:srcCompat="@drawable/imagemissing"
-        tools:ignore="ContentDescription,RtlHardcoded" />
+        app:srcCompat="@drawable/imagemissing" />
+
+    <LinearLayout
+        android:id="@+id/grpMenuFile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <ImageButton
         android:id="@+id/btnClear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@android:drawable/alert_light_frame"
         android:contentDescription=""
         android:onClick="btnClearImage"
-        android:visibility="gone"
+        android:visibility="visible"
         app:srcCompat="@android:drawable/ic_menu_delete"
         tools:ignore="ContentDescription"/>
 
-    <TextView
-        android:id="@+id/txtPicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageViewSmall"
-        android:layout_toEndOf="@+id/btnClear"
-        android:background="@android:color/background_light"
-        android:text="TextView"
-        android:visibility="gone" />
+    <ImageButton
+        android:id="@+id/btnShowInfo"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@android:drawable/alert_light_frame"
+        android:clickable="false"
+        android:onClick="showInfo"
+        android:scaleType="centerInside"
+        android:tint="@color/colorDisabled"
+        app:srcCompat="@android:drawable/ic_menu_info_details"
+        tools:ignore="ContentDescription"/>
+
+    <ImageButton
+        android:id="@+id/btnShowNotes"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@android:drawable/alert_light_frame"
+        android:onClick="showNotes"
+        android:scaleType="centerInside"
+        android:tint="@color/colorDisabled"
+        app:srcCompat="@drawable/notepad"
+        tools:ignore="ContentDescription"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

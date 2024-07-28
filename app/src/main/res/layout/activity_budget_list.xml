@@ -1,26 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/activity_main"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context="com.example.des.hp.MainActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.des.hp.MainActivity">
 
+    <include layout="@layout/my_toolbar" />
 
-    <include
-        layout="@layout/included_program_info"
+    <LinearLayout
+        android:layout_marginVertical="?attr/actionBarSize"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        style="@style/MyBox"
+        android:layout_marginHorizontal="10dp">
+
+        <TextView
+            android:id="@+id/lblTaskDate"
+            android:text="@string/only_outstanding_budgets"
+            style="@style/MyTextHint"/>
+
+        <Switch
+            android:id="@+id/swToggleOutstanding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/budgetListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:cacheColorHint="#0000"
         android:scrollbars="vertical"
-        android:scrollingCache="false">
-    </androidx.recyclerview.widget.RecyclerView>
+        android:scrollingCache="false"
+        android:layout_marginHorizontal="10dp"/>
 
-</LinearLayout>
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:contentDescription="@string/floatingactionbutton"
+        android:elevation="1dp"
+        android:translationZ="1dp"
+        app:backgroundTint="@color/colorPrimary"
+        app:maxImageSize="48dp"
+        app:srcCompat="@android:drawable/ic_menu_add" />
+
+</RelativeLayout>

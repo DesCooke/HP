@@ -1,5 +1,7 @@
 package com.example.des.hp.Database;
 
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,6 +10,7 @@ import android.net.Uri;
 import android.webkit.MimeTypeMap;
 
 import com.example.des.hp.ExtraFiles.ExtraFilesItem;
+import com.example.des.hp.Holiday.HolidayItem;
 import com.example.des.hp.myutils.ImageUtils;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
@@ -55,8 +58,10 @@ class TableExtraFiles extends TableBase
 
     boolean addExtraFilesItem(ExtraFilesItem extraFilesItem)
     {
-        try
-        {
+        try(DatabaseAccess da = databaseAccess()){
+            HolidayItem holidayItem = new HolidayItem();
+            da.getHolidayItem(extraFilesItem.holidayId, holidayItem);
+
             if(!IsValid())
                 return (false);
 
@@ -83,8 +88,9 @@ class TableExtraFiles extends TableBase
                 if(!setNextFileId("file", myInt.Value + 1))
                     return (false);
 
+
                 MyUri myUri = new MyUri(_context);
-                Uri toUri=myUri.getUri(ImageUtils.imageUtils().GetHolidayFileDir(extraFilesItem.holidayId) + "/" + extraFilesItem.fileName);
+                Uri toUri=myUri.getUri(ImageUtils.imageUtils().GetHolidayFileDir(holidayItem.holidayName) + "/" + extraFilesItem.fileName);
 
                 // put back into a string
                 String theString=toUri.toString();

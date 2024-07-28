@@ -21,9 +21,9 @@ public class InternalFileList extends BaseActivity
         super.showForm();
         try
         {
-            SetTitles("Internal Files", "please select one");
+            SetToolbarTitles("Internal Files", "please select one");
 
-            internalFileList=imageUtils().listInternalFiles(holidayId);
+            internalFileList=imageUtils().listInternalFiles(getHolidayName(holidayId));
 
             InternalFileAdapter internalFileAdapter = new InternalFileAdapter(internalFileList);
 

@@ -38,6 +38,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
                 txtBudgetDescription.setText(getString(R.string.schedule_unknown));
                 txtBudgetTotal.setText(getString(R.string.caption_zero));
             }
+
             grpBudgetDescription.setOnClickListener(this);
             grpBudgetTotal.setOnClickListener(this);
             grpBudgetPaid.setOnClickListener(this);
@@ -300,15 +301,17 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             budgetItem.budgetPaid = Integer.parseInt(removePoundSign(txtBudgetPaid.getText().toString()));
             budgetItem.budgetUnpaid = Integer.parseInt(removePoundSign(txtBudgetUnpaid.getText().toString()));
             budgetItem.budgetNotes = "";
-            
-            budgetItem.budgetPicture = "";
-            if (!internalImageFilename.isEmpty())
-                budgetItem.budgetPicture = internalImageFilename;
-            budgetItem.pictureAssigned = imageSet;
-            budgetItem.pictureChanged = imageChanged;
-            budgetItem.fileBitmap = null;
-            if (imageSet)
-                budgetItem.fileBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+
+            if(imageChanged) {
+                budgetItem.budgetPicture = "";
+                if (!internalImageFilename.isEmpty())
+                    budgetItem.budgetPicture = internalImageFilename;
+                budgetItem.pictureAssigned = imageSet;
+                budgetItem.pictureChanged = true;
+                budgetItem.fileBitmap = null;
+                if (imageSet)
+                    budgetItem.fileBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            }
 
             if (action.equals("add")) {
                 budgetItem.holidayId = holidayId;
@@ -338,6 +341,42 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
         }
     }
     //endregion
-    
-    
+
+    @Override
+    public void setNoteId(int pNoteId)
+    {
+        try
+        {
+            budgetItem.noteId=pNoteId;
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateBudgetItem(budgetItem);
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("setNoteId", e.getMessage());
+        }
+
+    }
+
+    @Override
+    public void setInfoId(int pInfoId)
+    {
+        try
+        {
+            budgetItem.infoId=pInfoId;
+            try(DatabaseAccess da = databaseAccess())
+            {
+                da.updateBudgetItem(budgetItem);
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("setInfoId", e.getMessage());
+        }
+
+    }
+
+
 }

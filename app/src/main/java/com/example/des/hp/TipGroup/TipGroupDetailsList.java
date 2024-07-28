@@ -10,12 +10,14 @@ import android.view.View;
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
-import com.example.des.hp.Tip.TipDetailsList;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
+
+import androidx.annotation.NonNull;
 
 public class TipGroupDetailsList extends BaseActivity
 {
@@ -23,6 +25,7 @@ public class TipGroupDetailsList extends BaseActivity
     //region Member Variables
     public ArrayList<TipGroupItem> tipGroupList;
     public TipGroupAdapter tipGroupAdapter;
+    public FloatingActionButton fab;
     //endregion
 
     //region Constructors/Destructors
@@ -34,6 +37,9 @@ public class TipGroupDetailsList extends BaseActivity
         {
             layoutName="activity_tipgroup_list";
             setContentView(R.layout.activity_tipgroup_list);
+
+            fab=findViewById(R.id.fab);
+            fab.setOnClickListener(this::showTipGroupAdd);
 
             afterCreate();
 
@@ -87,7 +93,7 @@ public class TipGroupDetailsList extends BaseActivity
             allowCellMove=true;
 
             tipGroupList=new ArrayList<>();
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
                 if(!da.getTipGroupList(holidayId, tipGroupList))
                     return;
@@ -96,19 +102,14 @@ public class TipGroupDetailsList extends BaseActivity
 
             CreateRecyclerView(R.id.tipGroupListView, tipGroupAdapter);
 
-            tipGroupAdapter.setOnItemClickListener(new TipGroupAdapter.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(View view, TipGroupItem obj)
-                {
-                    Intent intent=new Intent(getApplicationContext(), TipDetailsList.class);
-                    intent.putExtra("ACTION", "view");
-                    intent.putExtra("HOLIDAYID", obj.holidayId);
-                    intent.putExtra("TIPGROUPID", obj.tipGroupId);
-                    intent.putExtra("TITLE", title + "/" + subTitle);
-                    intent.putExtra("SUBTITLE", obj.tipGroupDescription);
-                    startActivity(intent);
-                }
+            tipGroupAdapter.setOnItemClickListener((view, obj) -> {
+                Intent intent=new Intent(getApplicationContext(), TipGroupDetailsView.class);
+                intent.putExtra("ACTION", "view");
+                intent.putExtra("HOLIDAYID", obj.holidayId);
+                intent.putExtra("TIPGROUPID", obj.tipGroupId);
+                intent.putExtra("TITLE", obj.tipGroupDescription);
+                intent.putExtra("SUBTITLE", title);
+                startActivity(intent);
             });
 
             afterShow();
@@ -164,18 +165,15 @@ public class TipGroupDetailsList extends BaseActivity
 
     //region OnClick Events
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
         try
         {
-            switch(item.getItemId())
-            {
-                case R.id.action_add_tipgroup:
-                    showTipGroupAdd(null);
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
+            if (item.getItemId() == R.id.action_add_tipgroup) {
+                showTipGroupAdd(null);
+                return true;
             }
+            return super.onOptionsItemSelected(item);
         }
         catch(Exception e)
         {

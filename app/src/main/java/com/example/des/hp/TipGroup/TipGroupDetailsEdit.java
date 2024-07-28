@@ -30,12 +30,10 @@ public class TipGroupDetailsEdit extends TipGroupDetailsView implements View.OnC
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
 
-
             if(action != null && action.equals("add"))
             {
                 txtTipGroupDescription.setText("");
-                SetTitles("Add a Tip", "");
-                grpMenuFile.setVisibility(View.GONE);
+                SetToolbarTitles("Add a Tip", "");
             }
             grpTipGroupDescription.setOnClickListener(this);
             imageView.setOnClickListener(this);
@@ -117,15 +115,16 @@ public class TipGroupDetailsEdit extends TipGroupDetailsView implements View.OnC
 
             tipGroupItem.tipGroupDescription=txtTipGroupDescription.getText().toString();
 
-            tipGroupItem.tipGroupPicture="";
-            if(!internalImageFilename.isEmpty())
-                tipGroupItem.tipGroupPicture=internalImageFilename;
-            tipGroupItem.pictureAssigned=imageSet;
-            tipGroupItem.pictureChanged=imageChanged;
-            tipGroupItem.fileBitmap=null;
-            if(imageSet)
-                tipGroupItem.fileBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
-
+            if(imageChanged) {
+                tipGroupItem.tipGroupPicture = "";
+                if (!internalImageFilename.isEmpty())
+                    tipGroupItem.tipGroupPicture = internalImageFilename;
+                tipGroupItem.pictureAssigned = imageSet;
+                tipGroupItem.pictureChanged = true;
+                tipGroupItem.fileBitmap = null;
+                if (imageSet)
+                    tipGroupItem.fileBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            }
             tipGroupItem.tipGroupNotes="";
 
             if(action.equals("add"))

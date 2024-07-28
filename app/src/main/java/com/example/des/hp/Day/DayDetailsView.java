@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.des.hp.Budget.BudgetDetailsList;
@@ -13,18 +15,18 @@ import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.Holiday.*;
-import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionDetailsEdit;
-import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionDetailsView;
-import com.example.des.hp.Schedule.ScheduleAdapter;
-import com.example.des.hp.Schedule.ScheduleItem;
+import com.example.des.hp.Event.EventDetailsEdit;
+import com.example.des.hp.Event.EventDetailsView;
+import com.example.des.hp.Event.EventAdapter;
+import com.example.des.hp.Event.EventScheduleItem;
 import com.example.des.hp.Tasks.TaskDetailsList;
 import com.example.des.hp.TipGroup.TipGroupDetailsList;
 import com.example.des.hp.myutils.*;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Locale;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.DateUtils.dateUtils;
@@ -39,8 +41,13 @@ public class DayDetailsView extends BaseActivity
     public DayItem dayItem;
     private TextView txtDayCat;
     public LinearLayout grpMenuFile;
-    public ArrayList<ScheduleItem> scheduleList;
-    public ScheduleAdapter scheduleAdapter;
+    public ArrayList<EventScheduleItem> scheduleList;
+    public EventAdapter eventAdapter;
+    public LinearLayout topBit;
+    public RelativeLayout fullPage;
+    public ImageView btnEditDay;
+    public FloatingActionButton fab;
+
     //endregion
 
     //region Constructors/Destructors
@@ -55,6 +62,10 @@ public class DayDetailsView extends BaseActivity
 
             txtDayCat= findViewById(R.id.txtDayCat);
             grpMenuFile= findViewById(R.id.grpMenuFile);
+            topBit= findViewById(R.id.topBit);
+            fullPage=findViewById(R.id.fullPage);
+            btnEditDay=findViewById(R.id.my_toolbar_edit);
+            btnEditDay.setOnClickListener(view -> editDay());
 
             afterCreate();
 
@@ -130,15 +141,15 @@ public class DayDetailsView extends BaseActivity
 
             SetImage(dayItem.dayPicture);
 
-            String lSubTitle;
+            fab=findViewById(R.id.fab);
+            if(fab!=null)
+                fab.setOnClickListener(view -> StartNewAddIntent());
+
+
             MyBoolean isUnknown=new MyBoolean();
             if(!dateUtils().IsUnknown(DatabaseAccess.currentStartDate, isUnknown))
                 return;
-            if(isUnknown.Value)
-            {
-                lSubTitle=String.format(Locale.ENGLISH, getResources().getString(R.string.fmt_day_line), dayItem.sequenceNo);
-            } else
-            {
+            if (!isUnknown.Value) {
                 Date lcurrdate=new Date();
 
                 // we subtract 1 because sequence starts at 1 - but we want to add 0 days for the
@@ -149,12 +160,11 @@ public class DayDetailsView extends BaseActivity
                 MyString myString=new MyString();
                 if(!dateUtils().DateToStr(lcurrdate, myString))
                     return;
-                lSubTitle=String.format(Locale.ENGLISH, getResources().getString(R.string.fmt_date_line), myString.Value);
             }
 
 
-            SetTitles(holidayItem.holidayName, dayItem.dayName + " / " + lSubTitle);
-
+            SetToolbarTitles(dayItem.dayName, holidayItem.holidayName);
+            ShowToolbarEdit();
 
             int lColor=-1;
             String lDayCat="Day Category: <unknown>";
@@ -178,7 +188,8 @@ public class DayDetailsView extends BaseActivity
             if(lColor != -1)
             {
                 txtDayCat.setBackgroundColor(lColor);
-                grpMenuFile.setBackgroundColor(lColor);
+                topBit.setBackgroundColor(lColor);
+                fullPage.setBackgroundColor(lColor);
             }
 
             scheduleList=new ArrayList<>();
@@ -189,13 +200,13 @@ public class DayDetailsView extends BaseActivity
                     return;
             }
 
-            scheduleAdapter=new ScheduleAdapter(this, scheduleList);
+            eventAdapter =new EventAdapter(this, scheduleList);
 
-            CreateRecyclerView(R.id.dayListView, scheduleAdapter);
+            CreateRecyclerView(R.id.dayListView, eventAdapter);
             if(lColor != -1)
                 recyclerView.setBackgroundColor(lColor);
 
-            scheduleAdapter.setOnItemClickListener((view, obj) -> {
+            eventAdapter.setOnItemClickListener((view, obj) -> {
                 if(obj.schedType == getResources().getInteger(R.integer.schedule_type_generalattraction))
                 {
                     StartNewEditIntent(obj);
@@ -212,21 +223,6 @@ public class DayDetailsView extends BaseActivity
     //endregion
 
     //region form Functions
-    @Override
-    public int getInfoId()
-    {
-        try
-        {
-            return (dayItem.infoId);
-        }
-        catch(Exception e)
-        {
-            ShowError("getInfoId", e.getMessage());
-        }
-        return (0);
-
-    }
-
     public void showBudget()
     {
         try
@@ -250,7 +246,7 @@ public class DayDetailsView extends BaseActivity
             Intent intent2=new Intent(getApplicationContext(), TipGroupDetailsList.class);
             intent2.putExtra("HOLIDAYID", dayItem.holidayId);
             intent2.putExtra("TITLE", holidayName);
-            intent2.putExtra("SUBTITLE", "Tips");
+            intent2.putExtra("SUBTITLE", "Tip Groups");
             startActivity(intent2);
         }
         catch(Exception e)
@@ -265,8 +261,8 @@ public class DayDetailsView extends BaseActivity
         {
             Intent intent2=new Intent(getApplicationContext(), TaskDetailsList.class);
             intent2.putExtra("HOLIDAYID", dayItem.holidayId);
-            intent2.putExtra("TITLE", holidayName);
-            intent2.putExtra("SUBTITLE", "Tasks");
+            intent2.putExtra("TITLE", "Tasks");
+            intent2.putExtra("SUBTITLE", holidayName);
             startActivity(intent2);
         }
         catch(Exception e)
@@ -275,6 +271,7 @@ public class DayDetailsView extends BaseActivity
         }
     }
 
+    @Override
     public void setNoteId(int pNoteId)
     {
         try
@@ -324,6 +321,23 @@ public class DayDetailsView extends BaseActivity
 
     }
 
+    @Override
+    public int getInfoId()
+    {
+        try
+        {
+            return (dayItem.infoId);
+        }
+        catch(Exception e)
+        {
+            ShowError("getInfoId", e.getMessage());
+        }
+        return (0);
+
+    }
+
+
+
     public void editDay()
     {
         try
@@ -340,11 +354,11 @@ public class DayDetailsView extends BaseActivity
         }
     }
 
-    public void StartNewEditIntent(ScheduleItem obj)
+    public void StartNewEditIntent(EventScheduleItem obj)
     {
         try
         {
-            Intent intent=new Intent(getApplicationContext(), GeneralAttractionDetailsView.class);
+            Intent intent=new Intent(getApplicationContext(), EventDetailsView.class);
             intent.putExtra("ACTION", "view");
             intent.putExtra("HOLIDAYID", obj.holidayId);
             intent.putExtra("DAYID", obj.dayId);
@@ -367,7 +381,7 @@ public class DayDetailsView extends BaseActivity
     {
         try
         {
-            Intent intent=new Intent(getApplicationContext(), GeneralAttractionDetailsEdit.class);
+            Intent intent=new Intent(getApplicationContext(), EventDetailsEdit.class);
             intent.putExtra("ACTION", "add");
             intent.putExtra("HOLIDAYID", holidayId);
             intent.putExtra("DAYID", dayId);
@@ -405,7 +419,7 @@ public class DayDetailsView extends BaseActivity
     {
         try
         {
-            Collections.swap(scheduleAdapter.data, from, to);
+            Collections.swap(eventAdapter.data, from, to);
         }
         catch(Exception e)
         {
@@ -419,7 +433,7 @@ public class DayDetailsView extends BaseActivity
     {
         try
         {
-            scheduleAdapter.onItemMove();
+            eventAdapter.onItemMove();
         }
         catch(Exception e)
         {
@@ -433,7 +447,7 @@ public class DayDetailsView extends BaseActivity
     {
         try
         {
-            scheduleAdapter.notifyItemMoved(from, to);
+            eventAdapter.notifyItemMoved(from, to);
         }
         catch(Exception e)
         {
@@ -441,6 +455,33 @@ public class DayDetailsView extends BaseActivity
         }
 
     }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        try
+        {
+            if(action.compareTo("add")!=0) {
+                try (DatabaseAccess da = databaseAccess()) {
+                    if (!da.getDayItem(holidayId, dayId, dayItem)) {
+                        finish();
+                    }
+                    if (dayItem != null) {
+                        if (dayItem.dayId == 0) {
+                            finish();
+                        }
+                    }
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("onResume", e.getMessage());
+        }
+
+    }
+
 
     //endregion
 }

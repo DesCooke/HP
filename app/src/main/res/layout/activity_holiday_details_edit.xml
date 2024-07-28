@@ -5,172 +5,296 @@
                                                  android:layout_width="match_parent"
                                                  android:layout_height="match_parent">
 
+    <include layout="@layout/my_toolbar" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginVertical="?attr/actionBarSize"
         android:orientation="vertical">
-
-        <include
-            layout="@layout/included_program_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/lblTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Holiday Details"
-            android:textAlignment="center"
-            android:textSize="36sp" />
 
         <include
             layout="@layout/included_schedule_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-
         <LinearLayout
             android:id="@+id/grpHolidayName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:onClick="pickHolidayName"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:baselineAligned="false"
+            android:layout_margin="10dp"
+            style="@style/MyBox">
 
             <TextView
-                android:id="@+id/txtHolidayNameCaption"
-                android:layout_width="170dp"
-                android:layout_height="wrap_content"
-                android:text="Holiday Name"
-                android:textSize="18sp" />
+                android:id="@+id/lblHolidayName"
+                android:text="@string/holiday_name"
+                style="@style/MyTextHint"/>
 
             <TextView
                 android:id="@+id/txtHolidayName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textSize="18sp" />
+                style="@style/MyTextLine"/>
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/grpKnownDates"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false"
+            android:layout_margin="10dp"
+            style="@style/MyBox">
 
-            <TextView
-                android:id="@+id/lblKnownDates"
-                android:layout_width="170dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Dates Known"
-                android:textSize="18sp" />
+                android:orientation="vertical" >
 
-            <Switch
-                android:id="@+id/swKnownDates"
+                <TextView
+                    android:id="@+id/lblKnownDates"
+                    android:text="@string/known_dates"
+                    style="@style/MyTextHint"/>
+
+                <Switch
+                    android:id="@+id/swKnownDates"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="toggleVisibility"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/grpStartDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="toggleVisibility" />
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/lblStartDate"
+                    android:text="@string/start_date"
+                    style="@style/MyTextHint"/>
+
+                <TextView
+                    android:id="@+id/txtStartDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style = "@style/MyTextLine" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/grpStartDate"
+            android:id="@+id/grpSwitches"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="pickDateTime"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:baselineAligned="false"
+            android:layout_margin="10dp"
+            style="@style/MyBox">
 
-            <TextView
-                android:id="@+id/lblStartDate"
-                android:layout_width="170dp"
-                android:layout_height="wrap_content"
-                android:text="Start Date"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/txtStartDate"
+            <LinearLayout
+                android:id="@+id/grpSwitchLine1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="right"
-                android:text="TextView"
-                android:textSize="18sp" />
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lblDays"
+                        style="@style/MyTextHint"
+                        android:text="@string/days" />
+
+                    <Switch
+                        android:id="@+id/swDays"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="toggleVisibility"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lblMaps"
+                        style="@style/MyTextHint"
+                        android:text="@string/maps" />
+
+                    <Switch
+                        android:id="@+id/swMaps"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="toggleVisibility"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lblTasks"
+                        style="@style/MyTextHint"
+                        android:text="@string/tasks" />
+
+                    <Switch
+                        android:id="@+id/swTasks"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="toggleVisibility"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lblTips"
+                        style="@style/MyTextHint"
+                        android:text="@string/tips" />
+
+                    <Switch
+                        android:id="@+id/swTips"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="toggleVisibility"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/grpSwitchLine2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lblBudget"
+                        style="@style/MyTextHint"
+                        android:text="@string/budget" />
+
+                    <Switch
+                        android:id="@+id/swBudget"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="toggleVisibility"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lblAttractions"
+                        style="@style/MyTextHint"
+                        android:text="@string/theme_parks" />
+
+                    <Switch
+                        android:id="@+id/swAttractions"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="toggleVisibility"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lblContacts"
+                        style="@style/MyTextHint"
+                        android:text="@string/contacts" />
+
+                    <Switch
+                        android:id="@+id/swContacts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="toggleVisibility"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lblPio"
+                        style="@style/MyTextHint"
+                        android:text="@string/poi" />
+
+                    <Switch
+                        android:id="@+id/swPoi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="toggleVisibility"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
 
         </LinearLayout>
-
-        <Switch
-            android:id="@+id/swDays"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Show Itinerary Button"
-            android:textColor="?android:attr/textColorTertiary"
-            android:textSize="18sp" />
-
-        <Switch
-            android:id="@+id/swMaps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Show Maps Button"
-            android:textColor="?android:attr/textColorTertiary"
-            android:textSize="18sp" />
-
-        <Switch
-            android:id="@+id/swTasks"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Show Tasks Button"
-            android:textColor="?android:attr/textColorTertiary"
-            android:textSize="18sp" />
-
-        <Switch
-            android:id="@+id/swTips"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Show Tips Button"
-            android:textColor="?android:attr/textColorTertiary"
-            android:textSize="18sp" />
-
-        <Switch
-            android:id="@+id/swBudget"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Show Budget Button"
-            android:textColor="?android:attr/textColorTertiary"
-            android:textSize="18sp" />
-
-        <Switch
-            android:id="@+id/swAttractions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Show Attractions Button"
-            android:textColor="?android:attr/textColorTertiary"
-            android:textSize="18sp" />
-
-        <Switch
-            android:id="@+id/swContacts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Show Contacts Button"
-            android:textColor="?android:attr/textColorTertiary"
-            android:textSize="18sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
 
             <Button
                 android:id="@+id/btnSave"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/button"
-                android:layout_alignStart="@+id/button"
-                android:layout_alignLeft="@+id/button"
                 android:layout_weight="1"
                 android:onClick="saveHoliday"
-                android:text="Save" />
+                android:text="@string/save" />
         </LinearLayout>
 
         <CheckBox

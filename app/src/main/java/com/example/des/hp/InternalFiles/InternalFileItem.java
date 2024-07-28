@@ -4,12 +4,12 @@ package com.example.des.hp.InternalFiles;
 public class InternalFileItem
 {
     public String filename;
-    public int holidayId;
+    public String holidayName;
 
-    public InternalFileItem(int argHolidayId, String argFilename)
+    public InternalFileItem(String argHolidayName, String argFilename)
     {
         filename=argFilename;
-        holidayId = argHolidayId;
+        holidayName = argHolidayName;
     }
 
 }

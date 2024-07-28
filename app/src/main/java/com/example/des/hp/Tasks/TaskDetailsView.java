@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -34,12 +35,10 @@ public class TaskDetailsView extends BaseActivity
     public ImageButton btnClear;
     public Button btnSave;
     public LinearLayout grpMenuFile;
-    public LinearLayout grpTaskName;
-    public TextView lblTaskDate;
-    public TextView lblKnownDate;
-    public LinearLayout grpKnownDate;
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch swKnownDate;
+    public TextView txtKnownDate;
+    public ImageView btnEdit;
     //endregion
 
     //region Constructors/Destructors
@@ -52,18 +51,18 @@ public class TaskDetailsView extends BaseActivity
             layoutName="activity_task_details_view";
             setContentView(R.layout.activity_task_details_view);
 
-            txtTaskDescription= findViewById(R.id.txtTaskName);
-            grpTaskDate= findViewById(R.id.grpTaskDate);
+            txtKnownDate=findViewById(R.id.txtKnownDate);
+            txtTaskDescription= findViewById(R.id.txtTaskDescription);
             txtTaskDate= findViewById(R.id.txtTaskDate);
             chkTaskComplete= findViewById(R.id.chkTaskComplete);
             btnClear= findViewById(R.id.btnClear);
             btnSave= findViewById(R.id.btnSave);
             grpMenuFile= findViewById(R.id.grpMenuFile);
-            grpTaskName= findViewById(R.id.grpTaskName);
-            lblTaskDate= findViewById(R.id.lblTaskDate);
-            lblKnownDate= findViewById(R.id.lblKnownDate);
-            grpKnownDate= findViewById(R.id.grpKnownDate);
             swKnownDate= findViewById(R.id.swKnownDate);
+            grpTaskDate=findViewById(R.id.grpTaskDate);
+
+            btnEdit=findViewById(R.id.my_toolbar_edit);
+            btnEdit.setOnClickListener(view -> editTask());
 
             afterCreate();
 
@@ -126,16 +125,20 @@ public class TaskDetailsView extends BaseActivity
 
             if(title == null || (title.isEmpty()))
             {
-                SetTitles(taskItem.taskDescription, "");
+                SetToolbarTitles(taskItem.taskDescription, "");
             } else
             {
-                SetTitles(title, subTitle);
+                SetToolbarTitles(title, subTitle);
             }
 
             SetImage(taskItem.taskPicture);
 
             txtTaskDescription.setText(taskItem.taskDescription);
 
+            if(action.compareTo("view")==0)
+                ShowToolbarEdit();
+
+            swKnownDate.setChecked(taskItem.taskDateKnown);
             if(taskItem.taskDateKnown)
             {
                 grpTaskDate.setVisibility(View.VISIBLE);
@@ -146,6 +149,17 @@ public class TaskDetailsView extends BaseActivity
             }
 
             chkTaskComplete.setChecked(taskItem.taskComplete);
+
+            if(action.compareTo("view")==0){
+                swKnownDate.setEnabled(false);
+                grpTaskDate.setEnabled(false);
+                chkTaskComplete.setEnabled(false);
+            }
+            else{
+                swKnownDate.setEnabled(true);
+                grpTaskDate.setEnabled(true);
+                chkTaskComplete.setEnabled(true);
+            }
 
             afterShow();
         }
@@ -172,6 +186,7 @@ public class TaskDetailsView extends BaseActivity
 
     }
 
+    @Override
     public void setNoteId(int pNoteId)
     {
         try
@@ -257,6 +272,29 @@ public class TaskDetailsView extends BaseActivity
         }
 
     }
+
+    protected void onResume()
+    {
+        super.onResume();
+        try
+        {
+            if(action.compareTo("add")!=0) {
+                try (DatabaseAccess da = databaseAccess()) {
+                    if (!da.getTaskItem(holidayId, taskId, taskItem))
+                        return;
+                    if (action.compareTo("add") != 0)
+                        if (taskItem.taskId == 0)
+                            finish();
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            ShowError("onResume", e.getMessage());
+        }
+
+    }
+
     //endregion
 
 }

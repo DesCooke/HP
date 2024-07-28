@@ -9,10 +9,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,8 +21,10 @@ import com.example.des.hp.Budget.BudgetDetailsList;
 import com.example.des.hp.Contact.ContactDetailsList;
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
+import com.example.des.hp.Event.EventScheduleItem;
+import com.example.des.hp.Poi.PoiList;
 import com.example.des.hp.TipGroup.*;
-import com.example.des.hp.Attraction.*;
+import com.example.des.hp.ThemeParks.*;
 import com.example.des.hp.Day.DayDetailsList;
 import com.example.des.hp.ExtraFiles.*;
 import com.example.des.hp.R;
@@ -31,7 +33,7 @@ import com.example.des.hp.myutils.*;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
-import androidx.annotation.NonNull;
+import java.util.ArrayList;
 
 public class HolidayDetailsView extends BaseActivity
 {
@@ -45,15 +47,17 @@ public class HolidayDetailsView extends BaseActivity
     public ImageButton btnShowTasks;
     public ImageButton btnShowBudget;
     public ImageButton btnShowTips;
-    public ImageButton btnShowAttractions;
+    public ImageButton btnShowThemeParks;
     public ImageButton btnShowContacts;
+    public ImageButton btnShowPoi;
     public TextView itineraryBadge;
     public TextView mapBadge;
     public TextView taskBadge;
     public TextView budgetBadge;
     public TextView tipsBadge;
-    public TextView attractionsBadge;
+    public TextView themeParksBadge;
     public TextView contactsBadge;
+    public TextView poiBadge;
     private int buttonCount;
     public RelativeLayout btnGroupDays;
     public RelativeLayout btnGroupMaps;
@@ -62,9 +66,11 @@ public class HolidayDetailsView extends BaseActivity
     public RelativeLayout btnGroupBudget;
     public RelativeLayout btnGroupAttractions;
     public RelativeLayout btnGroupContacts;
+    public RelativeLayout btnGroupPoi;
     public LinearLayout row1;
     public LinearLayout row2;
     public LinearLayout row3;
+    public ImageView editHoliday;
 
 
     // EditText Dialog
@@ -94,16 +100,21 @@ public class HolidayDetailsView extends BaseActivity
             btnShowTasks= findViewById(R.id.btnShowTasks);
             btnShowBudget= findViewById(R.id.btnShowBudget);
             btnShowTips= findViewById(R.id.btnShowTips);
-            btnShowAttractions= findViewById(R.id.btnShowAttractions);
+            btnShowThemeParks = findViewById(R.id.btnShowThemeParks);
             btnShowContacts= findViewById(R.id.btnShowContacts);
+            btnShowPoi= findViewById(R.id.btnShowPoi);
 
             itineraryBadge= findViewById(R.id.txtItineraryBadge);
             mapBadge= findViewById(R.id.txtMapBadge);
             taskBadge= findViewById(R.id.txtTaskBadge);
             budgetBadge= findViewById(R.id.txtBudgetBadge);
             contactsBadge= findViewById(R.id.txtContactBadge);
+            poiBadge= findViewById(R.id.txtPoiBadge);
             tipsBadge= findViewById(R.id.txtTipsBadge);
-            attractionsBadge= findViewById(R.id.txtAttractionBadge);
+            themeParksBadge = findViewById(R.id.txtThemeParksBadge);
+
+            editHoliday=findViewById(R.id.my_toolbar_edit);
+            editHoliday.setOnClickListener(view -> editHoliday());
 
             row1= findViewById(R.id.row1);
             row2= findViewById(R.id.row2);
@@ -114,8 +125,9 @@ public class HolidayDetailsView extends BaseActivity
             btnGroupTasks= findViewById(R.id.btnGroupTasks);
             btnGroupTips= findViewById(R.id.btnGroupTips);
             btnGroupBudget= findViewById(R.id.btnGroupBudget);
-            btnGroupAttractions= findViewById(R.id.btnGroupAttractions);
+            btnGroupAttractions= findViewById(R.id.btnGroupThemeParks);
             btnGroupContacts= findViewById(R.id.btnGroupContacts);
+            btnGroupPoi= findViewById(R.id.btnGroupPoi);
 
             afterCreate();
 
@@ -164,8 +176,8 @@ public class HolidayDetailsView extends BaseActivity
         {
             Intent intent2=new Intent(getApplicationContext(), TaskDetailsList.class);
             intent2.putExtra("HOLIDAYID", holidayItem.holidayId);
-            intent2.putExtra("TITLE", holidayItem.holidayName);
-            intent2.putExtra("SUBTITLE", "Tasks");
+            intent2.putExtra("TITLE", "Tasks");
+            intent2.putExtra("SUBTITLE", holidayItem.holidayName);
             startActivity(intent2);
         }
         catch(Exception e)
@@ -180,8 +192,8 @@ public class HolidayDetailsView extends BaseActivity
         {
             Intent intent2=new Intent(getApplicationContext(), BudgetDetailsList.class);
             intent2.putExtra("HOLIDAYID", holidayItem.holidayId);
-            intent2.putExtra("TITLE", holidayItem.holidayName);
-            intent2.putExtra("SUBTITLE", "Budget");
+            intent2.putExtra("TITLE", "Budget");
+            intent2.putExtra("SUBTITLE", holidayItem.holidayName);
             startActivity(intent2);
         }
         catch(Exception e)
@@ -222,14 +234,31 @@ public class HolidayDetailsView extends BaseActivity
         }
     }
 
-    public void showAttractions(View view)
+    public void showPoi(View view)
     {
         try
         {
-            Intent intent2=new Intent(getApplicationContext(), AttractionDetailsList.class);
+            Intent intent2=new Intent(getApplicationContext(), PoiList.class);
             intent2.putExtra("HOLIDAYID", holidayItem.holidayId);
-            intent2.putExtra("TITLE", holidayItem.holidayName);
-            intent2.putExtra("SUBTITLE", "Attractions");
+            intent2.putExtra("TITLE", "Points of Interest");
+            intent2.putExtra("SUBTITLE", holidayItem.holidayName);
+            startActivity(intent2);
+        }
+        catch(Exception e)
+        {
+            ShowError("showTipGroups", e.getMessage());
+        }
+    }
+
+
+    public void showThemeParks(View view)
+    {
+        try
+        {
+            Intent intent2=new Intent(getApplicationContext(), ThemeParkList.class);
+            intent2.putExtra("HOLIDAYID", holidayItem.holidayId);
+            intent2.putExtra("TITLE", "Theme Parks");
+            intent2.putExtra("SUBTITLE", holidayItem.holidayName);
             startActivity(intent2);
         }
         catch(Exception e)
@@ -268,7 +297,6 @@ public class HolidayDetailsView extends BaseActivity
     }
 
 
-
     @Override
     public void showForm()
     {
@@ -285,7 +313,8 @@ public class HolidayDetailsView extends BaseActivity
                 if(!da.getHolidayItem(holidayId, holidayItem))
                     return;
 
-                SetTitles(holidayItem.holidayName, "Holiday");
+                SetToolbarTitles(holidayItem.holidayName, "Holiday");
+                ShowToolbarEdit();
 
                 if(!da.getDayCount(holidayId, myInt))
                     return;
@@ -314,25 +343,36 @@ public class HolidayDetailsView extends BaseActivity
 
                 if(!da.getAttractionsCount(holidayItem.holidayId, myInt))
                     return;
-                int attractionsCount=myInt.Value;
-                attractionsBadge.setText(String.format("Attractions (%s)", attractionsCount));
+                int themeParksCount=myInt.Value;
+                themeParksBadge.setText(String.format("Theme Parks (%s)", themeParksCount));
 
                 if(!da.getContactCount(holidayItem.holidayId, myInt))
                     return;
                 int contactCount=myInt.Value;
                 contactsBadge.setText(String.format("Contacts (%s)", contactCount));
 
+                ArrayList<EventScheduleItem> scheduleList = new ArrayList<>();
+                if (!da.getScheduleList(holidayId, 0, 0, 0, scheduleList))
+                    return;
+                poiBadge.setText(String.format("POIs (%s)", scheduleList.size()));
+
+                if(!holidayItem.dateKnown)
+                {
+                    grpStartDate.setVisibility(View.INVISIBLE);
+                } else
+                {
+                    grpStartDate.setVisibility(View.VISIBLE);
+                    if(dayCount==0) {
+                        txtStartDate.setText(holidayItem.startDateStr);
+                    }
+                    else{
+                        txtStartDate.setText(String.format("%s -> %s", holidayItem.startDateStr, holidayItem.endDateStr));
+                    }
+                }
+
+
             }
             SetImage(holidayItem.holidayPicture);
-
-            if(!holidayItem.dateKnown)
-            {
-                grpStartDate.setVisibility(View.INVISIBLE);
-            } else
-            {
-                grpStartDate.setVisibility(View.VISIBLE);
-                txtStartDate.setText(holidayItem.startDateStr);
-            }
 
             buttonCount=0;
             showOrHideButton(btnGroupDays, holidayItem.buttonDays);
@@ -342,6 +382,7 @@ public class HolidayDetailsView extends BaseActivity
             showOrHideButton(btnGroupBudget, holidayItem.buttonBudget);
             showOrHideButton(btnGroupAttractions, holidayItem.buttonAttractions);
             showOrHideButton(btnGroupContacts, holidayItem.buttonContacts);
+            showOrHideButton(btnGroupPoi, holidayItem.buttonPoi);
 
             afterShow();
         }
@@ -393,54 +434,30 @@ public class HolidayDetailsView extends BaseActivity
         }
     }
 
-    public void deleteHoliday()
-    {
-        try
-        {
-            try(DatabaseAccess da = databaseAccess())
-            {
-                if(!da.deleteHolidayItem(holidayItem))
-                    return;
-            }
-            finish();
-        }
-        catch(Exception e)
-        {
-            ShowError("deleteHoliday", e.getMessage());
-        }
-    }
-
     @Override
     protected void onResume()
     {
         super.onResume();
         try
         {
-            showForm();
+            if(action.compareTo("add")!=0) {
+                try (DatabaseAccess da = databaseAccess()) {
+                    if (!da.getHolidayItem(holidayId, holidayItem)) {
+                        finish();
+                    }
+                    if (holidayItem != null) {
+                        if (holidayItem.holidayId == 0) {
+                            finish();
+                        }
+                    }
+                }
+            }
         }
         catch(Exception e)
         {
             ShowError("onResume", e.getMessage());
         }
 
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item)
-    {
-        try
-        {
-            int id=item.getItemId();
-            if(id==R.id.action_edit_holiday)
-                editHoliday();
-            if(id==R.id.action_delete_holiday)
-                deleteHoliday();
-        }
-        catch(Exception e)
-        {
-            ShowError("onOptionsItemSelected", e.getMessage());
-        }
-        return (true);
     }
 
     @Override

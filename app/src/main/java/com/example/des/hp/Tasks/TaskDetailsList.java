@@ -1,27 +1,35 @@
 package com.example.des.hp.Tasks;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Switch;
 
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
+import androidx.annotation.NonNull;
+
 public class TaskDetailsList extends BaseActivity
 {
 
     //region Member Variables
     public ArrayList<TaskItem> taskList;
-    public TaskAdapter taskAdapter;
+    private TaskAdapter taskAdapter;
+    public FloatingActionButton fab;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
+    public Switch swToggleOutstanding;
     //endregion
 
     //region Constructors/Destructors
@@ -34,7 +42,22 @@ public class TaskDetailsList extends BaseActivity
             layoutName="activity_task_list";
             setContentView(R.layout.activity_task_list);
 
+            Bundle extras=getIntent().getExtras();
+            if(extras != null)
+            {
+                holidayId=extras.getInt("HOLIDAYID", 0);
+                title=extras.getString("TITLE", "");
+                subTitle=extras.getString("SUBTITLE", "");
+            }
+
+            fab=findViewById(R.id.fab);
+            fab.setOnClickListener(this::showTaskAdd);
             afterCreate();
+
+            swToggleOutstanding = findViewById(R.id.swToggleOutstanding);
+            swToggleOutstanding.setOnClickListener(this::toggleOutstanding);
+            swToggleOutstanding.setChecked(true);
+
 
             showForm();
         }
@@ -69,8 +92,8 @@ public class TaskDetailsList extends BaseActivity
             Intent intent=new Intent(getApplicationContext(), TaskDetailsEdit.class);
             intent.putExtra("ACTION", "add");
             intent.putExtra("HOLIDAYID", holidayId);
-            intent.putExtra("TITLE", title);
-            intent.putExtra("SUBTITLE", "Add a Task");
+            intent.putExtra("TITLE", "Add a Task");
+            intent.putExtra("SUBTITLE", title);
             startActivity(intent);
         }
         catch(Exception e)
@@ -86,33 +109,33 @@ public class TaskDetailsList extends BaseActivity
         {
             allowCellMove=true;
 
-            if(title.length() == 0)
-                SetTitles("Task", "Tasks");
+            SetToolbarTitles(title, subTitle);
 
             taskList=new ArrayList<>();
-            try(DatabaseAccess da = databaseAccess();)
+            try(DatabaseAccess da = databaseAccess())
             {
-                if(!da.getTaskList(holidayId, taskList))
-                    return;
+                if(swToggleOutstanding.isChecked()){
+                    if(!da.getOSTaskList(holidayId, taskList))
+                        return;
+                }
+                else{
+                    if(!da.getTaskList(holidayId, taskList))
+                        return;
+                }
             }
 
             taskAdapter=new TaskAdapter(this, taskList);
 
             CreateRecyclerView(R.id.taskListView, taskAdapter);
 
-            taskAdapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(View view, TaskItem obj)
-                {
-                    Intent intent=new Intent(getApplicationContext(), TaskDetailsView.class);
-                    intent.putExtra("ACTION", "view");
-                    intent.putExtra("HOLIDAYID", obj.holidayId);
-                    intent.putExtra("TASKID", obj.taskId);
-                    intent.putExtra("TITLE", title + "/" + subTitle);
-                    intent.putExtra("SUBTITLE", obj.taskDescription);
-                    startActivity(intent);
-                }
+            taskAdapter.setOnItemClickListener((view, obj) -> {
+                Intent intent=new Intent(getApplicationContext(), TaskDetailsView.class);
+                intent.putExtra("ACTION", "view");
+                intent.putExtra("HOLIDAYID", obj.holidayId);
+                intent.putExtra("TASKID", obj.taskId);
+                intent.putExtra("TITLE", obj.taskDescription);
+                intent.putExtra("SUBTITLE", subTitle);
+                startActivity(intent);
             });
 
 
@@ -123,6 +146,10 @@ public class TaskDetailsList extends BaseActivity
             ShowError("showForm", e.getMessage());
         }
 
+    }
+
+    public void toggleOutstanding(View view){
+        showForm();
     }
 
     @Override
@@ -171,18 +198,15 @@ public class TaskDetailsList extends BaseActivity
 
     //region OnClick Events
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
         try
         {
-            switch(item.getItemId())
-            {
-                case R.id.action_add_task:
-                    showTaskAdd(null);
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
+            if (item.getItemId() == R.id.action_add_task) {
+                showTaskAdd(null);
+                return true;
             }
+            return super.onOptionsItemSelected(item);
         }
         catch(Exception e)
         {

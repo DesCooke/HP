@@ -114,7 +114,7 @@ class TableTip extends TableBase
                     if(tipItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(!removePicture(tipItem.holidayId, tipItem.origTipPicture))
+                        if(!removePictureByHolidayId(tipItem.holidayId, tipItem.origTipPicture))
                             return (false);
                     }
 
@@ -137,7 +137,17 @@ class TableTip extends TableBase
 
 
             String lSQL;
-            lSQL="UPDATE Tip " + "SET sequenceNo = " + tipItem.sequenceNo + ", " + "    tipDescription = " + MyQuotedString(tipItem.tipDescription) + ", " + "    tipPicture = " + MyQuotedString(tipItem.tipPicture) + ", " + "    tipNotes = " + MyQuotedString(tipItem.tipNotes) + ", " + "    infoId = " + tipItem.infoId + ", " + "    noteId = " + tipItem.noteId + ", " + "    galleryId = " + tipItem.galleryId + ", " + "WHERE holidayId = " + tipItem.holidayId + " " + "AND tipGroupId = " + tipItem.tipGroupId + " " + "AND tipId = " + tipItem.tipId;
+            lSQL="UPDATE Tip " +
+                    "SET sequenceNo = " + tipItem.sequenceNo + ", " +
+                    "    tipDescription = " + MyQuotedString(tipItem.tipDescription) + ", " +
+                    "    tipPicture = " + MyQuotedString(tipItem.tipPicture) + ", " +
+                    "    tipNotes = " + MyQuotedString(tipItem.tipNotes) + ", " +
+                    "    infoId = " + tipItem.infoId + ", " +
+                    "    noteId = " + tipItem.noteId + ", " +
+                    "    galleryId = " + tipItem.galleryId + " " +
+                    "WHERE holidayId = " + tipItem.holidayId + " " +
+                    "AND tipGroupId = " + tipItem.tipGroupId + " " +
+                    "AND tipId = " + tipItem.tipId;
 
             return (executeSQL("updateTipItem", lSQL));
         }
@@ -159,7 +169,7 @@ class TableTip extends TableBase
             String lSQL="DELETE FROM Tip " + "WHERE holidayId = " + tipItem.holidayId + " " + "AND tipGroupId = " + tipItem.tipGroupId + " " + "AND tipId = " + tipItem.tipId;
 
             if(!tipItem.tipPicture.isEmpty())
-                if(!removePicture(tipItem.holidayId, tipItem.tipPicture))
+                if(!removePictureByHolidayId(tipItem.holidayId, tipItem.tipPicture))
                     return (false);
 
             if(!executeSQL("deleteTipItem", lSQL))

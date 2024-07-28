@@ -11,6 +11,7 @@ import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.Holiday.*;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +27,7 @@ public class DayDetailsList extends BaseActivity
     public ArrayList<DayItem> dayList;
     public HolidayItem holidayItem;
     private DayAdapter dayAdapter;
+    public FloatingActionButton fab;
     //endregion
 
     //region Constructors/Destructors
@@ -72,6 +74,7 @@ public class DayDetailsList extends BaseActivity
         {
             Intent intent=new Intent(getApplicationContext(), DayDetailsEdit.class);
             intent.putExtra("ACTION", "add");
+            intent.putExtra("HOLIDAYNAME", holidayItem.holidayName);
             intent.putExtra("HOLIDAYID", holidayId);
             startActivity(intent);
         }
@@ -95,7 +98,7 @@ public class DayDetailsList extends BaseActivity
                 if(!da.getHolidayItem(holidayId, holidayItem))
                     return;
 
-                SetTitles(holidayItem.holidayName, "Itinerary");
+                SetToolbarTitles(holidayItem.holidayName, "Itinerary");
 
                 DatabaseAccess.currentStartDate=holidayItem.startDateDate;
 
@@ -114,6 +117,10 @@ public class DayDetailsList extends BaseActivity
                 intent.putExtra("DAYID", obj.dayId);
                 startActivity(intent);
             });
+
+            fab=findViewById(R.id.fab);
+            if(fab!=null)
+                fab.setOnClickListener(this::showDayAdd);
 
             afterShow();
         }

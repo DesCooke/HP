@@ -18,6 +18,8 @@ public class HolidayItem
     public long startDateInt;
     public Date startDateDate;
     public String startDateStr;
+    public Date endDateDate;
+    public String endDateStr;
     public boolean dateKnown;
     public int mapFileGroupId;
     public int infoId;
@@ -31,6 +33,7 @@ public class HolidayItem
     public boolean buttonBudget;
     public boolean buttonAttractions;
     public boolean buttonContacts;
+    public boolean buttonPoi;
 
     // Original Fields
     public int origHolidayId;
@@ -53,6 +56,7 @@ public class HolidayItem
     public boolean origButtonBudget;
     public boolean origButtonAttractions;
     public boolean origButtonContacts;
+    public boolean origButtonPoi;
 
     public String ToGo;
 

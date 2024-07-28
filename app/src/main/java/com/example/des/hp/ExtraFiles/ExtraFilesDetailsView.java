@@ -2,8 +2,6 @@ package com.example.des.hp.ExtraFiles;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +28,7 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
     public ImageButton btnClear;
     public Button btnSave;
     public ImageButton btnFile;
+
     //endregion
 
     //region Constructors/Destructors
@@ -62,19 +61,6 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
         }
     }
 
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        try
-        {
-            MenuInflater inflater=getMenuInflater();
-            inflater.inflate(R.menu.extrafilesdetailsformmenu, menu);
-        }
-        catch(Exception e)
-        {
-            ShowError("onCreateOptionsMenu", e.getMessage());
-        }
-        return true;
-    }
     //endregion
 
     //region Regular Form Activities
@@ -103,7 +89,7 @@ public class ExtraFilesDetailsView extends BaseActivity implements View.OnClickL
 
                 if(title.isEmpty())
                     if(extraFilesItem.fileDescription != null)
-                        SetTitles(extraFilesItem.fileDescription, "");
+                        SetToolbarTitles(extraFilesItem.fileDescription, "");
             }
 
 

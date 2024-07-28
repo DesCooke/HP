@@ -6,7 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import com.example.des.hp.Database.DatabaseAccess;
+import com.example.des.hp.Holiday.HolidayItem;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.R;
 
@@ -90,12 +93,18 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
         holder.txtBudgetTotal.setText(StringUtils.IntToMoneyString(c.budgetTotal));
         holder.txtBudgetPaid.setText(StringUtils.IntToMoneyString(c.budgetPaid));
         holder.txtBudgetUnpaid.setText(StringUtils.IntToMoneyString(c.budgetUnpaid));
-        
+
+
         if (c.pictureAssigned)
         {
             holder.budgetImage.setVisibility(View.VISIBLE);
-            if (!imageUtils.getListIcon(c.holidayId, context, c.budgetPicture, holder.budgetImage))
-                return;
+            try(DatabaseAccess da = databaseAccess()) {
+                HolidayItem holidayItem = new HolidayItem();
+                da.getHolidayItem(c.holidayId, holidayItem);
+
+                if (!imageUtils.getListIcon(holidayItem.holidayId, context, c.budgetPicture, holder.budgetImage))
+                    return;
+            }
         } else
         {
             if (c.budgetDescription.equals("Total"))
@@ -103,6 +112,7 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
                 if (imageTotal == null)
                     imageTotal = BitmapFactory.decodeResource(context.getResources(), R.drawable.sum);
                 holder.budgetImage.setImageBitmap(imageTotal);
+                holder.budgetItemCell.setBackgroundColor(ContextCompat.getColor(context, R.color.colorEasy));
             } else
             {
                 holder.budgetImage.setVisibility(View.INVISIBLE);

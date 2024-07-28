@@ -80,9 +80,9 @@ class InternalImageAdapter extends RecyclerView.Adapter<InternalImageAdapter.Vie
 
         if(!c.internalImageFilename.isEmpty())
         {
-            if(!imageUtils.getGridIcon(c.holidayId, context, c.internalImageFilename, holder.internalImage))
-                return;
-            holder.txtFilename.setText(c.internalImageFilename);
+                if (!imageUtils.getGridIcon(c.holidayName, context, c.internalImageFilename, holder.internalImage))
+                    return;
+                holder.txtFilename.setText(c.internalImageFilename);
         }
 
         holder.internalImage.setOnClickListener(view -> {

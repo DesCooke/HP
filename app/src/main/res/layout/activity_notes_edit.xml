@@ -1,33 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:weightSum="1">
+              android:layout_height="match_parent">
 
-    <TextView
-        android:text="Notes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/lblTitle"
-        android:textSize="36sp"
-        android:textAlignment="center" />
+    <include layout="@layout/my_toolbar" />
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="249dp"
-        android:inputType="textMultiLine"
-        android:ems="10"
         android:id="@+id/edtNotes"
-        android:gravity="top|left"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:autofillHints=""
+        android:inputType="textMultiLine"
+        android:hint="@string/edit_notes"
+        android:gravity="start"
+        android:layout_marginVertical="?attr/actionBarSize"
+        android:ems="10"/>
 
     <Button
-        android:text="Save"
-        android:layout_width="match_parent"
+        android:text="@string/save"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnSaveNotes"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:onClick="saveNotes"/>
 
-</LinearLayout>
+</RelativeLayout>

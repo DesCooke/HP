@@ -6,14 +6,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Day.DayItem;
-import com.example.des.hp.Schedule.GeneralAttraction.GeneralAttractionItem;
-import com.example.des.hp.Schedule.ScheduleItem;
+import com.example.des.hp.Event.EventScheduleDetailItem;
+import com.example.des.hp.Event.EventScheduleItem;
+import com.example.des.hp.Holiday.HolidayItem;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
 import java.util.ArrayList;
 
 import static com.example.des.hp.Database.DatabaseAccess.database;
+import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static java.lang.Math.abs;
 
 class TableDay extends TableBase
@@ -77,8 +79,12 @@ class TableDay extends TableBase
                 if (dayItem.dayPicture.isEmpty()) {
                     //myMessages().LogMessage("  - Save new image and get a filename...");
                     MyString myString = new MyString();
-                    if (!savePicture(dayItem.holidayId, dayItem.dayBitmap, myString))
-                        return (false);
+                    try(DatabaseAccess da = databaseAccess()){
+                        HolidayItem holidayItem = new HolidayItem();
+                        da.getHolidayItem(dayItem.holidayId, holidayItem);
+                        if (!savePicture(holidayItem.holidayId, dayItem.dayBitmap, myString))
+                            return (false);
+                    }
                     dayItem.dayPicture = myString.Value;
                     //myMessages().LogMessage("  - New filename " + dayItem.dayPicture);
                 }
@@ -131,14 +137,15 @@ class TableDay extends TableBase
             if(!IsValid())
                 return (false);
 
-            //myMessages().LogMessage("updateDayItem:Handling Image");
             if(dayItem.pictureChanged)
             {
-                if (!dayItem.origPictureAssigned || dayItem.dayPicture.isEmpty() || dayItem.dayPicture.compareTo(dayItem.origDayPicture) != 0) {
+                if (!dayItem.origPictureAssigned ||
+                        dayItem.dayPicture.isEmpty() ||
+                        dayItem.dayPicture.compareTo(dayItem.origDayPicture) != 0) {
+
                     if(dayItem.origPictureAssigned)
                     {
-                        //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(!removePicture(dayItem.holidayId, dayItem.origDayPicture))
+                        if (!removePictureByHolidayId(dayItem.holidayId, dayItem.origDayPicture))
                             return (false);
                     }
 
@@ -182,7 +189,7 @@ class TableDay extends TableBase
             String lSQL="DELETE FROM day " + "WHERE holidayId = " + dayItem.holidayId + " " + "AND dayId = " + dayItem.dayId;
 
             if(!dayItem.dayPicture.isEmpty())
-                if(!removePicture(dayItem.holidayId, dayItem.dayPicture))
+                if(!removePictureByHolidayId(dayItem.holidayId, dayItem.dayPicture))
                     return (false);
 
             if(!executeSQL("deleteDayItem", lSQL))
@@ -408,7 +415,7 @@ class TableDay extends TableBase
     {
         try
         {
-            ArrayList<ScheduleItem> al = new ArrayList<>();
+            ArrayList<EventScheduleItem> al = new ArrayList<>();
             database.getScheduleList(dayItem.holidayId, dayItem.dayId, 0,0,al);
 
             int lMinMinutes=86400;
@@ -428,10 +435,10 @@ class TableDay extends TableBase
                 //   check-in and departs, but not arrival - set end date to midnight
                 // the day after will show
                 //   arrival but not check-in or departs- set start date to 00:00
-                GeneralAttractionItem gai = al.get(al.size()-1).generalAttractionItem;
+                EventScheduleDetailItem gai = al.get(al.size()-1).eventScheduleDetailItem;
                 if(gai.CheckInKnown && gai.DepartsKnown && !gai.ArrivalKnown)
                     lMaxMinutes = 24 * 60;
-                gai = al.get(0).generalAttractionItem;
+                gai = al.get(0).eventScheduleDetailItem;
                 if(!gai.CheckInKnown && !gai.DepartsKnown && gai.ArrivalKnown)
                     lMinMinutes = 0;
             }

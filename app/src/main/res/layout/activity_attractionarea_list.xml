@@ -4,16 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include layout="@layout/my_toolbar" />
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="?attr/actionBarSize"
         android:layout_weight="1">
-
-        <include
-            layout="@layout/included_program_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
 
         <include
             layout="@layout/included_schedule_header"
@@ -67,7 +65,7 @@
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/attractionAreaListView"
+            android:id="@+id/themeParkAreaListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:cacheColorHint="#0000"

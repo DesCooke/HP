@@ -235,18 +235,16 @@ public class MyFileUtils
     }
 
     // Returns: true(worked)/false(failed)
-    public boolean CopyFileToLocalDir(int holidayId, Uri argFromUri, String newFilename)
+    public boolean CopyFileToLocalDir(String holidayName, Uri argFromUri, String newFilename)
     {
         try
         {
-            //myMessages().LogMessage("Copying file to local directory " + argFromUri.getPath());
-
             _context.grantUriPermission("com.example.des.hp", argFromUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             InputStream in=_context.getContentResolver().openInputStream(argFromUri);
             if(in == null)
                 throw new Exception("Unable to open for read" + argFromUri.getPath());
 
-            String holidayFileDir = ImageUtils.imageUtils().GetHolidayFileDir(holidayId);
+            String holidayFileDir = ImageUtils.imageUtils().GetHolidayFileDir(holidayName);
             File f99=new File(holidayFileDir);
             if(!f99.exists())
             {

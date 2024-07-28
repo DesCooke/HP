@@ -51,7 +51,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -63,12 +62,12 @@ import android.provider.OpenableColumns;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
 import com.example.des.hp.ExtraFiles.ExtraFilesDetailsList;
 import com.example.des.hp.ExtraFiles.ExtraFilesItem;
+import com.example.des.hp.Holiday.HolidayItem;
 import com.example.des.hp.InternalImages.InternalImageItem;
 import com.example.des.hp.InternalImages.InternalImageList;
 import com.example.des.hp.Notes.NoteEdit;
@@ -118,9 +117,7 @@ public class BaseActivity extends AppCompatActivity
     public boolean showInfoEnabled;
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
-
-    public LinearLayout grpToolBar;
-    public boolean alwaysShowToolBar;
+    public ImageButton btnClearImage;
 
     public TextView txtFilename;
 
@@ -132,7 +129,6 @@ public class BaseActivity extends AppCompatActivity
     public boolean showNotesEnabled;
     public ImageButton btnShowNotes;
 
-    public TextView txtProgramInfo;
     public String layoutName="";
 
     public TextView txtPicture;
@@ -182,8 +178,8 @@ public class BaseActivity extends AppCompatActivity
             intent2.putExtra("ACTION", "modify");
             intent2.putExtra("HOLIDAYID", holidayId);
             intent2.putExtra("NOTEID", lNoteId);
-            intent2.putExtra("TITLE", subTitle);
-            intent2.putExtra("SUBTITLE", "Notes");
+            intent2.putExtra("TITLE", "Notes");
+            intent2.putExtra("SUBTITLE", title);
             startActivity(intent2);
         }
         catch(Exception e)
@@ -243,7 +239,7 @@ public class BaseActivity extends AppCompatActivity
 
         try
         {
-            ArrayList<InternalImageItem> internalImageList=imageUtils().listInternalImages(holidayId);
+            ArrayList<InternalImageItem> internalImageList=imageUtils().listInternalImages(getHolidayName(holidayId));
             if(internalImageList == null)
             {
                 selectFromDevice(view);
@@ -297,6 +293,15 @@ public class BaseActivity extends AppCompatActivity
         }
     }
 
+    public String getHolidayName(int holidayId) {
+        try (DatabaseAccess da = databaseAccess()) {
+            HolidayItem holidayItem = new HolidayItem();
+            da.getHolidayItem(holidayId, holidayItem);
+
+            return(holidayItem.holidayName);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent)
     {
@@ -339,7 +344,7 @@ public class BaseActivity extends AppCompatActivity
                         {
                             MyBitmap myBitmap=new MyBitmap();
                             String file=imageReturnedIntent.getStringExtra("selectedfile");
-                            boolean lRetCode=imageUtils().ScaleBitmapFromFile(holidayId, file, getContentResolver(), myBitmap);
+                            boolean lRetCode=imageUtils().ScaleBitmapFromFile(getHolidayName(holidayId), file, getContentResolver(), myBitmap);
                             if(!lRetCode)
                                 return;
 
@@ -471,7 +476,7 @@ public class BaseActivity extends AppCompatActivity
             {
                 if(txtPicture != null)
                     txtPicture.setText(picture);
-                if(!imageUtils().getPageHeaderImage(holidayId, this, picture, imageView))
+                if(!imageUtils().getPageHeaderImage(getHolidayName(holidayId), this, picture, imageView))
                     return;
                 imageSet=true;
             }
@@ -516,12 +521,12 @@ public class BaseActivity extends AppCompatActivity
             if(btnShowInfo != null)
                 showInfoEnabled=true;
 
+            btnClearImage=findViewById(R.id.btnClear);
+
             showNotesEnabled=false;
             btnShowNotes= findViewById(R.id.btnShowNotes);
             if(btnShowNotes != null)
                 showNotesEnabled=true;
-
-            grpToolBar=findViewById(R.id.grpToolBar);
 
             if(showInfoEnabled)
             {
@@ -530,7 +535,6 @@ public class BaseActivity extends AppCompatActivity
                 btnShowInfoBadge.show();
             }
 
-            txtProgramInfo= findViewById(R.id.txtProgramInfo);
             txtPicture= findViewById(R.id.txtPicture);
 
             imageDefault=BitmapFactory.decodeResource(getResources(), R.drawable.imagemissing);
@@ -568,8 +572,8 @@ public class BaseActivity extends AppCompatActivity
                 setInfoId(lInfoId);
             }
             intent2.putExtra("FILEGROUPID", lInfoId);
-            intent2.putExtra("TITLE", subTitle);
-            intent2.putExtra("SUBTITLE", "Info");
+            intent2.putExtra("TITLE", "Info");
+            intent2.putExtra("SUBTITLE", title);
             intent2.putExtra("HOLIDAYID", holidayId);
             startActivity(intent2);
         }
@@ -668,15 +672,37 @@ public class BaseActivity extends AppCompatActivity
 
     public void handleToolBar()
     {
+        // handle the displaying of the icons (notes, info and image clear)
+        // never info and notes during add (nothing to attach them to)
+        // always show info and notes during modify
+        // show info and notes during view if there is any content
         try
         {
-            if(grpToolBar==null)
-                return;
-            grpToolBar.setVisibility(View.VISIBLE);
-            if(alwaysShowToolBar)
-                return;
-            if(!hasInfo && !hasNotes)
-                grpToolBar.setVisibility(View.GONE);
+            if(btnShowInfo!=null) {
+                btnShowInfo.setVisibility(View.GONE);
+                if(action.compareTo("modify")==0)
+                    btnShowInfo.setVisibility(View.VISIBLE);
+                if(action.compareTo("view")==0)
+                    if (hasInfo)
+                        btnShowInfo.setVisibility(View.VISIBLE);
+            }
+
+            if(btnShowNotes!=null) {
+                btnShowNotes.setVisibility(View.GONE);
+                if(action.compareTo("modify")==0)
+                    btnShowNotes.setVisibility(View.VISIBLE);
+                if(action.compareTo("view")==0)
+                    if (hasNotes)
+                        btnShowNotes.setVisibility(View.VISIBLE);
+            }
+
+            if(btnClearImage!=null) {
+                btnClearImage.setVisibility(View.GONE);
+                if(action.compareTo("add")==0)
+                    btnClearImage.setVisibility(View.VISIBLE);
+                if(action.compareTo("modify")==0)
+                    btnClearImage.setVisibility(View.VISIBLE);
+            }
         }
         catch(Exception e)
         {
@@ -736,23 +762,50 @@ public class BaseActivity extends AppCompatActivity
         }
     }
 
-    public void SetTitles(String pTitle, String pSubTitle)
+    public void SetToolbarTitles(String pTitle, String pSubTitle)
     {
         try
         {
             title=pTitle;
             subTitle=pSubTitle;
 
-            ActionBar actionBar=getSupportActionBar();
-            if(actionBar != null)
-            {
-                actionBar.setTitle(title);
-                actionBar.setSubtitle(subTitle);
-            }
+            TextView tvTitle = findViewById(R.id.my_main_title);
+            TextView tvSubtitle = findViewById(R.id.my_sub_title);
+            tvTitle.setText(title);
+            tvSubtitle.setText(subTitle);
+
         }
         catch(Exception e)
         {
-            ShowError("SetTitles", e.getMessage());
+            ShowError("SetToolbarTitles", e.getMessage());
+        }
+
+    }
+
+    public void ShowToolbarEdit()
+    {
+        try
+        {
+            ImageView tbMenu = findViewById(R.id.my_toolbar_edit);
+            tbMenu.setVisibility(View.VISIBLE);
+        }
+        catch(Exception e)
+        {
+            ShowError("SetToolbarTitles", e.getMessage());
+        }
+
+    }
+
+    public void ShowToolbarDelete()
+    {
+        try
+        {
+            ImageView tbDelete = findViewById(R.id.my_toolbar_delete);
+            tbDelete.setVisibility(View.VISIBLE);
+        }
+        catch(Exception e)
+        {
+            ShowError("SetToolbarTitles", e.getMessage());
         }
 
     }
@@ -762,7 +815,7 @@ public class BaseActivity extends AppCompatActivity
         try
         {
             clearImage(null);
-            SetTitles(title, subTitle);
+            SetToolbarTitles(title, subTitle);
         }
         catch(Exception e)
         {

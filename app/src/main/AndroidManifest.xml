@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
         android:requestRawExternalStorageAccess="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -33,8 +33,8 @@
         <activity android:name=".Day.DayDetailsEdit" />
         <activity android:name=".Day.DayDetailsView" />
         <activity android:name=".Day.DayDetailsList" />
-        <activity android:name=".Schedule.GeneralAttraction.GeneralAttractionDetailsEdit" />
-        <activity android:name=".Schedule.GeneralAttraction.GeneralAttractionDetailsView" />
+        <activity android:name=".Event.EventDetailsEdit" />
+        <activity android:name=".Event.EventDetailsView" />
         <activity android:name=".ExtraFiles.ExtraFilesDetailsList" />
         <activity android:name=".ExtraFiles.ExtraFilesDetailsView" />
         <activity android:name=".ExtraFiles.ExtraFilesDetailsEdit" />
@@ -50,21 +50,19 @@
         <activity android:name=".Tip.TipDetailsList" />
         <activity android:name=".Tip.TipDetailsView" />
         <activity android:name=".Tip.TipDetailsEdit" />
-        <activity android:name=".Attraction.AttractionDetailsList" />
-        <activity android:name=".Attraction.AttractionDetailsView" />
-        <activity android:name=".Attraction.AttractionDetailsEdit" />
-        <activity android:name=".AttractionArea.AttractionAreaDetailsList" />
-        <activity android:name=".AttractionArea.AttractionAreaDetailsView" />
-        <activity android:name=".AttractionArea.AttractionAreaDetailsEdit" />
-        <activity android:name=".AttractionArea.AttractionAreaView" />
+        <activity android:name=".ThemeParks.ThemeParkList" />
+        <activity android:name=".ThemeParks.ThemeParkView" />
+        <activity android:name=".ThemeParks.ThemeParkEdit" />
+        <activity android:name=".ThemeParks.ThemeParkAreaView" />
+        <activity android:name=".ThemeParks.ThemeParkAreaEdit" />
         <activity android:name=".Contact.ContactDetailsList" />
         <activity android:name=".Contact.ContactDetailsView" />
         <activity android:name=".Contact.ContactDetailsEdit" />
         <activity android:name=".ScheduleArea.ScheduleAreaList" />
         <activity android:name=".Notes.NoteEdit" />
-        <activity android:name=".Notes.NoteView" />
         <activity android:name=".InternalImages.InternalImageList" />
         <activity android:name=".InternalFiles.InternalFileList" />
+        <activity android:name=".Poi.PoiList" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

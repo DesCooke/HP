@@ -20,7 +20,7 @@ import com.example.des.hp.R;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
-class TipAdapter extends RecyclerView.Adapter<TipAdapter.ViewHolder>
+public class TipAdapter extends RecyclerView.Adapter<TipAdapter.ViewHolder>
 {
     private final Context context;
     public ArrayList<TipItem> data;
@@ -28,12 +28,12 @@ class TipAdapter extends RecyclerView.Adapter<TipAdapter.ViewHolder>
     private final ImageUtils imageUtils;
 
 
-    interface OnItemClickListener
+    public interface OnItemClickListener
     {
         void onItemClick(View view, TipItem obj);
     }
 
-    void setOnItemClickListener(final OnItemClickListener mItemClickListener)
+    public void setOnItemClickListener(final OnItemClickListener mItemClickListener)
     {
         this.mOnItemClickListener=mItemClickListener;
     }
@@ -59,7 +59,7 @@ class TipAdapter extends RecyclerView.Adapter<TipAdapter.ViewHolder>
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    TipAdapter(Activity activity, ArrayList<TipItem> items)
+    public TipAdapter(Activity activity, ArrayList<TipItem> items)
     {
         this.context=activity;
         imageUtils=new ImageUtils(activity);

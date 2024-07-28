@@ -1,167 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_holiday_details_form"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
     android:orientation="vertical">
 
-
-    <include
-        layout="@layout/included_program_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <include
-        layout="@layout/included_schedule_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <include layout="@layout/my_toolbar" />
 
     <LinearLayout
-        android:id="@+id/grpBudgetDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginVertical="?attr/actionBarSize"
+        android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/txtBudgetDescriptionCaption"
+        <include
+            layout="@layout/included_schedule_header"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:gravity="center_vertical"
-            android:text="@string/description"
-            android:textSize="22sp" />
+            android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/txtBudgetDescription"
+        <LinearLayout
+            android:id="@+id/grpBudgetDescription"
+            style="@style/MyBox" >
+
+            <TextView
+                android:id="@+id/lblBudgetDescription"
+                android:text="@string/budget_description"
+                style="@style/MyTextHint" />
+
+            <TextView
+                android:id="@+id/txtBudgetDescription"
+                style="@style/MyTextLine" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/grpBudgetTotal"
+            style="@style/MyBox" >
+
+            <TextView
+                android:id="@+id/lblBudgetTotal"
+                android:text="@string/caption_budget_total"
+                style="@style/MyTextHint" />
+
+            <TextView
+                android:id="@+id/txtBudgetTotal"
+                style="@style/MyTextLine" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/grpBudgetPaid"
+            style="@style/MyBox" >
+
+            <TextView
+                android:id="@+id/lblBudgetPaid"
+                android:text="@string/caption_budget_paid"
+                style="@style/MyTextHint" />
+
+            <TextView
+                android:id="@+id/txtBudgetPaid"
+                style="@style/MyTextLine" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/grpBudgetUnpaid"
+            style="@style/MyBox" >
+
+            <TextView
+                android:id="@+id/lblBudgetUnpaid"
+                android:text="@string/caption_budget_unpaid"
+                style="@style/MyTextHint" />
+
+            <TextView
+                android:id="@+id/txtBudgetUnpaid"
+                style="@style/MyTextLine" />
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/included_schedule_footer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@android:string/unknownName"
-            android:textSize="22sp" />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/grpBudgetTotal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/txtBudgetTotalCaption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/caption_budget_total"
-            android:textSize="22sp" />
-
-        <TextView
-            android:id="@+id/txtBudgetTotal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="@string/caption_zero"
-            android:textAlignment="textEnd"
-            android:textSize="22sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/grpBudgetPaid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/txtBudgetPaidCaption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/caption_budget_paid"
-            android:textSize="22sp" />
-
-        <TextView
-            android:id="@+id/txtBudgetPaid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="@string/caption_zero"
-            android:textAlignment="textEnd"
-            android:textSize="22sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/grpBudgetUnpaid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/txtBudgetUnpaidCaption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/caption_budget_unpaid"
-            android:textSize="22sp" />
-
-        <TextView
-            android:id="@+id/txtBudgetUnpaid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="@string/caption_zero"
-            android:textAlignment="textEnd"
-            android:textSize="22sp" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/grpMenuFile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/btnShowInfo"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:background="@android:drawable/alert_light_frame"
-            android:clickable="false"
-            android:contentDescription="@android:string/unknownName"
-            android:onClick="showInfo"
-            android:scaleType="centerInside"
-            android:tint="@color/colorDisabled"
-            app:srcCompat="@android:drawable/ic_menu_info_details" />
-
-        <Space
-            android:layout_width="20dp"
-            android:layout_height="match_parent" />
-
-        <ImageButton
-            android:id="@+id/btnShowNotes"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:background="@android:drawable/alert_light_frame"
-            android:contentDescription="@android:string/unknownName"
-            android:onClick="showNotes"
-            android:scaleType="centerInside"
-            android:tint="@color/colorDisabled"
-            app:srcCompat="@drawable/notepad" />
-
-        <Space
-            android:layout_width="20dp"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
-
-    <include
-        layout="@layout/included_schedule_footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-
-</LinearLayout>
+</RelativeLayout>

@@ -5,15 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include layout="@layout/my_toolbar" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
         android:orientation="vertical">
-
-        <include
-            layout="@layout/included_program_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
 
         <include
             layout="@layout/included_schedule_header"
@@ -22,65 +20,30 @@
 
         <LinearLayout
             android:id="@+id/grpStartDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false"
+            android:layout_margin="10dp"
+            style="@style/MyBox">
 
-            <TextView
-                android:id="@+id/lblStartDate"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/grpStartTime"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Start Date"
-                android:textSize="18sp" />
+                android:orientation="vertical"
+                android:layout_weight="1">
 
-            <TextView
-                android:id="@+id/txtStartDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView"
-                android:textAlignment="textEnd"
-                android:textSize="18sp" />
+                <TextView
+                    android:id="@+id/lblStartDate"
+                    android:text="@string/dates"
+                    style="@style/MyTextHint"/>
+
+                <TextView
+                    android:id="@+id/txtStartDate"
+                    style="@style/MyTextLine"/>
+
+            </LinearLayout>
 
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/grpMenuFile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/btnShowInfo"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:background="@android:drawable/alert_light_frame"
-                android:clickable="false"
-                android:onClick="showInfo"
-                android:scaleType="centerInside"
-                android:tint="@color/colorDisabled"
-                app:srcCompat="@android:drawable/ic_menu_info_details"/>
-
-            <Space
-                android:layout_width="20dp"
-                android:layout_height="match_parent"/>
-
-            <ImageButton
-                android:id="@+id/btnShowNotes"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:background="@android:drawable/alert_light_frame"
-                android:onClick="showNotes"
-                android:scaleType="centerInside"
-                android:tint="@color/colorDisabled"
-                app:srcCompat="@drawable/notepad"/>
-
-            <Space
-                android:layout_width="20dp"
-                android:layout_height="match_parent"/>
-        </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -106,19 +69,21 @@
                         android:background="@android:drawable/alert_light_frame"
                         android:onClick="showDay"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/calendar" />
+                        app:srcCompat="@drawable/calendar"
+                        tools:ignore="ContentDescription" />
 
                     <TextView
                         android:id="@+id/txtItineraryBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:background="@android:drawable/alert_light_frame"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="99"
+                        android:text="@string/_99"
                         android:textAlignment="gravity"
-                        android:textSize="10sp" />
+                        android:textSize="10sp"
+                        tools:ignore="RelativeOverlap,SmallSp" />
 
                 </RelativeLayout>
 
@@ -134,19 +99,21 @@
                         android:background="@android:drawable/alert_light_frame"
                         android:onClick="showMaps"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/map" />
+                        app:srcCompat="@drawable/map"
+                        tools:ignore="ContentDescription" />
 
                     <TextView
                         android:id="@+id/txtMapBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:background="@android:drawable/alert_light_frame"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="99"
+                        android:text="@string/_99"
                         android:textAlignment="gravity"
-                        android:textSize="10sp" />
+                        android:textSize="10sp"
+                        tools:ignore="RelativeOverlap,SmallSp" />
 
                 </RelativeLayout>
 
@@ -163,19 +130,21 @@
                         android:background="@android:drawable/alert_light_frame"
                         android:onClick="showTasks"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/task" />
+                        app:srcCompat="@drawable/task"
+                        tools:ignore="ContentDescription" />
 
                     <TextView
                         android:id="@+id/txtTaskBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:background="@android:drawable/alert_light_frame"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="99"
+                        android:text="@string/_99"
                         android:textAlignment="gravity"
-                        android:textSize="10sp" />
+                        android:textSize="10sp"
+                        tools:ignore="RelativeOverlap,SmallSp" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -184,6 +153,7 @@
                 android:id="@+id/row2"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
+                android:baselineAligned="false"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -196,23 +166,24 @@
                         android:id="@+id/btnShowTips"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:background="@android:drawable/alert_light_frame"
                         android:onClick="showTipGroups"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/tips" />
+                        app:srcCompat="@drawable/tips"
+                        tools:ignore="ContentDescription" />
 
                     <TextView
                         android:id="@+id/txtTipsBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:background="@android:drawable/alert_light_frame"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="99"
+                        android:text="@string/_99"
                         android:textAlignment="gravity"
-                        android:textSize="10sp" />
+                        android:textSize="10sp"
+                        tools:ignore="RelativeOverlap,SmallSp" />
 
                 </RelativeLayout>
 
@@ -226,62 +197,64 @@
                         android:id="@+id/btnShowBudget"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:background="@android:drawable/alert_light_frame"
                         android:onClick="showBudget"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/budget" />
+                        app:srcCompat="@drawable/budget"
+                        tools:ignore="ContentDescription" />
 
                     <TextView
                         android:id="@+id/txtBudgetBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:background="@android:drawable/alert_light_frame"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="99"
+                        android:text="@string/_99"
                         android:textAlignment="gravity"
-                        android:textSize="10sp" />
+                        android:textSize="10sp"
+                        tools:ignore="RelativeOverlap,SmallSp" />
 
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/btnGroupAttractions"
+                    android:id="@+id/btnGroupThemeParks"
                     android:layout_width="120dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0">
 
                     <ImageButton
-                        android:id="@+id/btnShowAttractions"
+                        android:id="@+id/btnShowThemeParks"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:background="@android:drawable/alert_light_frame"
-                        android:onClick="showAttractions"
+                        android:onClick="showThemeParks"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/attractions" />
+                        app:srcCompat="@drawable/themeparks"
+                        tools:ignore="ContentDescription" />
 
                     <TextView
-                        android:id="@+id/txtAttractionBadge"
+                        android:id="@+id/txtThemeParksBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:background="@android:drawable/alert_light_frame"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="99"
+                        android:text="@string/_99"
                         android:textAlignment="gravity"
-                        android:textSize="10sp" />
+                        android:textSize="10sp"
+                        tools:ignore="RelativeOverlap,SmallSp" />
 
                 </RelativeLayout>
             </LinearLayout>
-
 
             <LinearLayout
                 android:id="@+id/row3"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
+                android:baselineAligned="false"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -294,26 +267,60 @@
                         android:id="@+id/btnShowContacts"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:background="@android:drawable/alert_light_frame"
                         android:onClick="showContacts"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/contacts" />
+                        app:srcCompat="@drawable/contacts"
+                        tools:ignore="ContentDescription" />
 
                     <TextView
                         android:id="@+id/txtContactBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:background="@android:drawable/alert_light_frame"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="99"
+                        android:text="@string/_99"
                         android:textAlignment="gravity"
-                        android:textSize="10sp" />
+                        android:textSize="10sp"
+                        tools:ignore="RelativeOverlap,SmallSp" />
 
                 </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/btnGroupPoi"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0">
+
+                    <ImageButton
+                        android:id="@+id/btnShowPoi"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:drawable/alert_light_frame"
+                        android:onClick="showPoi"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/poi"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/txtPoiBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:background="@android:drawable/alert_light_frame"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/_99"
+                        android:textAlignment="gravity"
+                        android:textSize="10sp"
+                        tools:ignore="RelativeOverlap,SmallSp" />
+
+                </RelativeLayout>
+
             </LinearLayout>
+
 
         </LinearLayout>
 

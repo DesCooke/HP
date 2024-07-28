@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import com.example.des.hp.Dialog.BaseActivity;
 import com.example.des.hp.R;
 import com.example.des.hp.myutils.*;
 
+import java.io.File;
 import java.util.Date;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
@@ -51,6 +53,11 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
     public Switch swAttractions;
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch swContacts;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
+    public Switch swPoi;
+    public ImageView deleteHoliday;
+
+
 
     //endregion
 
@@ -80,15 +87,21 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
             swBudget= findViewById(R.id.swBudget);
             swAttractions= findViewById(R.id.swAttractions);
             swContacts= findViewById(R.id.swContacts);
+            swPoi= findViewById(R.id.swPoi);
+
+            deleteHoliday=findViewById(R.id.my_toolbar_delete);
+            deleteHoliday.setOnClickListener(view -> deleteHoliday());
 
             holidayItem=new HolidayItem();
 
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
 
+            txtStartDate.setOnClickListener(this::pickDateTime);
+
             if(action != null && action.equals("add"))
             {
-                SetTitles(getString(R.string.title_planner), "Add a Holiday");
+                SetToolbarTitles(getString(R.string.title_planner), "Add a Holiday");
                 holidayName.setText("");
                 datesAreUnknown();
             } else
@@ -102,6 +115,9 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
                 holidayName.setText(holidayItem.holidayName);
 
                 txtStartDate.setText(holidayItem.startDateStr);
+
+                SetToolbarTitles(holidayItem.holidayName, "Holiday");
+                ShowToolbarDelete();
 
                 if(holidayItem.startDateInt == DateUtils.unknownDate)
                 {
@@ -119,12 +135,15 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
                 swBudget.setChecked(holidayItem.buttonBudget);
                 swAttractions.setChecked(holidayItem.buttonAttractions);
                 swContacts.setChecked(holidayItem.buttonContacts);
+                swPoi.setChecked(holidayItem.buttonPoi);
 
                 setTitle(holidayItem.holidayName);
                 SetImage(holidayItem.holidayPicture);
             }
             afterCreate();
             imageView.setOnClickListener(this);
+            holidayName.setOnClickListener(this);
+
         }
         catch(Exception e)
         {
@@ -140,8 +159,16 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
         try
         {
             int id=view.getId();
-            if(id==R.id.imageViewSmall)
-                pickImage(view);
+            if(id==R.id.imageViewSmall) {
+                if(action.compareTo("add")==0) {
+                    myMessages().ShowMessageShort("Please save the holiday before assigning a picture");
+                }
+                else {
+                    pickImage(view);
+                }
+            }
+            if(id==R.id.txtHolidayName)
+                pickHolidayName(view);
         }
         catch(Exception e)
         {
@@ -223,6 +250,7 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
         {
             grpStartDate.setVisibility(View.VISIBLE);
             lblKnownDates.setText(getString(R.string.dates_known));
+            txtStartDate.setText(holidayItem.startDateStr);
         }
         catch(Exception e)
         {
@@ -278,12 +306,32 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
         {
             myMessages().ShowMessageShort("Saving Holiday");
 
-            holidayItem.holidayPicture="";
-            if(!internalImageFilename.isEmpty())
-                holidayItem.holidayPicture=internalImageFilename;
-            holidayItem.pictureAssigned=imageSet;
-            holidayItem.pictureChanged=imageChanged;
             holidayItem.holidayName=holidayName.getText().toString();
+            holidayItem.pictureChanged = imageChanged;
+            if(imageChanged) {
+                holidayItem.holidayPicture = "";
+                if (!internalImageFilename.isEmpty())
+                    holidayItem.holidayPicture = internalImageFilename;
+                holidayItem.pictureAssigned = imageSet;
+            }
+
+            // if holiday name has changed - then rename directory asap
+            if(action.compareTo("add")!=0) {
+                if (holidayItem.origHolidayName.compareTo(holidayItem.holidayName) != 0) {
+                    String oldname = holidayItem.origHolidayName;
+                    String newname = holidayItem.holidayName;
+                    holidayItem.holidayName = oldname;
+                    // holiday name changes - so rename directory
+                    String oldDirname = ImageUtils.imageUtils().GetHolidayDirFromHolidayItem(holidayItem);
+                    holidayItem.holidayName = newname;
+                    String newDirname = ImageUtils.imageUtils().GetHolidayDirFromHolidayItem(holidayItem);
+                    File file = new File(oldDirname);
+                    boolean res = file.renameTo(new File(newDirname));
+                    if (!res)
+                        throw new Exception("Hmmm - error renaming holiday directory");
+                }
+            }
+
             if(sw.isChecked())
             {
                 holidayItem.startDateDate=new Date();
@@ -311,6 +359,7 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
             holidayItem.buttonBudget = swBudget.isChecked();
             holidayItem.buttonAttractions = swAttractions.isChecked();
             holidayItem.buttonContacts = swContacts.isChecked();
+            holidayItem.buttonPoi = swPoi.isChecked();
 
             try(DatabaseAccess da = databaseAccess())
             {
@@ -341,5 +390,43 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
         }
     }
     //endregion
+
+    public int getNoteId()
+    {
+        return holidayItem.noteId;
+    }
+
+    public void setNoteId(int noteId)
+    {
+        holidayItem.noteId = noteId;
+    }
+
+    public int getInfoId()
+    {
+        return holidayItem.infoId;
+    }
+
+    public void setInfoId(int infoId)
+    {
+        holidayItem.infoId = infoId;
+    }
+
+    public void deleteHoliday()
+    {
+        try
+        {
+            try(DatabaseAccess da = databaseAccess())
+            {
+                if(!da.deleteHolidayItem(holidayItem))
+                    return;
+            }
+            finish();
+        }
+        catch(Exception e)
+        {
+            ShowError("deleteHoliday", e.getMessage());
+        }
+    }
+
 
 }

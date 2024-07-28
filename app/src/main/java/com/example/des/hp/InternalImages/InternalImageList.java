@@ -21,14 +21,14 @@ public class InternalImageList extends BaseActivity
         super.showForm();
         try
         {
-            SetTitles("Internal Images", "please select one");
+            SetToolbarTitles("Internal Images", "please select one");
 
             Bundle extras=getIntent().getExtras();
             if(extras != null) {
                 holidayId = extras.getInt("HOLIDAYID", 0);
             }
 
-            internalImageList=imageUtils().listInternalImages(holidayId);
+            internalImageList=imageUtils().listInternalImages(getHolidayName(holidayId));
 
             InternalImageAdapter internalImageAdapter = new InternalImageAdapter(this, internalImageList);
 

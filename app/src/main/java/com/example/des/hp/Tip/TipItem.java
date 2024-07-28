@@ -40,6 +40,9 @@ public class TipItem
 
     public TipItem()
     {
+        tipDescription="";
+        tipPicture="";
+        tipNotes="";
     }
 
 }

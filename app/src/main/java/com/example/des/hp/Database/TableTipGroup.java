@@ -114,7 +114,7 @@ class TableTipGroup extends TableBase
                     if(tipGroupItem.origPictureAssigned)
                     {
                         //myMessages().LogMessage("  - Original Image was assigned - need to get rid of it");
-                        if(!removePicture(tipGroupItem.holidayId, tipGroupItem.origTipGroupPicture))
+                        if(!removePictureByHolidayId(tipGroupItem.holidayId, tipGroupItem.origTipGroupPicture))
                             return (false);
                     }
 
@@ -136,7 +136,16 @@ class TableTipGroup extends TableBase
             }
 
             String lSQL;
-            lSQL="UPDATE TipGroup " + "SET sequenceNo = " + tipGroupItem.sequenceNo + ", " + "    tipGroupDescription = " + MyQuotedString(tipGroupItem.tipGroupDescription) + ", " + "    tipGroupPicture = " + MyQuotedString(tipGroupItem.tipGroupPicture) + ", " + "    tipGroupNotes = " + MyQuotedString(tipGroupItem.tipGroupNotes) + ", " + "    infoId = " + tipGroupItem.infoId + ", " + "    noteId = " + tipGroupItem.noteId + ", " + "    galleryId = " + tipGroupItem.galleryId + ", " + "WHERE holidayId = " + tipGroupItem.holidayId + " " + "AND tipGroupId = " + tipGroupItem.tipGroupId;
+            lSQL="UPDATE TipGroup " +
+                    "SET sequenceNo = " + tipGroupItem.sequenceNo + ", " +
+                    "    tipGroupDescription = " + MyQuotedString(tipGroupItem.tipGroupDescription) + ", " +
+                    "    tipGroupPicture = " + MyQuotedString(tipGroupItem.tipGroupPicture) + ", " +
+                    "    tipGroupNotes = " + MyQuotedString(tipGroupItem.tipGroupNotes) + ", " +
+                    "    infoId = " + tipGroupItem.infoId + ", " +
+                    "    noteId = " + tipGroupItem.noteId + ", " +
+                    "    galleryId = " + tipGroupItem.galleryId + " " +
+                    "WHERE holidayId = " + tipGroupItem.holidayId + " " +
+                    "AND tipGroupId = " + tipGroupItem.tipGroupId;
 
             return (executeSQL("updateTipGroupItem", lSQL));
         }
@@ -158,7 +167,7 @@ class TableTipGroup extends TableBase
             String lSQL="DELETE FROM TipGroup " + "WHERE holidayId = " + tipGroupItem.holidayId + " " + "AND tipGroupId = " + tipGroupItem.tipGroupId;
 
             if(!tipGroupItem.tipGroupPicture.isEmpty())
-                if(!removePicture(tipGroupItem.holidayId, tipGroupItem.tipGroupPicture))
+                if(!removePictureByHolidayId(tipGroupItem.holidayId, tipGroupItem.tipGroupPicture))
                     return (false);
 
             if(!executeSQL("deleteTipGroupItem", lSQL))

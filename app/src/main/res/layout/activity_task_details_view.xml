@@ -1,152 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/activity_map_details_form"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context="com.example.des.hp.ExtraFiles.ExtraFilesDetailsEdit">
+              android:orientation="vertical">
 
-    <include
-        layout="@layout/included_program_info"
+    <include layout="@layout/my_toolbar" />
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginVertical="?attr/actionBarSize">
 
     <include
         layout="@layout/included_schedule_header"
         android:layout_width="match_parent"
+        android:layout_marginVertical="?attr/actionBarSize"
         android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:id="@+id/grpTaskName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="false"
-        android:orientation="horizontal">
+        style="@style/MyBox"
+        android:layout_marginHorizontal="10dp">
 
         <TextView
             android:id="@+id/txtTaskNameCaption"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="center_vertical"
-            android:text="@string/caption_taskname"
-            android:textSize="18sp"/>
+            android:text="@string/task_name"
+            style="@style/MyTextHint" />
 
         <TextView
-            android:id="@+id/txtTaskName"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text=""
-            android:textSize="18sp"/>
-
+            android:id="@+id/txtTaskDescription"
+            style="@style/MyTextLine" />
     </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="10dp">
+
+            <LinearLayout
+                android:id="@+id/grpTaskStartDate"
+                android:orientation="horizontal"
+                android:baselineAligned="false"
+                style="@style/MyBox">
+
+                <LinearLayout
+                    android:id="@+id/lblKnownDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/txtKnownDate"
+                        android:text="@string/known_date"
+                        style="@style/MyTextHint"/>
+
+                    <Switch
+                        android:id="@+id/swKnownDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick="toggleVisibility"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/grpTaskDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/lblTaskDate"
+                        android:text="@string/task_date"
+                        style="@style/MyTextHint"/>
+
+                    <TextView
+                        android:id="@+id/txtTaskDate"
+                        style="@style/MyTextLine" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
     <LinearLayout
-        android:id="@+id/grpKnownDate"
+        android:id="@+id/grpTaskComplete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:layout_marginHorizontal="10dp"
+        style="@style/MyBox">
 
-        <TextView
-            android:id="@+id/lblKnownDate"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/lblTaskComplete"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="Date Known"
-            android:textSize="18sp"/>
+            android:orientation="vertical"
+            android:layout_weight="1">
 
-        <Switch
-            android:id="@+id/swKnownDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="toggleVisibility"/>
+            <TextView
+                android:id="@+id/txtTaskComplete"
+                android:text="@string/task_complete"
+                style="@style/MyTextHint"/>
 
-    </LinearLayout>
+            <CheckBox
+                android:id="@+id/chkTaskComplete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:id="@+id/grpTaskDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/lblTaskDate"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="center_vertical"
-            android:text="@string/caption_taskdate"
-            android:textSize="18sp"/>
-
-        <TextView
-            android:id="@+id/txtTaskDate"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text=""
-            android:textAlignment="viewEnd"
-            android:textSize="18sp"/>
+        </LinearLayout>
 
     </LinearLayout>
 
-
-    <CheckBox
-        android:id="@+id/chkTaskComplete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="false"
-        android:focusable="false"
-        android:text="@string/caption_taskcomplete"
-        android:textSize="18sp"/>
-
-    <LinearLayout
-        android:id="@+id/grpMenuFile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/btnShowInfo"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:background="@android:drawable/alert_light_frame"
-            android:clickable="false"
-            android:contentDescription="@string/schedule_unknown"
-            android:onClick="showInfo"
-            android:scaleType="centerInside"
-            android:tint="@color/colorDisabled"
-            app:srcCompat="@android:drawable/ic_menu_info_details"/>
-
-
-        <Space
-            android:layout_width="20dp"
-            android:layout_height="match_parent"/>
-
-        <ImageButton
-            android:id="@+id/btnShowNotes"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:background="@android:drawable/alert_light_frame"
-            android:contentDescription="@string/schedule_unknown"
-            android:onClick="showNotes"
-            android:scaleType="centerInside"
-            android:tint="@color/colorDisabled"
-            app:srcCompat="@drawable/notepad"/>
-
-        <Space
-            android:layout_width="20dp"
-            android:layout_height="match_parent"/>
-    </LinearLayout>
 
     <include
         layout="@layout/included_schedule_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-</LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
