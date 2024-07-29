@@ -6,6 +6,7 @@ package com.example.des.hp.Holiday;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,6 +51,7 @@ public class HolidayDetailsView extends BaseActivity
     public ImageButton btnShowThemeParks;
     public ImageButton btnShowContacts;
     public ImageButton btnShowPoi;
+    public ImageView btnMap;
     public TextView itineraryBadge;
     public TextView mapBadge;
     public TextView taskBadge;

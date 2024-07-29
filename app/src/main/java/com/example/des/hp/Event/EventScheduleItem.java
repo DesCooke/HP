@@ -28,6 +28,9 @@ public class EventScheduleItem
     public int infoId;
     public int noteId;
     public int galleryId;
+    public String url1;
+    public String url2;
+    public String url3;
 
     // Original Fields
     public int origHolidayId;
@@ -49,6 +52,9 @@ public class EventScheduleItem
     public int origInfoId;
     public int origNoteId;
     public int origGalleryId;
+    public String origUrl1;
+    public String origUrl2;
+    public String origUrl3;
 
     public Bitmap scheduleBitmap;
     public boolean pictureChanged;
@@ -125,6 +131,9 @@ public class EventScheduleItem
         endHour=0;
         endMin=0;
         pictureAssigned=false;
+        url1="";
+        url2="";
+        url3="";
 
         origHolidayId=0;
         origDayId=0;
@@ -140,6 +149,9 @@ public class EventScheduleItem
         origEndHour=0;
         origEndMin=0;
         origPictureAssigned=false;
+        origUrl1="";
+        origUrl2="";
+        origUrl3="";
 
         scheduleBitmap=null;
         pictureChanged=false;

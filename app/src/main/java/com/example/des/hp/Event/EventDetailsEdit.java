@@ -47,6 +47,9 @@ public class EventDetailsEdit extends EventDetailsView implements View.OnClickLi
             btnSave.setVisibility(View.VISIBLE);
 
             btnDelete.setOnClickListener(view -> deleteSchedule());
+            btnUrl1.setOnClickListener(view -> editUrl1());
+            btnUrl2.setOnClickListener(view -> editUrl2());
+            btnUrl3.setOnClickListener(view -> editUrl3());
 
             ShowToolbarDelete();
 
@@ -83,6 +86,18 @@ public class EventDetailsEdit extends EventDetailsView implements View.OnClickLi
             ShowError("onCreate", e.getMessage());
         }
 
+    }
+
+    public void editUrl1(){
+        EnterStringToMyString("Map Url", "Enter MapUrl", Url1);
+    }
+
+    public void editUrl2(){
+        EnterStringToMyString("Info Url 1", "Enter Info Url 1", Url2);
+    }
+
+    public void editUrl3(){
+        EnterStringToMyString("Info Url 2", "Enter Info Url 2", Url3);
     }
 
     @Override
@@ -168,6 +183,26 @@ public class EventDetailsEdit extends EventDetailsView implements View.OnClickLi
 
         dialogWithEditTextFragment.showIt();
     }
+
+    public void EnterStringToMyString(String formCaption, String formMessage, MyString theString)
+    {
+        dialogWithEditTextFragment=
+                DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
+                        "hihi2",            // unique name for this dialog type
+                        formCaption,    // form caption
+                        formMessage,             // form message
+                        R.drawable.attachment,
+                        theString.Value, // initial text
+                        view -> {
+                            theString.Value = dialogWithEditTextFragment.getFinalText();
+                            dialogWithEditTextFragment.dismiss();
+                        },
+                        this,
+                        false
+                );
+
+        dialogWithEditTextFragment.showIt();
+    }
     //endregion
 
     //region Saving
@@ -191,6 +226,10 @@ public class EventDetailsEdit extends EventDetailsView implements View.OnClickLi
             eventScheduleItem.scheduleBitmap=null;
             if(imageSet)
                 eventScheduleItem.scheduleBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
+
+            eventScheduleItem.url1 = Url1.Value;
+            eventScheduleItem.url2 = Url2.Value;
+            eventScheduleItem.url3 = Url3.Value;
 
             eventScheduleItem.eventScheduleDetailItem.ReservationType=0;
             if(radWalkIn.isChecked())
