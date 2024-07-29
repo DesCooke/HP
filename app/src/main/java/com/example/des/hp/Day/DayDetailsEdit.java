@@ -24,7 +24,6 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
 {
 
     public TextView dayName;
-    public String holidayName;
     public DayItem dayItem;
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch radUnknown;
@@ -37,9 +36,11 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
     public LinearLayout grpDayName;
+
+    // buttons
     public ImageButton btnClear;
+    public ImageView btnDeleteDay;
     public Button btnSave;
-    public ImageView deleteDay;
     //endregion
 
     //region Constructors/Destructors
@@ -48,64 +49,50 @@ public class DayDetailsEdit extends BaseActivity implements View.OnClickListener
     {
         super.onCreate(savedInstanceState);
 
-        try
-        {
-            layoutName="activity_day_details_edit";
+        try {
+            imageChanged = false;
             setContentView(R.layout.activity_day_details_edit);
 
-            dayItem=new DayItem();
+            dayItem = new DayItem();
 
-            imageView= findViewById(R.id.imageViewSmall);
-            dayName= findViewById(R.id.txtDayName);
-            radUnknown= findViewById(R.id.radUnknown);
-            radEasy= findViewById(R.id.radEasy);
-            radModerate= findViewById(R.id.radModerate);
-            radBusy= findViewById(R.id.radBusy);
-            grpDayName= findViewById(R.id.grpDayName);
-            btnClear= findViewById(R.id.btnClear);
-            btnSave= findViewById(R.id.btnSave);
+            imageView = findViewById(R.id.imageViewSmall);
+            dayName = findViewById(R.id.txtDayName);
+            radUnknown = findViewById(R.id.radUnknown);
+            radEasy = findViewById(R.id.radEasy);
+            radModerate = findViewById(R.id.radModerate);
+            radBusy = findViewById(R.id.radBusy);
+            grpDayName = findViewById(R.id.grpDayName);
+            btnClear = findViewById(R.id.btnClear);
+            btnSave = findViewById(R.id.btnSave);
+            btnDeleteDay = findViewById(R.id.my_toolbar_delete);
 
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
 
-            deleteDay=findViewById(R.id.my_toolbar_delete);
-            deleteDay.setOnClickListener(view -> deleteDay());
+            btnDeleteDay.setOnClickListener(view -> deleteDay());
+            grpDayName.setOnClickListener(this);
+            imageView.setOnClickListener(this);
 
             btnClearImage(null);
 
-            Bundle extras=getIntent().getExtras();
-            if(extras != null)
-            {
-                action=extras.getString("ACTION");
-                if(action != null && action.equals("add"))
-                {
-                    holidayId=extras.getInt("HOLIDAYID");
-                    holidayName=extras.getString("HOLIDAYNAME");
-                    dayName.setText("");
-                    SetToolbarTitles("Add a Day", holidayName);
-                }
-                if(action != null && action.equals("modify"))
-                {
-                    holidayId=extras.getInt("HOLIDAYID");
-                    dayId=extras.getInt("DAYID");
-
-                    try(DatabaseAccess da = databaseAccess())
-                    {
-                        if(!da.getDayItem(holidayId, dayId, dayItem))
-                            return;
-                        HolidayItem holidayItem=new HolidayItem();
-                        if(!da.getHolidayItem(holidayId, holidayItem))
-                            return;
-                        SetToolbarTitles(dayItem.dayName, holidayItem.holidayName);
-                    }
-
-                    ShowToolbarDelete();
-
-                }
+            if (action != null && action.equals("add")) {
+                dayName.setText("");
+                SetToolbarTitles("Add a Day", holidayName);
             }
 
-            grpDayName.setOnClickListener(this);
-            imageView.setOnClickListener(this);
+            if (action != null && action.equals("modify")) {
+                try (DatabaseAccess da = databaseAccess()) {
+                    if (!da.getDayItem(holidayId, dayId, dayItem))
+                        return;
+                    HolidayItem holidayItem = new HolidayItem();
+                    if (!da.getHolidayItem(holidayId, holidayItem))
+                        return;
+                    SetToolbarTitles(dayItem.dayName, holidayItem.holidayName);
+                }
+
+                ShowToolbarDelete();
+
+            }
 
             afterCreate();
 

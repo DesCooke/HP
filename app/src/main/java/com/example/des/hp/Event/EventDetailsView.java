@@ -8,9 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -57,9 +55,6 @@ public class EventDetailsView extends EventBase
     public LinearLayout grpEndTime;
     public LinearLayout grpNotes;
     public ImageView btnEdit;
-
-    public ImageButton btnClear;
-    public Button btnSave;
 
     public NoteItem noteItem;
     //endregion
@@ -108,8 +103,6 @@ public class EventDetailsView extends EventBase
             chkEndKnown = findViewById(R.id.chkEndKnown);
             grpNotes = findViewById(R.id.grpNotes);
 
-            btnClear= findViewById(R.id.btnClear);
-            btnSave= findViewById(R.id.btnSave);
             btnEdit=findViewById(R.id.my_toolbar_edit);
             btnEdit.setOnClickListener(view -> editSchedule(EventDetailsEdit.class));
 

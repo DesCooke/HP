@@ -257,7 +257,7 @@ public class EventBase extends BaseActivity
         try
         {
             Intent intent=new Intent(getApplicationContext(), classNeeded);
-            intent.putExtra("ACTION", "edit");
+            intent.putExtra("ACTION", "modify");
             intent.putExtra("HOLIDAYID", holidayId);
             intent.putExtra("DAYID", dayId);
             intent.putExtra("ATTRACTIONID", attractionId);

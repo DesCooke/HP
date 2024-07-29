@@ -4,6 +4,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -20,7 +22,11 @@ public class EventDetailsEdit extends EventDetailsView implements View.OnClickLi
     //region Member variables
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
+
+    // Buttons
+    public ImageButton btnClear;
     public ImageView btnDelete;
+    public Button btnSave;
     //endregion
 
     //region Constructors/Destructors
@@ -32,8 +38,17 @@ public class EventDetailsEdit extends EventDetailsView implements View.OnClickLi
         try
         {
             imageChanged=false;
+
+            btnDelete = findViewById(R.id.my_toolbar_delete);
+            btnClear = findViewById(R.id.btnClear);
+            btnSave = findViewById(R.id.btnSave);
+
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
+
+            btnDelete.setOnClickListener(view -> deleteSchedule());
+
+            ShowToolbarDelete();
 
             heartRating.setIsIndicator(false);
             scenicRating.setIsIndicator(false);
@@ -61,9 +76,6 @@ public class EventDetailsEdit extends EventDetailsView implements View.OnClickLi
             rad180Days.setOnClickListener(this);
             radBooked.setOnClickListener(this);
 
-            btnDelete = findViewById(R.id.my_toolbar_delete);
-            btnDelete.setOnClickListener(view -> deleteSchedule());
-            ShowToolbarDelete();
 
         }
         catch(Exception e)
