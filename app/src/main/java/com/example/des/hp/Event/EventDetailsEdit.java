@@ -249,7 +249,7 @@ public class EventDetailsEdit extends EventDetailsView implements View.OnClickLi
                     return;
             }
 
-            if(action.equals("edit"))
+            if(action.equals("modify"))
             {
 
                 if(!da.updateScheduleItem(eventScheduleItem))
