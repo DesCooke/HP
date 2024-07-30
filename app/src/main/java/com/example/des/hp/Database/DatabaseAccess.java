@@ -36,7 +36,7 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 public class DatabaseAccess extends SQLiteOpenHelper
 {
     //region MEMBERVARIABLES
-    public static final int DATABASE_VERSION = 75;
+    public static final int DATABASE_VERSION = 76;
     public static Date currentStartDate;
     public static DatabaseAccess database = null;
     
@@ -170,18 +170,18 @@ public class DatabaseAccess extends SQLiteOpenHelper
         try
         {
             myMessages().ShowMessageShort("Upgrading from " + oldVersion + " to " + newVersion);
-            if(oldVersion==74 && newVersion==75){
-                String l_SQL= "ALTER TABLE schedule ADD COLUMN url1 VARCHAR ";
+            if(oldVersion==75 && newVersion==76){
+                String l_SQL= "ALTER TABLE holiday ADD COLUMN url1 VARCHAR ";
                 db.execSQL(l_SQL);
-                l_SQL= "ALTER TABLE schedule ADD COLUMN url2 VARCHAR ";
+                l_SQL= "ALTER TABLE holiday ADD COLUMN url2 VARCHAR ";
                 db.execSQL(l_SQL);
-                l_SQL= "ALTER TABLE schedule ADD COLUMN url3 VARCHAR ";
+                l_SQL= "ALTER TABLE holiday ADD COLUMN url3 VARCHAR ";
                 db.execSQL(l_SQL);
-                l_SQL= "UPDATE schedule SET url1=''";
+                l_SQL= "UPDATE holiday SET url1=''";
                 db.execSQL(l_SQL);
-                l_SQL= "UPDATE schedule SET url2=''";
+                l_SQL= "UPDATE holiday SET url2=''";
                 db.execSQL(l_SQL);
-                l_SQL= "UPDATE schedule SET url3=''";
+                l_SQL= "UPDATE holiday SET url3=''";
                 db.execSQL(l_SQL);
             }
             myMessages().LogMessage("Finished onUpgrade");

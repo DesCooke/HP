@@ -73,6 +73,12 @@ public class HolidayDetailsView extends BaseActivity
     public LinearLayout row2;
     public LinearLayout row3;
     public ImageView editHoliday;
+    public MyString Url1;
+    public MyString Url2;
+    public MyString Url3;
+    public ImageView btnUrl1;
+    public ImageView btnUrl2;
+    public ImageView btnUrl3;
 
 
     // EditText Dialog
@@ -93,6 +99,10 @@ public class HolidayDetailsView extends BaseActivity
             setContentView(R.layout.activity_holiday_details_view);
 
             context=this;
+
+            Url1 = new MyString();
+            Url2 = new MyString();
+            Url3 = new MyString();
 
             imageView= findViewById(R.id.imageViewSmall);
             txtStartDate= findViewById(R.id.txtStartDate);
@@ -130,6 +140,14 @@ public class HolidayDetailsView extends BaseActivity
             btnGroupAttractions= findViewById(R.id.btnGroupThemeParks);
             btnGroupContacts= findViewById(R.id.btnGroupContacts);
             btnGroupPoi= findViewById(R.id.btnGroupPoi);
+
+            btnUrl1= findViewById(R.id.btnUrl1);
+            btnUrl2= findViewById(R.id.btnUrl2);
+            btnUrl3= findViewById(R.id.btnUrl3);
+
+            btnUrl1.setOnClickListener(view -> viewUrl1());
+            btnUrl2.setOnClickListener(view -> viewUrl2());
+            btnUrl3.setOnClickListener(view -> viewUrl3());
 
             afterCreate();
 
@@ -308,6 +326,8 @@ public class HolidayDetailsView extends BaseActivity
         {
             MyInt myInt=new MyInt();
 
+            showUrlMenu();
+
             holidayItem=new HolidayItem();
             try(DatabaseAccess da = databaseAccess())
             {
@@ -358,6 +378,22 @@ public class HolidayDetailsView extends BaseActivity
                     return;
                 poiBadge.setText(String.format("POIs (%s)", scheduleList.size()));
 
+                if(action.equals("view"))
+                {
+                    Url1.Value=holidayItem.url1;
+                    Url2.Value=holidayItem.url2;
+                    Url3.Value=holidayItem.url3;
+                    btnUrl1.setVisibility(View.INVISIBLE);
+                    btnUrl2.setVisibility(View.INVISIBLE);
+                    btnUrl3.setVisibility(View.INVISIBLE);
+                    if(!Url1.Value.isEmpty())
+                        btnUrl1.setVisibility(View.VISIBLE);
+                    if(!Url2.Value.isEmpty())
+                        btnUrl2.setVisibility(View.VISIBLE);
+                    if(!Url3.Value.isEmpty())
+                        btnUrl3.setVisibility(View.VISIBLE);
+                }
+
                 if(!holidayItem.dateKnown)
                 {
                     grpStartDate.setVisibility(View.INVISIBLE);
@@ -394,6 +430,36 @@ public class HolidayDetailsView extends BaseActivity
             ShowError("showForm", e.getMessage());
         }
 
+    }
+
+    public void viewUrl1(){
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Url1.Value));
+            startActivity(browserIntent);
+        } catch (Exception e)
+        {
+            ShowError("showForm", e.getMessage());
+        }
+    }
+
+    public void viewUrl2(){
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Url2.Value));
+            startActivity(browserIntent);
+        } catch (Exception e)
+        {
+            ShowError("showForm", e.getMessage());
+        }
+    }
+
+    public void viewUrl3(){
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Url3.Value));
+            startActivity(browserIntent);
+        } catch (Exception e)
+        {
+            ShowError("showForm", e.getMessage());
+        }
     }
 
     public void showOrHideButton(RelativeLayout layout, boolean show)
