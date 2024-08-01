@@ -880,7 +880,21 @@ public class DatabaseAccess extends SQLiteOpenHelper
         return (false);
         
     }
-    
+
+    public boolean getOSTaskCount(int holidayId, MyInt retInt)
+    {
+        try
+        {
+            return (tableTask.getOSTaskCount(holidayId, retInt));
+        }
+        catch (Exception e)
+        {
+            ShowError("getTaskCount", e.getMessage());
+        }
+        return (false);
+
+    }
+
     public boolean addTaskItem(TaskItem taskItem)
     {
         try
@@ -1029,7 +1043,21 @@ public class DatabaseAccess extends SQLiteOpenHelper
         return (false);
         
     }
-    
+
+    public boolean getOSBudgetCount(int holidayId, MyInt retInt)
+    {
+        try
+        {
+            return (tableBudget.getOSBudgetCount(holidayId, retInt));
+        }
+        catch (Exception e)
+        {
+            ShowError("getBudgetCount", e.getMessage());
+        }
+        return (false);
+
+    }
+
     public boolean addBudgetItem(BudgetItem budgetItem)
     {
         try

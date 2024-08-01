@@ -351,12 +351,18 @@ public class HolidayDetailsView extends BaseActivity
                 if(!da.getTaskCount(holidayItem.holidayId, myInt))
                     return;
                 int taskCount=myInt.Value;
-                taskBadge.setText(String.format("Tasks (%s)", taskCount));
+                if(!da.getOSTaskCount(holidayItem.holidayId, myInt))
+                    return;
+                int osTaskCount=myInt.Value;
+                taskBadge.setText(String.format("Tasks (%s / %s)", osTaskCount, taskCount));
 
                 if(!da.getBudgetCount(holidayItem.holidayId, myInt))
                     return;
                 int budgetCount=myInt.Value;
-                budgetBadge.setText(String.format("Budget (%s)", budgetCount));
+                if(!da.getOSBudgetCount(holidayItem.holidayId, myInt))
+                    return;
+                int osBudgetCount=myInt.Value;
+                budgetBadge.setText(String.format("Budget (%s / %s)", osBudgetCount, budgetCount));
 
                 if(!da.getTipsCount(holidayItem.holidayId, myInt))
                     return;

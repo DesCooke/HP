@@ -77,6 +77,28 @@ class TableBudget extends TableBase
 
     }
 
+    boolean getOSBudgetCount(int holidayId, MyInt retInt)
+    {
+        try
+        {
+            if(!IsValid())
+                return (false);
+
+            String lSQL="SELECT IFNULL(COUNT(*),0) " +
+                    "FROM Budget " +
+                    "WHERE holidayId = " + holidayId + " " +
+                    "AND (budgetUnpaid < -0.001 OR budgetUnpaid > 0.001) ";
+
+            return executeSQLGetInt("getBudgetCount", lSQL, retInt);
+        }
+        catch(Exception e)
+        {
+            ShowError("getBudgetCount", e.getMessage());
+        }
+        return (false);
+
+    }
+
     boolean addBudgetItem(BudgetItem budgetItem)
     {
         try
