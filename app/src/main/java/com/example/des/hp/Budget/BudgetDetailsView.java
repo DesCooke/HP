@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
@@ -39,6 +41,8 @@ public class BudgetDetailsView extends BaseActivity
     public LinearLayout grpBudgetUnpaid;
     public ImageView btnEdit;
     public ImageView btnDelete;
+    public Switch swActive;
+    public TextView lblActive;
     //endregion
     
     //region Constructors/Destructors
@@ -67,8 +71,10 @@ public class BudgetDetailsView extends BaseActivity
             grpBudgetUnpaid = findViewById(R.id.grpBudgetUnpaid);
             btnEdit = findViewById(R.id.my_toolbar_edit);
             btnDelete = findViewById(R.id.my_toolbar_delete);
+            swActive = findViewById(R.id.swActive);
+            lblActive = findViewById(R.id.lblActive);
+
             btnEdit.setOnClickListener(view -> editBudget());
-            btnDelete.setOnClickListener(view -> deleteBudget());
 
             afterCreate();
             
@@ -121,6 +127,10 @@ public class BudgetDetailsView extends BaseActivity
         super.showForm();
         try
         {
+            btnShowInfo.setVisibility(View.GONE);
+            btnSave.setVisibility(View.GONE);
+            swActive.setEnabled(false);
+
             budgetItem = new BudgetItem();
             try(DatabaseAccess da = databaseAccess())
             {
@@ -144,6 +154,10 @@ public class BudgetDetailsView extends BaseActivity
             txtBudgetTotal.setText(StringUtils.IntToMoneyString(budgetItem.budgetTotal));
             txtBudgetUnpaid.setText(StringUtils.IntToMoneyString(budgetItem.budgetUnpaid));
             txtBudgetPaid.setText(StringUtils.IntToMoneyString(budgetItem.budgetPaid));
+            swActive.setChecked(budgetItem.active);
+            lblActive.setText(R.string.lblInactive);
+            if(budgetItem.active)
+                lblActive.setText(R.string.lblActive);
 
             afterShow();
         }

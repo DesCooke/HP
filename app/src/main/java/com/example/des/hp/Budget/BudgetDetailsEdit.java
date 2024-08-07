@@ -27,11 +27,19 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
     {
         super.onCreate(savedInstanceState);
         
+    }
+
+
+    //region showForm
+    public void showForm()
+    {
+        super.showForm();
         try
         {
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
-            
+            swActive.setEnabled(true);
+
             if (action != null && action.equals("add"))
             {
                 grpMenuFile.setVisibility(View.GONE);
@@ -44,18 +52,14 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             grpBudgetPaid.setOnClickListener(this);
             grpBudgetUnpaid.setOnClickListener(this);
             imageView.setOnClickListener(this);
+            btnDelete.setOnClickListener(view -> deleteBudget());
+            btnSave.setOnClickListener(view -> saveBudget());
+            swActive.setOnClickListener(view -> toggleActive());
         }
         catch (Exception e)
         {
             ShowError("onCreate", e.getMessage());
         }
-    }
-
-
-    //region showForm
-    public void showForm()
-    {
-        super.showForm();
     }
     //endregion
 
@@ -286,9 +290,15 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
         }
     }
     //endregion
-    
+
+    public void toggleActive() {
+        lblActive.setText(R.string.lblInactive);
+        if(swActive.isChecked())
+            lblActive.setText(R.string.lblActive);
+    }
+
     //region Saving
-    public void saveSchedule(View view)
+    public void saveBudget()
     {
         try(DatabaseAccess da = databaseAccess())
         {
@@ -301,6 +311,7 @@ public class BudgetDetailsEdit extends BudgetDetailsView implements View.OnClick
             budgetItem.budgetPaid = Integer.parseInt(removePoundSign(txtBudgetPaid.getText().toString()));
             budgetItem.budgetUnpaid = Integer.parseInt(removePoundSign(txtBudgetUnpaid.getText().toString()));
             budgetItem.budgetNotes = "";
+            budgetItem.active=swActive.isChecked();
 
             if(imageChanged) {
                 budgetItem.budgetPicture = "";

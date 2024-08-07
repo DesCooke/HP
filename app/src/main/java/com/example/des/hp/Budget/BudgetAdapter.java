@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,11 +90,28 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
     public void onBindViewHolder(ViewHolder holder, int position)
     {
         final BudgetItem c = data.get(position);
+
+        int lColor=R.color.colorFullyPaid;
+        if(!c.active){
+            lColor=R.color.colorInactive;
+        }
+        else{
+            if(c.budgetUnpaid<-0.0001 || c.budgetUnpaid>0.0001)
+                lColor=R.color.colorPrimaryDark;
+        }
+
         holder.txtBudgetDescription.setText(c.budgetDescription);
         holder.txtBudgetTotal.setText(StringUtils.IntToMoneyString(c.budgetTotal));
         holder.txtBudgetPaid.setText(StringUtils.IntToMoneyString(c.budgetPaid));
         holder.txtBudgetUnpaid.setText(StringUtils.IntToMoneyString(c.budgetUnpaid));
 
+        holder.txtBudgetDescription.setTextColor(context.getColor(lColor));
+        holder.txtBudgetTotal.setTextColor(context.getColor(lColor));
+        holder.txtBudgetPaid.setTextColor(context.getColor(lColor));
+        holder.txtBudgetUnpaid.setTextColor(context.getColor(lColor));
+
+        holder.budgetItemCell.setBackgroundColor(ContextCompat.getColor(context, R.color.colorTransparent));
+        holder.budgetImage.setVisibility(View.INVISIBLE);
 
         if (c.pictureAssigned)
         {
@@ -113,9 +131,7 @@ class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder>
                     imageTotal = BitmapFactory.decodeResource(context.getResources(), R.drawable.sum);
                 holder.budgetImage.setImageBitmap(imageTotal);
                 holder.budgetItemCell.setBackgroundColor(ContextCompat.getColor(context, R.color.colorEasy));
-            } else
-            {
-                holder.budgetImage.setVisibility(View.INVISIBLE);
+                holder.budgetImage.setVisibility(View.VISIBLE);
             }
         }
         

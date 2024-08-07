@@ -19,21 +19,43 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         style="@style/MyBox"
         android:layout_marginHorizontal="10dp">
 
-        <TextView
-            android:id="@+id/lblTaskDate"
-            android:text="@string/only_outstanding_budgets"
-            style="@style/MyTextHint"/>
-
-        <Switch
-            android:id="@+id/swToggleOutstanding"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/lblToggleOutstanding"
+                android:text="@string/only_outstanding_budgets"
+                style="@style/MyTextHint"/>
 
+            <Switch
+                android:id="@+id/swToggleOutstanding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/lblToggleActive"
+                android:text="@string/only_active_budgets"
+                style="@style/MyTextHint"/>
+
+            <Switch
+                android:id="@+id/swToggleActive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        </LinearLayout>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

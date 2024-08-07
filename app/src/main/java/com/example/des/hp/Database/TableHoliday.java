@@ -446,6 +446,7 @@ class TableHoliday extends TableBase
     {
         return value.compareTo("0") != 0;
     }
+
     boolean getNextHolidayId(MyInt retInt)
     {
         try

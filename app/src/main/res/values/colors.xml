@@ -13,5 +13,7 @@
     <color name="colorEnabled">#40a6ce</color>
     <color name="colorDisabled">#bdbec2</color>
     <color name="colorText">#ffffff</color>
+    <color name="colorInactive">#C0C0C0</color>
+    <color name="colorFullyPaid">#4CAF50</color>
     <color name="BadgeColour">#ad40a6ce</color>
 </resources>

@@ -36,7 +36,7 @@ import static com.example.des.hp.myutils.MyMessages.myMessages;
 public class DatabaseAccess extends SQLiteOpenHelper
 {
     //region MEMBERVARIABLES
-    public static final int DATABASE_VERSION = 76;
+    public static final int DATABASE_VERSION = 77;
     public static Date currentStartDate;
     public static DatabaseAccess database = null;
     
@@ -163,25 +163,25 @@ public class DatabaseAccess extends SQLiteOpenHelper
         }
         
     }
-    
+
+    private String booleanToString(boolean value)
+    {
+        if(value)
+            return("1");
+        return("0");
+    }
+
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
         try
         {
             myMessages().ShowMessageShort("Upgrading from " + oldVersion + " to " + newVersion);
-            if(oldVersion==75 && newVersion==76){
-                String l_SQL= "ALTER TABLE holiday ADD COLUMN url1 VARCHAR ";
+            if(oldVersion==76 && newVersion==77){
+                String l_SQL= "ALTER TABLE budget ADD COLUMN active INT(5) ";
                 db.execSQL(l_SQL);
-                l_SQL= "ALTER TABLE holiday ADD COLUMN url2 VARCHAR ";
-                db.execSQL(l_SQL);
-                l_SQL= "ALTER TABLE holiday ADD COLUMN url3 VARCHAR ";
-                db.execSQL(l_SQL);
-                l_SQL= "UPDATE holiday SET url1=''";
-                db.execSQL(l_SQL);
-                l_SQL= "UPDATE holiday SET url2=''";
-                db.execSQL(l_SQL);
-                l_SQL= "UPDATE holiday SET url3=''";
+                l_SQL= "UPDATE budget SET active=" + booleanToString(true);
                 db.execSQL(l_SQL);
             }
             myMessages().LogMessage("Finished onUpgrade");
@@ -1162,18 +1162,18 @@ public class DatabaseAccess extends SQLiteOpenHelper
         
     }
     
-    public boolean getBudgetList(int holidayId, ArrayList<BudgetItem> al)
+    public boolean getOSActiveBudgetList(int holidayId, ArrayList<BudgetItem> al)
     {
         try
         {
-            return (tableBudget.getBudgetList(holidayId, al));
+            return (tableBudget.getOSActiveBudgetList(holidayId, al));
         }
         catch (Exception e)
         {
-            ShowError("getBudgetList", e.getMessage());
+            ShowError("getOSActiveBudgetList", e.getMessage());
         }
         return (false);
-        
+
     }
 
     public boolean getOSBudgetList(int holidayId, ArrayList<BudgetItem> al)
@@ -1184,12 +1184,41 @@ public class DatabaseAccess extends SQLiteOpenHelper
         }
         catch (Exception e)
         {
-            ShowError("getBudgetList", e.getMessage());
+            ShowError("getOSInActiveBudgetList", e.getMessage());
+        }
+        return (false);
+
+    }
+
+    public boolean getActiveBudgetList(int holidayId, ArrayList<BudgetItem> al)
+    {
+        try
+        {
+            return (tableBudget.getActiveBudgetList(holidayId, al));
+        }
+        catch (Exception e)
+        {
+            ShowError("getActiveBudgetList", e.getMessage());
+        }
+        return (false);
+
+    }
+
+    public boolean getBudgetList(int holidayId, ArrayList<BudgetItem> al)
+    {
+        try
+        {
+            return (tableBudget.getBudgetList(holidayId, al));
+        }
+        catch (Exception e)
+        {
+            ShowError("getInactiveBudgetList", e.getMessage());
         }
         return (false);
 
     }
     //endregion
+
 
     //region TIP functions
     public boolean addTipItem(TipItem tipItem)

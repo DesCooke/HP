@@ -30,6 +30,7 @@ public class BudgetDetailsList extends BaseActivity
     public FloatingActionButton fab;
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch swToggleOutstanding;
+    public Switch swToggleActive;
     //endregion
     
     //region Constructors/Destructors
@@ -52,6 +53,9 @@ public class BudgetDetailsList extends BaseActivity
             swToggleOutstanding.setChecked(true);
             swToggleOutstanding.setOnClickListener(view -> showForm());
 
+            swToggleActive=findViewById(R.id.swToggleActive);
+            swToggleActive.setChecked(true);
+            swToggleActive.setOnClickListener(view -> showForm());
 
             afterCreate();
             
@@ -109,12 +113,23 @@ public class BudgetDetailsList extends BaseActivity
             try(DatabaseAccess da = databaseAccess())
             {
                 if(swToggleOutstanding.isChecked()){
-                    if (!da.getOSBudgetList(holidayId, budgetList))
-                        return;
+                    if(swToggleActive.isChecked()) {
+                        if (!da.getOSActiveBudgetList(holidayId, budgetList))
+                            return;
+                    }
+                    else{
+                        if (!da.getOSBudgetList(holidayId, budgetList))
+                            return;
+                    }
                 }
                 else {
-                    if (!da.getBudgetList(holidayId, budgetList))
-                        return;
+                    if (swToggleActive.isChecked()) {
+                        if (!da.getActiveBudgetList(holidayId, budgetList))
+                            return;
+                    } else {
+                        if (!da.getBudgetList(holidayId, budgetList))
+                            return;
+                    }
                 }
             }
             budgetAdapter = new BudgetAdapter(this, budgetList);
@@ -135,7 +150,6 @@ public class BudgetDetailsList extends BaseActivity
             afterShow();
         }
         catch (Exception e)
-        
         {
             ShowError("showForm", e.getMessage());
         }

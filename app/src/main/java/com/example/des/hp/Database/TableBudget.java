@@ -27,6 +27,7 @@ class TableBudget extends TableBase
         super.ShowError("TableBudget:" + argFunction, argMessage);
     }
 
+
     public boolean onCreate(SQLiteDatabase db)
     {
         try
@@ -44,7 +45,8 @@ class TableBudget extends TableBase
             "  budgetNotes       VARCHAR, " +
             "  infoId            INT(5),  " +
             "  noteId            INT(5),  " +
-            "  galleryId         INT(5)  " +
+            "  galleryId         INT(5),  " +
+            "  active            INT(5)   " +
             ") ";
 
             db.execSQL(lSQL);
@@ -58,6 +60,19 @@ class TableBudget extends TableBase
         return (false);
     }
 
+    private String booleanToString(boolean value)
+    {
+        if(value)
+            return("1");
+        return("0");
+    }
+
+    boolean booleanFromString(String value)
+    {
+        return value.compareTo("0") != 0;
+    }
+
+
     boolean getBudgetCount(int holidayId, MyInt retInt)
     {
         try
@@ -65,7 +80,10 @@ class TableBudget extends TableBase
             if(!IsValid())
                 return (false);
 
-            String lSQL="SELECT IFNULL(COUNT(*),0) " + "FROM Budget " + "WHERE holidayId = " + holidayId;
+            String lSQL="SELECT IFNULL(COUNT(*),0) " +
+                    "FROM Budget " +
+                    "WHERE holidayId = " + holidayId + " " +
+                    "AND active = " + booleanToString(true );
 
             return executeSQLGetInt("getBudgetCount", lSQL, retInt);
         }
@@ -87,7 +105,8 @@ class TableBudget extends TableBase
             String lSQL="SELECT IFNULL(COUNT(*),0) " +
                     "FROM Budget " +
                     "WHERE holidayId = " + holidayId + " " +
-                    "AND (budgetUnpaid < -0.001 OR budgetUnpaid > 0.001) ";
+                    "AND (budgetUnpaid < -0.001 OR budgetUnpaid > 0.001) " +
+                    "AND active = " + booleanToString(true );
 
             return executeSQLGetInt("getBudgetCount", lSQL, retInt);
         }
@@ -133,7 +152,8 @@ class TableBudget extends TableBase
                           "    budgetNotes, " +
                           "    infoId, " +
                           "    noteId, " +
-                          "    galleryId " +
+                          "    galleryId, " +
+                          "    active " +
                           ") " +
                           "VALUES " +
                           "(" +
@@ -148,7 +168,8 @@ class TableBudget extends TableBase
                           MyQuotedString(budgetItem.budgetNotes) + ", " +
                           budgetItem.infoId + ", " +
                           budgetItem.noteId + ", " +
-                          budgetItem.galleryId + " " +
+                          budgetItem.galleryId + "," +
+                          booleanToString(budgetItem.active) + " " +
                           ")";
 
             return (executeSQL("addBudgetItem", lSql));
@@ -235,7 +256,8 @@ class TableBudget extends TableBase
                    "    budgetNotes = " + MyQuotedString(budgetItem.budgetNotes) + ", " +
                    "    infoId = " + budgetItem.infoId + ", " +
                    "    noteId = " + budgetItem.noteId + ", " +
-                   "    galleryId = " + budgetItem.galleryId + " " +
+                   "    galleryId = " + budgetItem.galleryId + ", " +
+                   "    active = " + booleanToString(budgetItem.active) + " " +
                    "WHERE holidayId = " + budgetItem.holidayId + " " +
                    "AND budgetId = " + budgetItem.budgetId;
 
@@ -318,7 +340,8 @@ class TableBudget extends TableBase
                 "  budgetNotes, " +
                 "  infoId, " +
                 "  noteId, " +
-                "  galleryId " +
+                "  galleryId, " +
+                "  active " +
                 "FROM budget " +
                 "WHERE HolidayId = " + holidayId + " " +
                 "AND BudgetId = " + budgetId;
@@ -347,6 +370,7 @@ class TableBudget extends TableBase
             budgetItem.infoId=Integer.parseInt(cursor.getString(9));
             budgetItem.noteId=Integer.parseInt(cursor.getString(10));
             budgetItem.galleryId=Integer.parseInt(cursor.getString(11));
+            budgetItem.active=booleanFromString(cursor.getString(12));
 
             budgetItem.origHolidayId=budgetItem.holidayId;
             budgetItem.origBudgetId=budgetItem.budgetId;
@@ -360,6 +384,7 @@ class TableBudget extends TableBase
             budgetItem.origInfoId=budgetItem.infoId;
             budgetItem.origNoteId=budgetItem.noteId;
             budgetItem.origGalleryId=budgetItem.galleryId;
+            budgetItem.origActive=budgetItem.active;
 
             budgetItem.pictureChanged=false;
 
@@ -407,7 +432,11 @@ class TableBudget extends TableBase
     {
         try
         {
-            String lSQL="SELECT IFNULL(SUM(budgetTotal),0) " + "FROM Budget " + "WHERE holidayId = " + holidayId;
+            String lSQL=
+                    "SELECT IFNULL(SUM(budgetTotal),0) " +
+                    "FROM Budget " +
+                    "WHERE holidayId = " + holidayId + " " +
+                    "AND active = " + booleanToString(true);
 
             executeSQLGetInt("getBudgetTotal", lSQL, retInt);   
         }
@@ -421,7 +450,10 @@ class TableBudget extends TableBase
     {
         try
         {
-            String lSQL="SELECT IFNULL(SUM(budgetUnpaid),0) " + "FROM Budget " + "WHERE holidayId = " + holidayId;
+            String lSQL="SELECT IFNULL(SUM(budgetUnpaid),0) " +
+                    "FROM Budget " +
+                    "WHERE holidayId = " + holidayId + " " +
+                    "AND active = " + booleanToString(true);
 
             executeSQLGetInt("getBudgetUnpaid", lSQL, retInt);
         }
@@ -435,7 +467,11 @@ class TableBudget extends TableBase
     {
         try
         {
-            String lSQL="SELECT IFNULL(SUM(budgetPaid),0) " + "FROM Budget " + "WHERE holidayId = " + holidayId;
+            String lSQL=
+                    "SELECT IFNULL(SUM(budgetPaid),0) " +
+                    "FROM Budget " +
+                    "WHERE holidayId = " + holidayId + " " +
+                    "AND active = " + booleanToString(true);
 
             executeSQLGetInt("getBudgetPaid", lSQL, retInt);
         }
@@ -453,7 +489,8 @@ class TableBudget extends TableBase
             String lSQL="SELECT IFNULL(SUM(budgetTotal),0) " +
                     "FROM Budget " +
                     "WHERE holidayId = " + holidayId + " " +
-                    "AND (budgetUnpaid < -0.001 OR budgetUnpaid > 0.001) ";
+                    "AND (budgetUnpaid < -0.001 OR budgetUnpaid > 0.001) " +
+                    "AND active = " + booleanToString(true);
 
             executeSQLGetInt("getBudgetTotal", lSQL, retInt);
         }
@@ -470,7 +507,8 @@ class TableBudget extends TableBase
             String lSQL="SELECT IFNULL(SUM(budgetUnpaid),0) " +
                     "FROM Budget " +
                     "WHERE holidayId = " + holidayId + " " +
-                    "AND (budgetUnpaid < -0.001 OR budgetUnpaid > 0.001) ";
+                    "AND (budgetUnpaid < -0.001 OR budgetUnpaid > 0.001) " +
+                    "AND active = " + booleanToString(true);
 
             executeSQLGetInt("getBudgetUnpaid", lSQL, retInt);
         }
@@ -487,7 +525,8 @@ class TableBudget extends TableBase
             String lSQL="SELECT IFNULL(SUM(budgetPaid),0) " +
                     "FROM Budget " +
                     "WHERE holidayId = " + holidayId + " " +
-                    "AND (budgetUnpaid < -0.001 OR budgetUnpaid > 0.001) ";
+                    "AND (budgetUnpaid < -0.001 OR budgetUnpaid > 0.001) " +
+                    "AND active = " + booleanToString(true);
 
             executeSQLGetInt("getBudgetPaid", lSQL, retInt);
         }
@@ -524,22 +563,86 @@ class TableBudget extends TableBase
         try
         {
             String lSql=
-            "SELECT " +
-            "  holidayId, " +
-            "  budgetId, " +
-            "  sequenceNo, " +
-            "  budgetDescription, " +
-            "  budgetTotal, " +
-            "  budgetPaid, " +
-            "  budgetUnpaid, " +
-            "  budgetPicture, " +
-            "  budgetNotes, " +
-            "  infoId, " +
-            "  noteId, " +
-            "  galleryId " +
-            "FROM budget " +
-            "WHERE HolidayId = " + holidayId + " " +
-            "ORDER BY SequenceNo ";
+                    "SELECT " +
+                            "  holidayId, " +
+                            "  budgetId, " +
+                            "  sequenceNo, " +
+                            "  budgetDescription, " +
+                            "  budgetTotal, " +
+                            "  budgetPaid, " +
+                            "  budgetUnpaid, " +
+                            "  budgetPicture, " +
+                            "  budgetNotes, " +
+                            "  infoId, " +
+                            "  noteId, " +
+                            "  galleryId, " +
+                            "  active " +
+                            "FROM budget " +
+                            "WHERE HolidayId = " + holidayId + " " +
+                            "ORDER BY SequenceNo ";
+
+            Cursor cursor=executeSQLOpenCursor("getBudgetList", lSql);
+            if(cursor == null)
+                return (false);
+
+            while(cursor.moveToNext())
+            {
+                BudgetItem budgetItem=new BudgetItem();
+                if(!GetBudgetItemFromQuery(cursor, budgetItem))
+                    return (false);
+
+                al.add(budgetItem);
+            }
+            BudgetItem totalBudgetItem=new BudgetItem();
+            totalBudgetItem.sequenceNo=9999;
+
+            totalBudgetItem.budgetDescription=_context.getString(R.string.caption_budget_total_marker);
+            MyInt myInt=new MyInt();
+
+            getBudgetPaid(holidayId, myInt);
+            totalBudgetItem.budgetPaid=myInt.Value;
+
+            getBudgetUnpaid(holidayId, myInt);
+            totalBudgetItem.budgetUnpaid=myInt.Value;
+
+            getBudgetTotal(holidayId, myInt);
+            totalBudgetItem.budgetTotal=myInt.Value;
+
+            al.add(totalBudgetItem);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("getBudgetList", e.getMessage());
+        }
+        return (false);
+
+    }
+
+    boolean getActiveBudgetList(int holidayId, ArrayList<BudgetItem> al)
+    {
+        try
+        {
+            String lSql=
+                    "SELECT " +
+                            "  holidayId, " +
+                            "  budgetId, " +
+                            "  sequenceNo, " +
+                            "  budgetDescription, " +
+                            "  budgetTotal, " +
+                            "  budgetPaid, " +
+                            "  budgetUnpaid, " +
+                            "  budgetPicture, " +
+                            "  budgetNotes, " +
+                            "  infoId, " +
+                            "  noteId, " +
+                            "  galleryId, " +
+                            "  active " +
+                            "FROM budget " +
+                            "WHERE HolidayId = " + holidayId + " " +
+                            "AND active = " + booleanToString(true) + " " +
+                            "ORDER BY SequenceNo ";
 
             Cursor cursor=executeSQLOpenCursor("getBudgetList", lSql);
             if(cursor == null)
@@ -581,6 +684,70 @@ class TableBudget extends TableBase
     }
 
 
+    boolean getOSActiveBudgetList(int holidayId, ArrayList<BudgetItem> al)
+    {
+        try
+        {
+            String lSql=
+                    "SELECT " +
+                            "  holidayId, " +
+                            "  budgetId, " +
+                            "  sequenceNo, " +
+                            "  budgetDescription, " +
+                            "  budgetTotal, " +
+                            "  budgetPaid, " +
+                            "  budgetUnpaid, " +
+                            "  budgetPicture, " +
+                            "  budgetNotes, " +
+                            "  infoId, " +
+                            "  noteId, " +
+                            "  galleryId, " +
+                            "  active  " +
+                            "FROM budget " +
+                            "WHERE HolidayId = " + holidayId + " " +
+                            "AND (budgetUnpaid < -0.001 OR budgetUnpaid > 0.001) " +
+                            "AND active = " + booleanToString(true) + " " +
+                            "ORDER BY SequenceNo ";
+
+            Cursor cursor=executeSQLOpenCursor("getBudgetList", lSql);
+            if(cursor == null)
+                return (false);
+
+            while(cursor.moveToNext())
+            {
+                BudgetItem budgetItem=new BudgetItem();
+                if(!GetBudgetItemFromQuery(cursor, budgetItem))
+                    return (false);
+
+                al.add(budgetItem);
+            }
+            BudgetItem totalBudgetItem=new BudgetItem();
+            totalBudgetItem.sequenceNo=9999;
+
+            totalBudgetItem.budgetDescription=_context.getString(R.string.caption_budget_total_marker);
+            MyInt myInt=new MyInt();
+
+            getOSBudgetPaid(holidayId, myInt);
+            totalBudgetItem.budgetPaid=myInt.Value;
+
+            getOSBudgetUnpaid(holidayId, myInt);
+            totalBudgetItem.budgetUnpaid=myInt.Value;
+
+            getOSBudgetTotal(holidayId, myInt);
+            totalBudgetItem.budgetTotal=myInt.Value;
+
+            al.add(totalBudgetItem);
+
+            return (true);
+        }
+        catch(Exception e)
+        {
+            ShowError("getBudgetList", e.getMessage());
+        }
+        return (false);
+
+    }
+
     boolean getOSBudgetList(int holidayId, ArrayList<BudgetItem> al)
     {
         try
@@ -598,7 +765,8 @@ class TableBudget extends TableBase
                             "  budgetNotes, " +
                             "  infoId, " +
                             "  noteId, " +
-                            "  galleryId " +
+                            "  galleryId, " +
+                            "  active  " +
                             "FROM budget " +
                             "WHERE HolidayId = " + holidayId + " " +
                             "AND (budgetUnpaid < -0.001 OR budgetUnpaid > 0.001) " +
