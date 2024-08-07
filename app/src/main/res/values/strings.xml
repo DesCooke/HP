@@ -197,5 +197,10 @@
     <string name="theme_parks">Theme Parks</string>
     <string name="poi">POI</string>
     <string name="points_of_interest">Points of Interest</string>
+    <string name="active">Active</string>
+    <string name="only_active_budgets">Only Active Budgets</string>
+    <string name="inactive">Inactive</string>
+    <string name="lblActive">Active</string>
+    <string name="lblInactive">Inactive</string>
 
 </resources>

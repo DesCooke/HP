@@ -4,6 +4,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -20,7 +22,11 @@ public class EventDetailsEdit extends EventDetailsView implements View.OnClickLi
     //region Member variables
     public DialogWithEditTextFragment dialogWithEditTextFragment;
     public View.OnClickListener dwetOnOkClick;
+
+    // Buttons
+    public ImageButton btnClear;
     public ImageView btnDelete;
+    public Button btnSave;
     //endregion
 
     //region Constructors/Destructors
@@ -32,8 +38,20 @@ public class EventDetailsEdit extends EventDetailsView implements View.OnClickLi
         try
         {
             imageChanged=false;
+
+            btnDelete = findViewById(R.id.my_toolbar_delete);
+            btnClear = findViewById(R.id.btnClear);
+            btnSave = findViewById(R.id.btnSave);
+
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
+
+            btnDelete.setOnClickListener(view -> deleteSchedule());
+            btnUrl1.setOnClickListener(view -> editUrl1());
+            btnUrl2.setOnClickListener(view -> editUrl2());
+            btnUrl3.setOnClickListener(view -> editUrl3());
+
+            ShowToolbarDelete();
 
             heartRating.setIsIndicator(false);
             scenicRating.setIsIndicator(false);
@@ -61,9 +79,6 @@ public class EventDetailsEdit extends EventDetailsView implements View.OnClickLi
             rad180Days.setOnClickListener(this);
             radBooked.setOnClickListener(this);
 
-            btnDelete = findViewById(R.id.my_toolbar_delete);
-            btnDelete.setOnClickListener(view -> deleteSchedule());
-            ShowToolbarDelete();
 
         }
         catch(Exception e)
@@ -71,6 +86,18 @@ public class EventDetailsEdit extends EventDetailsView implements View.OnClickLi
             ShowError("onCreate", e.getMessage());
         }
 
+    }
+
+    public void editUrl1(){
+        EnterStringToMyString("Map Url", "Enter MapUrl", Url1);
+    }
+
+    public void editUrl2(){
+        EnterStringToMyString("Info Url 1", "Enter Info Url 1", Url2);
+    }
+
+    public void editUrl3(){
+        EnterStringToMyString("Info Url 2", "Enter Info Url 2", Url3);
     }
 
     @Override
@@ -156,6 +183,26 @@ public class EventDetailsEdit extends EventDetailsView implements View.OnClickLi
 
         dialogWithEditTextFragment.showIt();
     }
+
+    public void EnterStringToMyString(String formCaption, String formMessage, MyString theString)
+    {
+        dialogWithEditTextFragment=
+                DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
+                        "hihi2",            // unique name for this dialog type
+                        formCaption,    // form caption
+                        formMessage,             // form message
+                        R.drawable.attachment,
+                        theString.Value, // initial text
+                        view -> {
+                            theString.Value = dialogWithEditTextFragment.getFinalText();
+                            dialogWithEditTextFragment.dismiss();
+                        },
+                        this,
+                        false
+                );
+
+        dialogWithEditTextFragment.showIt();
+    }
     //endregion
 
     //region Saving
@@ -179,6 +226,10 @@ public class EventDetailsEdit extends EventDetailsView implements View.OnClickLi
             eventScheduleItem.scheduleBitmap=null;
             if(imageSet)
                 eventScheduleItem.scheduleBitmap=((BitmapDrawable) imageView.getDrawable()).getBitmap();
+
+            eventScheduleItem.url1 = Url1.Value;
+            eventScheduleItem.url2 = Url2.Value;
+            eventScheduleItem.url3 = Url3.Value;
 
             eventScheduleItem.eventScheduleDetailItem.ReservationType=0;
             if(radWalkIn.isChecked())
@@ -237,7 +288,7 @@ public class EventDetailsEdit extends EventDetailsView implements View.OnClickLi
                     return;
             }
 
-            if(action.equals("edit"))
+            if(action.equals("modify"))
             {
 
                 if(!da.updateScheduleItem(eventScheduleItem))

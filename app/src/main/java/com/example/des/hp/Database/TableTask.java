@@ -63,6 +63,28 @@ class TableTask extends TableBase
 
     }
 
+    boolean getOSTaskCount(int argHolidayId, MyInt retInt)
+    {
+        try
+        {
+            if(!IsValid())
+                return (false);
+
+            String lSQL="SELECT IFNULL(COUNT(*),0) " +
+                    "FROM Tasks " +
+                    "WHERE holidayId = " + argHolidayId + " " +
+                    "AND taskComplete = 0 ";
+
+            return (executeSQLGetInt("getTaskCount", lSQL, retInt));
+        }
+        catch(Exception e)
+        {
+            ShowError("getTaskCount", e.getMessage());
+        }
+        return (false);
+
+    }
+
     boolean addTaskItem(TaskItem taskItem)
     {
         try

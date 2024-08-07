@@ -3,14 +3,13 @@ package com.example.des.hp.Event;
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -26,6 +25,7 @@ import com.example.des.hp.Notes.NoteItem;
 import com.example.des.hp.R;
 import com.example.des.hp.Tasks.TaskDetailsList;
 import com.example.des.hp.TipGroup.TipGroupDetailsList;
+import com.example.des.hp.myutils.MyString;
 
 public class EventDetailsView extends EventBase
 {
@@ -57,9 +57,12 @@ public class EventDetailsView extends EventBase
     public LinearLayout grpEndTime;
     public LinearLayout grpNotes;
     public ImageView btnEdit;
-
-    public ImageButton btnClear;
-    public Button btnSave;
+    public MyString Url1;
+    public MyString Url2;
+    public MyString Url3;
+    public ImageView btnUrl1;
+    public ImageView btnUrl2;
+    public ImageView btnUrl3;
 
     public NoteItem noteItem;
     //endregion
@@ -78,6 +81,9 @@ public class EventDetailsView extends EventBase
             setContentView(R.layout.activity_generalattraction_details_view);
 
             noteItem = new NoteItem();
+            Url1 = new MyString();
+            Url2 = new MyString();
+            Url3 = new MyString();
 
             grpAttractionType = findViewById(R.id.grpAttractionType);
             grpBookingReference = findViewById(R.id.grpBookingReference);
@@ -85,6 +91,14 @@ public class EventDetailsView extends EventBase
             grpTerminal = findViewById(R.id.grpTerminal);
             grpStartTime = findViewById(R.id.grpStartTime);
             grpEndTime = findViewById(R.id.grpEndTime);
+
+            btnUrl1= findViewById(R.id.btnUrl1);
+            btnUrl2= findViewById(R.id.btnUrl2);
+            btnUrl3= findViewById(R.id.btnUrl3);
+
+            btnUrl1.setOnClickListener(view -> viewUrl1());
+            btnUrl2.setOnClickListener(view -> viewUrl2());
+            btnUrl3.setOnClickListener(view -> viewUrl3());
 
             grpReservationTypeId = findViewById(R.id.grpReservationTypeId);
 
@@ -108,8 +122,6 @@ public class EventDetailsView extends EventBase
             chkEndKnown = findViewById(R.id.chkEndKnown);
             grpNotes = findViewById(R.id.grpNotes);
 
-            btnClear= findViewById(R.id.btnClear);
-            btnSave= findViewById(R.id.btnSave);
             btnEdit=findViewById(R.id.my_toolbar_edit);
             btnEdit.setOnClickListener(view -> editSchedule(EventDetailsEdit.class));
 
@@ -147,21 +159,56 @@ public class EventDetailsView extends EventBase
         boolean viewOnlyForm=false;
         try(DatabaseAccess da = databaseAccess())
         {
+            showUrlMenu();
+
             if(action != null)
             {
                 if(action.equals("view")) {
                     ShowToolbarEdit();
                     viewOnlyForm = true;
                 }
-                if(action.equals("add"))
-                    if(eventScheduleItem.eventScheduleDetailItem == null)
-                        eventScheduleItem.eventScheduleDetailItem =new EventScheduleDetailItem();
+                if(action.equals("add")) {
+                    if (eventScheduleItem.eventScheduleDetailItem == null) {
+                        eventScheduleItem.eventScheduleDetailItem = new EventScheduleDetailItem();
+                    }
+                    Url1.Value="";
+                    Url2.Value="";
+                    Url3.Value="";
+                    btnUrl1.setVisibility(View.VISIBLE);
+                    btnUrl2.setVisibility(View.VISIBLE);
+                    btnUrl3.setVisibility(View.VISIBLE);
+                }
 
-                if(!action.equals("add"))
+                if(action.equals("view"))
                 {
                     heartRating.setRating(eventScheduleItem.eventScheduleDetailItem.heartRating);
                     thrillRating.setRating(eventScheduleItem.eventScheduleDetailItem.thrillRating);
                     scenicRating.setRating(eventScheduleItem.eventScheduleDetailItem.scenicRating);
+                    Url1.Value=eventScheduleItem.url1;
+                    Url2.Value=eventScheduleItem.url2;
+                    Url3.Value=eventScheduleItem.url3;
+                    btnUrl1.setVisibility(View.INVISIBLE);
+                    btnUrl2.setVisibility(View.INVISIBLE);
+                    btnUrl3.setVisibility(View.INVISIBLE);
+                    if(!Url1.Value.isEmpty())
+                        btnUrl1.setVisibility(View.VISIBLE);
+                    if(!Url2.Value.isEmpty())
+                        btnUrl2.setVisibility(View.VISIBLE);
+                    if(!Url3.Value.isEmpty())
+                        btnUrl3.setVisibility(View.VISIBLE);
+                }
+
+                if(action.equals("modify"))
+                {
+                    heartRating.setRating(eventScheduleItem.eventScheduleDetailItem.heartRating);
+                    thrillRating.setRating(eventScheduleItem.eventScheduleDetailItem.thrillRating);
+                    scenicRating.setRating(eventScheduleItem.eventScheduleDetailItem.scenicRating);
+                    Url1.Value=eventScheduleItem.url1;
+                    Url2.Value=eventScheduleItem.url2;
+                    Url3.Value=eventScheduleItem.url3;
+                    btnUrl1.setVisibility(View.VISIBLE);
+                    btnUrl2.setVisibility(View.VISIBLE);
+                    btnUrl3.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -258,6 +305,36 @@ public class EventDetailsView extends EventBase
 
         }
         catch (Exception e)
+        {
+            ShowError("showForm", e.getMessage());
+        }
+    }
+
+    public void viewUrl1(){
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Url1.Value));
+            startActivity(browserIntent);
+        } catch (Exception e)
+        {
+            ShowError("showForm", e.getMessage());
+        }
+    }
+
+    public void viewUrl2(){
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Url2.Value));
+            startActivity(browserIntent);
+        } catch (Exception e)
+        {
+            ShowError("showForm", e.getMessage());
+        }
+    }
+
+    public void viewUrl3(){
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Url3.Value));
+            startActivity(browserIntent);
+        } catch (Exception e)
         {
             ShowError("showForm", e.getMessage());
         }

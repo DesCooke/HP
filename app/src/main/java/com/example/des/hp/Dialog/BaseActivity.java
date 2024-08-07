@@ -62,6 +62,7 @@ import android.provider.OpenableColumns;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.des.hp.Database.DatabaseAccess;
@@ -118,6 +119,8 @@ public class BaseActivity extends AppCompatActivity
     public ImageButton btnShowInfo;
     public BadgeView btnShowInfoBadge;
     public ImageButton btnClearImage;
+
+    public LinearLayout grpMenuFile2;
 
     public TextView txtFilename;
 
@@ -512,10 +515,26 @@ public class BaseActivity extends AppCompatActivity
         }
     }
 
+    public void hideUrlMenu(){
+        grpMenuFile2 = findViewById(R.id.grpMenuFile2);
+        if(grpMenuFile2!=null){
+            grpMenuFile2.setVisibility(TextView.INVISIBLE);
+        }
+    }
+
+    public void showUrlMenu(){
+        grpMenuFile2 = findViewById(R.id.grpMenuFile2);
+        if(grpMenuFile2!=null){
+            grpMenuFile2.setVisibility(TextView.VISIBLE);
+        }
+    }
+
     public void afterCreate()
     {
         try
         {
+            hideUrlMenu();
+
             showInfoEnabled=false;
             btnShowInfo= findViewById(R.id.btnShowInfo);
             if(btnShowInfo != null)

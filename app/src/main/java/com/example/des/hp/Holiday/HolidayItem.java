@@ -34,6 +34,9 @@ public class HolidayItem
     public boolean buttonAttractions;
     public boolean buttonContacts;
     public boolean buttonPoi;
+    public String url1;
+    public String url2;
+    public String url3;
 
     // Original Fields
     public int origHolidayId;
@@ -57,6 +60,10 @@ public class HolidayItem
     public boolean origButtonAttractions;
     public boolean origButtonContacts;
     public boolean origButtonPoi;
+    public String origUrl1;
+    public String origUrl2;
+    public String origUrl3;
+
 
     public String ToGo;
 
@@ -68,6 +75,9 @@ public class HolidayItem
         startDateDate=new Date();
         origStartDateDate=new Date();
         ToGo="";
+        url1="";
+        url2="";
+        url3="";
     }
 
 }

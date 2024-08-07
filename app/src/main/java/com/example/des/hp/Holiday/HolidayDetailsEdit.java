@@ -56,6 +56,12 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch swPoi;
     public ImageView deleteHoliday;
+    public MyString Url1;
+    public MyString Url2;
+    public MyString Url3;
+    public ImageView btnUrl1;
+    public ImageView btnUrl2;
+    public ImageView btnUrl3;
 
 
 
@@ -96,6 +102,18 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
 
             btnClear.setVisibility(View.VISIBLE);
             btnSave.setVisibility(View.VISIBLE);
+
+            Url1 = new MyString();
+            Url2 = new MyString();
+            Url3 = new MyString();
+
+            btnUrl1= findViewById(R.id.btnUrl1);
+            btnUrl2= findViewById(R.id.btnUrl2);
+            btnUrl3= findViewById(R.id.btnUrl3);
+
+            btnUrl1.setOnClickListener(view -> editUrl1());
+            btnUrl2.setOnClickListener(view -> editUrl2());
+            btnUrl3.setOnClickListener(view -> editUrl3());
 
             txtStartDate.setOnClickListener(this::pickDateTime);
 
@@ -152,6 +170,38 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
 
     }
     //endregion
+
+    public void editUrl1(){
+        EnterStringToMyString("Map Url", "Enter MapUrl", Url1);
+    }
+
+    public void editUrl2(){
+        EnterStringToMyString("Info Url 1", "Enter Info Url 1", Url2);
+    }
+
+    public void editUrl3(){
+        EnterStringToMyString("Info Url 2", "Enter Info Url 2", Url3);
+    }
+
+    public void EnterStringToMyString(String formCaption, String formMessage, MyString theString)
+    {
+        dialogWithEditTextFragment=
+                DialogWithEditTextFragment.newInstance(getSupportFragmentManager(),     // for the transaction bit
+                        "hihi2",            // unique name for this dialog type
+                        formCaption,    // form caption
+                        formMessage,             // form message
+                        R.drawable.attachment,
+                        theString.Value, // initial text
+                        view -> {
+                            theString.Value = dialogWithEditTextFragment.getFinalText();
+                            dialogWithEditTextFragment.dismiss();
+                        },
+                        this,
+                        false
+                );
+
+        dialogWithEditTextFragment.showIt();
+    }
 
     //region OnClick Events
     public void onClick(View view)
@@ -289,7 +339,30 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
         {
             super.showForm();
 
+            showUrlMenu();
+
             SetImage(holidayItem.holidayPicture);
+
+            if(action.compareTo("add")==0){
+                Url1.Value="";
+                Url2.Value="";
+                Url3.Value="";
+                btnUrl1.setVisibility(View.VISIBLE);
+                btnUrl2.setVisibility(View.VISIBLE);
+                btnUrl3.setVisibility(View.VISIBLE);
+            }
+
+            if(action.equals("modify"))
+            {
+                Url1.Value=holidayItem.url1;
+                Url2.Value=holidayItem.url2;
+                Url3.Value=holidayItem.url3;
+                btnUrl1.setVisibility(View.VISIBLE);
+                btnUrl2.setVisibility(View.VISIBLE);
+                btnUrl3.setVisibility(View.VISIBLE);
+            }
+
+
 
             afterShow();
         }
@@ -331,6 +404,10 @@ public class HolidayDetailsEdit extends BaseActivity implements View.OnClickList
                         throw new Exception("Hmmm - error renaming holiday directory");
                 }
             }
+
+            holidayItem.url1 = Url1.Value;
+            holidayItem.url2 = Url2.Value;
+            holidayItem.url3 = Url3.Value;
 
             if(sw.isChecked())
             {

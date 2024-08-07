@@ -105,6 +105,7 @@ class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
     public void onBindViewHolder(ViewHolder holder, int position)
     {
         final DayItem c=data.get(position);
+
         holder.txtTitle.setText(c.dayName);
         holder.txtStartAt.setText("");
         holder.txtEndAt.setText("");
@@ -179,9 +180,14 @@ class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder>
             holder.timesSection.setBackgroundColor(lColor);
         }
 
-        if(!c.dayPicture.isEmpty())
-            if(!imageUtils.getListIcon(c.holidayId, context, c.dayPicture, holder.dayImage))
+        if(!c.dayPicture.isEmpty()) {
+            holder.dayImage.setVisibility(View.VISIBLE);
+            if (!imageUtils.getListIcon(c.holidayId, context, c.dayPicture, holder.dayImage))
                 return;
+        }
+        else{
+            holder.dayImage.setVisibility(View.GONE);
+        }
 
         holder.dayItemCell.setOnClickListener(view -> {
             if(mOnItemClickListener != null)

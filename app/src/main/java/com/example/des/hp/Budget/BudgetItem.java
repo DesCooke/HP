@@ -22,6 +22,7 @@ public class BudgetItem
     public int infoId;
     public int noteId;
     public int galleryId;
+    public boolean active;
 
     // Original Fields
     public int origHolidayId;
@@ -37,6 +38,7 @@ public class BudgetItem
     public int origInfoId;
     public int origNoteId;
     public int origGalleryId;
+    public boolean origActive;
 
     public boolean pictureChanged;
 
@@ -50,6 +52,8 @@ public class BudgetItem
         origBudgetDescription="";
         origBudgetPicture="";
         origBudgetNotes="";
+        active=true;
+        origActive=true;
     }
 
 }

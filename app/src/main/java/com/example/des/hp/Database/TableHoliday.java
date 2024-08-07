@@ -54,7 +54,10 @@ class TableHoliday extends TableBase
                             "  buttonBudget   INT(5),  " +
                             "  buttonPoi      INT(5),  " +
                             "  buttonAttractions INT(5),  " +
-                            "  buttonContacts INT(5)   " +
+                            "  buttonContacts INT(5), " +
+                            "  url1           VARCHAR, " +
+                            "  url2           VARCHAR, " +
+                            "  url3           VARCHAR " +
                             ") ";
 
             db.execSQL(lSQL);
@@ -93,7 +96,8 @@ class TableHoliday extends TableBase
                             "  (holidayName, holidayId, startDate, holidayPicture, infoId, " +
                             "   noteId, galleryId, buttonDays, buttonDay, " +
                             "   buttonMaps, buttonTasks, buttonTips, buttonBudget, " +
-                            "   buttonAttractions, buttonContacts, buttonPoi) " +
+                            "   buttonAttractions, buttonContacts, buttonPoi, " +
+                            "   url1, url2, url3) " +
                             "VALUES " +
                             "(" +
                             MyQuotedString(holidayItem.holidayName) + "," +
@@ -111,7 +115,10 @@ class TableHoliday extends TableBase
                             booleanToString(holidayItem.buttonBudget)+ ", " +
                             booleanToString(holidayItem.buttonAttractions)+ ", " +
                             booleanToString(holidayItem.buttonContacts) + ", " +
-                            booleanToString(holidayItem.buttonPoi) + " " +
+                            booleanToString(holidayItem.buttonPoi) + ", " +
+                            MyQuotedString(holidayItem.url1) + ", " +
+                            MyQuotedString(holidayItem.url2) + ", " +
+                            MyQuotedString(holidayItem.url3) + " " +
                             ")";
 
             return (executeSQL("addHolidayItem", lSql));
@@ -184,7 +191,10 @@ class TableHoliday extends TableBase
                             "      buttonBudget = " + booleanToString(holidayItem.buttonBudget) + ", " +
                             "      buttonAttractions = " + booleanToString(holidayItem.buttonAttractions) + ", " +
                             "      buttonContacts = " + booleanToString(holidayItem.buttonContacts) + ", " +
-                            "      buttonPoi = " + booleanToString(holidayItem.buttonPoi) + " " +
+                            "      buttonPoi = " + booleanToString(holidayItem.buttonPoi) + ", " +
+                            "      url1 = " + MyQuotedString(holidayItem.url1) + ", " +
+                            "      url2 = " + MyQuotedString(holidayItem.url2) + ", " +
+                            "      url3 = " + MyQuotedString(holidayItem.url3) + " " +
                             "WHERE holidayId = " + holidayItem.holidayId;
             return (executeSQL("updateHolidayItem", l_SQL));
         }
@@ -234,7 +244,7 @@ class TableHoliday extends TableBase
                     "SELECT HolidayId, HolidayName, HolidayPicture, StartDate, mapFileGroupId, infoId, " +
                     " noteId, galleryId, buttonDays, buttonDay, buttonMaps, " +
                     " buttonTasks, buttonTips, buttonBudget, buttonAttractions, buttonContacts, " +
-                    " buttonPoi " +
+                    " buttonPoi, url1, url2, url3 " +
                     "FROM Holiday " +
                     "WHERE HolidayId = " + id + " ";
 
@@ -317,6 +327,10 @@ class TableHoliday extends TableBase
             retHolidayItem.buttonAttractions=booleanFromString(cursor.getString(14));
             retHolidayItem.buttonContacts=booleanFromString(cursor.getString(15));
             retHolidayItem.buttonPoi=booleanFromString(cursor.getString(16));
+            retHolidayItem.url1=cursor.getString(17);
+            retHolidayItem.url2=cursor.getString(18);
+            retHolidayItem.url3=cursor.getString(19);
+
             retHolidayItem.pictureChanged=false;
 
 
@@ -340,6 +354,9 @@ class TableHoliday extends TableBase
             retHolidayItem.origButtonAttractions=retHolidayItem.buttonAttractions;
             retHolidayItem.origButtonContacts=retHolidayItem.buttonContacts;
             retHolidayItem.origButtonPoi=retHolidayItem.buttonPoi;
+            retHolidayItem.origUrl1=retHolidayItem.url1;
+            retHolidayItem.origUrl2=retHolidayItem.url2;
+            retHolidayItem.origUrl3=retHolidayItem.url3;
 
             if(!retHolidayItem.holidayPicture.isEmpty())
             {
@@ -429,6 +446,7 @@ class TableHoliday extends TableBase
     {
         return value.compareTo("0") != 0;
     }
+
     boolean getNextHolidayId(MyInt retInt)
     {
         try
@@ -458,7 +476,7 @@ class TableHoliday extends TableBase
                     "SELECT holidayId, holidayName, holidayPicture, startDate, mapFileGroupId, infoId, " +
                     " noteId, galleryId, buttonDays, buttonDay, buttonMaps, buttonTasks, " +
                     " buttonTips, buttonBudget, buttonAttractions, buttonContacts, " +
-                    " buttonPoi " +
+                    " buttonPoi, url1, url2, url3 " +
                     "FROM holiday " +
                     "ORDER BY startDate DESC";
 
