@@ -15,6 +15,8 @@ import com.example.des.hp.myutils.MyDateDiff;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -69,6 +71,61 @@ class TableHoliday extends TableBase
             ShowError("onCreate", e.getMessage());
         }
         return (false);
+    }
+
+    public void export(OutputStreamWriter buffwriter) {
+
+        try {
+            buffwriter.write("<holiday>\n");
+
+            String lSql =
+                    "select HolidayId, HolidayName, HolidayPicture, StartDate, mapFileGroupId, infoId, " +
+                            " noteId, galleryId, buttonDays, buttonDay, buttonMaps, " +
+                            " buttonTasks, buttonTips, buttonBudget, buttonAttractions, buttonContacts, " +
+                            " buttonPoi, url1, url2, url3 " +
+                            "FROM holiday " +
+                            "ORDER BY holidayId";
+
+            Cursor cursor = executeSQLOpenCursor("export", lSql);
+            if (cursor == null)
+                return;
+
+            while (cursor.moveToNext()) {
+                int holidayId = Integer.parseInt(cursor.getString(0));
+                String pic = cursor.getString(2);
+                String picAsBase64 = "";
+                if (!pic.isEmpty()) {
+                    picAsBase64 = pictureToBase64(holidayId, pic);
+                }
+
+                buffwriter.write(
+                        cursor.getString(0) + "," +
+                                encodeString(cursor.getString(1)) + "," +
+                                picAsBase64 + "," +
+                                cursor.getString(3) + "," +
+                                cursor.getString(4) + "," +
+                                cursor.getString(5) + "," +
+                                cursor.getString(6) + "," +
+                                cursor.getString(7) + "," +
+                                cursor.getString(8) + "," +
+                                cursor.getString(9) + "," +
+                                cursor.getString(10) + "," +
+                                cursor.getString(11) + "," +
+                                cursor.getString(12) + "," +
+                                cursor.getString(13) + "," +
+                                cursor.getString(14) + "," +
+                                cursor.getString(15) + "," +
+                                cursor.getString(16) + "," +
+                                cursor.getString(17) + "," +
+                                cursor.getString(18) + "," +
+                                cursor.getString(19) + "\n"
+                );
+
+            }
+
+        } catch (java.io.FileNotFoundException e) {
+        } catch (java.io.IOException e) {
+        }
     }
 
     boolean addHolidayItem(HolidayItem holidayItem)

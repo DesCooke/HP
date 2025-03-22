@@ -1,9 +1,12 @@
 package com.example.des.hp.Database;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 
 import androidx.annotation.NonNull;
 
@@ -12,6 +15,10 @@ import com.example.des.hp.R;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
+import java.io.BufferedWriter;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 class TableBudget extends TableBase
@@ -59,6 +66,69 @@ class TableBudget extends TableBase
         }
         return (false);
     }
+
+    public void export(OutputStreamWriter buffwriter)
+    {
+
+        try
+        {
+            buffwriter.write("<budget>\n");
+
+            String lSql =
+                    "select holidayId, " +
+                            "budgetId, " +
+                            "sequenceNo, " +
+                            "budgetDescription, " +
+                            "budgetTotal, " +
+                            "budgetPaid, " +
+                            "budgetUnpaid, " +
+                            "budgetPicture, " +
+                            "budgetNotes, " +
+                            "infoId, " +
+                            "noteId, " +
+                            "galleryId, " +
+                            "active " +
+                            "FROM budget " +
+                            "ORDER BY holidayId, budgetId";
+
+            Cursor cursor=executeSQLOpenCursor("export", lSql);
+            if(cursor == null)
+                return;
+
+            while(cursor.moveToNext())
+            {
+                int holidayId = Integer.parseInt(cursor.getString(0));
+                String pic = cursor.getString(7);
+                String picAsBase64 = "";
+                if(!pic.isEmpty()) {
+                    picAsBase64 = pictureToBase64(holidayId, pic);
+                }
+
+                buffwriter.write(cursor.getString(0) + "," +
+                        cursor.getString(1) + "," +
+                        cursor.getString(2) + "," +
+                        encodeString(cursor.getString(3)) + "," +
+                        cursor.getString(4) + "," +
+                        cursor.getString(5) + "," +
+                        cursor.getString(6) + "," +
+                        picAsBase64 + "," +
+                        cursor.getString(8) + "," +
+                        cursor.getString(9) + "," +
+                        cursor.getString(10) + "," +
+                        cursor.getString(11) + "," +
+                        cursor.getString(12) + "\n"
+                );
+
+            }
+
+        } catch (java.io.FileNotFoundException e)
+        {
+        }
+        catch (java.io.IOException e)
+        {
+        }
+    }
+
 
     private String booleanToString(boolean value)
     {

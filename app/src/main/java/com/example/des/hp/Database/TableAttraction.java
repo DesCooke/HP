@@ -1,14 +1,21 @@
 package com.example.des.hp.Database;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 
 import com.example.des.hp.ThemeParks.ThemeParkItem;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
+import java.io.BufferedWriter;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 class TableAttraction extends TableBase
@@ -27,7 +34,17 @@ class TableAttraction extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS attraction " + "( " + "  holidayId             INT(5),  " + "  attractionId          INT(5),  " + "  sequenceNo            INT(5),  " + "  attractionDescription VARCHAR, " + "  attractionPicture     VARCHAR, " + "  attractionNotes       VARCHAR, " + "  infoId                INT(5),  " + "  noteId                INT(5),  " + "  galleryId             INT(5)  " + ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS attraction " +
+                    "( " + "  holidayId             INT(5),  " +
+                    "  attractionId          INT(5),  " +
+                    "  sequenceNo            INT(5),  " +
+                    "  attractionDescription VARCHAR, " +
+                    "  attractionPicture     VARCHAR, " +
+                    "  attractionNotes       VARCHAR, " +
+                    "  infoId                INT(5),  " +
+                    "  noteId                INT(5),  " +
+                    "  galleryId             INT(5)  " +
+                    ") ";
 
             db.execSQL(lSQL);
 
@@ -37,6 +54,54 @@ class TableAttraction extends TableBase
         {
             ShowError("onCreate", e.getMessage());
             return (false);
+        }
+    }
+
+    public void export(OutputStreamWriter buffwriter) {
+
+        try {
+            buffwriter.write("<attraction>\n");
+
+            String lSql =
+                    "select holidayId, " +
+                            "attractionId, " +
+                            "sequenceNo, " +
+                            "attractionDescription, " +
+                            "attractionPicture, " +
+                            "attractionNotes, " +
+                            "infoId, " +
+                            "noteId, " +
+                            "galleryId " +
+                            "FROM attraction " +
+                            "ORDER BY holidayId, attractionId";
+
+            Cursor cursor = executeSQLOpenCursor("exportRecord", lSql);
+            if (cursor == null)
+                return;
+
+            while (cursor.moveToNext()) {
+                int holidayId = Integer.parseInt(cursor.getString(0));
+                String pic = cursor.getString(4);
+                String picAsBase64 = "";
+                if(!pic.isEmpty()) {
+                    picAsBase64 = pictureToBase64(holidayId, pic);
+                }
+
+                buffwriter.write(cursor.getString(0) + "," +
+                        cursor.getString(1) + "," +
+                        cursor.getString(2) + "," +
+                        encodeString(cursor.getString(3)) + "," +
+                        picAsBase64 + "," +
+                        encodeString(cursor.getString(5)) + "," +
+                        cursor.getString(6) + "," +
+                        cursor.getString(7) + "," +
+                        cursor.getString(8) + "\n"
+                );
+
+            }
+
+        } catch (java.io.FileNotFoundException e) {
+        } catch (java.io.IOException e) {
         }
     }
 

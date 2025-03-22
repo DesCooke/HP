@@ -1,14 +1,21 @@
 package com.example.des.hp.Database;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 
 import com.example.des.hp.ThemeParks.ThemeParkAreaItem;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
+import java.io.BufferedWriter;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 class TableAttractionArea extends TableBase
@@ -27,7 +34,17 @@ class TableAttractionArea extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS attractionarea " + "( " + "  holidayId                 INT(5),  " + "  attractionId              INT(5),  " + "  attractionAreaId          INT(5),  " + "  sequenceNo                INT(5),  " + "  attractionAreaDescription VARCHAR, " + "  attractionAreaPicture     VARCHAR, " + "  attractionAreaNotes       VARCHAR, " + "  infoId                    INT(5),  " + "  noteId                    INT(5),  " + "  galleryId                 INT(5)  " + ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS attractionarea " + "( " +
+                    "  holidayId                 INT(5),  " +
+                    "  attractionId              INT(5),  " +
+                    "  attractionAreaId          INT(5),  " +
+                    "  sequenceNo                INT(5),  " +
+                    "  attractionAreaDescription VARCHAR, " +
+                    "  attractionAreaPicture     VARCHAR, " +
+                    "  attractionAreaNotes       VARCHAR, " +
+                    "  infoId                    INT(5),  " +
+                    "  noteId                    INT(5),  " +
+                    "  galleryId                 INT(5)  " + ") ";
 
             db.execSQL(lSQL);
 
@@ -39,6 +56,61 @@ class TableAttractionArea extends TableBase
         }
         return (false);
     }
+
+    public void export(OutputStreamWriter buffwriter)
+    {
+
+        try
+        {
+            buffwriter.write("<attractionarea>\n");
+
+            String lSql =
+                    "select holidayId, " +
+                            "attractionId, " +
+                            "attractionAreaId, " +
+                            "sequenceNo, " +
+                            "attractionAreaDescription, " +
+                            "attractionAreaPicture, " +
+                            "attractionAreaNotes, " +
+                            "infoId, " +
+                            "noteId, " +
+                            "galleryId " +
+                            "FROM attractionarea " +
+                            "ORDER BY holidayId, attractionId, attractionAreaId";
+
+            Cursor cursor=executeSQLOpenCursor("exportRecord", lSql);
+            if(cursor == null)
+                return;
+
+            while(cursor.moveToNext())
+            {
+                int holidayId = Integer.parseInt(cursor.getString(0));
+                String pic = cursor.getString(5);
+                String picAsBase64 = "";
+                if(!pic.isEmpty()) {
+                    picAsBase64 = pictureToBase64(holidayId, pic);
+                }
+                buffwriter.write(cursor.getString(0) + "," +
+                        cursor.getString(1) + "," +
+                        cursor.getString(2) + "," +
+                        cursor.getString(3) + "," +
+                        encodeString(cursor.getString(4)) + "," +
+                        picAsBase64 + "," +
+                        encodeString(cursor.getString(6)) + "," +
+                        cursor.getString(7) + "," +
+                        cursor.getString(8) + "\n"
+                );
+
+            }
+
+        } catch (java.io.FileNotFoundException e)
+        {
+        }
+        catch (java.io.IOException e)
+        {
+        }
+    }
+
 
     boolean addAttractionAreaItem(ThemeParkAreaItem themeParkAreaItem)
     {

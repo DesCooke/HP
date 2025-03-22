@@ -1,9 +1,12 @@
 package com.example.des.hp.Database;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 
 import com.example.des.hp.Day.DayItem;
 import com.example.des.hp.Event.EventScheduleDetailItem;
@@ -12,6 +15,10 @@ import com.example.des.hp.Holiday.HolidayItem;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
+import java.io.BufferedWriter;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import static com.example.des.hp.Database.DatabaseAccess.database;
@@ -34,7 +41,17 @@ class TableDay extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS day " + "( " + "  holidayId  INT(5),  " + "  dayId      INT(5),  " + "  sequenceNo INT(5),  " + "  dayName    VARCHAR, " + "  dayPicture VARCHAR, " + "  dayCat     INT(5),  " + "  infoId     INT(5),  " + "  noteId     INT(5),  " + "  galleryId  INT(5) ) ";
+            String lSQL="CREATE TABLE IF NOT EXISTS day " +
+                    "( " +
+                    "  holidayId  INT(5),  " +
+                    "  dayId      INT(5),  " +
+                    "  sequenceNo INT(5),  " +
+                    "  dayName    VARCHAR, " +
+                    "  dayPicture VARCHAR, " +
+                    "  dayCat     INT(5),  " +
+                    "  infoId     INT(5),  " +
+                    "  noteId     INT(5),  " +
+                    "  galleryId  INT(5) ) ";
 
             db.execSQL(lSQL);
 
@@ -47,6 +64,53 @@ class TableDay extends TableBase
         return (false);
     }
 
+    public void export(OutputStreamWriter buffwriter) {
+
+        try {
+            buffwriter.write("<day>\n");
+
+            String lSql =
+                    "select holidayId, " +
+                            "dayId, " +
+                            "sequenceNo, " +
+                            "dayName, " +
+                            "dayPicture, " +
+                            "dayCat, " +
+                            "infoId, " +
+                            "noteId, " +
+                            "galleryId " +
+                            "FROM day " +
+                            "ORDER BY holidayId, dayId";
+
+            Cursor cursor = executeSQLOpenCursor("export", lSql);
+            if (cursor == null)
+                return;
+
+            while (cursor.moveToNext()) {
+                int holidayId = Integer.parseInt(cursor.getString(0));
+                String pic = cursor.getString(4);
+                String picAsBase64 = "";
+                if (!pic.isEmpty()) {
+                    picAsBase64 = pictureToBase64(holidayId, pic);
+                }
+
+                buffwriter.write(cursor.getString(0) + "," +
+                        cursor.getString(1) + "," +
+                        cursor.getString(2) + "," +
+                        encodeString(cursor.getString(3)) + "," +
+                        picAsBase64 + "," +
+                        cursor.getString(5) + "," +
+                        cursor.getString(6) + "," +
+                        cursor.getString(7) + "," +
+                        cursor.getString(8) + "\n"
+                );
+
+            }
+
+        } catch (java.io.FileNotFoundException e) {
+        } catch (java.io.IOException e) {
+        }
+    }
     boolean getDayCount(int argHolidayId, MyInt retInt)
     {
         try

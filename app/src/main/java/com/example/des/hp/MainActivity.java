@@ -1,9 +1,15 @@
 package com.example.des.hp;
 
+import static android.os.ParcelFileDescriptor.MODE_CREATE;
+
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.des.hp.Database.DatabaseAccess;
@@ -12,9 +18,16 @@ import com.example.des.hp.myutils.*;
 import com.example.des.hp.Holiday.*;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Objects;
 
+import static com.example.des.hp.Database.DatabaseAccess.database;
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
@@ -28,6 +41,7 @@ public class MainActivity extends BaseActivity
     public ArrayList<HolidayItem> holidayList;
     public boolean accessGranted = false;
     public FloatingActionButton fab;
+    public FloatingActionButton fabExport;
 
     private static MainActivity instance;
     //endregion
@@ -118,6 +132,9 @@ public class MainActivity extends BaseActivity
                 fab=findViewById(R.id.fab);
                 if(fab!=null)
                     fab.setOnClickListener(this::showHolidayAdd);
+                fabExport = findViewById(R.id.fabExport);
+                if(fabExport!=null)
+                    fabExport.setOnClickListener(this::exportDB);
 
                 HolidayAdapter adapter = new HolidayAdapter(this, R.layout.holidaylistitemrow, holidayList);
                 ListView listView1 = findViewById(R.id.holidayListView);
@@ -174,7 +191,36 @@ public class MainActivity extends BaseActivity
             ShowError("showHolidayAdd", e.getMessage());
         }
     }
-    
+
+    public void exportDB(View view)
+    {
+        try
+        {
+            String theDateTime = android.text.format.DateFormat.format("yyyy-MM-dd_HH-mm-ss", Calendar.getInstance().getTime()).toString();
+            String filename = "/storage/emulated/0/Download/hp_" + theDateTime + ".csv";
+            File file = new File(filename);
+            Uri uri = Uri.fromFile(file);
+
+            ParcelFileDescriptor pdf =
+                    this.getContentResolver().openFileDescriptor(uri, "w");
+            FileDescriptor fd = pdf.getFileDescriptor();
+            FileOutputStream fileStream = new FileOutputStream(fd);
+            OutputStreamWriter chapterWriter = new OutputStreamWriter(fileStream);
+            BufferedWriter buffwriter = new BufferedWriter(chapterWriter);
+            buffwriter.write("HolidayPlanner\n");
+            buffwriter.flush();
+            pdf.close();
+
+            ContentResolver cr = this.getContentResolver();
+            databaseAccess().export(uri, cr);
+
+        }
+        catch (Exception e)
+        {
+            ShowError("showHolidayAdd", e.getMessage());
+
+        }
+    }
     //endregion
     
 }

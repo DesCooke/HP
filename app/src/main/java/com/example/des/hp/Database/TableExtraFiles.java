@@ -2,11 +2,13 @@ package com.example.des.hp.Database;
 
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 import android.webkit.MimeTypeMap;
 
 import com.example.des.hp.ExtraFiles.ExtraFilesItem;
@@ -16,6 +18,10 @@ import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 import com.example.des.hp.myutils.MyUri;
 
+import java.io.BufferedWriter;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 class TableExtraFiles extends TableBase
@@ -54,6 +60,56 @@ class TableExtraFiles extends TableBase
             ShowError("onCreate", e.getMessage());
         }
         return (false);
+    }
+
+    public void export(OutputStreamWriter buffwriter) {
+
+        try {
+            buffwriter.write("<extraFiles>\n");
+
+            String lSql =
+                    "select fileGroupId, " +
+                            "fileId, " +
+                            "sequenceNo, " +
+                            "fileDescription, " +
+                            "fileName, " +
+                            "filePicture, " +
+                            "holidayId " +
+                            "FROM extraFiles " +
+                            "ORDER BY holidayId, fileId";
+
+            Cursor cursor=executeSQLOpenCursor("export", lSql);
+            if(cursor == null)
+                return;
+
+            while(cursor.moveToNext())
+            {
+                int holidayId = Integer.parseInt(cursor.getString(6));
+                String pic = cursor.getString(5);
+                String picAsBase64 = "";
+                if(!pic.isEmpty()) {
+                    picAsBase64 = pictureToBase64(holidayId, pic);
+                }
+                String file = cursor.getString(4);
+                String fileAsBase64 = "";
+                if(!file.isEmpty()) {
+                    fileAsBase64 = fileToBase64(holidayId, file);
+                }
+
+                buffwriter.write(cursor.getString(0) + "," +
+                        cursor.getString(1) + "," +
+                        cursor.getString(2) + "," +
+                        encodeString(cursor.getString(3)) + "," +
+                        fileAsBase64 + "," +
+                        picAsBase64 + "," +
+                        cursor.getString(6) + "\n"
+                );
+
+            }
+
+        } catch (java.io.FileNotFoundException e) {
+        } catch (java.io.IOException e) {
+        }
     }
 
     boolean addExtraFilesItem(ExtraFilesItem extraFilesItem)
