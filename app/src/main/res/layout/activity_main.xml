@@ -37,4 +37,12 @@
         app:maxImageSize="48dp"
         app:srcCompat="@android:drawable/ic_menu_add" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabExport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        app:srcCompat="@drawable/ic_menu_share" />
+
 </RelativeLayout>

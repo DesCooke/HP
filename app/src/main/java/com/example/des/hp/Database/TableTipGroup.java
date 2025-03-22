@@ -9,6 +9,8 @@ import com.example.des.hp.TipGroup.TipGroupItem;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 class TableTipGroup extends TableBase
@@ -28,7 +30,17 @@ class TableTipGroup extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS tipgroup " + "( " + "  holidayId           INT(5),  " + "  tipGroupId          INT(5),  " + "  sequenceNo          INT(5),  " + "  tipGroupDescription VARCHAR, " + "  tipGroupPicture     VARCHAR, " + "  tipGroupNotes       VARCHAR, " + "  infoId              INT(5),  " + "  noteId              INT(5),  " + "  galleryId           INT(5)  " + ")";
+            String lSQL="CREATE TABLE IF NOT EXISTS tipgroup " +
+                    "( " +
+                    "holidayId           INT(5),  " +
+                    "  tipGroupId          INT(5),  " +
+                    "  sequenceNo          INT(5),  " +
+                    "  tipGroupDescription VARCHAR, " +
+                    "  tipGroupPicture     VARCHAR, " +
+                    "  tipGroupNotes       VARCHAR, " +
+                    "  infoId              INT(5),  " +
+                    "  noteId              INT(5),  " +
+                    "  galleryId           INT(5)  " + ")";
 
             db.execSQL(lSQL);
 
@@ -40,6 +52,47 @@ class TableTipGroup extends TableBase
         }
         return (false);
     }
+
+    public void export(OutputStreamWriter buffwriter) {
+
+        try {
+            buffwriter.write("<tipgroup>\n");
+
+            String lSql="SELECT holidayId, tipGroupId, sequenceNo, tipGroupDescription, " +
+                    "tipGroupPicture, tipGroupNotes, infoId, noteId, galleryId " +
+                    "from tipgroup " +
+                    "ORDER BY holidayId, tipGroupId";
+
+            Cursor cursor = executeSQLOpenCursor("export", lSql);
+            if (cursor == null)
+                return;
+
+            while (cursor.moveToNext()) {
+                int holidayId = Integer.parseInt(cursor.getString(0));
+                String pic = cursor.getString(4);
+                String picAsBase64 = "";
+                if (!pic.isEmpty()) {
+                    picAsBase64 = pictureToBase64(holidayId, pic);
+                }
+
+                buffwriter.write(cursor.getString(0) + "," +
+                        cursor.getString(1) + "," +
+                        cursor.getString(2) + "," +
+                        encodeString(cursor.getString(3)) + "," +
+                        picAsBase64 + "," +
+                        cursor.getString(5) + "," +
+                        cursor.getString(6) + "," +
+                        cursor.getString(7) + "," +
+                        cursor.getString(8) + "\n"
+                );
+
+            }
+
+        } catch (java.io.FileNotFoundException e) {
+        } catch (java.io.IOException e) {
+        }
+    }
+
 
     boolean addTipGroupItem(TipGroupItem tipGroupItem)
     {

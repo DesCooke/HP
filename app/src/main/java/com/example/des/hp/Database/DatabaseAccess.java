@@ -1,9 +1,12 @@
 package com.example.des.hp.Database;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 
 import com.example.des.hp.MainActivity;
 import com.example.des.hp.Notes.NoteItem;
@@ -26,7 +29,11 @@ import com.example.des.hp.myutils.MyFileUtils;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -103,7 +110,40 @@ public class DatabaseAccess extends SQLiteOpenHelper
             ShowError("DatabaseAccess", e.getMessage());
         }
     }
-    
+
+    public void export(Uri uri, ContentResolver cr) {
+        try {
+            ParcelFileDescriptor pdf = cr.openFileDescriptor(uri, "w");
+            FileDescriptor fd = pdf.getFileDescriptor();
+            FileOutputStream fileStream = new FileOutputStream(fd);
+            OutputStreamWriter chapterWriter = new OutputStreamWriter(fileStream);
+//            BufferedWriter buffwriter = new BufferedWriter(chapterWriter);
+
+            tableAttraction.export(chapterWriter);
+            tableAttractionArea.export(chapterWriter);
+            tableBudget.export(chapterWriter);
+            tableContact.export(chapterWriter);
+            tableDay.export(chapterWriter);
+            tableExtraFiles.export(chapterWriter);
+            tableFileIds.export(chapterWriter);
+            tableGeneralAttraction.export(chapterWriter);
+            tableHoliday.export(chapterWriter);
+            tableNotes.export(chapterWriter);
+            tableSchedule.export(chapterWriter);
+            tableTask.export(chapterWriter);
+            tableTip.export(chapterWriter);
+            tableTipGroup.export(chapterWriter);
+
+            //buffwriter.flush();
+            chapterWriter.flush();
+            chapterWriter.close();
+            pdf.close();
+
+        } catch (java.io.FileNotFoundException e) {
+        } catch (java.io.IOException e) {
+        }
+
+    }
     public static DatabaseAccess databaseAccess()
     {
         if (database == null)

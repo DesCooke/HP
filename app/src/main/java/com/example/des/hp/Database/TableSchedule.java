@@ -9,6 +9,8 @@ import com.example.des.hp.Event.EventScheduleItem;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 class TableSchedule extends TableBase
@@ -61,6 +63,63 @@ class TableSchedule extends TableBase
         }
         return (false);
     }
+
+    public void export(OutputStreamWriter buffwriter) {
+
+        try {
+            buffwriter.write("<schedule>\n");
+
+            String lSql =
+            "select holidayId, dayId, attractionId, attractionAreaId, " +
+            "       scheduleId, sequenceNo, schedType, " +
+                    "       schedName, schedPicture, url1, url2, url3, startTimeKnown, startHour,  " +
+                    "       startMin, endTimeKnown, endHour, endMin, infoId, noteId, galleryId  " +
+                    "FROM schedule " +
+                            "ORDER BY holidayId, dayId, attractionId, attractionAreaId ";
+
+            Cursor cursor = executeSQLOpenCursor("export", lSql);
+            if (cursor == null)
+                return;
+
+            while (cursor.moveToNext()) {
+                int holidayId = Integer.parseInt(cursor.getString(0));
+                String pic = cursor.getString(8);
+                String picAsBase64 = "";
+                if (!pic.isEmpty()) {
+                    picAsBase64 = pictureToBase64(holidayId, pic);
+                }
+
+                buffwriter.write(
+                        cursor.getString(0) + "," +
+                                encodeString(cursor.getString(1)) + "," +
+                                picAsBase64 + "," +
+                                cursor.getString(3) + "," +
+                                cursor.getString(4) + "," +
+                                cursor.getString(5) + "," +
+                                cursor.getString(6) + "," +
+                                encodeString(cursor.getString(7)) + "," +
+                                picAsBase64 + "," +
+                                cursor.getString(9) + "," +
+                                cursor.getString(10) + "," +
+                                cursor.getString(11) + "," +
+                                cursor.getString(12) + "," +
+                                cursor.getString(13) + "," +
+                                cursor.getString(14) + "," +
+                                cursor.getString(15) + "," +
+                                cursor.getString(16) + "," +
+                                cursor.getString(17) + "," +
+                                cursor.getString(18) + "," +
+                                cursor.getString(19) + "," +
+                                cursor.getString(20) + "\n"
+                );
+
+            }
+
+        } catch (java.io.FileNotFoundException e) {
+        } catch (java.io.IOException e) {
+        }
+    }
+
 
     public boolean addScheduleItem(EventScheduleItem eventScheduleItem)
     {

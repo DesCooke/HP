@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.des.hp.myutils.*;
 import com.example.des.hp.Notes.*;
 
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+
 class TableNotes extends TableBase
 {
     TableNotes(Context context, SQLiteOpenHelper dbHelper)
@@ -24,7 +27,11 @@ class TableNotes extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS notes " + "( " + "  holidayId       INT(5),  " + "  noteId          INT(5),  " + "  notes           VARCHAR  " + ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS notes " +
+                    "( " +
+                    "  holidayId       INT(5),  " +
+                    "  noteId          INT(5),  " +
+                    "  notes           VARCHAR  " + ") ";
 
             db.execSQL(lSQL);
 
@@ -36,6 +43,35 @@ class TableNotes extends TableBase
         }
         return (false);
     }
+
+    public void export(OutputStreamWriter buffwriter) {
+
+        try {
+            buffwriter.write("<notes>\n");
+
+            String lSql =
+                    "select HolidayId, noteId, notes " +
+                            "FROM notes " +
+                            "ORDER BY holidayId, noteId";
+
+            Cursor cursor = executeSQLOpenCursor("export", lSql);
+            if (cursor == null)
+                return;
+
+            while (cursor.moveToNext()) {
+                buffwriter.write(
+                        cursor.getString(0) + "," +
+                                cursor.getString(1) + "," +
+                                stringToBase64(cursor.getString(2)) + "\n"
+                );
+
+            }
+
+        } catch (java.io.FileNotFoundException e) {
+        } catch (java.io.IOException e) {
+        }
+    }
+
 
     boolean addNoteItem(NoteItem noteItem)
     {

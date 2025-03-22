@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.des.hp.Event.EventScheduleDetailItem;
 
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+
 class TableGeneralAttraction extends TableBase
 {
     TableGeneralAttraction(Context context, SQLiteOpenHelper dbHelper)
@@ -69,6 +72,70 @@ class TableGeneralAttraction extends TableBase
             ShowError("onCreate", e.getMessage());
         }
         return (false);
+    }
+
+    public void export(OutputStreamWriter buffwriter) {
+
+        try {
+            buffwriter.write("<generalattraction>\n");
+
+            String lSql =
+                    "SELECT holidayId, dayId, attractionId, attractionAreaId, " +
+                            "  scheduleId, name, heartRating, scenicRating, thrillRating," +
+                            "  AttractionType, BookingReference, FlightNo, DepartsKnown, DepartsHour, " +
+                            "  DepartsMin, Terminal, RestaurantFullId, ReservationType, " +
+                            "  ShowKnown, ShowHour, ShowMin, PickUpKnown, PickUpHour, PickUpMin, " +
+                            "  DropOffKnown, DropOffHour, DropOffMin, CheckInKnown, CheckInHour, CheckInMin, " +
+                            "  ArrivalKnown, ArrivalHour, ArrivalMin " +
+                            "FROM generalattraction " +
+                            "ORDER BY holidayId, dayId, attractionId, attractionAreaId";
+
+            Cursor cursor = executeSQLOpenCursor("exportRecord", lSql);
+            if (cursor == null)
+                return;
+
+            while (cursor.moveToNext()) {
+                buffwriter.write(
+                        cursor.getString(0) + "," +
+                        cursor.getString(1) + "," +
+                        cursor.getString(2) + "," +
+                        cursor.getString(3) + "," +
+                        cursor.getString(4) + "," +
+                                encodeString(cursor.getString(5)) + "," +
+                        cursor.getString(6) + "," +
+                        cursor.getString(7) + "," +
+                        cursor.getString(8) + "," +
+                                cursor.getString(9) + "," +
+                                encodeString(cursor.getString(10)) + "," +
+                                cursor.getString(11) + "," +
+                                cursor.getString(12) + "," +
+                                cursor.getString(13) + "," +
+                                cursor.getString(14) + "," +
+                                cursor.getString(15) + "," +
+                                cursor.getString(16) + "," +
+                                cursor.getString(17) + "," +
+                                cursor.getString(18) + "," +
+                                cursor.getString(19) + "," +
+                                cursor.getString(20) + "," +
+                                cursor.getString(21) + "," +
+                                cursor.getString(22) + "," +
+                                cursor.getString(23) + "," +
+                                cursor.getString(24) + "," +
+                                cursor.getString(25) + "," +
+                                cursor.getString(26) + "," +
+                                cursor.getString(27) + "," +
+                                cursor.getString(28) + "," +
+                                cursor.getString(29) + "," +
+                                cursor.getString(30) + "," +
+                                cursor.getString(31) + "," +
+                                cursor.getString(32) + "\n"
+                );
+
+            }
+
+        } catch (java.io.FileNotFoundException e) {
+        } catch (java.io.IOException e) {
+        }
     }
 
     private String booleanToString(boolean value)

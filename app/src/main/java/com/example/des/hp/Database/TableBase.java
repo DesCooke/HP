@@ -1,5 +1,6 @@
 package com.example.des.hp.Database;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -7,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Base64;
 
 import com.example.des.hp.Holiday.HolidayItem;
 import com.example.des.hp.myutils.DateUtils;
@@ -15,9 +17,13 @@ import com.example.des.hp.myutils.MyFileUtils;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 
+import static com.example.des.hp.Database.DatabaseAccess.database;
 import static com.example.des.hp.Database.DatabaseAccess.databaseAccess;
 import static com.example.des.hp.myutils.MyMessages.myMessages;
 
@@ -44,6 +50,78 @@ public class TableBase
     }
     //endregion
 
+    public byte[] getBytes(InputStream inputStream) throws java.io.FileNotFoundException {
+        try {
+            ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+            int bufferSize = 1024;
+            byte[] buffer = new byte[bufferSize];
+            int len = 0;
+            while ((len = inputStream.read(buffer)) != -1) {
+                byteBuffer.write(buffer, 0, len);
+            }
+            return byteBuffer.toByteArray();
+        } catch (java.io.FileNotFoundException e){
+            return null;
+        } catch (java.io.IOException e){
+            return null;
+        }
+    }
+    public String pictureToBase64(int holidayId, String pic) {
+        HolidayItem holidayItem = new HolidayItem();
+        databaseAccess().getHolidayItem(holidayId, holidayItem);
+        String picDir = ImageUtils.imageUtils().GetHolidayImageDir(holidayItem.holidayName);
+        String fullPath = picDir + "/" + pic;
+        Uri uri = Uri.fromFile(new File(fullPath));
+        ContentResolver cr = _context.getContentResolver();
+        try {
+            InputStream in = cr.openInputStream(uri);
+            if (in == null)
+                return ("");
+            byte[] bytes = getBytes(in);
+            String ansValue = Base64.encodeToString(bytes, Base64.NO_WRAP);
+            return ansValue;
+        } catch (java.io.FileNotFoundException e) {
+        }
+        return "";
+    }
+
+    public String stringToBase64(String content) {
+        try {
+            byte[] bytes = content.getBytes();
+            if(bytes!=null) {
+                String ansValue = Base64.encodeToString(bytes, Base64.NO_WRAP);
+                if(ansValue!=null){
+                    return ansValue;
+                }
+            }
+        } catch (Exception e) {
+        }
+        return "";
+    }
+
+    public String fileToBase64(int holidayId, String filename) {
+        HolidayItem holidayItem = new HolidayItem();
+        databaseAccess().getHolidayItem(holidayId, holidayItem);
+        String picDir = ImageUtils.imageUtils().GetHolidayFileDir(holidayItem.holidayName);
+
+        String fullPath = picDir + "/" + filename;
+        Uri uri = Uri.fromFile(new File(fullPath));
+        ContentResolver cr = _context.getContentResolver();
+        try {
+            InputStream in = cr.openInputStream(uri);
+            if (in == null)
+                return ("");
+            byte[] bytes = getBytes(in);
+            if(bytes!=null) {
+                String ansValue = Base64.encodeToString(bytes, Base64.NO_WRAP);
+                if(ansValue!=null){
+                    return ansValue;
+                }
+            }
+        } catch (java.io.FileNotFoundException e) {
+        }
+        return "";
+    }
     //region HELPER FUNCTIONS
     public boolean IsValid()
     {
@@ -65,7 +143,17 @@ public class TableBase
 
     }
 
-    private String CleanString(String argString)
+    public String encodeString(String argString)
+    {
+        if(argString.isEmpty())
+            return ("");
+
+        String ret= argString.replace(",", "<#COMMA#>");
+
+        return (ret.replace("\n", "<#LF#>"));
+    }
+
+    public String CleanString(String argString)
     {
         if(argString.isEmpty())
             return ("");

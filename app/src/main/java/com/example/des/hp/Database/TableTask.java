@@ -10,6 +10,8 @@ import com.example.des.hp.myutils.DateUtils;
 import com.example.des.hp.myutils.MyInt;
 import com.example.des.hp.myutils.MyString;
 
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 class TableTask extends TableBase
@@ -31,7 +33,20 @@ class TableTask extends TableBase
     {
         try
         {
-            String lSQL="CREATE TABLE IF NOT EXISTS tasks " + "( " + "  holidayId       INT(5),  " + "  taskId          INT(5),  " + "  sequenceNo      INT(5),  " + "  taskDescription VARCHAR, " + "  taskDateKnown   INT(1),  " + "  taskDate        INT(16), " + "  taskPicture     VARCHAR, " + "  taskComplete    INT(1),  " + "  taskNotes       VARCHAR, " + "  infoId          INT(5),  " + "  noteId          INT(5),  " + "  galleryId       INT(5)  " + ") ";
+            String lSQL="CREATE TABLE IF NOT EXISTS tasks " +
+                    "( " +
+                    "  holidayId       INT(5),  " +
+                    "  taskId          INT(5),  " +
+                    "  sequenceNo      INT(5),  " +
+                    "  taskDescription VARCHAR, " +
+                    "  taskDateKnown   INT(1),  " +
+                    "  taskDate        INT(16), " +
+                    "  taskPicture     VARCHAR, " +
+                    "  taskComplete    INT(1),  " +
+                    "  taskNotes       VARCHAR, " +
+                    "  infoId          INT(5),  " +
+                    "  noteId          INT(5),  " +
+                    "  galleryId       INT(5)  " + ") ";
 
             db.execSQL(lSQL);
 
@@ -43,6 +58,51 @@ class TableTask extends TableBase
         }
         return (false);
     }
+
+    public void export(OutputStreamWriter buffwriter) {
+
+        try {
+            buffwriter.write("<tasks>\n");
+
+            String lSql="SELECT holidayId, taskId, sequenceNo, taskDescription, " +
+                    "  taskDateKnown, taskDate, taskPicture, taskComplete, taskNotes, infoId, " +
+                    "  noteId, galleryId " +
+                    " FROM Tasks " +
+                            "ORDER BY holidayId, taskId";
+
+            Cursor cursor = executeSQLOpenCursor("export", lSql);
+            if (cursor == null)
+                return;
+
+            while (cursor.moveToNext()) {
+                int holidayId = Integer.parseInt(cursor.getString(0));
+                String pic = cursor.getString(6);
+                String picAsBase64 = "";
+                if (!pic.isEmpty()) {
+                    picAsBase64 = pictureToBase64(holidayId, pic);
+                }
+
+                buffwriter.write(cursor.getString(0) + "," +
+                        cursor.getString(1) + "," +
+                        cursor.getString(2) + "," +
+                        encodeString(cursor.getString(3)) + "," +
+                        cursor.getString(4) + "," +
+                        cursor.getString(5) + "," +
+                        picAsBase64 + "," +
+                        cursor.getString(7) + "," +
+                        cursor.getString(8) + "," +
+                        cursor.getString(9) + "," +
+                        cursor.getString(10) + "," +
+                        cursor.getString(11) + "\n"
+                );
+
+            }
+
+        } catch (java.io.FileNotFoundException e) {
+        } catch (java.io.IOException e) {
+        }
+    }
+
 
     boolean getTaskCount(int argHolidayId, MyInt retInt)
     {
